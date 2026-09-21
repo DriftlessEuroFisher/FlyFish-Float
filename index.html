@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#15241f">
+<title>Idaho &amp; Wyoming Rivers — Fly Fishing &amp; Float Map</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+
+<header id="appbar">
+  <h1>Idaho &amp; Wyoming Rivers<small>Fly fishing &amp; float conditions · live USGS flows</small></h1>
+  <div class="spacer"></div>
+  <div id="updated">flows<br><b id="updwhen">loading…</b></div>
+  <button class="iconbtn" id="btn-refresh" aria-label="Refresh flows" title="Refresh flows">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-2.6-6.3M21 4v5h-5"/></svg>
+  </button>
+  <button class="iconbtn" id="btn-legend" aria-label="Legend and help" title="Legend">?</button>
+</header>
+
+<div id="chips" role="toolbar" aria-label="Filters">
+  <button class="chip on" data-f="act" data-v="all"><span class="dot"></span>Everything</button>
+  <button class="chip" data-f="act" data-v="fish">🎣 Fishing</button>
+  <button class="chip" data-f="act" data-v="float">🛶 Floating</button>
+  <button class="chip" data-f="beg" data-v="1">Beginner-friendly</button>
+  <button class="chip" data-f="dur" data-v="half">≤ Half-day floats</button>
+  <button class="chip" data-f="dur" data-v="full">Full-day floats</button>
+  <button class="chip" data-f="cls" data-v="1">Class I only</button>
+</div>
+
+<div id="safety" role="note">
+  <b>Read me first:</b> Mountain water is <b>cold enough to incapacitate</b> even in July. The Snake River Canyon (West Table–Sheep Gulch) is real Class III whitewater. The South Fork is dam-controlled — <b>flows can change with little warning</b>. Wear a PFD, scout logjams in braided channels, and check current regs &amp; licenses with <b>WY Game &amp; Fish</b> and <b>Idaho Fish &amp; Game</b> before you go.
+  <button class="x" id="safety-x" aria-label="Dismiss safety note">✕</button>
+</div>
+
+<div id="map" role="application" aria-label="River map"></div>
+
+<div id="netpill">⚠ Offline — showing last saved readings</div>
+
+<aside id="sheet" aria-label="River details">
+  <div id="grab"></div>
+  <div id="sheethead">
+    <span class="swatch" id="sw"></span>
+    <div style="flex:1;min-width:0">
+      <h2 id="sh-title">River</h2>
+      <div class="sub" id="sh-sub"></div>
+    </div>
+    <button class="x" id="sheet-x" aria-label="Close panel">✕</button>
+  </div>
+  <div id="sheetbody"></div>
+</aside>
+
+<div id="scrim"></div>
+<div id="legend" role="dialog" aria-label="Legend">
+  <button class="x" id="legend-x" aria-label="Close legend">✕</button>
+  <h2>Legend &amp; how to read this map</h2>
+  <div class="lg-row"><span class="ap launch" style="position:relative"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.4 L16.6 11.4 L14.2 15 L6.3 15 Z" fill="#fff" stroke="none"/><path d="M8.2 11.4 L9.5 8.9 L12.2 8.9 L12.4 11.4" fill="#fff" stroke="none"/><path d="M2.6 18.2 q2 -1.7 4 0 t4 0 t4 0 t2.8 0"/><path d="M2.6 21 q2 -1.7 4 0 t4 0 t4 0 t2.8 0"/></svg></span> Put-in / boat launch <span style="color:var(--txt-dim);font-size:11px">(green corner dot)</span></div>
+  <div class="lg-row"><span class="ap takeout" style="position:relative"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.4 L16.6 11.4 L14.2 15 L6.3 15 Z" fill="#fff" stroke="none"/><path d="M8.2 11.4 L9.5 8.9 L12.2 8.9 L12.4 11.4" fill="#fff" stroke="none"/><path d="M2.6 18.2 q2 -1.7 4 0 t4 0 t4 0 t2.8 0"/><path d="M2.6 21 q2 -1.7 4 0 t4 0 t4 0 t2.8 0"/></svg></span> Take-out / boat ramp <span style="color:var(--txt-dim);font-size:11px">(orange corner dot)</span></div>
+  <div class="lg-row"><span class="ap both" style="position:static"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.4 L16.6 11.4 L14.2 15 L6.3 15 Z" fill="#fff" stroke="none"/><path d="M8.2 11.4 L9.5 8.9 L12.2 8.9 L12.4 11.4" fill="#fff" stroke="none"/><path d="M2.6 18.2 q2 -1.7 4 0 t4 0 t4 0 t2.8 0"/><path d="M2.6 21 q2 -1.7 4 0 t4 0 t4 0 t2.8 0"/></svg></span> Ramp used as both put-in &amp; take-out</div>
+  <div class="lg-row"><span class="ap wade" style="position:static"><svg viewBox="0 0 24 24"><ellipse cx="10.5" cy="12" rx="7" ry="3.1" fill="#fff"/><path d="M16.5 12 L22 8.5 L22 15.5 Z" fill="#fff"/><circle cx="6.6" cy="11.3" r="0.95" fill="#5b6e3a"/></svg></span> Wade-fishing access (no boat ramp)</div>
+  <div class="lg-row"><span class="gdot" style="position:static;background:var(--st-avg)"></span> USGS gauge — dot color = flow status</div>
+  <div class="lg-note">River lines are color-coded per river and turn <b>gray</b> when filtered out. Tap any river line, ramp, or gauge dot for details.</div>
+  <div class="lg-note">River lines snap to <b>live USGS hydrography</b> (the National Map's high-resolution NHD) when you're online, tracing the true channel — including the Snake's braids. Offline, they fall back to a built-in approximation.</div>
+  <h2 style="margin-top:14px">Flow status</h2>
+  <div class="lg-row"><span class="badge" style="background:var(--st-vlow)">Very low</span> &lt; 40% of median — skinny, slow, spooky fish</div>
+  <div class="lg-row"><span class="badge" style="background:var(--st-low)">Below average</span> 40–75% — clear &amp; technical, slower floats</div>
+  <div class="lg-row"><span class="badge" style="background:var(--st-avg)">Around average</span> 75–125% — the "normal" window</div>
+  <div class="lg-row"><span class="badge" style="background:var(--st-high)">Above average</span> 125–180% — fast, cold, likely off-color</div>
+  <div class="lg-row"><span class="badge" style="background:var(--st-vhigh)">Very high ⚠</span> &gt; 180% — pushy water, experts/guides only</div>
+  <div class="lg-note">Status compares <b>right-now CFS</b> (USGS latest-continuous) against the <b>historical median for this week of the year</b>, computed from USGS daily values. Float times are estimates scaled by current vs. median flow — always sanity-check at the ramp.</div>
+  <div class="lg-note">Coverage = the major fishable/floatable rivers of Idaho &amp; Wyoming. River lines are simplified for fast loading and are <b>not navigation-grade</b>. Channels in braided rivers move every year.</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="js/rivers-data.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>

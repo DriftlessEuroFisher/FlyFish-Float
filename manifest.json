@@ -1,0 +1,14 @@
+{
+  "name": "Idaho & Wyoming Rivers — Fly Fishing & Float Map",
+  "short_name": "River Conditions",
+  "description": "Live USGS flow conditions for Idaho & Wyoming fly fishing rivers.",
+  "start_url": "index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#eef1ec",
+  "theme_color": "#15241f",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
