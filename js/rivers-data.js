@@ -121,7 +121,7 @@ const RIVERS = [
 {
   id:"snake", name:"Snake River — Jackson Hole", color:"#1f6f8b",
   state:"WY", gauges:["damSnake","mooseSnake","townSnake","alpineSnake"], primaryGauge:"mooseSnake",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:1000,max:3000}, // starting point from public guide reports (best wading window July-Sept, Jackson Hole float shops) — adjust to your own experience
   blurb:"The main artery of the valley: a big, braided freestone full of native Snake River fine-spotted cutthroat. Character changes hugely by reach — flat dam water up top, fast braids through the park, and genuine Class III whitewater in the canyon below Hoback Junction.",
   fish:"Dry-dropper from a drift boat is the classic program. Fishes best once runoff drops out (typically July) through October. Watch water temps mid-summer.",
   coords:[[43.8585,-110.5852],[43.8575,-110.5700],[43.8600,-110.5560],[43.8590,-110.5380],[43.8520,-110.5230],[43.8430,-110.5120],[43.8330,-110.5080],[43.8230,-110.5160],[43.8160,-110.5340],[43.8100,-110.5520],[43.8000,-110.5680],[43.7880,-110.5820],[43.7760,-110.5980],[43.7660,-110.6160],[43.7560,-110.6380],[43.7480,-110.6560],[43.7390,-110.6680],[43.7320,-110.6740],[43.7220,-110.6820],[43.7120,-110.6900],[43.7010,-110.6960],[43.6900,-110.7000],[43.6790,-110.7040],[43.6680,-110.7100],[43.6560,-110.7150],[43.6420,-110.7180],[43.6280,-110.7240],[43.6140,-110.7320],[43.6010,-110.7420],[43.5880,-110.7520],[43.5740,-110.7620],[43.5600,-110.7720],[43.5460,-110.7820],[43.5320,-110.7940],[43.5180,-110.8060],[43.5040,-110.8180],[43.4906,-110.8330],[43.4790,-110.8280],[43.4680,-110.8160],[43.4570,-110.8050],[43.4460,-110.7980],[43.4340,-110.7940],[43.4220,-110.7920],[43.4100,-110.7900],[43.3960,-110.7880],[43.3820,-110.7820],[43.3700,-110.7720],[43.3590,-110.7600],[43.3480,-110.7480],[43.3360,-110.7380],[43.3240,-110.7320],[43.3120,-110.7340],[43.3010,-110.7460],[43.2950,-110.7640],[43.2910,-110.7870],[43.2820,-110.8040],[43.2720,-110.8200],[43.2620,-110.8380],[43.2540,-110.8560],[43.2450,-110.8720],[43.2360,-110.8840],[43.2320,-110.8900],[43.2240,-110.9020],[43.2160,-110.9180],[43.2080,-110.9340],[43.2000,-110.9500],[43.1920,-110.9660],[43.1840,-110.9800],[43.1760,-110.9890],[43.1840,-111.0040],[43.1840,-111.0200],[43.1760,-111.0340]]
@@ -129,7 +129,7 @@ const RIVERS = [
 {
   id:"southfork", name:"South Fork of the Snake", color:"#0e7a6a",
   state:"ID", gauges:["southFork","heise"], primaryGauge:"southFork",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:6000,max:9000}, // starting point from public guide reports (fall dry-fly/wade window per SF Snake guide reports) — adjust to your own experience
   blurb:"A blue-ribbon tailwater below Palisades Dam — flows are reservoir-controlled, so it stays fishable when the freestones blow out. Huge cottonwood corridor, big cutthroat, browns, and rainbows, famous salmonfly hatch in early July.",
   fish:"Because the Bureau of Reclamation sets releases, check the gauge the morning you float — releases can change quickly. Banks fish well at most flows; riffles open up as water drops.",
   coords:[[43.3370,-111.2100],[43.3400,-111.2180],[43.3460,-111.2280],[43.3540,-111.2380],[43.3640,-111.2480],[43.3760,-111.2560],[43.3880,-111.2640],[43.3960,-111.2780],[43.4006,-111.3050],[43.4060,-111.3240],[43.4140,-111.3420],[43.4240,-111.3560],[43.4360,-111.3680],[43.4450,-111.3820],[43.4501,-111.3984],[43.4560,-111.4180],[43.4660,-111.4360],[43.4760,-111.4500],[43.4900,-111.4600],[43.5040,-111.4680],[43.5160,-111.4820],[43.5240,-111.5020],[43.5300,-111.5240],[43.5320,-111.5460],[43.5380,-111.5660],[43.5480,-111.5840],[43.5600,-111.5980],[43.5720,-111.6120],[43.5840,-111.6280],[43.5960,-111.6420],[43.6080,-111.6520],[43.6160,-111.6580],[43.6226,-111.6653],[43.6180,-111.6840],[43.6120,-111.7020],[43.6060,-111.7200],[43.5980,-111.7380],[43.5880,-111.7560],[43.5760,-111.7720],[43.5620,-111.7860],[43.5500,-111.8020],[43.5440,-111.8220],[43.5440,-111.8440],[43.5500,-111.8640],[43.5480,-111.8840],[43.5380,-111.9020],[43.5280,-111.9220],[43.5160,-111.9420],[43.5020,-111.9620],[43.4900,-112.0040]]
@@ -137,7 +137,7 @@ const RIVERS = [
 {
   id:"teton", name:"Teton River (Teton Valley)", color:"#5b8c2a",
   state:"ID", gauges:["teton","tetonStA"], primaryGauge:"teton",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:150,max:400}, // starting point from public guide reports (ideal wade flows per Teton Valley guide reports) — adjust to your own experience
   blurb:"A slow, clear spring-creek-style river meandering through the hay meadows of Teton Valley near Driggs and Victor, then dropping into a remote canyon. Glassy water, sighted fish, technical dry-fly fishing with the Tetons behind you.",
   fish:"PMDs, gray drakes, and terrestrials on long leaders. Valley floats are flat Class I — ideal for a first rowing day. The canyon below Harrops is committing; don't drift past your take-out.",
   coords:[[43.5780,-111.1380],[43.5900,-111.1520],[43.6020,-111.1660],[43.6140,-111.1780],[43.6280,-111.1880],[43.6420,-111.1960],[43.6560,-111.2020],[43.6700,-111.2080],[43.6840,-111.2140],[43.6980,-111.2180],[43.7050,-111.2220],[43.7180,-111.2260],[43.7320,-111.2300],[43.7460,-111.2330],[43.7540,-111.2320],[43.7660,-111.2320],[43.7780,-111.2330],[43.7900,-111.2340],[43.8000,-111.2350],[43.8120,-111.2380],[43.8240,-111.2420],[43.8360,-111.2460],[43.8480,-111.2500],[43.8600,-111.2550],[43.8720,-111.2660],[43.8820,-111.2800],[43.8900,-111.2960],[43.8960,-111.3140],[43.9040,-111.3320],[43.9140,-111.3480],[43.9260,-111.3640],[43.9360,-111.3820],[43.9420,-111.4020],[43.9460,-111.4240],[43.9480,-111.4460],[43.9460,-111.4680],[43.9400,-111.4880],[43.9320,-111.5080],[43.9240,-111.5280],[43.9180,-111.5480],[43.9220,-111.5680],[43.9300,-111.5860]]
@@ -145,7 +145,7 @@ const RIVERS = [
 {
   id:"grosventre", name:"Gros Ventre River", color:"#8c6a1d",
   state:"WY", gauges:["grosVentre"], primaryGauge:"grosVentre",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:150,max:600}, // starting point from public guide reports (safe/productive wading range, Kelly gauge) — adjust to your own experience
   blurb:"A rowdy little freestone tumbling out of the Gros Ventre Range past the 1925 landslide and Slide Lake, then along the airport bench to the Snake. Mostly a wade fishery — pocket water cutthroat fishing once it clears.",
   fish:"Blows out hard in runoff and clears late (July). Hopper water in August. Flows drop fast late season as irrigation pulls water — check the Kelly gauge before driving out.",
   coords:[[43.6100,-110.4800],[43.6160,-110.4980],[43.6220,-110.5160],[43.6280,-110.5340],[43.6310,-110.5520],[43.6320,-110.5700],[43.6310,-110.5880],[43.6300,-110.5970],[43.6290,-110.6020],[43.6280,-110.6120],[43.6320,-110.6280],[43.6400,-110.6440],[43.6480,-110.6600],[43.6540,-110.6760],[43.6560,-110.6920],[43.6520,-110.7080],[43.6460,-110.7220],[43.6380,-110.7320],[43.6260,-110.7380],[43.6140,-110.7420],[43.6020,-110.7480],[43.5920,-110.7540],[43.5850,-110.7570]]
@@ -153,7 +153,7 @@ const RIVERS = [
 {
   id:"hoback", name:"Hoback River", color:"#7d4a8c",
   state:"WY", gauges:["hoback"], primaryGauge:"hoback",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:150,max:700}, // starting point from public guide reports (optimal wadeable range per WY guide reports) — adjust to your own experience
   blurb:"A free-flowing Wild & Scenic tributary running 55 miles down a highway-accessible canyon to Hoback Junction. Spring runoff brings kayakers and packrafters; once it drops, it's a superb roadside wade fishery for cutthroat.",
   fish:"Small-water tactics: attractor dries and dry-dropper in pockets. Fishes mid-July through fall. At high water this is paddler terrain, not a beginner float.",
   coords:[[43.2300,-110.3950],[43.2360,-110.4120],[43.2420,-110.4300],[43.2450,-110.4500],[43.2450,-110.4640],[43.2440,-110.4790],[43.2500,-110.4960],[43.2580,-110.5120],[43.2660,-110.5280],[43.2740,-110.5440],[43.2820,-110.5600],[43.2900,-110.5780],[43.2960,-110.5960],[43.3000,-110.6140],[43.3040,-110.6320],[43.3080,-110.6500],[43.3120,-110.6680],[43.3140,-110.6860],[43.3160,-110.7040],[43.3180,-110.7250]]
@@ -161,7 +161,7 @@ const RIVERS = [
 {
   id:"flatcreek", name:"Flat Creek (Elk Refuge)", color:"#3a7d6e",
   state:"WY", gauges:["flatCreek"], primaryGauge:"flatCreek",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:8,max:25}, // starting point from public guide reports (typical low, steady late-summer spring-creek flow) — adjust to your own experience
   blurb:"The valley's PhD water: a glassy spring creek winding through the National Elk Refuge minutes from Jackson's town square. Big, educated cutthroat in skinny water. Walk-in fishing only — no floating.",
   fish:"Open Aug 1 – Oct 31 on the refuge section; special regs apply. Long leaders, 5X–6X, crawl don't walk. One bad cast per pool is the rule.",
   coords:[[43.5450,-110.7000],[43.5360,-110.7060],[43.5280,-110.7120],[43.5180,-110.7180],[43.5080,-110.7240],[43.4980,-110.7320],[43.4900,-110.7420],[43.4830,-110.7560],[43.4760,-110.7640],[43.4700,-110.7700],[43.4620,-110.7800],[43.4550,-110.7900],[43.4490,-110.7980],[43.4440,-110.8060]]
@@ -185,7 +185,7 @@ const RIVERS = [
 {
   id:"greys", name:"Greys River", color:"#5b6e3a",
   state:"WY", gauges:["greys"], primaryGauge:"greys",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:200,max:600}, // starting point from public guide reports (optimal wading range near Alpine) — adjust to your own experience
   blurb:"Sixty miles of gravel-road freestone paralleling the Wyoming Range, emptying into Palisades Reservoir at Alpine. Camp-where-you-stop national forest water, eager cutthroat, almost no crowds.",
   fish:"A wade fishery for most of its length (kayak/packraft water up high in runoff). Attractor dries all summer. The lower few miles near Alpine hold the biggest fish.",
   coords:[[42.8800,-110.7000],[42.9100,-110.7320],[42.9400,-110.7640],[42.9700,-110.7960],[43.0000,-110.8280],[43.0300,-110.8600],[43.0600,-110.8920],[43.0840,-110.9240],[43.1020,-110.9540],[43.1200,-110.9840],[43.1340,-111.0000],[43.1430,-111.0080],[43.1540,-111.0140],[43.1650,-111.0200]]
@@ -195,7 +195,7 @@ const RIVERS = [
 {
   id:"henrysfork", name:"Henry's Fork", color:"#1d7a46",
   state:"ID", gauges:["hfIslandPark","hfAshton","hfStAnthony"], primaryGauge:"hfIslandPark",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:800,max:1300}, // starting point from public guide reports (ideal window for Island Park Dam release) — adjust to your own experience
   blurb:"Arguably the most famous dry-fly river in America. Spring-creek flats at Harriman Ranch, the Box Canyon tailwater below Island Park Dam, big freestone water below Mesa Falls, and a rich lower river through Ashton and St. Anthony.",
   fish:"Green drakes at Harriman in late June are a pilgrimage. Box Canyon fishes big nymphs all season. Lower river (Warm River to Ashton, Ora to Chester) is superb dry-dropper float water.",
   coords:[[44.4990,-111.2630],[44.4400,-111.3400],[44.4150,-111.3950],[44.3600,-111.4450],[44.3300,-111.4600],[44.2500,-111.4000],[44.1800,-111.3300],[44.1200,-111.3150],[44.0700,-111.4500],[44.0400,-111.5300],[43.9660,-111.6840],[43.8700,-111.7700],[43.8300,-111.7900],[43.7900,-111.8800]]
@@ -203,7 +203,7 @@ const RIVERS = [
 {
   id:"fallriver", name:"Fall River", color:"#946000",
   state:"ID", gauges:["fallRiver"], primaryGauge:"fallRiver",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:500,max:1400}, // starting point from public guide reports (fishable below the ~1,800cfs visibility threshold) — adjust to your own experience
   blurb:"A fast, cold freestone pouring off Yellowstone's Pitchstone Plateau to join the Henry's Fork near Ashton. Bouldery pocket water with wild rainbows and almost no pressure.",
   fish:"Wade fishing with attractor dries once runoff drops (July). Floating is limited and hazardous — diversions and ledges. Treat as a wade fishery.",
   coords:[[44.1300,-111.0500],[44.1000,-111.1300],[44.0680,-111.2200],[44.0500,-111.3200],[44.0450,-111.4200],[44.0550,-111.5000]]
@@ -243,7 +243,7 @@ const RIVERS = [
 {
   id:"bear", name:"Bear River (WY/ID)", color:"#6e8c3a",
   state:"WY", gauges:["bearBorder"], primaryGauge:"bearBorder",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:375,max:1150}, // starting point from public guide reports (optimal flow range, Bear River at Border) — adjust to your own experience
   blurb:"The longest river in North America that never reaches the sea, looping from the Uintas through Evanston, Cokeville, and Idaho's Bear Lake country on its way to the Great Salt Lake. Sleepy canoe water with chunky cutthroat and browns.",
   fish:"The Bonneville cutthroat restoration reaches near Cokeville and below Soda Springs fish well early and late. Heavy irrigation draw mid-summer — watch the Border gauge.",
   coords:[[41.2600,-110.9600],[41.5500,-110.9800],[41.8000,-110.9500],[42.0800,-110.9600],[42.2100,-111.0500],[42.3200,-111.3000],[42.5000,-111.4500],[42.6500,-111.6000],[42.5800,-111.7300],[42.3500,-111.8000],[42.1000,-111.8700]]
@@ -253,7 +253,7 @@ const RIVERS = [
 {
   id:"bigwood", name:"Big Wood River", color:"#a85e2a",
   state:"ID", gauges:["bigWood"], primaryGauge:"bigWood",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:150,max:500}, // starting point from public guide reports (ideal flow for the Hailey section) — adjust to your own experience
   blurb:"Sun Valley's home water — a classic cottonwood-lined freestone running from Galena Summit through Ketchum, Hailey, and Bellevue. Rainbows that see flies all year and still eat dries.",
   fish:"Baetis and midges in winter (it's open year-round), green drakes in June, hoppers by August. A wade fishery throughout; access is excellent via public easements.",
   coords:[[43.8700,-114.6600],[43.7800,-114.5100],[43.6810,-114.3640],[43.6000,-114.3300],[43.5190,-114.3190],[43.4630,-114.2610],[43.3800,-114.3200],[43.3200,-114.3900]]
@@ -261,7 +261,7 @@ const RIVERS = [
 {
   id:"silvercreek", name:"Silver Creek", color:"#3a8c7d",
   state:"ID", gauges:["silverCreek"], primaryGauge:"silverCreek",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:70,max:150}, // starting point from public guide reports (typical clear, wadeable spring-creek flow) — adjust to your own experience
   blurb:"The most famous spring creek in the West. Gin-clear, weed-waving flats at the Nature Conservancy's Silver Creek Preserve near Picabo, stuffed with large, deeply suspicious rainbows and browns.",
   fish:"Brown drakes in early June (a circus, in a good way), tricos at dawn all summer, the legendary harvest-moon mouse bite. Float tubes only on parts of the Preserve; no real boating.",
   coords:[[43.3500,-114.1500],[43.3300,-114.1100],[43.3170,-114.0900],[43.3100,-114.0400],[43.3150,-113.9700],[43.3000,-113.9000]]
@@ -269,7 +269,7 @@ const RIVERS = [
 {
   id:"biglost", name:"Big Lost River", color:"#8c5e3a",
   state:"ID", gauges:["bigLost"], primaryGauge:"bigLost",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:100,max:300}, // starting point from public guide reports (comfortable wading below Mackay Dam) — adjust to your own experience
   blurb:"A tailwater oddity below Mackay Reservoir that literally disappears into the desert downstream. Wild rainbows in the canyon reach, framed by Idaho's tallest peaks.",
   fish:"Cranefly larvae and pale morning duns; technical when low. Flows swing with irrigation demand — the gauge matters more here than almost anywhere.",
   coords:[[44.0500,-113.8500],[43.9700,-113.7200],[43.9100,-113.6100],[43.8200,-113.5300],[43.7200,-113.4200],[43.6500,-113.3100]]
@@ -285,7 +285,7 @@ const RIVERS = [
 {
   id:"boise", name:"Boise River", color:"#2a8ca0",
   state:"ID", gauges:["boiseTwinSpr","boiseGlenwood"], primaryGauge:"boiseGlenwood",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:300,max:600}, // starting point from public guide reports (sweet spot at the Glenwood gauge) — adjust to your own experience
   blurb:"From wilderness water above Arrowrock to one of America's best urban trout floats through downtown Boise. The Middle Fork canyon above Twin Springs is a gem; the town reach holds wild trout under the tubers.",
   fish:"Town stretch fishes caddis on summer evenings and BWOs in fall; flows are dam-set, so check Glenwood before wading. Above Lucky Peak, the canyon water is classic pocket fishing.",
   coords:[[43.6600,-115.7270],[43.5900,-115.9200],[43.5300,-116.0600],[43.5600,-116.1300],[43.6100,-116.2200],[43.6600,-116.2800],[43.6900,-116.3500],[43.7300,-116.5500],[43.7600,-116.7500],[43.7800,-116.9700]]
@@ -293,7 +293,7 @@ const RIVERS = [
 {
   id:"sfboise", name:"South Fork Boise", color:"#1d6e5b",
   state:"ID", gauges:["sfBoise"], primaryGauge:"sfBoise",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:1400,max:1800}, // starting point from public guide reports (prime tailwater flows below Anderson Ranch Dam) — adjust to your own experience
   blurb:"Idaho's other great tailwater: a canyon-bound rainbow fishery below Anderson Ranch Dam. Big-shouldered wild rainbows, a famous pink-albert hatch, and flows that double overnight when irrigation calls.",
   fish:"Fishes at almost any release, but wading is only sane below ~600 CFS — above that, float it. Watch the gauge: releases jump from 300 to 1,600+ CFS in spring.",
   coords:[[43.3430,-115.4770],[43.3300,-115.5700],[43.3150,-115.6600],[43.3500,-115.7700],[43.4300,-115.8700],[43.5400,-115.9300]]
@@ -309,7 +309,7 @@ const RIVERS = [
 {
   id:"nfpayette", name:"North Fork Payette", color:"#c2452a",
   state:"ID", gauges:["nfPayette"], primaryGauge:"nfPayette",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:250,max:400}, // starting point from public guide reports (good level once dam releases draw down) — adjust to your own experience
   blurb:"Two rivers in one: a friendly meadow float through Cascade and McCall country up top, and below Smiths Ferry, sixteen miles of nearly continuous Class V — some of the hardest commonly-run whitewater on Earth.",
   fish:"Fish the mellow water above Smiths Ferry (rainbows, the odd big bull trout). The lower NF is expert-kayaker-only; everyone else admires it from Highway 55.",
   coords:[[44.9100,-116.1200],[44.7500,-116.0800],[44.5200,-116.0400],[44.3000,-116.0900],[44.0900,-116.1150],[44.0800,-116.1200]]
@@ -319,7 +319,7 @@ const RIVERS = [
 {
   id:"salmon", name:"Salmon River", color:"#b05a1d",
   state:"ID", gauges:["salmonTown","salmonWB"], primaryGauge:"salmonTown",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:500,max:1500}, // starting point from public guide reports (normal wadeable summer/fall range) — adjust to your own experience
   blurb:"The River of No Return: 400+ free-flowing miles from the Sawtooth Valley through the Frank Church Wilderness to the Snake. Cutthroat and rainbows all summer, then the famous fall and spring steelhead runs.",
   fish:"Day stretches near Stanley, Salmon, and Riggins fish well from a boat July–October. Steelhead from October (upper river) through April (Riggins area). Check ID F&G steelhead rules — they change in-season.",
   coords:[[43.9500,-114.8400],[44.1000,-114.9000],[44.2200,-114.9300],[44.2700,-114.7300],[44.4000,-114.4500],[44.5050,-114.2300],[44.7500,-114.1000],[45.0000,-113.9500],[45.1830,-113.8950],[45.4100,-113.9900],[45.3800,-114.3000],[45.3700,-114.6800],[45.3300,-115.2000],[45.4000,-115.6000],[45.3200,-116.0000],[45.4140,-116.3140],[45.7560,-116.3230],[45.8500,-116.6000],[45.8600,-116.7900]]
@@ -327,7 +327,7 @@ const RIVERS = [
 {
   id:"mfsalmon", name:"Middle Fork of the Salmon", color:"#d97706",
   state:"ID", gauges:["mfSalmon"], primaryGauge:"mfSalmon",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:1000,max:2500}, // starting point from public guide reports (prime fishing flows, dropping/clearing) — adjust to your own experience
   blurb:"The crown jewel: 100 roadless miles of crystal water, hot springs, and Class III–IV rapids through the largest wilderness in the lower 48. Westslope cutthroat eat dries the entire way.",
   fish:"Permit-lottery multiday float (June–September launches from Boundary Creek). Barbless single hooks, all trout released. Book an outfitter or win the lottery — there's no day-trip version.",
   coords:[[44.4500,-115.2300],[44.6000,-115.1800],[44.7700,-115.0500],[44.9800,-114.8400],[45.1000,-114.7000],[45.3000,-114.5900]]
@@ -351,7 +351,7 @@ const RIVERS = [
 {
   id:"lochsa", name:"Lochsa River", color:"#2a7d8c",
   state:"ID", gauges:["lochsa"], primaryGauge:"lochsa",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:400,max:900}, // starting point from public guide reports (low-water dry-fly window, late summer/fall) — adjust to your own experience
   blurb:"Wild & Scenic whitewater paralleling US-12 over Lolo Pass — at runoff, one of the best continuous big-water Class IV runs anywhere. After the water drops: gorgeous westslope cutthroat dry-fly fishing.",
   fish:"Catch-and-release cutthroat water, July–October, all wade fishing off the highway. Whitewater season is May–June for experienced raft crews only.",
   coords:[[46.5100,-114.6900],[46.4500,-114.9000],[46.3500,-115.1500],[46.2500,-115.3800],[46.1500,-115.5870]]
@@ -359,7 +359,7 @@ const RIVERS = [
 {
   id:"selway", name:"Selway River", color:"#3a8c5b",
   state:"ID", gauges:["selway"], primaryGauge:"selway",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:400,max:1200}, // starting point from public guide reports (fishable low-water window, Aug-Sept) — adjust to your own experience
   blurb:"The hardest river permit in America — one launch per day through the Selway-Bitterroot Wilderness. Below Selway Falls, a road-accessible reach offers the same emerald water without the lottery.",
   fish:"Westslope cutthroat on dries, catch-and-release. The lower 20 road miles above Lowell fish beautifully July–September and are wadeable; the wilderness reach is a once-in-a-lifetime float.",
   coords:[[45.8200,-114.9500],[45.9500,-115.1500],[46.0300,-115.3500],[46.0870,-115.5140],[46.1400,-115.5900]]
@@ -367,7 +367,7 @@ const RIVERS = [
 {
   id:"clearwater", name:"Clearwater River", color:"#1d5b8c",
   state:"ID", gauges:["clearwater"], primaryGauge:"clearwater",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:5000,max:15000}, // starting point from public guide reports (ideal steelhead flow range at Spalding) — adjust to your own experience
   blurb:"Big, broad steelhead water from Kooskia to Lewiston. Home of Idaho's famous B-run steelhead — fish that average 10+ pounds and eat swung flies in October like they mean it.",
   fish:"Steelhead October–March (check ID F&G season status — runs vary year to year). Summer smallmouth fishing is excellent and ignored. Jet-boat and two-handed-rod country.",
   coords:[[46.1400,-115.5900],[46.1400,-115.9800],[46.2300,-116.0300],[46.3500,-116.1500],[46.4800,-116.2600],[46.4480,-116.8270],[46.4200,-117.0200]]
@@ -399,7 +399,7 @@ const RIVERS = [
 {
   id:"cda", name:"Coeur d'Alene River", color:"#5b8c6e",
   state:"ID", gauges:["cdaEnaville","cdaCataldo"], primaryGauge:"cdaCataldo",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:500,max:1500}, // starting point from public guide reports (normal summer / wade-friendly range at Cataldo) — adjust to your own experience
   blurb:"North Idaho's friendly cutthroat river: the North Fork's swimming-hole pools above Enaville, then a lazy lower river winding through the chain lakes to Lake Coeur d'Alene.",
   fish:"Westslope cutthroat on dries all summer (catch-and-release on much of the NF). Lower river holds northern pike in the sloughs — bring a wire bite guard and heavy streamers.",
   coords:[[47.7500,-115.9000],[47.6400,-115.9700],[47.5700,-116.2530],[47.5550,-116.3270],[47.5300,-116.5000],[47.4700,-116.7000]]
@@ -407,7 +407,7 @@ const RIVERS = [
 {
   id:"kootenai", name:"Kootenai River", color:"#3a7d8c",
   state:"ID", gauges:["kootenai"], primaryGauge:"kootenai",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:4000,max:7500}, // starting point from public guide reports (wade fishing opens up below ~7,500cfs) — adjust to your own experience
   blurb:"A massive, moody tailwater (Libby Dam, upstream in Montana) sweeping through Idaho's panhandle farm country at Bonners Ferry. Big rainbows, endangered white sturgeon, and serious flow swings.",
   fish:"Flows can triple on a dam schedule — never anchor or wade without checking. Rainbows eat dries along the eddy lines; the sturgeon are federally protected, no targeting.",
   coords:[[48.6200,-116.0500],[48.6910,-116.3140],[48.8000,-116.4000],[48.9900,-116.5000]]
@@ -425,7 +425,7 @@ const RIVERS = [
 {
   id:"nplatteupper", name:"North Platte — Upper (Saratoga)", color:"#8c1d46",
   state:"WY", gauges:["npSaratoga"], primaryGauge:"npSaratoga",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:300,max:600}, // starting point from public guide reports (ideal wading range, Saratoga) — adjust to your own experience
   blurb:"The freestone North Platte: from the Class III Northgate Canyon on the Colorado line through the ranch meadows around Saratoga. A premier wade-and-float brown and rainbow fishery with a hot spring in town.",
   fish:"Fishes best as runoff drops (late June) — big stoneflies, then hoppers. The Treasure Island to Saratoga float is the classic. Public access via WGFD walk-in areas.",
   coords:[[41.0000,-106.3400],[41.1500,-106.4500],[41.3000,-106.6500],[41.3440,-106.7900],[41.4550,-106.8060],[41.6000,-106.8700],[41.7700,-106.9400],[41.9500,-106.9000],[42.0500,-106.8600]]
@@ -449,7 +449,7 @@ const RIVERS = [
 {
   id:"bighorn", name:"Bighorn River (WY)", color:"#a8702a",
   state:"WY", gauges:["windBoysen"], primaryGauge:"windBoysen",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:1300,max:1600}, // starting point from public guide reports (median summer tailwater flows below Boysen) — adjust to your own experience
   blurb:"Born at Wedding of the Waters (where the Wind changes name), the Wyoming Bighorn runs through Thermopolis past the world's largest mineral hot spring. A year-round tailwater-style fishery with big browns, rainbows, and cutthroat.",
   fish:"The Wedding of the Waters to Thermopolis float is short, mellow, and stuffed with fish. Crowds are a fraction of the Montana Bighorn's. Winter midge fishing is legitimately good.",
   coords:[[43.5800,-108.2100],[43.6500,-108.2100],[43.7500,-108.1800],[43.8800,-108.1000],[44.0100,-107.9600],[44.2000,-108.0000],[44.3800,-108.0400],[44.4900,-108.0600]]
@@ -489,7 +489,7 @@ const RIVERS = [
 {
   id:"green", name:"Green River (WY)", color:"#1d7a8c",
   state:"WY", gauges:["greenWarren","greenFont","greenGR"], primaryGauge:"greenWarren",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:700,max:1400}, // starting point from public guide reports (wade/float sweet spot at Warren Bridge) — adjust to your own experience
   blurb:"The upper Green: born under the Wind River Range at Green River Lakes, drifting through sagebrush ranch country past Warren Bridge and Daniel, then a tailwater reborn below Fontenelle Dam.",
   fish:"The Warren Bridge to Daniel floats are quintessential Wyoming — browns and rainbows on hoppers with the Winds on the horizon. Below Fontenelle is an underrated big-fish tailwater.",
   coords:[[43.3100,-109.8600],[43.2000,-109.9800],[43.1000,-110.0800],[43.0190,-110.1180],[42.8700,-110.0700],[42.7000,-110.1100],[42.5500,-110.1100],[42.2600,-110.2000],[42.0900,-110.1200],[42.0250,-110.0650],[41.8500,-109.9000],[41.6500,-109.6500],[41.5160,-109.4480]]

@@ -48,21 +48,28 @@ as the primary status system rather than fixed CFS thresholds.
 
 ## Good-flow ranges (per-river, optional)
 
-Each river in `js/rivers-data.js` has a `goodFlow` field, currently `null`
-for all 49 rivers:
+Each river in `js/rivers-data.js` has a `goodFlow` field:
 
 ```js
+goodFlow: {min:300, max:600}, // starting point from public guide reports (...) — adjust to your own experience
 goodFlow: null, // TODO: set {min:___, max:___} (CFS) for YOUR good-flow range
 ```
 
-When set to e.g. `{min: 700, max: 1400}`, the flow card for that river's
-primary gauge shows an extra "✓ In your good-flow range" / "Outside your
-good-flow range" badge, on top of (not replacing) the relative status above.
+When set, the flow card for that river's primary gauge shows an extra
+"✓ In your good-flow range" / "Outside your good-flow range" badge, on top of
+(not replacing) the relative status above.
 
-**TODO for me:** fill these in over time for the rivers I actually fish,
-based on my own experience — not generic guide advice. Leave the rest `null`;
-the app works fine without them. Rivers I fish most and should prioritize
-filling in first: _(add here as I decide)_.
+26 of the 49 rivers were pre-filled with starting-point ranges pulled from
+public fly shop/guide reports (each has a short source note in its comment,
+e.g. "sweet spot at the Glenwood gauge"). These are generic guide numbers,
+**not my own experience** — treat them as a rough first draft and overwrite
+with your own numbers as you fish each river through the season. The
+remaining 23 rivers (smaller, less-documented, or wilderness/permit water
+without published flow guidance) are still `null`.
+
+**TODO for me:** replace the researched starting points with my own
+experience-based numbers over time, and fill in the rest for whichever
+rivers I end up fishing most.
 
 ## Conventions
 
