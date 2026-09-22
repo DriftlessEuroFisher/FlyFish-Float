@@ -134,6 +134,20 @@ const GAUGES = {
   platteRockville:{ site:"USGS-05414000", label:"Platte River near Rockville, WI" },
   ebPecatonica:   { site:"USGS-05433000", label:"E. Br. Pecatonica River nr Blanchardville, WI" },
   trempArcadia:   { site:"USGS-05379400", label:"Trempealeau River at Arcadia, WI" },
+  /* ---- NORTH SHORE OF LAKE SUPERIOR (Duluth to Grand Portage, MN + far NW WI) ----
+     Steelhead/brown-trout tributaries of Lake Superior. Most of the famous
+     names (Gooseberry, Split Rock, Baptism, Temperance, Cascade, Devil Track,
+     Kadunce, Brule, Cross, Poplar, and the small Duluth-area creeks) have no
+     currently-active USGS discharge gauge — verified against the live USGS
+     site list on 2026-09-21 — so they're carried as ungauged, same pattern
+     as the Driftless. The handful that are gauged anchor the regional read. */
+  knifeNS:        { site:"USGS-04015330", label:"Knife River near Two Harbors, MN" },
+  stLouisSkibo:   { site:"USGS-04015438", label:"St. Louis River near Skibo, MN" },
+  stLouisScanlon: { site:"USGS-04024000", label:"St. Louis River at Scanlon, MN" },
+  nemadjiGauge:   { site:"USGS-04024430", label:"Nemadji River near South Superior, WI" },
+  pigeonGauge:    { site:"USGS-04010500", label:"Pigeon River at Middle Falls nr Grand Portage, MN" },
+  grandPortageGauge:{ site:"USGS-04010510", label:"Grand Portage River at Grand Portage, MN" },
+  boisBruleGauge: { site:"USGS-04025500", label:"Bois Brule River at Brule, WI" },
 };
 
 // approximate gauge map positions [lat,lng]
@@ -182,6 +196,10 @@ const GAUGE_POS = {
   kinniRiverFalls:[44.8308,-92.7331], eauGalleSV:[44.8528,-92.2383],
   grantBurton:[42.7203,-90.8192], platteRockville:[42.7311,-90.6403], ebPecatonica:[42.7856,-89.8611],
   trempArcadia:[44.2544,-91.5053],
+  // North Shore of Lake Superior — coordinates from USGS site metadata
+  knifeNS:[46.9469,-91.7956], stLouisSkibo:[47.4811,-92.0400], stLouisScanlon:[46.7035,-92.4184],
+  nemadjiGauge:[46.6333,-92.0939], pigeonGauge:[48.0122,-89.6162], grandPortageGauge:[47.9636,-89.6834],
+  boisBruleGauge:[46.5378,-91.5953],
 };
 
 const RIVERS = [
@@ -1252,6 +1270,213 @@ const RIVERS = [
   fish:"Illinois has no wild trout fishery here — the state runs a stocked catch-and-keep trout season in spring and fall at designated sites, and the river otherwise fishes for smallmouth bass. Check current Illinois DNR trout site listings and season dates before planning a trip around it.",
   coords:[[42.4700,-90.0200],[42.4408,-90.0447],[42.3800,-90.1400],[42.3192,-90.2262],[42.2542,-90.2871],[42.2200,-90.3300]]
 },
+
+/* ================= NORTH SHORE OF LAKE SUPERIOR (Duluth to Grand Portage) =================
+   Steelhead/brown-trout tributaries of Lake Superior, MN plus one WI river
+   (the Bois Brule) sharing the same fishery culture. Walk-and-wade small
+   water almost everywhere — most of these rivers drop a few miles from a
+   ridge or lake straight to the shore, so "source" and "mouth" in the
+   coords below are often only a handful of highway-miles apart. Public
+   access is mostly state parks and DNR waysides right off Hwy 61, not
+   private-land easements like the Driftless, so there's no angling-
+   easement note here — just state-park vehicle permits where noted.
+   Only the rivers with an active USGS discharge gauge (Knife, St. Louis,
+   Nemadji, Pigeon, Grand Portage, Bois Brule) show a live number; the
+   famous names — Gooseberry, Split Rock, Baptism, Temperance, Cascade,
+   Devil Track, Kadunce, Brule, Cross, Poplar — are ungauged for discharge,
+   verified against the live USGS site list on 2026-09-21. */
+{
+  id:"stlouisriver", name:"St. Louis River", color:"#2a5f7a",
+  state:"MN", region:"northshore", gauges:["stLouisSkibo","stLouisScanlon"], primaryGauge:"stLouisScanlon",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Duluth–Superior's big river — down through the Fond du Lac gorge and Jay Cooke State Park's swinging bridge to the harbor and Lake Superior. The estuary is one of the better fall walleye and smallmouth fisheries on the western lake, and steelhead and salmon push into the lower river in spring and fall.",
+  fish:"Walleye, smallmouth and channel cats through the estuary and harbor; steelhead and kamloops rainbows below the Fond du Lac dam in spring, coho and pink salmon in fall. Jay Cooke's whitewater gorge is scenic wading, not easy fishing.",
+  coords:[[47.4811,-92.0400],[47.20,-92.30],[46.85,-92.45],[46.7035,-92.4184],[46.72,-92.15],[46.75,-92.05]]
+},
+{
+  id:"nemadji", name:"Nemadji River", color:"#7a5f2a",
+  state:"WI", region:"northshore", gauges:["nemadjiGauge"], primaryGauge:"nemadjiGauge",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A red-clay river draining the \"Nemadji Triangle\" south of Superior — famously the color of chocolate milk after rain, since the clay banks blow out fast, then clears in a day or two. A better-kept-secret steelhead river than its Minnesota neighbors.",
+  fish:"Spring and fall steelhead, plus a fall coho run. Timing matters more here than almost anywhere on the South Shore — fish the clearing edge after a blowout, not during one.",
+  coords:[[46.55,-92.35],[46.60,-92.20],[46.6333,-92.0939]]
+},
+{
+  id:"lesterriver", name:"Lester River", color:"#3a7a6e",
+  state:"MN", region:"northshore", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Duluth's home steelhead water, running through the Lester Park neighborhood on the city's east side down to Lake Superior — the most convenient North Shore river to fish, which also makes it the most crowded during the spring run.",
+  fish:"Spring steelhead (mid-April through May in a normal year) and a fall coho/kamloops run; brook trout upstream above the falls. No gauge — the Knife River station a few miles up the shore is the best regional wetness read.",
+  coords:[[46.87,-92.06],[46.85,-92.03],[46.8390,-92.0180]]
+},
+{
+  id:"frenchriverns", name:"French River", color:"#4a8a5e",
+  state:"MN", region:"northshore", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A short, steep river a few miles up the shore from Duluth, home to the state's French River fish hatchery — steelhead and salmon eggs collected here stock much of the North Shore program.",
+  fish:"A reliable spring steelhead run right below the hatchery weir; expect company near the trap. Brook trout in the upper reaches above the falls.",
+  coords:[[46.93,-91.95],[46.91,-91.93],[46.9010,-91.9160]]
+},
+{
+  id:"suckerriver", name:"Sucker River", color:"#2a7a4a",
+  state:"MN", region:"northshore", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Runs through Lakewood Township just past the French River, with a well-known falls and gorge a short walk from the Hwy 61 crossing.",
+  fish:"One of the better early-season steelhead streams on the Lower Shore — holds fish below the falls barrier all spring. Brook trout above.",
+  coords:[[46.95,-91.93],[46.93,-91.91],[46.9210,-91.8985]]
+},
+{
+  id:"talmadgeriver", name:"Talmadge River", color:"#5f7a2a",
+  state:"MN", region:"northshore", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Empties at McQuade Harbor, a small boat-and-bank access area that's also one of the better shore-fishing spots on the Lower Shore for lake-run fish staging off a stream mouth.",
+  fish:"Steelhead and salmon stage off the harbor mouth before running up; small-water fishing upstream past the harbor.",
+  coords:[[46.97,-91.88],[46.96,-91.86],[46.9550,-91.8460]]
+},
+{
+  id:"kniferiverns", name:"Knife River", color:"#2a6e8c",
+  state:"MN", region:"northshore", gauges:["knifeNS"], primaryGauge:"knifeNS",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The North Shore's best-known steelhead water and one of the only ones with a live USGS gauge — the historic fishing village of Knife River sits right at the mouth, with a DNR trap used for egg-take on the spring run.",
+  fish:"The benchmark spring steelhead river — fish concentrate below the impassable falls in town. Coho salmon run in fall. Use this gauge as the regional wetness read for the Lower and Middle Shore.",
+  coords:[[47.00,-91.83],[46.98,-91.81],[46.9469,-91.7956]]
+},
+{
+  id:"stewartriver", name:"Stewart River", color:"#8c6e2a",
+  state:"MN", region:"northshore", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A quiet little river just north of the town of Knife River — smaller and far less pressured than its famous neighbor.",
+  fish:"A lower-pressure alternative to the Knife when that river's lot is full during the spring run. Steelhead plus a modest resident brook trout population.",
+  coords:[[47.02,-91.80],[46.99,-91.78],[46.9700,-91.7700]]
+},
+{
+  id:"silvercreekns", name:"Silver Creek — North Shore", color:"#6e8c8c",
+  state:"MN", region:"northshore", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A small stream near the Silver Cliff tunnel between Two Harbors and Gooseberry Falls — easy to miss from the highway, which keeps it quiet.",
+  fish:"A short, brushy steelhead creek that fishes best early in the run, before the bigger rivers up the shore clear.",
+  coords:[[47.08,-91.68],[47.06,-91.65],[47.0500,-91.6300]]
+},
+{
+  id:"gooseberryriver", name:"Gooseberry River", color:"#3a8c9c",
+  state:"MN", region:"northshore", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Minnesota's most-visited state park river — a series of waterfalls right at the Hwy 61 bridge draws crowds that have nothing to do with fishing, so the water well above and below the falls is where anglers go.",
+  fish:"Steelhead stack up below the falls barrier in spring; brook trout in the upper river inside the park. Expect heavy foot traffic at the falls overlooks even on a weekday.",
+  coords:[[47.2964,-91.6214],[47.22,-91.55],[47.1428,-91.4569]]
+},
+{
+  id:"splitrockriver", name:"Split Rock River", color:"#4a6e9c",
+  state:"MN", region:"northshore", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Runs through a steep, scenic gorge just south of the Split Rock Lighthouse, crossed by the Superior Hiking Trail — one of the prettiest short hikes on the whole shore, with fishing as a bonus.",
+  fish:"A good early-season steelhead creek with easy bank access from the state park trail; brook trout in the upper gorge pools.",
+  coords:[[47.3619,-91.5539],[47.27,-91.47],[47.1819,-91.4078]]
+},
+{
+  id:"beaverriverns", name:"Beaver River", color:"#7a4a6e",
+  state:"MN", region:"northshore", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Empties at the harbor town of Beaver Bay, one of the oldest settlements on the shore — a modest river with a loyal local following.",
+  fish:"Steelhead and a fall coho run; fish the harbor-mouth pool early before working upstream.",
+  coords:[[47.32,-91.33],[47.29,-91.31],[47.2610,-91.2890]]
+},
+{
+  id:"baptismriver", name:"Baptism River", color:"#2a4a8c",
+  state:"MN", region:"northshore", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The North Shore's biggest and most dramatic river, dropping through Tettegouche State Park's High Falls — Minnesota's tallest waterfall entirely within the state — before reaching Lake Superior at Illgen City.",
+  fish:"A strong spring steelhead run below the falls barrier, plus resident brook trout in the park's upper gorge pools. The High Falls overlook draws hikers; the fishing water is downstream toward the mouth.",
+  coords:[[47.45,-91.30],[47.40,-91.25],[47.3361,-91.1978]]
+},
+{
+  id:"crossriver", name:"Cross River", color:"#5f4a2a",
+  state:"MN", region:"northshore", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Meets the lake at the harbor town of Schroeder, with a wayside and falls right off Hwy 61.",
+  fish:"A compact steelhead creek with easy roadside access at the wayside falls; fish above and below the falls pool.",
+  coords:[[47.58,-90.92],[47.56,-90.90],[47.5431,-90.8919]]
+},
+{
+  id:"temperanceriver", name:"Temperance River", color:"#3a5f8c",
+  state:"MN", region:"northshore", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Named because it's the one North Shore river with no sandbar at its mouth — it drops straight into Lake Superior through a narrow gorge of potholes and cauldrons at Temperance River State Park, a popular hike.",
+  fish:"Steelhead below the gorge falls in spring; the potholes and plunge pools inside the park are scenic but mostly unfishable — work the calmer water above and below the gorge.",
+  coords:[[47.9283,-90.7817],[47.75,-90.83],[47.5533,-90.8736]]
+},
+{
+  id:"poplarriver", name:"Poplar River", color:"#8c3a4a",
+  state:"MN", region:"northshore", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Runs through the Lutsen resort area, past Lutsen Mountains and the Poplar River golf course — heavily restored in recent years to curb the erosion that used to choke it with sediment after storms.",
+  fish:"Steelhead and a lively spring high-water event; the restoration work has noticeably improved holding water over the last decade.",
+  coords:[[47.70,-90.75],[47.66,-90.73],[47.6358,-90.7072]]
+},
+{
+  id:"cascaderiver", name:"Cascade River", color:"#2a8c6e",
+  state:"MN", region:"northshore", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A staircase of falls through Cascade River State Park, one of the most-photographed spots on the whole shore — the Superior Hiking Trail crosses right above the highway bridge.",
+  fish:"Steelhead below the falls barrier; the park's cascades themselves are sightseeing, not fishing water. Quieter than Gooseberry despite similar scenery.",
+  coords:[[47.85,-90.55],[47.78,-90.53],[47.7069,-90.5225]]
+},
+{
+  id:"deviltrackriver", name:"Devil Track River", color:"#4a2a6e",
+  state:"MN", region:"northshore", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Minnesota's biggest whitewater run at high water, and home to a dramatic slot canyon a few miles upstream from Grand Marais. A USGS gauge has operated here historically, but the site isn't reporting live discharge, so it's carried as ungauged rather than showing a stale number.",
+  fish:"A strong steelhead river with plenty of holding water; the canyon reach upstream is a scramble-and-scout wade, not a casual outing.",
+  coords:[[47.90,-90.30],[47.82,-90.28],[47.7683,-90.2611]]
+},
+{
+  id:"kadunceriver", name:"Kadunce River", color:"#6e8c4a",
+  state:"MN", region:"northshore", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A short river best known for the Kadunce Canyon hike — a wade up a slot canyon between mossy walls just off Hwy 61 east of Grand Marais.",
+  fish:"A small, brushy steelhead creek; most people come for the canyon hike rather than the fishing, so pressure is light.",
+  coords:[[47.85,-90.15],[47.82,-90.13],[47.7936,-90.1547]]
+},
+{
+  id:"brulerivermn", name:"Brule River (MN)", color:"#3a6e2a",
+  state:"MN", region:"northshore", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Not to be confused with Wisconsin's Bois Brule on the other end of the old voyageur portage route — this Brule drops through Judge C.R. Magney State Park past the Devil's Kettle, a waterfall that splits, and one branch's outflow has never been definitively traced.",
+  fish:"Steelhead and brook trout; the Devil's Kettle hike draws most visitors, leaving the fishing water downstream from the falls comparatively quiet.",
+  coords:[[47.86,-90.08],[47.84,-90.06],[47.8280,-90.0500]]
+},
+{
+  id:"flutereedriver", name:"Flute Reed River", color:"#8c6e6e",
+  state:"MN", region:"northshore", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"One of the northernmost North Shore streams, running through Hovland just a few miles short of the Canadian border — small, quiet, and about as far as most anglers bother to drive.",
+  fish:"A small steelhead creek with light pressure simply because of the drive; a good add-on for a Grand Portage/Pigeon River day.",
+  coords:[[47.87,-90.06],[47.86,-90.05],[47.8580,-90.0430]]
+},
+{
+  id:"pigeonriver", name:"Pigeon River", color:"#2a3a6e",
+  state:"MN", region:"northshore", gauges:["pigeonGauge"], primaryGauge:"pigeonGauge",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The literal US–Canada border for its last miles, dropping over Middle and High Falls (Minnesota's tallest) at Grand Portage State Park — a spectacular, little-fished river mostly because half of it requires an Ontario license.",
+  fish:"Steelhead and brook trout, but a genuine logistical puzzle: the river itself is the boundary, so fishing from the far bank or wading across requires a valid Canadian/Ontario license. Stick to the Minnesota-side falls overlook trail if you're not sure of your paperwork.",
+  coords:[[48.05,-89.75],[48.03,-89.68],[48.0122,-89.6162]]
+},
+{
+  id:"grandportageriver", name:"Grand Portage River", color:"#5f6e2a",
+  state:"MN", region:"northshore", gauges:["grandPortageGauge"], primaryGauge:"grandPortageGauge",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A small river on the Grand Portage Reservation near the end of Hwy 61 — the historic 8.5-mile portage trail that gave the whole region its name starts near here, bypassing the Pigeon River's unrunnable lower gorge.",
+  fish:"A modest steelhead stream. Check current Grand Portage Band fishing regulations, which apply on reservation land and differ from state rules.",
+  coords:[[47.98,-89.72],[47.97,-89.70],[47.9636,-89.6834]]
+},
+{
+  id:"boisbrulewi", name:"Bois Brule River", color:"#3a4a2a",
+  state:"WI", region:"northshore", gauges:["boisBruleGauge"], primaryGauge:"boisBruleGauge",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The legendary \"River of Presidents\" — five U.S. presidents have fished it — running from the height of land near the St. Croix headwaters (the old voyageur portage between the two watersheds) north to Lake Superior at the town of Brule. One of the best big-brown-trout and steelhead rivers in the Midwest.",
+  fish:"Big resident brown trout in the upper river, plus strong spring steelhead and fall coho/king salmon runs in the lower river below Copper Range. Famous, well-studied, and well worth the drive — book a guide for the lower river if you don't know it.",
+  coords:[[46.65,-91.58],[46.60,-91.57],[46.5378,-91.5953]]
+},
 ];
 
 /* ---------- Access points ---------- */
@@ -1494,6 +1719,33 @@ const RAMPS = [
   // ---- Illinois Driftless ----
   {id:"applesp",  river:"appleriver", name:"Apple River Canyon State Park", role:"wade", pos:[42.4408,-90.0447], note:"Limestone canyon, campground and trails. Illinois runs a stocked catch-and-keep trout season at designated sites — check current IDNR listings and dates."},
   {id:"appleeliz",river:"appleriver", name:"Apple River — Elizabeth area", role:"wade", pos:[42.3192,-90.2262], note:"Lower river; smallmouth bass water outside the stocked trout season."},
+
+  // ---- North Shore of Lake Superior ----
+  {id:"stlouisjc",  river:"stlouisriver", name:"Jay Cooke State Park (swinging bridge)", role:"wade", pos:[46.6600,-92.3600], note:"Vehicle permit required; the classic gorge view and Fond du Lac dam pool access."},
+  {id:"nemadjimo",  river:"nemadji", name:"Nemadji River mouth, South Superior", role:"wade", pos:[46.6333,-92.0939], note:"Gauge site; check water color before making the drive after rain."},
+  {id:"lesterpk",   river:"lesterriver", name:"Lester Park, Duluth", role:"wade", pos:[46.8390,-92.0180], note:"In-city access; the most convenient North Shore river, and the most crowded during the spring run."},
+  {id:"frenchhatch",river:"frenchriverns", name:"French River hatchery access", role:"wade", pos:[46.9010,-91.9160], note:"DNR hatchery weir; fish congregate below the trap during the spring run."},
+  {id:"suckerfalls",river:"suckerriver", name:"Sucker River falls access", role:"wade", pos:[46.9210,-91.8985], note:"Short walk to the falls and gorge from the Hwy 61 pull-off."},
+  {id:"mcquade",    river:"talmadgeriver", name:"McQuade Harbor", role:"wade", pos:[46.9550,-91.8460], note:"Small harbor access; bank fishing for staging lake-run fish plus river mouth access."},
+  {id:"kniferivtn", river:"kniferiverns", name:"Knife River — town access", role:"wade", pos:[46.9469,-91.7956], note:"Gauge site and historic fishing village; fish concentrate below the falls barrier."},
+  {id:"stewartrd",  river:"stewartriver", name:"Stewart River — old Hwy 61", role:"wade", pos:[46.9700,-91.7700], note:"Quiet roadside pull-offs; the low-pressure alternative to the Knife."},
+  {id:"silvertunnel",river:"silvercreekns", name:"Silver Cliff tunnel access", role:"wade", pos:[47.0500,-91.6300], note:"Small, brushy water easy to miss from the highway."},
+  {id:"gooseberrysp",river:"gooseberryriver", name:"Gooseberry Falls State Park", role:"wade", pos:[47.1405,-91.4695], note:"Vehicle permit required; iconic falls overlook — fish well upstream or downstream of the crowds."},
+  {id:"splitrocksp",river:"splitrockriver", name:"Split Rock Lighthouse State Park (gorge trail)", role:"wade", pos:[47.2005,-91.3673], note:"Superior Hiking Trail gorge access; vehicle permit required."},
+  {id:"beaverbay",  river:"beaverriverns", name:"Beaver Bay harbor access", role:"wade", pos:[47.2610,-91.2890], note:"Harbor-mouth pool; fish here early before working upstream."},
+  {id:"tettegouche",river:"baptismriver", name:"Tettegouche State Park (High Falls)", role:"wade", pos:[47.3390,-91.2050], note:"Vehicle permit required; the High Falls overlook is a hike, fishing water is toward the mouth at Illgen City."},
+  {id:"schroederway",river:"crossriver", name:"Cross River wayside, Schroeder", role:"wade", pos:[47.5431,-90.8919], note:"Roadside wayside and falls right off Hwy 61."},
+  {id:"temperancesp",river:"temperanceriver", name:"Temperance River State Park", role:"wade", pos:[47.5533,-90.8736], note:"Vehicle permit required; potholes and gorge are sightseeing, fish above/below the gorge."},
+  {id:"lutsenaccess",river:"poplarriver", name:"Poplar River — Lutsen access", role:"wade", pos:[47.6358,-90.7072], note:"Resort-area access; restoration work has improved holding water."},
+  {id:"cascadesp",  river:"cascaderiver", name:"Cascade River State Park", role:"wade", pos:[47.7069,-90.5225], note:"Vehicle permit required; Superior Hiking Trail crosses right above the highway bridge."},
+  {id:"deviltrackcyn",river:"deviltrackriver", name:"Devil Track Canyon access", role:"wade", pos:[47.8000,-90.2900], note:"Upstream canyon reach — scramble-and-scout, not a casual outing."},
+  {id:"kaduncecyn", river:"kadunceriver", name:"Kadunce River wayside", role:"wade", pos:[47.7936,-90.1547], note:"Popular slot-canyon hike; light fishing pressure as a result."},
+  {id:"magneysp",   river:"brulerivermn", name:"Judge C.R. Magney State Park (Devil's Kettle)", role:"wade", pos:[47.8280,-90.0500], note:"Vehicle permit required; fishing water is downstream from the falls, away from the hiking crowds."},
+  {id:"hovland1",   river:"flutereedriver", name:"Hovland roadside access", role:"wade", pos:[47.8580,-90.0430], note:"Small water, light pressure — a good add-on to a Grand Portage day."},
+  {id:"grandportsp",river:"pigeonriver", name:"Grand Portage State Park (falls overlook)", role:"wade", pos:[48.0000,-89.7300], note:"Boardwalk overlook of Middle/High Falls; wading across the border requires a valid Ontario license."},
+  {id:"grandportriv",river:"grandportageriver", name:"Grand Portage River access", role:"wade", pos:[47.9636,-89.6834], note:"On Grand Portage Band land — check current tribal fishing regulations."},
+  {id:"boisbrule1", river:"boisbrulewi", name:"Bois Brule — Stones Bridge (upper river)", role:"wade", pos:[46.4200,-91.5800], note:"Classic upper-river brown trout water, walk-and-wade."},
+  {id:"boisbrule2", river:"boisbrulewi", name:"Bois Brule — Hwy 2 / town of Brule (lower river)", role:"both", pos:[46.5378,-91.5953], note:"Gauge site; drift-boat put-in for the lower river's steelhead and salmon water below Copper Range."},
 ];
 
 /* ---------- Float sections ---------- */
@@ -1812,4 +2064,34 @@ const WADE_ONLY = {
   buffalowi:"Wade only for the trout in the upper branches; smallmouth downstream.",
   pineriverwi:"Smallmouth paddling below Richland Center; trout fishing on foot in the upper river and feeder creeks.",
   appleriver:"Wade only. Illinois runs a stocked catch-and-keep trout season at designated sites — check current IDNR listings and dates before planning around it.",
+
+  /* ---- North Shore of Lake Superior ----
+     Small, steep tributaries dropping a few miles from a ridge or lake
+     straight to Lake Superior — walk-and-wade almost everywhere, with
+     the estuary/harbor rivers and the Bois Brule's lower reach as the
+     only real exceptions. */
+  stlouisriver:"The harbor/estuary is boated (walleye/musky trolling); Jay Cooke's gorge is whitewater kayaking only, not fishable water. Most bank anglers work the Fond du Lac dam pool.",
+  nemadji:"Wade only. Clay banks turn mucky right after a rain event — wait for the water to firm up before wading in.",
+  lesterriver:"Wade only — small water in a city-park setting.",
+  frenchriverns:"Wade only, right below the hatchery weir.",
+  suckerriver:"Wade only. Walk down to the falls pool from the Hwy 61 parking area.",
+  talmadgeriver:"Wade only, plus bank/harbor fishing at the McQuade Harbor breakwall.",
+  kniferiverns:"Wade only, below the falls in the town of Knife River.",
+  stewartriver:"Wade only. Roadside pull-offs along old Hwy 61.",
+  silvercreekns:"Wade only. Small and brushy near the Silver Cliff tunnel.",
+  gooseberryriver:"Wade only, and crowded at the falls overlook — fish well upstream or downstream of the tourist area.",
+  splitrockriver:"Wade only, via the Superior Hiking Trail gorge access.",
+  beaverriverns:"Wade only, from the harbor-mouth pool on up.",
+  baptismriver:"Wade only, below the High Falls barrier.",
+  crossriver:"Wade only, at the Schroeder wayside.",
+  temperanceriver:"Wade only. The gorge potholes inside the state park are unfishable — work the water above and below.",
+  poplarriver:"Wade only, through the restored Lutsen reach.",
+  cascaderiver:"Wade only, below the falls staircase.",
+  deviltrackriver:"Wade only below the canyon; the slot canyon itself is a scramble, not a fishery.",
+  kadunceriver:"Wade only. Most visitors are there for the canyon hike, not the fishing.",
+  brulerivermn:"Wade only, below the Devil's Kettle.",
+  flutereedriver:"Wade only. Small water, light pressure.",
+  pigeonriver:"No floating — the lower river is unrunnable falls and gorge, and it's the international border besides.",
+  grandportageriver:"Wade only. Check current Grand Portage Band regulations before you fish reservation water.",
+  boisbrulewi:"The lower river below Copper Range is a genuine drift-boat float for steelhead and salmon season; the upper river is walk-and-wade.",
 };

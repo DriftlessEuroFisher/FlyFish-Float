@@ -188,6 +188,13 @@ const REGIONS = [
   ["Grant County spring creeks (WI)", [43.02,-90.65,11]],
   ["Black Earth / Madison (WI)", [43.13,-89.72,11]],
   ["Kinnickinnic / River Falls (WI)", [44.84,-92.66,11]],
+  ["── North Shore (Lake Superior) ──", null],
+  ["North Shore — whole region", [47.30,-90.80,8]],
+  ["Duluth shore (Lester–Knife)", [46.92,-91.90,10]],
+  ["Two Harbors (Gooseberry–Baptism)", [47.20,-91.35,10]],
+  ["Tofte / Lutsen (Temperance–Cascade)", [47.65,-90.70,10]],
+  ["Grand Marais to Grand Portage", [47.85,-90.05,9]],
+  ["Bois Brule (WI)", [46.55,-91.58,11]],
 ];
 const regionCtl = L.control({position:"topright"});
 regionCtl.onAdd = function(){
@@ -210,7 +217,7 @@ regionCtl.addTo(map);
 function syncLabels(){
   const z = map.getZoom();
   Object.values(riverLayers).forEach(l => {
-    const min = l.river && l.river.region === "driftless" ? 10 : 8;
+    const min = l.river && (l.river.region === "driftless" || l.river.region === "northshore") ? 10 : 8;
     l.lbl.setOpacity(z >= min ? 1 : 0);
   });
 }
@@ -375,7 +382,7 @@ async function openRiver(id, focusGauge){
   $("#sw").style.background = r.color;
   $("#sh-title").textContent = r.name;
   const stateName = {ID:"Idaho", WY:"Wyoming", IA:"Iowa", MN:"Minnesota", WI:"Wisconsin", IL:"Illinois"}[r.state] || r.state;
-  $("#sh-sub").textContent = r.region==="driftless" ? stateName+" · Driftless Area" : stateName;
+  $("#sh-sub").textContent = r.region==="driftless" ? stateName+" · Driftless Area" : r.region==="northshore" ? stateName+" · North Shore" : stateName;
   sheet.classList.add("open");
   loadRealRiver(r);                    // snap this river to exact USGS linework
   renderSheet(r);                      // instant paint with whatever we have
@@ -410,6 +417,9 @@ function renderSheet(r){
   h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Flow data: USGS Water Data OGC API. River lines simplified — not for navigation. Verify regulations with ${regBody}.</p>`;
   if(r.region==="driftless"){
     h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🚶 Driftless access is mostly <b>walk-and-wade</b>, and a lot of the best water runs through <b>private land under a public angling easement</b> — you may fish and walk the stream corridor, but not leave it. Park only in the marked pull-offs, and check the state's current easement map and trout regulations (including any catch-and-release or artificial-only stretches) before you go. Iowa also requires a <b>trout fee</b> on top of a fishing license.</p>`;
+  }
+  if(r.region==="northshore"){
+    h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🌊 North Shore streams drop fast and cold straight off the ridge — spring steelhead runs are driven by snowmelt timing more than the calendar, so check current run reports before making the drive. Most access is <b>state park or DNR wayside</b> parking (many require a vehicle permit); a Minnesota <b>trout stamp</b> is required in addition to a fishing license. The Pigeon River and Grand Portage River cross into tribal or international jurisdiction — check current Grand Portage Band and Ontario licensing before fishing those reaches.</p>`;
   }
   if(r.state==="IA" && r.region!=="driftless"){
     h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">⚠ Central Iowa rivers have low-head dams — the "drowning machine" recirculating hydraulic at the base is dangerous at almost any flow. Scout unfamiliar stretches and check <a href="https://www.iowawhitewater.org/lhd/LHDrivers.html" target="_blank" rel="noopener">Iowa Whitewater's low-head dam list</a> before you put in.</p>`;
@@ -494,11 +504,14 @@ function noGaugeHTML(r){
       That's a <i>different stream</i> — treat it only as a rough read on how wet the region is, not as this creek's flow.
       <button class="zoom" data-river="${near.id}" style="margin-top:8px">Open ${near.name.split("—")[0].trim()} →</button></div>`;
   }
+  const ungaugedNote = r.region==="northshore"
+    ? "Most North Shore streams are too small to gauge — there's no live number for this one, and the app doesn't invent one. Judge it on arrival: <b>clarity</b> is the thing that matters most. These are rain- and snowmelt-driven freestone streams, not spring creeks — they blow out fast after a heavy rain or a warm melt day and can take several days to clear and drop back into shape, longer than a Driftless spring creek would."
+    : "Most Driftless spring creeks are too small to gauge — there's no live number for this one, and the app doesn't invent one. Judge it on arrival: <b>clarity</b> is the thing that matters most. If you can see the bottom in two feet of water it's on; chocolate-brown after a storm means give it a day or two. Spring-fed creeks clear far faster than the bigger freestone rivers, and often fish well the day after rain that has the mainstems blown out.";
   return `<div class="flowcard">
     <div class="gname">No USGS gauge on this water</div>
     <div class="flowrow"><span class="cfs">—<small> CFS</small></span>
       <span class="badge" style="background:var(--st-na)">Ungauged</span></div>
-    <div class="plain">Most Driftless spring creeks are too small to gauge — there's no live number for this one, and the app doesn't invent one. Judge it on arrival: <b>clarity</b> is the thing that matters most. If you can see the bottom in two feet of water it's on; chocolate-brown after a storm means give it a day or two. Spring-fed creeks clear far faster than the bigger freestone rivers, and often fish well the day after rain that has the mainstems blown out.</div>
+    <div class="plain">${ungaugedNote}</div>
     ${proxy}
   </div>`;
 }

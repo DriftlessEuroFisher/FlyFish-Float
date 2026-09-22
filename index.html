@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#15241f">
-<title>River Conditions — ID, WY, Central Iowa &amp; the Driftless — Fly Fishing &amp; Float Map</title>
+<title>River Conditions — ID, WY, Central Iowa, the Driftless &amp; MN North Shore — Fly Fishing &amp; Float Map</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,7 +18,7 @@
 <body>
 
 <header id="appbar">
-  <h1>River Conditions<small>ID · WY · Central IA · Driftless · live USGS flows</small></h1>
+  <h1>River Conditions<small>ID · WY · Central IA · Driftless · MN North Shore · live USGS flows</small></h1>
   <div class="spacer"></div>
   <div id="updated">flows<br><b id="updwhen">loading…</b></div>
   <button class="iconbtn" id="btn-refresh" aria-label="Refresh flows" title="Refresh flows">
@@ -38,7 +38,7 @@
 </div>
 
 <div id="safety" role="note">
-  <b>Read me first:</b> Mountain water is <b>cold enough to incapacitate</b> even in July. The Snake River Canyon (West Table–Sheep Gulch) is real Class III whitewater. The South Fork is dam-controlled — <b>flows can change with little warning</b>. Central Iowa rivers have <b>low-head dams</b> — dangerous "drowning machine" hydraulics at the base, at almost any flow. Driftless spring creeks are <b>walk-and-wade</b>, and much of the best water crosses <b>private land under a public angling easement</b> — stay in the stream corridor and park only in the marked pull-offs. Wear a PFD, scout logjams and dams, and check current regs &amp; licenses with <b>WY Game &amp; Fish</b>, <b>Idaho Fish &amp; Game</b>, or the <b>Iowa</b>, <b>Minnesota</b>, <b>Wisconsin</b> and <b>Illinois DNR</b> before you go.
+  <b>Read me first:</b> Mountain water is <b>cold enough to incapacitate</b> even in July. The Snake River Canyon (West Table–Sheep Gulch) is real Class III whitewater. The South Fork is dam-controlled — <b>flows can change with little warning</b>. Central Iowa rivers have <b>low-head dams</b> — dangerous "drowning machine" hydraulics at the base, at almost any flow. Driftless spring creeks are <b>walk-and-wade</b>, and much of the best water crosses <b>private land under a public angling easement</b> — stay in the stream corridor and park only in the marked pull-offs. North Shore streams are <b>snowmelt-driven and cold</b>, with slick basalt ledges at the falls and gorges — the Pigeon River is the literal US–Canada border, so check jurisdiction before you wade across. Wear a PFD, scout logjams and dams, and check current regs &amp; licenses with <b>WY Game &amp; Fish</b>, <b>Idaho Fish &amp; Game</b>, or the <b>Iowa</b>, <b>Minnesota</b>, <b>Wisconsin</b> and <b>Illinois DNR</b> before you go.
   <button class="x" id="safety-x" aria-label="Dismiss safety note">✕</button>
 </div>
 
@@ -68,7 +68,7 @@
   <div class="lg-row"><span class="ap both" style="position:static"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.4 L16.6 11.4 L14.2 15 L6.3 15 Z" fill="#fff" stroke="none"/><path d="M8.2 11.4 L9.5 8.9 L12.2 8.9 L12.4 11.4" fill="#fff" stroke="none"/><path d="M2.6 18.2 q2 -1.7 4 0 t4 0 t4 0 t2.8 0"/><path d="M2.6 21 q2 -1.7 4 0 t4 0 t4 0 t2.8 0"/></svg></span> Ramp used as both put-in &amp; take-out</div>
   <div class="lg-row"><span class="ap wade" style="position:static"><svg viewBox="0 0 24 24"><ellipse cx="10.5" cy="12" rx="7" ry="3.1" fill="#fff"/><path d="M16.5 12 L22 8.5 L22 15.5 Z" fill="#fff"/><circle cx="6.6" cy="11.3" r="0.95" fill="#5b6e3a"/></svg></span> Wade-fishing access (no boat ramp)</div>
   <div class="lg-row"><span class="gdot" style="position:static;background:var(--st-avg)"></span> USGS gauge — dot color = flow status</div>
-  <div class="lg-note"><b>Ungauged streams.</b> Most Driftless spring creeks are too small for a USGS gauge. Those rivers show an <b>Ungauged</b> card instead of a flow number — plus the nearest gauged water as a rough regional wetness read, clearly marked as a different stream. The app never borrows another watershed's number and labels it as the creek you tapped.</div>
+  <div class="lg-note"><b>Ungauged streams.</b> Most Driftless spring creeks and North Shore steelhead streams are too small for a USGS gauge. Those rivers show an <b>Ungauged</b> card instead of a flow number — plus the nearest gauged water as a rough regional wetness read, clearly marked as a different stream. The app never borrows another watershed's number and labels it as the creek you tapped.</div>
   <div class="lg-note">River lines are color-coded per river and turn <b>gray</b> when filtered out. Tap any river line, ramp, or gauge dot for details.</div>
   <div class="lg-note">River lines snap to <b>live USGS hydrography</b> (the National Map's high-resolution NHD) when you're online, tracing the true channel — including the Snake's braids. Offline, they fall back to a built-in approximation.</div>
   <h2 style="margin-top:14px">Flow status</h2>
@@ -78,8 +78,9 @@
   <div class="lg-row"><span class="badge" style="background:var(--st-high)">Above average</span> 125–180% — fast, cold, likely off-color</div>
   <div class="lg-row"><span class="badge" style="background:var(--st-vhigh)">Very high ⚠</span> &gt; 180% — pushy water, experts/guides only</div>
   <div class="lg-note">Status compares <b>right-now CFS</b> (USGS latest-continuous) against the <b>historical median for this week of the year</b>, computed from USGS daily values. Float times are estimates scaled by current vs. median flow — always sanity-check at the ramp.</div>
-  <div class="lg-note">Coverage = the major fishable/floatable rivers of Idaho &amp; Wyoming, the Central Iowa (Des Moines area) state water trail system, and the trout streams of the <b>Driftless Area</b> across northeast Iowa, southeast Minnesota, southwest Wisconsin and northwest Illinois. River lines are simplified for fast loading and are <b>not navigation-grade</b>. Channels in braided rivers move every year.</div>
+  <div class="lg-note">Coverage = the major fishable/floatable rivers of Idaho &amp; Wyoming, the Central Iowa (Des Moines area) state water trail system, the trout streams of the <b>Driftless Area</b> across northeast Iowa, southeast Minnesota, southwest Wisconsin and northwest Illinois, and the steelhead/trout tributaries of Minnesota's <b>North Shore</b> of Lake Superior (plus Wisconsin's Bois Brule). River lines are simplified for fast loading and are <b>not navigation-grade</b>. Channels in braided rivers move every year.</div>
   <div class="lg-note"><b>Driftless access.</b> These are walk-and-wade spring creeks, and a large share of the best water crosses private land under a <b>public angling easement</b>: you may fish and walk the stream corridor, but not leave it. Park in the marked pull-offs. Several streams carry catch-and-release or artificial-only stretches that change — always check the current state regulations and easement maps. Iowa requires a <b>trout fee</b> in addition to a fishing license.</div>
+  <div class="lg-note"><b>North Shore access.</b> Mostly state-park and DNR-wayside parking right off Hwy 61 — many parks require a vehicle permit. Runs are snowmelt-driven, so timing shifts year to year; check current DNR steelhead reports before planning around a specific week. A Minnesota <b>trout stamp</b> is required in addition to a license, and the Pigeon River / Grand Portage River cross into international or tribal jurisdiction with their own licensing rules.</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>

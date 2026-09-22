@@ -1,9 +1,10 @@
-# River Conditions — ID, WY, Central Iowa & the Driftless — Fly Fishing / Float Map
+# River Conditions — ID, WY, Central Iowa, the Driftless & MN North Shore — Fly Fishing / Float Map
 
 A single-page, no-build, mobile-first web app: a Leaflet map of Idaho &
 Wyoming trout rivers, the Central Iowa (Des Moines area) state water
-trail system, and the trout streams of the Driftless Area, with live USGS
-flow conditions, built for checking "is it worth driving out today?"
+trail system, the trout streams of the Driftless Area, and the steelhead/
+trout tributaries of Minnesota's North Shore of Lake Superior, with live
+USGS flow conditions, built for checking "is it worth driving out today?"
 from a phone.
 
 ## How I use this
@@ -29,12 +30,13 @@ like an app, not a browser tab.
 
 ## Rivers covered
 
-128 rivers across three regions. Full list and gauge IDs live in
+152 rivers across four regions. Full list and gauge IDs live in
 `js/rivers-data.js`; this file doesn't duplicate it since the code is the
-source of truth. Rivers carry a `region` field — `"driftless"` on the new
-ones, absent on the original western rivers, `"ciowa"` conceptually for the
-Des Moines water trails (the code tests `state==="IA" && region!=="driftless"`
-so the central Iowa entries didn't need editing).
+source of truth. Rivers carry a `region` field — `"driftless"` and
+`"northshore"` on the two spring/rain-fed sub-regions, absent on the
+original western rivers, `"ciowa"` conceptually for the Des Moines water
+trails (the code tests `state==="IA" && region!=="driftless"` so the
+central Iowa entries didn't need editing).
 
 **West (49).** Idaho/Wyoming trout rivers — 24 ID, 25 WY. All gauged.
 
@@ -82,17 +84,46 @@ carry catch-and-release or artificial-only stretches whose boundaries
 change. The blurbs point at the current state regs rather than asserting a
 rule that may be stale.
 
+**North Shore (24).** 22 MN, 1 WI (the Bois Brule), plus the Pigeon River
+which is itself the US–Canada border. Steelhead/brown-trout tributaries of
+Lake Superior running Duluth → Grand Portage along Hwy 61: the Duluth-area
+creeks (Lester, French, Sucker, Talmadge), the Knife/Stewart/Silver cluster,
+the state-park run (Gooseberry, Split Rock, Baptism/Tettegouche, Temperance,
+Cascade), the Grand Marais cluster (Devil Track, Kadunce, Brule/Magney,
+Flute Reed), and the border rivers (Pigeon, Grand Portage). Added because
+they're within a 5-hour drive of Forest Lake, MN, the same "worth driving
+today" test as everything else in this app.
+
+Same ungauged-stream philosophy as the Driftless, verified against the live
+USGS site list on 2026-09-21: only **6 of the 24** have an active discharge
+gauge (Knife River, St. Louis River ×2, Nemadji, Pigeon, Grand Portage, Bois
+Brule) — `nearestGaugedRiver()` handles the rest exactly like a Driftless
+creek, no code changes needed since that function is already generic on
+`r.region`. Devil Track has a USGS site number but it isn't reporting live
+discharge, so — same rule as Rush/Crooked/Campbell Creek in the Driftless —
+it's carried as ungauged rather than shown as stale.
+
+Public access here is mostly **state-park and DNR-wayside parking**, not
+private-land easements — no angling-easement note fires for this region.
+Instead `openRiver`/`renderSheet` fires a North-Shore-specific note about
+snowmelt-driven run timing, vehicle permits, the MN trout stamp, and the
+Pigeon River / Grand Portage River's international/tribal jurisdiction. Zoom
+gating for labels uses the same ≥10 threshold as the Driftless (`syncLabels()`
+in `js/app.js`) since these streams are packed almost as tightly along the
+shore.
+
 ## Status
 
 **Finished / working:**
 - Core app: Leaflet map, bottom sheet, live USGS flow fetch/render, the
   `statusOf()` relative-to-median status bucketing, home-screen install
   (`manifest.json` + icons).
-- All 128 rivers in place across the three regions (49 West, 7 Central
-  Iowa, 72 Driftless), with gauges, ramps/access points, blurbs, and
-  region-aware copy in the sheet.
+- All 152 rivers in place across the four regions (49 West, 7 Central
+  Iowa, 72 Driftless, 24 North Shore), with gauges, ramps/access points,
+  blurbs, and region-aware copy in the sheet.
 - Ungauged-river handling: the "Ungauged" card, `nearestGaugedRiver()`
-  regional-wetness fallback with the cross-state-line distance penalty.
+  regional-wetness fallback with the cross-state-line distance penalty —
+  reused as-is for the North Shore, no code changes needed.
 - Real NHD geometry upgrade (`trickleGeometry()`) and zoom-gated labels.
 - `goodFlow` scaffolding, with starting-point ranges filled in for 28 of
   the original 56 West/Central Iowa rivers from public source reports.
@@ -102,18 +133,31 @@ rule that may be stale.
   own experience-based numbers as you actually fish/float each river.
 - Fill in `goodFlow` for the remaining West/Central Iowa rivers that are
   still `null`.
-- All 72 Driftless rivers are `goodFlow: null` on purpose (see below) —
-  decide per-river, as you fish them, whether a range is worth adding at
-  all, starting with the 19 that have real gauges.
+- All 72 Driftless rivers and all 24 North Shore rivers are `goodFlow:
+  null` on purpose (see below) — decide per-river, as you fish them,
+  whether a range is worth adding at all.
+- North Shore coordinates are approximate (source/mouth anchor points from
+  official river-mouth coordinates plus reasonable interpolation, not
+  hand-traced like the West rivers) — `trickleGeometry()` should snap most
+  of them to real NHD linework on first load, but worth spot-checking a
+  few against the map once you've actually driven up there.
+- Only the North Shore's Duluth-to-Grand Portage core is added so far.
+  Other rivers inside the 5-hour-from-Forest-Lake radius — the Twin
+  Cities/east-central Minnesota corridor (St. Croix, Mississippi, Rum,
+  Minnesota River, Cannon), the St. Croix/Namekagon system, and the
+  north-central Minnesota lakes country (Crow Wing, Straight River near
+  Park Rapids, upper Mississippi) — are natural next batches, staged the
+  same way Central Iowa and the Driftless were.
 
 ## Always / Never
 
 - **Never** fabricate a flow number for an ungauged river — render the
   "Ungauged" card instead of guessing.
-- **Never** add a stage-only USGS site (has 00065 but not 00060) into
-  `GAUGES` — the status logic needs discharge (CFS), not stage. This has
-  already been decided for Rush Creek, Crooked Creek, Campbell Creek, and
-  Root River above Rushford; don't "fix" it by adding them.
+- **Never** add a stage-only or non-reporting USGS site into `GAUGES` — the
+  status logic needs live discharge (CFS). This has already been decided
+  for Rush Creek, Crooked Creek, Campbell Creek, and Root River above
+  Rushford (stage-only) and Devil Track River (has a site number but isn't
+  reporting live discharge); don't "fix" it by adding them.
 - **Always** keep this a no-build, no-framework, hand-editable
   single-page app — don't introduce a bundler, framework, or backend.
 - **Always** verify USGS gauge IDs against monitoring-locations metadata
@@ -154,11 +198,12 @@ Paddlers guidance"). These are generic numbers from other people, **not my
 own experience** — treat them as a rough first draft and overwrite with your
 own numbers as you fish or float each river through the season.
 
-**All 72 Driftless rivers are `null`.** That's on purpose, not an oversight:
-published CFS guidance barely exists for streams this small, and on a creek
-running single-digit to low-double-digit CFS a made-up range would be worse
-than none. On Driftless water, **clarity is the number that matters** —
-judge it on arrival. The ungauged card in the UI says exactly this.
+**All 72 Driftless rivers and all 24 North Shore rivers are `null`.** That's
+on purpose, not an oversight: published CFS guidance barely exists for
+streams this small, and on a creek running single-digit to low-double-digit
+CFS a made-up range would be worse than none. On this water, **clarity is
+the number that matters** — judge it on arrival. The ungauged card in the
+UI says exactly this.
 
 **TODO for me:** replace the researched starting points with my own
 experience-based numbers over time, and fill in the rest for whichever
@@ -180,8 +225,8 @@ are worth calibrating first.
   `NHD_KEYWORD` in `js/app.js` (e.g. Iowa's creek is GNIS "Trout Run", not
   "Trout Run Creek"; Richmond Springs feeds the Maquoketa River).
 - Labels are zoom-gated in `syncLabels()`: zoom ≥ 8 for the western rivers,
-  ≥ 10 for Driftless ones, because the coulee creeks sit almost on top of
-  each other and 72 labels at regional zoom is soup.
+  ≥ 10 for Driftless and North Shore ones, because those creeks sit almost
+  on top of each other and dozens of labels at regional zoom is soup.
 - Adding a new region means touching five things: the `region` field on the
   rivers, the state-name map and `regBody` in `openRiver`/`renderSheet`, the
   `REGIONS` quick-jump list, and the legend/safety copy in `index.html`.
