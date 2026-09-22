@@ -12,6 +12,55 @@ const STAT_YEARS = 7;        // years of history for the median
 const STAT_WINDOW = 7;       // +/- days around today's date
 const REFRESH_MS = 15 * 60 * 1000;
 
+/* ---------- request budget ----------
+   api.waterdata.usgs.gov allows 1000 requests/hour anonymously and replies
+   429 OVER_RATE_LIMIT past that. One request per gauge blew straight through
+   it once this map grew to 170 gauges: 170 latest-value calls plus 7 history
+   calls each (~1,190) is ~1,360 per load against a 1,000/hour budget, which
+   is why the header used to read "flows unavailable".
+
+   Everything below asks for MANY SITES PER REQUEST instead. Same data,
+   measured at 67 requests for a full cold load instead of ~1,530 — 7 for
+   every latest value on the map, 56 for the whole history backfill, 4 for
+   metadata. A steady-state refresh is 7.
+
+   A free API key from https://api.waterdata.usgs.gov/signup/ raises the
+   limit. To use one:  localStorage.setItem("usgsApiKey", "<your key>")
+   and reload. It's optional — the batched app fits in the anonymous
+   budget on its own. */
+const MAX_SITES_LATEST = 50;   // sites per latest-continuous request
+const MAX_SITES_DAILY  = 30;   // sites per daily request (x ~15 days of rows)
+const API_KEY = (()=>{ try { return localStorage.getItem("usgsApiKey") || ""; } catch(e){ return ""; } })();
+function apiURL(path, params){
+  const q = new URLSearchParams({f:"json", ...params});
+  if(API_KEY) q.set("api_key", API_KEY);
+  return `${API_BASE}/${path}?${q}`;
+}
+const chunk = (arr, n) => Array.from({length:Math.ceil(arr.length/n)}, (_,i)=>arr.slice(i*n,(i+1)*n));
+const siteOf = key => GAUGES[key].site;
+// site id -> gauge key, so a multi-site response can be demultiplexed
+const KEY_BY_SITE = {};
+Object.keys(GAUGES).forEach(k => { KEY_BY_SITE[GAUGES[k].site] = k; });
+
+/* Which region each gauge belongs to. Batches are built per region so the
+   water you're actually looking at loads first and the rest trickles in —
+   see refreshAll(). */
+function regionOfRiver(r){
+  if(r.region) return r.region;               // "driftless" | "northshore"
+  if(r.state==="ID" || r.state==="WY") return "west";
+  if(r.state==="IA") return "ciowa";
+  return "uppermidwest";                      // MN/WI big water + Northwoods
+}
+const GAUGE_REGION = {};
+RIVERS.forEach(r => (r.gauges||[]).forEach(g => {
+  if(!GAUGE_REGION[g]) GAUGE_REGION[g] = regionOfRiver(r);
+}));
+// A gauge listed in GAUGES but not referenced by any river would otherwise
+// belong to no region and never be fetched at all. Park it in "other".
+Object.keys(GAUGES).forEach(k => { if(!GAUGE_REGION[k]) GAUGE_REGION[k] = "other"; });
+const REGION_KEYS = [...new Set(Object.values(GAUGE_REGION))];
+function gaugesInRegion(reg){ return Object.keys(GAUGES).filter(k => GAUGE_REGION[k] === reg); }
+
 /* ---------- tiny storage layer (works even where localStorage
    is unavailable, e.g. sandboxed previews) ---------- */
 const mem = {};
@@ -24,80 +73,212 @@ const flows = {};   // gaugeKey -> {cfs, time, fetchedAt, stale}
 const stats = {};   // gaugeKey -> {median, mean, min, max, n}
 const meta  = {};   // gaugeKey -> {name, verified}
 
+/* Once the water API answers 429 its retry-after gets pushed further out by
+   every additional request, so the worst thing to do is keep trying. Back
+   off wholesale for a while and serve cached readings instead. Only
+   api.waterdata.usgs.gov is gated — NHD geometry and basemap tiles are a
+   different host with their own budget. */
+const API_COOLDOWN_MS = 12 * 60 * 1000;
+let apiPausedUntil = 0;
+const apiPaused = () => Date.now() < apiPausedUntil;
+
 function fetchJSON(url, timeout=12000){
   const ctl = new AbortController();
   const t = setTimeout(()=>ctl.abort(), timeout);
   return fetch(url, {signal:ctl.signal, headers:{accept:"application/geo+json,application/json"}})
-    .then(r => { if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); })
+    .then(r => {
+      if(r.status === 429 && /api\.waterdata\.usgs\.gov/.test(url)){
+        apiPausedUntil = Date.now() + API_COOLDOWN_MS;
+      }
+      if(!r.ok) throw new Error("HTTP "+r.status);
+      return r.json();
+    })
     .finally(()=>clearTimeout(t));
 }
 
-async function fetchLatest(key){
-  const g = GAUGES[key];
-  const url = `${API_BASE}/latest-continuous/items?f=json&monitoring_location_id=${g.site}&parameter_code=00060&limit=5`;
+/* Fall back to whatever was last saved for these gauges. Used when a batch
+   request fails outright, and for any site the batch came back without. */
+function markStale(keys){
+  keys.forEach(key=>{
+    // Keep showing the last known number, but say it's old. Callers only pass
+    // keys that just came back empty, so this never overwrites a fresh read —
+    // and on a failed refresh the reading correctly stops claiming to be live
+    // rather than riding on the previous cycle's value.
+    const prev = flows[key] || store.get("flow:"+key);
+    flows[key] = prev && prev.cfs != null
+      ? {...prev, stale:true}
+      : {cfs:null, stale:true, error:true};
+  });
+}
+
+/* Does this endpoint honour a comma-separated monitoring_location_id list?
+   Every multi-site request below assumes it does. If the API ever ignores
+   the extra ids and answers for one site only, batching would silently
+   blank out the rest of the map — so the first multi-site response is
+   checked, and a failure permanently falls back to one-site-at-a-time for
+   the session. Costs nothing when batching works, which is the normal case. */
+let batchSupported = true;
+
+async function fetchOneLatest(key){
+  if(apiPaused()){ markStale([key]); return; }
+  const url = apiURL("latest-continuous/items", {
+    monitoring_location_id: siteOf(key), parameter_code:"00060", limit:"4"
+  });
   try{
-    const j = await fetchJSON(url);
-    const f = (j.features||[]).find(x => x.properties && x.properties.value != null);
-    if(!f) throw new Error("no data");
-    const cfs = parseFloat(f.properties.value);          // values arrive as strings
-    if(!isFinite(cfs)) throw new Error("bad value");
+    const j = await fetchJSON(url, 15000);
+    const f = (j.features||[]).find(x=>x.properties && x.properties.value != null);
+    const cfs = f ? parseFloat(f.properties.value) : NaN;
+    if(!isFinite(cfs)) throw new Error("no data");
     flows[key] = {cfs, time:f.properties.time, fetchedAt:Date.now(), stale:false};
     store.set("flow:"+key, flows[key]);
+  }catch(e){ markStale([key]); }
+}
+
+/* Latest discharge for many gauges in ONE request. Each returned feature
+   carries its own monitoring_location_id, so the response is split back
+   out per gauge. */
+async function fetchLatestBatch(keys){
+  if(!keys.length) return;
+  if(apiPaused()){ markStale(keys); return; }
+  if(!batchSupported || keys.length === 1){
+    for(const k of keys) await fetchOneLatest(k);
+    return;
+  }
+  const url = apiURL("latest-continuous/items", {
+    monitoring_location_id: keys.map(siteOf).join(","),
+    parameter_code: "00060",
+    limit: String(keys.length * 4)
+  });
+  try{
+    const j = await fetchJSON(url, 20000);
+    const feats = (j.features||[]).filter(f=>f.properties && f.properties.value != null);
+    const sites = new Set(feats.map(f=>f.properties.monitoring_location_id));
+    // asked for many, heard about at most one -> the list wasn't honoured
+    if(sites.size <= 1 && keys.length > 1){
+      batchSupported = false;
+      for(const k of keys) await fetchOneLatest(k);
+      return;
+    }
+    const got = new Set();
+    feats.forEach(f=>{
+      const p = f.properties;
+      const key = KEY_BY_SITE[p.monitoring_location_id];
+      if(!key) return;
+      const cfs = parseFloat(p.value);              // values arrive as strings
+      if(!isFinite(cfs)) return;
+      // a site can return several rows; keep the most recent
+      if(flows[key] && !flows[key].stale && flows[key].time > p.time) return;
+      flows[key] = {cfs, time:p.time, fetchedAt:Date.now(), stale:false};
+      store.set("flow:"+key, flows[key]);
+      got.add(key);
+    });
+    markStale(keys.filter(k=>!got.has(k)));         // sites the batch didn't cover
   }catch(e){
-    const cached = store.get("flow:"+key);
-    if(cached){ flows[key] = {...cached, stale:true}; }
-    else { flows[key] = {cfs:null, stale:true, error:true}; }
+    markStale(keys);
   }
 }
 
-/* day-of-year median: N small windowed requests against the daily
-   collection (statistic 00003 = daily mean), one per past year.
-   Cached for 7 days, keyed by site + week-of-year. */
-async function fetchStats(key){
-  if(stats[key]) return stats[key];
-  const g = GAUGES[key];
+function statsCacheKey(key){
   const now = new Date();
-  const week = Math.floor(dayOfYear(now)/7);
-  const ck = `stats:${g.site}:${now.getFullYear()}w${week}:y${STAT_YEARS}`;
-  const cached = store.get(ck);
-  if(cached){ stats[key]=cached; return cached; }
+  return `stats:${GAUGES[key].site}:${now.getFullYear()}w${Math.floor(dayOfYear(now)/7)}:y${STAT_YEARS}`;
+}
 
-  const reqs = [];
-  for(let y=1; y<=STAT_YEARS; y++){
-    const c = new Date(now); c.setFullYear(now.getFullYear()-y);
-    const a = new Date(c); a.setDate(c.getDate()-STAT_WINDOW);
-    const b = new Date(c); b.setDate(c.getDate()+STAT_WINDOW);
-    const iso = d => d.toISOString().slice(0,10);
-    const url = `${API_BASE}/daily/items?f=json&monitoring_location_id=${g.site}`+
-      `&parameter_code=00060&statistic_id=00003&time=${iso(a)}T00:00:00Z/${iso(b)}T00:00:00Z&limit=60`;
-    reqs.push(fetchJSON(url).then(j => (j.features||[]).map(f=>parseFloat(f.properties.value)).filter(isFinite)).catch(()=>[]));
+/* Day-of-year median for many gauges at once.
+
+   Same shape as before — daily means (statistic 00003) from a +/-STAT_WINDOW
+   day window around today's date in each of the last STAT_YEARS years — but
+   the loop is inverted. It used to be one request per gauge per year
+   (170 x 7 = ~1,190 calls). Now it's one request per year per chunk of
+   sites: 7 years x ceil(n/30) chunks, so ~35 calls for the whole map. */
+async function fetchStatsBatch(keys){
+  const want = keys.filter(k => stats[k] === undefined);
+  if(!want.length) return;
+  // serve whatever is already cached, request only the rest
+  const need = [];
+  want.forEach(k=>{
+    const c = store.get(statsCacheKey(k));
+    if(c) stats[k] = c; else need.push(k);
+  });
+  if(!need.length) return;
+
+  const now = new Date();
+  const iso = d => d.toISOString().slice(0,10);
+  const vals = {};                       // gaugeKey -> number[]
+  need.forEach(k => vals[k] = []);
+
+  for(const group of chunk(need, batchSupported ? MAX_SITES_DAILY : 1)){
+    if(apiPaused()) break;
+    const ids = group.map(siteOf).join(",");
+    for(let y=1; y<=STAT_YEARS; y++){
+      if(apiPaused()) break;
+      const c = new Date(now); c.setFullYear(now.getFullYear()-y);
+      const a = new Date(c); a.setDate(c.getDate()-STAT_WINDOW);
+      const b = new Date(c); b.setDate(c.getDate()+STAT_WINDOW);
+      const url = apiURL("daily/items", {
+        monitoring_location_id: ids,
+        parameter_code: "00060",
+        statistic_id: "00003",
+        time: `${iso(a)}T00:00:00Z/${iso(b)}T00:00:00Z`,
+        limit: String(group.length * (STAT_WINDOW*2 + 4))
+      });
+      try{
+        const j = await fetchJSON(url, 25000);
+        (j.features||[]).forEach(f=>{
+          const p = f.properties; if(!p) return;
+          const k = KEY_BY_SITE[p.monitoring_location_id];
+          const v = parseFloat(p.value);
+          if(k && vals[k] && isFinite(v)) vals[k].push(v);
+        });
+      }catch(e){ /* a missing year just narrows the sample */ }
+    }
   }
-  const vals = (await Promise.all(reqs)).flat().sort((a,b)=>a-b);
-  if(!vals.length){ stats[key] = null; return null; }
-  const s = {
-    median: vals[Math.floor(vals.length/2)],
-    mean: vals.reduce((a,b)=>a+b,0)/vals.length,
-    min: vals[0], max: vals[vals.length-1], n: vals.length,
-  };
-  stats[key]=s; store.set(ck,s);
-  return s;
+
+  need.forEach(k=>{
+    const v = vals[k].sort((a,b)=>a-b);
+    // Nothing came back. If that's because we backed off mid-run, leave the
+    // entry *undefined* so a later call retries it — writing null here would
+    // latch "no history" for the session even after the cooldown expires.
+    if(!v.length){ if(!apiPaused()) stats[k] = null; return; }
+    const s = {
+      median: v[Math.floor(v.length/2)],
+      mean: v.reduce((a,b)=>a+b,0)/v.length,
+      min: v[0], max: v[v.length-1], n: v.length,
+    };
+    stats[k] = s;
+    store.set(statsCacheKey(k), s);
+  });
 }
 
 /* Verify the hardcoded site IDs against monitoring-location metadata
-   instead of trusting them blindly. Lazy + cached. */
-async function verifyGauge(key){
-  if(meta[key]) return meta[key];
-  const g = GAUGES[key];
-  const cached = store.get("meta:"+g.site);
-  if(cached){ meta[key]=cached; return cached; }
-  try{
-    const j = await fetchJSON(`${API_BASE}/monitoring-locations/items/${g.site}?f=json`, 9000);
-    meta[key] = {name: j.properties?.monitoring_location_name || g.label, verified:true};
-  }catch(e){
-    meta[key] = {name: g.label, verified:false};
+   instead of trusting them blindly — batched, lazy and cached. */
+async function verifyGaugesBatch(keys){
+  const need = [];
+  keys.forEach(k=>{
+    if(meta[k]) return;
+    const c = store.get("meta:"+GAUGES[k].site);
+    if(c) meta[k] = c; else need.push(k);
+  });
+  if(!need.length) return;
+  for(const group of chunk(need, batchSupported ? MAX_SITES_LATEST : 1)){
+    if(apiPaused()) break;
+    const url = apiURL("monitoring-locations/items", {
+      monitoring_location_id: group.map(siteOf).join(","),
+      limit: String(group.length + 5)
+    });
+    try{
+      const j = await fetchJSON(url, 20000);
+      (j.features||[]).forEach(f=>{
+        const p = f.properties || {};
+        const k = KEY_BY_SITE[p.monitoring_location_id];
+        if(!k) return;
+        meta[k] = {name: p.monitoring_location_name || GAUGES[k].label, verified:true};
+        store.set("meta:"+GAUGES[k].site, meta[k]);
+      });
+    }catch(e){ /* fall through to the unverified default below */ }
+    group.forEach(k=>{
+      if(!meta[k]) meta[k] = {name: GAUGES[k].label, verified:false};
+    });
   }
-  store.set("meta:"+GAUGES[key].site, meta[key]);
-  return meta[key];
 }
 
 function dayOfYear(d){ return Math.floor((d - new Date(d.getFullYear(),0,0))/864e5); }
@@ -571,8 +752,10 @@ async function openRiver(id, focusGauge){
   sheet.classList.add("open");
   loadRealRiver(r);                    // snap this river to exact USGS linework
   renderSheet(r);                      // instant paint with whatever we have
-  // lazy-load stats + metadata for this river's gauges, then repaint
-  await Promise.all(r.gauges.map(k=>Promise.all([fetchStats(k), verifyGauge(k)])));
+  // lazy-load stats + metadata for this river's gauges, then repaint.
+  // Batched across the river's gauges: opening the Mississippi Headwaters
+  // (6 gauges) is 2 requests, not 48.
+  await Promise.all([fetchStatsBatch(r.gauges), verifyGaugesBatch(r.gauges)]);
   if(curRiver===id){ renderSheet(r); repaintGauges(); }
   if(focusGauge) map.panTo(GAUGE_POS[focusGauge]);
 }
@@ -820,13 +1003,21 @@ function closeLegend(){scrim.classList.remove("show");legend.classList.remove("s
 $("#safety-x").addEventListener("click",()=>{ $("#safety").style.display="none"; store.set("safetyDismissed", Date.now()); });
 if(store.get("safetyDismissed")) $("#safety").style.display="none";
 
-/* ---------- refresh loop ---------- */
-async function refreshAll(manual){
-  const btn=$("#btn-refresh"); btn.classList.add("spin");
-  const keys = Object.keys(GAUGES);
-  for(let i=0; i<keys.length; i+=8){
-    await Promise.all(keys.slice(i,i+8).map(fetchLatest));
-  }
+/* ---------- refresh loop ----------
+   Ordered by region, nearest first. The region you're looking at is fetched
+   and painted before anything else, then the rest fill in behind it. With
+   batching that's ~4 requests for every latest value on the map instead of
+   170, so a refresh comfortably fits the API's hourly budget. */
+function regionsByDistance(){
+  const c = map.getCenter();
+  const score = reg => {
+    const pts = gaugesInRegion(reg).map(k=>GAUGE_POS[k]).filter(Boolean);
+    if(!pts.length) return Infinity;
+    return Math.min(...pts.map(p=>Math.hypot(p[0]-c.lat, (p[1]-c.lng)*0.73)));
+  };
+  return REGION_KEYS.slice().sort((a,b)=>score(a)-score(b));
+}
+function paintFlows(){
   const anyLive = Object.values(flows).some(f=>f && !f.stale);
   const anyData = Object.values(flows).some(f=>f && f.cfs!=null);
   $("#netpill").classList.toggle("show", !anyLive && anyData);
@@ -834,17 +1025,31 @@ async function refreshAll(manual){
     : (anyData ? "cached" : "unavailable");
   repaintGauges();
   if(curRiver) renderSheet(RIVERS.find(r=>r.id===curRiver));
+}
+async function refreshAll(manual){
+  const btn=$("#btn-refresh"); btn.classList.add("spin");
+  for(const reg of regionsByDistance()){
+    for(const group of chunk(gaugesInRegion(reg), MAX_SITES_LATEST)){
+      await fetchLatestBatch(group);
+    }
+    paintFlows();          // nearest region shows up without waiting for the rest
+  }
   btn.classList.remove("spin");
-  // trickle in historical stats in the background so badges upgrade
-  // from "Live" to a real status without hammering the API
+
+  // Historical medians backfill the same way — region by region, nearest
+  // first — so status badges upgrade from a bare CFS reading to a real
+  // comparison. ~35 requests for the whole map rather than ~1,190.
   if(!refreshAll.statsKicked){
-    refreshAll.statsKicked=true;
+    refreshAll.statsKicked = true;
     (async()=>{
-      for(const k of Object.keys(GAUGES)){
-        await fetchStats(k); repaintGauges();
-        if(curRiver) renderSheet(RIVERS.find(r=>r.id===curRiver));
-        await new Promise(r=>setTimeout(r,700));
+      for(const reg of regionsByDistance()){
+        await fetchStatsBatch(gaugesInRegion(reg));
+        paintFlows();
+        await new Promise(r=>setTimeout(r, 400));
       }
+      verifyGaugesBatch(Object.keys(GAUGES)).then(()=>{
+        if(curRiver) renderSheet(RIVERS.find(r=>r.id===curRiver));
+      });
     })();
   }
 }

@@ -237,14 +237,6 @@ these are all actively gauged and carry no `region` tag.
   the original 56 West/Central Iowa rivers from public source reports.
 
 **In progress / TODO:**
-- **The flow API is being rate-limited (HTTP 429).** `refreshAll()` fetches
-  one latest-value request per gauge (plus per-gauge stats), which was fine
-  at 56 rivers and is ~200 requests now that there are 170 gauges —
-  `api.waterdata.usgs.gov` starts returning 429 partway through, which is
-  why the header can read "flows unavailable". The fix is to batch: request
-  many sites per call instead of one, and stagger the stats backfill. This
-  predates the region expansion but got worse with it, and it's the single
-  highest-value thing left.
 - Replace the 28 researched starting-point `goodFlow` ranges with your
   own experience-based numbers as you actually fish/float each river.
 - Fill in `goodFlow` for the remaining West/Central Iowa rivers that are
@@ -278,6 +270,61 @@ these are all actively gauged and carry no `region` tag.
   single-page app — don't introduce a bundler, framework, or backend.
 - **Always** verify USGS gauge IDs against monitoring-locations metadata
   at runtime rather than trusting a hardcoded ID silently.
+
+## Talking to the flow API (request budget)
+
+`api.waterdata.usgs.gov` allows **1,000 requests/hour** anonymously and
+answers `429 OVER_RATE_LIMIT` past that, with a `retry-after` that gets
+*extended* by further probing — so when you hit it, stop and wait rather
+than retrying.
+
+One request per gauge blew through that budget the moment this map grew to
+170 gauges: 170 latest-value calls plus 7 history calls each (~1,190) plus
+170 metadata calls is roughly **1,530 per load**. That's the whole reason
+the header used to read "flows unavailable".
+
+Everything now asks for **many sites per request** — `monitoring_location_id`
+takes a comma-separated list and each returned feature carries its own
+`monitoring_location_id`, so one response demultiplexes back out per gauge.
+Measured against a stubbed API, a full cold load is **67 requests instead of
+~1,530**: 7 latest, 56 daily, 4 metadata. A steady-state refresh is 7.
+
+- `fetchLatestBatch(keys)` — up to `MAX_SITES_LATEST` (50) sites per call.
+- `fetchStatsBatch(keys)` — the loop is inverted versus the old code: one
+  request per year-window per chunk of `MAX_SITES_DAILY` (30) sites, so
+  7 × ceil(n/30) rather than 7 × n.
+- `verifyGaugesBatch(keys)` — same idea against monitoring-locations.
+
+**Ordered by region, nearest first.** `regionsByDistance()` sorts the five
+buckets (`west`, `ciowa`, `driftless`, `northshore`, `uppermidwest`, from
+`regionOfRiver()`) by distance from the map centre, and `paintFlows()` runs
+after each one — so the water you're looking at colours in before the rest
+of the country is fetched.
+
+Two things to preserve if you touch this:
+
+- **`batchSupported` is a safety net, not decoration.** If a multi-site
+  response ever comes back covering one site only, the API has ignored the
+  list and batching would silently blank most of the map — so it flips to
+  one-site-at-a-time for the session. A 429 deliberately does *not* trip it;
+  only a successful-but-narrow response does. (The multi-site syntax is
+  verified working against the live API for latest-continuous, a 30-site
+  batch, and the daily collection.)
+- **`apiPaused()` is the circuit breaker.** A 429 sets `apiPausedUntil` and
+  every batch function bails for `API_COOLDOWN_MS`, serving cached readings
+  instead. This matters because retry-after *grows with each further
+  request* — observed going 1217s → 3000s under probing, then falling back
+  to ~205s once the breaker stopped the bleeding. Only
+  `api.waterdata.usgs.gov` is gated; NHD and basemap tiles are separate
+  hosts with their own budgets.
+- **Don't write `stats[k] = null` when the breaker tripped.** `null` means
+  "asked, genuinely no history" and is sticky for the session; leaving it
+  `undefined` is what lets a later call retry after the cooldown.
+- **An API key is optional but supported.** Get a free one at
+  https://api.waterdata.usgs.gov/signup/ and set it with
+  `localStorage.setItem("usgsApiKey", "<key>")`. It's appended as `api_key`
+  automatically. The batched app fits inside the anonymous budget without
+  one; the key just adds headroom.
 
 ## How flow status works
 
