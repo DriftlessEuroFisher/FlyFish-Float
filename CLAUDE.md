@@ -1,8 +1,9 @@
-# River Conditions — Idaho & Wyoming Fly Fishing Map
+# River Conditions — ID, WY & Central Iowa Fly Fishing / Float Map
 
-A single-page, no-build, mobile-first web app: a Leaflet map of Idaho & Wyoming
-rivers with live USGS flow conditions, built for checking "is it worth driving
-out today?" from a phone.
+A single-page, no-build, mobile-first web app: a Leaflet map of Idaho &
+Wyoming trout rivers plus the Central Iowa (Des Moines area) state water
+trail system, with live USGS flow conditions, built for checking "is it
+worth driving out today?" from a phone.
 
 ## How I use this
 
@@ -27,9 +28,18 @@ like an app, not a browser tab.
 
 ## Rivers covered
 
-49 rivers across Idaho (24) and Wyoming (25), each with one or more USGS
+56 rivers: 49 Idaho/Wyoming trout rivers (24 ID, 25 WY) plus 7 Central Iowa
+water trail rivers (Des Moines River, Raccoon River and its North/Middle/
+South forks, South Skunk River, Beaver Creek), each with one or more USGS
 gauges. Full list and gauge IDs live in `js/rivers-data.js`; this file
 doesn't duplicate it since the code is the source of truth.
+
+The Iowa rivers are warmwater fisheries (catfish, smallmouth bass, walleye,
+carp) tied to the official Iowa DNR water trail / paddling system rather
+than trout wade-fishing — same data model (gauges, ramps, sections,
+goodFlow), different character. They also carry a low-head-dam safety note
+in the UI (a real, documented hazard on these rivers) that the ID/WY rivers
+don't need.
 
 ## How flow status works
 
@@ -59,13 +69,14 @@ When set, the flow card for that river's primary gauge shows an extra
 "✓ In your good-flow range" / "Outside your good-flow range" badge, on top of
 (not replacing) the relative status above.
 
-26 of the 49 rivers were pre-filled with starting-point ranges pulled from
-public fly shop/guide reports (each has a short source note in its comment,
-e.g. "sweet spot at the Glenwood gauge"). These are generic guide numbers,
-**not my own experience** — treat them as a rough first draft and overwrite
-with your own numbers as you fish each river through the season. The
-remaining 23 rivers (smaller, less-documented, or wilderness/permit water
-without published flow guidance) are still `null`.
+28 of the 56 rivers were pre-filled with starting-point ranges pulled from
+public fly shop/guide/paddler reports (each has a short source note in its
+comment, e.g. "sweet spot at the Glenwood gauge" or "Skunk River Paddlers
+guidance"). These are generic numbers from other people, **not my own
+experience** — treat them as a rough first draft and overwrite with your own
+numbers as you fish or float each river through the season. The remaining
+28 rivers (smaller, less-documented, or wilderness/permit water without
+published flow guidance) are still `null`.
 
 **TODO for me:** replace the researched starting points with my own
 experience-based numbers over time, and fill in the rest for whichever

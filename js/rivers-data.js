@@ -85,6 +85,19 @@ const GAUGES = {
   newFork:      { site:"USGS-09205000", label:"New Fork River nr Big Piney, WY" },
   encampment:   { site:"USGS-06623800", label:"Encampment River above Hog Park Creek" },
   laramie:      { site:"USGS-06659500", label:"Laramie River nr Woods Landing, WY" },
+  // --- Central Iowa water trails (Des Moines area) ---
+  dmSaylorville:  { site:"USGS-05481650", label:"Des Moines River near Saylorville, IA" },
+  dmDesMoines:    { site:"USGS-05482000", label:"Des Moines River at 2nd Ave, Des Moines, IA" },
+  dmBelowRaccoon: { site:"USGS-05485500", label:"Des Moines River below Raccoon River, Des Moines, IA" },
+  raccoonWDM:     { site:"USGS-05484600", label:"Raccoon River near West Des Moines, IA" },
+  raccoonVanMeter:{ site:"USGS-05484500", label:"Raccoon River at Van Meter, IA" },
+  nRaccoonJefferson:{ site:"USGS-05482500", label:"North Raccoon River near Jefferson, IA" },
+  nRaccoonSacCity:{ site:"USGS-05482300", label:"North Raccoon River near Sac City, IA" },
+  mRaccoonPanora: { site:"USGS-05483600", label:"Middle Raccoon River at Panora, IA" },
+  sRaccoonRedfield:{ site:"USGS-05484000", label:"South Raccoon River at Redfield, IA" },
+  sSkunkAmes:     { site:"USGS-05470000", label:"South Skunk River near Ames, IA" },
+  sSkunkAboveAmes:{ site:"USGS-05469995", label:"South Skunk River above Ames, IA" },
+  beaverCreekJohnston:{ site:"USGS-05481950", label:"Beaver Creek near Johnston/Grimes, IA" },
 };
 
 // approximate gauge map positions [lat,lng]
@@ -114,6 +127,13 @@ const GAUGE_POS = {
   tongue:[44.8700,-107.2600], clarksFork:[45.0300,-109.0600],
   greenWarren:[43.0190,-110.1180], greenFont:[42.0250,-110.0650], greenGR:[41.5160,-109.4480],
   newFork:[42.5800,-110.0900], encampment:[41.1500,-106.8200], laramie:[41.1000,-106.0100],
+  // Central Iowa
+  dmSaylorville:[41.6980,-93.6450], dmDesMoines:[41.6119,-93.6197], dmBelowRaccoon:[41.5800,-93.6350],
+  raccoonWDM:[41.5650,-93.7450], raccoonVanMeter:[41.5340,-93.9498],
+  nRaccoonJefferson:[42.0050,-94.3550], nRaccoonSacCity:[42.4230,-95.0100],
+  mRaccoonPanora:[41.6942,-94.3700], sRaccoonRedfield:[41.5928,-94.1830],
+  sSkunkAmes:[41.9900,-93.6280], sSkunkAboveAmes:[42.0450,-93.6100],
+  beaverCreekJohnston:[41.6850,-93.7450],
 };
 
 const RIVERS = [
@@ -518,6 +538,63 @@ const RIVERS = [
   fish:"The Monolith Ranch and Optimist Park access near Laramie city fish better than they have any right to. Hoppers in late summer; streamers in fall. Mostly wade fishing.",
   coords:[[41.0000,-105.9500],[41.1000,-106.0100],[41.2000,-105.8500],[41.3100,-105.5900],[41.5000,-105.4500],[41.7500,-105.2000],[42.0500,-104.9500]]
 },
+/* ================= CENTRAL IOWA WATER TRAILS (Des Moines area) ================= */
+{
+  id:"desmoines", name:"Des Moines River — Central Iowa", color:"#6b4a2a",
+  state:"IA", gauges:["dmSaylorville","dmDesMoines","dmBelowRaccoon"], primaryGauge:"dmDesMoines",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Iowa's namesake river through the capital — big, brown, and slow-moving from below Saylorville Dam through downtown Des Moines toward Red Rock country. The state-designated Polk County water trail segment runs about 20 miles from Saylorville's Cottonwood Recreation Area down to Yellow Banks County Park, threading the Principal Riverwalk whitewater feature through downtown.",
+  fish:"Channel and flathead catfish, walleye and saugeye running up from Saylorville and Red Rock, white bass in the spring run, plus carp and drum. Watch for low-head dams downtown — check current conditions before running any stretch you haven't floated before.",
+  coords:[[41.7300,-93.6550],[41.6980,-93.6450],[41.6300,-93.6300],[41.6119,-93.6197],[41.5800,-93.6350],[41.5300,-93.5700],[41.4800,-93.4900]]
+},
+{
+  id:"raccoon", name:"Raccoon River", color:"#a67c3d",
+  state:"IA", gauges:["raccoonWDM","raccoonVanMeter"], primaryGauge:"raccoonWDM",
+  goodFlow:{min:300,max:900}, // starting point from paddler reports ("nice water flow" cited around 400cfs; gets fast/wavy above ~1,300) — adjust to your own experience
+  blurb:"The classic Des Moines paddle: a wide, slow prairie river from the North/South/Middle Raccoon confluence near Van Meter into downtown Des Moines, joining the Des Moines River at the Principal Riverwalk. Walnut Woods to Water Works Park is the standard half-day float.",
+  fish:"Smallmouth bass in the rockier upstream riffles, channel catfish and walleye through the flatwater stretches, white bass in spring. The lower miles through Water Works Park are heavily bank-fished.",
+  coords:[[41.5340,-93.9498],[41.5500,-93.8600],[41.5650,-93.7450],[41.5730,-93.6900],[41.5760,-93.6500],[41.5800,-93.6350]]
+},
+{
+  id:"nraccoon", name:"North Raccoon River", color:"#7a5a3a",
+  state:"IA", gauges:["nRaccoonSacCity","nRaccoonJefferson"], primaryGauge:"nRaccoonJefferson",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"At roughly 150 navigable miles, the longest water trail in Iowa — from Sac County farm country down through Jefferson, Dawson, Perry, and Adel before joining the Middle and South Raccoon near Van Meter. The Dallas County reaches near Dawson and Booneville are the closest stretch to Des Moines.",
+  fish:"Smallmouth bass and channel catfish in the riffles near Jefferson and Perry, carp and flathead catfish in the deeper bends downstream — a quieter, more rural alternative to the mainstem Raccoon closer to town.",
+  coords:[[42.4230,-95.0100],[42.2500,-94.7000],[42.0136,-94.3778],[41.8800,-94.2200],[41.6100,-94.0000],[41.5500,-93.9600],[41.5340,-93.9498]]
+},
+{
+  id:"mraccoon", name:"Middle Raccoon River", color:"#9c7a4a",
+  state:"IA", gauges:["mRaccoonPanora"], primaryGauge:"mRaccoonPanora",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A smaller, quicker Raccoon tributary out of Lake Panora, joining the South Raccoon a few miles below Panora before the combined river continues toward Van Meter as \"the Raccoon.\"",
+  fish:"Smallmouth bass and rock bass in the riffles below the Panora dam; channel catfish downstream.",
+  coords:[[41.6942,-94.3700],[41.6500,-94.2900],[41.6100,-94.2200]]
+},
+{
+  id:"sraccoon", name:"South Raccoon River", color:"#6a8a4a",
+  state:"IA", gauges:["sRaccoonRedfield"], primaryGauge:"sRaccoonRedfield",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The smallest of the three upper Raccoon forks, running from Guthrie County past Nations Bridge Park before joining the Middle Raccoon near Redfield.",
+  fish:"Small-stream smallmouth bass and channel catfish; lightly fished compared to the mainstem.",
+  coords:[[41.6800,-94.5000],[41.6400,-94.3800],[41.6100,-94.2200]]
+},
+{
+  id:"sskunk", name:"South Skunk River", color:"#4a6a8a",
+  state:"IA", gauges:["sSkunkAboveAmes","sSkunkAmes"], primaryGauge:"sSkunkAmes",
+  goodFlow:{min:125,max:400}, // starting point from Skunk River Paddlers guidance (min ~125cfs, median ~209cfs is "really nice") — adjust to your own experience
+  blurb:"Story County's water trail — 33 miles with 11 access points running from Story City through Ames. A \"non-meandered\" stream under Iowa law: the state owns the water, not always the banks.",
+  fish:"Smallmouth bass and channel catfish in the riffle-pool sequences through Ames; carp and drum in the slower reaches. Popular with Iowa State students for after-class floats.",
+  coords:[[42.1700,-93.5900],[42.0900,-93.6000],[42.0450,-93.6100],[41.9900,-93.6280],[41.9200,-93.5900]]
+},
+{
+  id:"beavercreek", name:"Beaver Creek", color:"#8a5a6a",
+  state:"IA", gauges:["beaverCreekJohnston"], primaryGauge:"beaverCreekJohnston",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Iowa's newest state water trail (designated May 2025) — 7 miles of small, winding creek through Johnston and Grimes before joining the Des Moines River near Saylorville. Kayak access at Lew Clarkson Park in Johnston.",
+  fish:"A small-water creek fishery — panfish, channel catfish, and the occasional smallmouth. Better known as a quick urban paddle than a fishing destination.",
+  coords:[[41.7100,-93.7900],[41.6950,-93.7600],[41.6850,-93.7450],[41.6900,-93.7100],[41.7000,-93.6700]]
+},
 ];
 
 /* ---------- Access points ---------- */
@@ -627,6 +704,22 @@ const RAMPS = [
   {id:"lemw",  river:"lemhi", name:"ID F&G Lemhi access sites", role:"wade", pos:[44.9400,-113.6300], note:"Signed sportsman accesses off Hwy 28."},
   {id:"cdaw",  river:"cda", name:"NF Coeur d'Alene (FR 9)", role:"wade", pos:[47.6400,-115.9700], note:"Road follows the NF; endless pullouts."},
   {id:"bohw",  river:"biglost", name:"Below Mackay Dam", role:"wade", pos:[43.9100,-113.6100], note:"Short canyon below the reservoir."},
+  // ---- Central Iowa water trails ----
+  {id:"cottonwood", river:"desmoines", name:"Cottonwood Recreation Area", role:"launch", pos:[41.6980,-93.6450], note:"Below Saylorville Dam — top of the Polk County water trail segment."},
+  {id:"riverwalk", river:"desmoines", name:"Principal Riverwalk / Water Works Park", role:"both", pos:[41.5800,-93.6350], note:"Downtown whitewater park feature — scout it before running it."},
+  {id:"yellowbanks", river:"desmoines", name:"Yellow Banks County Park", role:"takeout", pos:[41.4800,-93.4900], note:"Bottom of the 20-mile designated Polk County segment."},
+  {id:"walnutwoods", river:"raccoon", name:"Walnut Woods State Park", role:"launch", pos:[41.5730,-93.6900], note:"Standard put-in for the classic town float."},
+  {id:"waterworks", river:"raccoon", name:"Water Works Park / Fleur Drive", role:"takeout", pos:[41.5760,-93.6500], note:"~4-hour paddle from Walnut Woods at normal flows."},
+  {id:"vanmeterr", river:"raccoon", name:"Van Meter access", role:"launch", pos:[41.5340,-93.9498], note:"Upstream put-in near the North/Middle/South Raccoon confluence."},
+  {id:"dawson", river:"nraccoon", name:"Dawson Boat Ramp", role:"launch", pos:[41.7975,-94.1667], note:"1 mile north of Dawson, Dallas County."},
+  {id:"booneville", river:"nraccoon", name:"Booneville Access", role:"takeout", pos:[41.7300,-94.0500], note:"8.1 miles downstream of Dawson."},
+  {id:"lennonmill", river:"mraccoon", name:"Lennon Mill Park (Panora)", role:"launch", pos:[41.6942,-94.3700], note:"In-town put-in below Lake Panora."},
+  {id:"mrconfl", river:"mraccoon", name:"Redfield confluence access", role:"takeout", pos:[41.6100,-94.2200], note:"Take out where the Middle and South Raccoon join."},
+  {id:"nationsbridge", river:"sraccoon", name:"Nations Bridge Park", role:"launch", pos:[41.6400,-94.3800], note:"Guthrie County put-in."},
+  {id:"srconfl", river:"sraccoon", name:"Redfield confluence access", role:"takeout", pos:[41.6100,-94.2200], note:"Same take-out as the Middle Raccoon, just below Redfield."},
+  {id:"sleepyhollow", river:"sskunk", name:"Sleepy Hollow Access", role:"launch", pos:[42.0450,-93.6280], note:"646 W. Riverside Rd, Ames."},
+  {id:"rivervalley", river:"sskunk", name:"River Valley Park (Ames)", role:"takeout", pos:[41.9900,-93.6200], note:"Standard in-town take-out."},
+  {id:"lewclarkson", river:"beavercreek", name:"Lew Clarkson Park (Johnston)", role:"wade", pos:[41.6900,-93.7100], note:"Kayak access point; small creek, no formal second access confirmed."},
 ];
 
 /* ---------- Float sections ---------- */
@@ -794,6 +887,39 @@ const SECTIONS = [
    miles:11.0, klass:"I-II", beginner:true, typSpeed:4.0,
    notes:"Brown-trout tailwater below Cody's canyon. Irrigation-season releases change daily — check the gauge that morning.",
    shuttle:"Hwy 14A; Cody shops shuttle."},
+  // ---- Central Iowa water trails ----
+  {id:"dm1", river:"desmoines", name:"Cottonwood → Water Works Park (downtown)", put:"cottonwood", take:"riverwalk",
+   miles:9.0, klass:"I", beginner:true, typSpeed:3.0,
+   notes:"Flatwater through north Des Moines into downtown, finishing at the Riverwalk whitewater feature — scout it, or take out just above.",
+   shuttle:"Short shuttle via 2nd Ave / I-235 corridor."},
+  {id:"dm2", river:"desmoines", name:"Water Works Park → Yellow Banks County Park", put:"riverwalk", take:"yellowbanks",
+   miles:11.0, klass:"I", beginner:true, typSpeed:3.0,
+   notes:"Wide, slow water past Fort Des Moines and into rural Polk County — the quiet half of the water trail segment.",
+   shuttle:"~20 min via County Hwy S6W."},
+  {id:"rc1", river:"raccoon", name:"Walnut Woods → Water Works Park", put:"walnutwoods", take:"waterworks",
+   miles:10.0, klass:"I", beginner:true, typSpeed:2.8,
+   notes:"The standard Des Moines paddle — flat, wide, and easy, finishing at the confluence with the Des Moines River.",
+   shuttle:"~15 min via Fleur Drive."},
+  {id:"rc2", river:"raccoon", name:"Van Meter → Walnut Woods", put:"vanmeterr", take:"walnutwoods",
+   miles:14.0, klass:"I", beginner:true, typSpeed:2.8,
+   notes:"Rural run through Dallas County before the river enters West Des Moines.",
+   shuttle:"~20 min via Hwy 6/Grand Ave."},
+  {id:"nrc1", river:"nraccoon", name:"Dawson → Booneville", put:"dawson", take:"booneville",
+   miles:8.1, klass:"I", beginner:true, typSpeed:2.5,
+   notes:"The Dallas County stretch closest to Des Moines — quiet, rural, well-marked access.",
+   shuttle:"Dallas County Conservation signs distance to the next access at every ramp."},
+  {id:"mrc1", river:"mraccoon", name:"Lennon Mill → Redfield confluence", put:"lennonmill", take:"mrconfl",
+   miles:9.0, klass:"I", beginner:true, typSpeed:2.6,
+   notes:"Quick-moving water below the Panora dam, easing into flatwater toward the confluence.",
+   shuttle:"~15 min via Hwy 44/141."},
+  {id:"src1", river:"sraccoon", name:"Nations Bridge → Redfield confluence", put:"nationsbridge", take:"srconfl",
+   miles:8.0, klass:"I", beginner:true, typSpeed:2.4,
+   notes:"The smallest of the three forks — narrow, quiet, lightly used.",
+   shuttle:"~15 min via county roads."},
+  {id:"sk1", river:"sskunk", name:"Sleepy Hollow → River Valley Park", put:"sleepyhollow", take:"rivervalley",
+   miles:5.0, klass:"I", beginner:true, typSpeed:2.3,
+   notes:"The in-town Ames stretch — riffle-pool water, popular with ISU students.",
+   shuttle:"Short shuttle within Ames."},
 ];
 
 /* rivers with no float sections — floating note shown instead */
@@ -831,4 +957,5 @@ const WADE_ONLY = {
   nfpayette:"Above Smiths Ferry: mellow floating. Below: 16 miles of Class V — among the hardest runnable whitewater anywhere. Know which half you're on.",
   snakeid:"Floatable in many reaches but dominated by reservoirs and diversions — go with local knowledge or a jet boat.",
   wind:"Above Boysen: wade fishing (permits on reservation water). The canyon float is listed below — permit and experience required.",
+  beavercreek:"Only one confirmed formal access (Lew Clarkson Park in Johnston) — mostly an out-and-back paddle or a shuttle you arrange yourself. Small water; fishing is secondary to the paddle.",
 };

@@ -174,6 +174,7 @@ const REGIONS = [
   ["Cody / Bighorn Basin", [44.30,-108.70,8]],
   ["Wind River / Thermopolis", [43.40,-108.50,9]],
   ["Saratoga / North Platte", [42.00,-106.70,8]],
+  ["Central Iowa / Des Moines", [41.65,-93.75,10]],
 ];
 const regionCtl = L.control({position:"topright"});
 regionCtl.onAdd = function(){
@@ -339,7 +340,7 @@ async function openRiver(id, focusGauge){
   curRiver = id;
   $("#sw").style.background = r.color;
   $("#sh-title").textContent = r.name;
-  $("#sh-sub").textContent = r.state==="ID" ? "Idaho" : "Wyoming";
+  $("#sh-sub").textContent = {ID:"Idaho", WY:"Wyoming", IA:"Iowa"}[r.state] || r.state;
   sheet.classList.add("open");
   loadRealRiver(r);                    // snap this river to exact USGS linework
   renderSheet(r);                      // instant paint with whatever we have
@@ -365,7 +366,11 @@ function renderSheet(r){
   } else if(WADE_ONLY[r.id]) {
     h += `<div class="secthead">Floating</div><div class="fishnote">🛶 ${WADE_ONLY[r.id]}</div>`;
   }
-  h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Flow data: USGS Water Data OGC API. River lines simplified — not for navigation. Verify regulations with WY Game &amp; Fish / Idaho Fish &amp; Game.</p>`;
+  const regBody = r.state==="IA" ? "the Iowa DNR" : "WY Game &amp; Fish / Idaho Fish &amp; Game";
+  h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Flow data: USGS Water Data OGC API. River lines simplified — not for navigation. Verify regulations with ${regBody}.</p>`;
+  if(r.state==="IA"){
+    h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">⚠ Central Iowa rivers have low-head dams — the "drowning machine" recirculating hydraulic at the base is dangerous at almost any flow. Scout unfamiliar stretches and check <a href="https://www.iowawhitewater.org/lhd/LHDrivers.html" target="_blank" rel="noopener">Iowa Whitewater's low-head dam list</a> before you put in.</p>`;
+  }
   body.innerHTML = h;
 
   body.querySelectorAll("[data-zoom]").forEach(el=>el.addEventListener("click",()=>{
