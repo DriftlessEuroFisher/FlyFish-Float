@@ -189,7 +189,7 @@ function statsCacheKey(key){
    day window around today's date in each of the last STAT_YEARS years — but
    the loop is inverted. It used to be one request per gauge per year
    (170 x 7 = ~1,190 calls). Now it's one request per year per chunk of
-   sites: 7 years x ceil(n/30) chunks, so ~35 calls for the whole map. */
+   sites: 7 years x ceil(n/30) chunks, so 56 calls for the whole map. */
 async function fetchStatsBatch(keys){
   const want = keys.filter(k => stats[k] === undefined);
   if(!want.length) return;
@@ -1038,7 +1038,7 @@ async function refreshAll(manual){
 
   // Historical medians backfill the same way — region by region, nearest
   // first — so status badges upgrade from a bare CFS reading to a real
-  // comparison. ~35 requests for the whole map rather than ~1,190.
+  // comparison. 56 requests for the whole map rather than ~1,190.
   if(!refreshAll.statsKicked){
     refreshAll.statsKicked = true;
     (async()=>{
