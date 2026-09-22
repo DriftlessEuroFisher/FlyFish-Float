@@ -428,11 +428,17 @@ are worth calibrating first.
   `nforest` national forest, `federal` NPS/USFWS/BLM/Corps, `wildlife` state
   WMAs and Aquatic Management Areas, `state` state forest/park, `local`
   county/city, `private` easement or NGO land recorded as publicly
-  accessible. Fill opacity is deliberately uneven — a national forest block
-  would swamp the basemap at the strength a 40-acre WMA needs, and the
-  wildlife class is drawn strongest because it's the layer anglers are
-  actually hunting for. `private` is pointedly *not* green: it's someone's
-  land and the access can lapse.
+  accessible. `private` is pointedly *not* green: it's someone's land and
+  the access can lapse.
+
+  **Every class draws at the same weight** — one `PAD_FILL_OPACITY` and one
+  `PAD_WEIGHT`, no per-class values. An earlier version ranked them (faint
+  national forest, bold WMA) and that was wrong for this app: fly fishing
+  has the most generous access rules of any use of public land, so a
+  national forest is no less fishable than a wildlife area and shouldn't
+  look it. Colour carries the manager; nothing carries emphasis. If you're
+  tempted to re-introduce per-class opacity to stop the big forests
+  dominating a wide view, adjust `padMinAcres()` instead.
 
   Only `Pub_Access` OA (open) and RA (restricted, dashed outline) are drawn;
   closed and unknown parcels are deliberately left off — a closed parcel

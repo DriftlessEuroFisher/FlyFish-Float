@@ -525,16 +525,17 @@ function repaintGauges(){ Object.keys(gaugeDots).forEach(k=>gaugeDots[k].setIcon
    because the manager is what decides the rules you fish under:
 
      National forest   Chequamegon-Nicolet, Superior, Ottawa, Hiawatha.
-                       Huge, so drawn faint — it's context, not a parcel.
      Other federal     NPS, USFWS refuges, BLM, Corps.
-     State wildlife    WMAs and Aquatic Management Areas — the walk-in
-                       hunting and fishing ground. Drawn strongest: this
-                       is the layer you're actually looking for.
+     State wildlife    WMAs and Aquatic Management Areas.
      State other       State forests, state parks, DNR holdings.
      County / city     Local parks and forests, often river frontage.
      Private w/ access Easements and NGO land that PAD-US records as
                        publicly accessible. Deliberately NOT green —
                        it's someone's land and the access can lapse.
+
+   All of them are drawn at the same weight. Fly fishing has the most
+   generous access rules of any use of public land, so none of these is
+   more fishable than another and none gets to look it.
 
    Pub_Access: OA = open access, RA = restricted (permit, seasonal, or
    limited entry) and gets a dashed outline. XA (closed) and UK (unknown)
@@ -550,16 +551,25 @@ const PUBLIC_LAND_MIN_ZOOM = 8;
 const publicLand = L.layerGroup().addTo(map);
 let padusKey = null, padusBusy = false;
 
-/* Manager -> colour. Fill opacity is deliberately uneven: national forest
-   and state forest blocks are enormous and would swamp the basemap at full
-   strength, while a 40-acre WMA needs to be obvious. */
+/* Manager -> colour, all drawn at the SAME weight.
+
+   An earlier version ranked these visually — faint national forest, bold
+   WMA — on the theory that the WMA is what you're hunting for. That's wrong
+   for this app. Fly fishing has the most generous access rules of any use
+   of public land: if it's open ground with water on it you can fish it,
+   whether that's a national forest, a county park or a state wildlife area.
+   So none of them gets to look more fishable than another. Colour still
+   distinguishes the manager, because the manager decides the regulations,
+   but nothing is emphasised or de-emphasised. */
+const PAD_FILL_OPACITY = 0.20;
+const PAD_WEIGHT = 1.2;
 const PAD_CLASS = {
-  nforest: {label:"National forest",      color:"#1f6b3a", fill:"#3f8f57", op:.13},
-  federal: {label:"Federal land",         color:"#1f6f8b", fill:"#4a97ad", op:.16},
-  wildlife:{label:"State wildlife / fishing area", color:"#1d7a2e", fill:"#5fbf62", op:.30},
-  state:   {label:"State forest / park",  color:"#2f7d3f", fill:"#6fae70", op:.18},
-  local:   {label:"County / city land",   color:"#5f7a3a", fill:"#93ad6e", op:.20},
-  private: {label:"Private land with public access", color:"#9c7a2a", fill:"#c8a94e", op:.16}
+  nforest: {label:"National forest",      color:"#1f6b3a", fill:"#3f8f57"},
+  federal: {label:"Federal land",         color:"#1f6f8b", fill:"#4a97ad"},
+  wildlife:{label:"State wildlife / fishing area", color:"#1d7a2e", fill:"#5fbf62"},
+  state:   {label:"State forest / park",  color:"#2f7d3f", fill:"#6fae70"},
+  local:   {label:"County / city land",   color:"#5f7a3a", fill:"#93ad6e"},
+  private: {label:"Private land with public access", color:"#9c7a2a", fill:"#c8a94e"}
 };
 function padClass(p){
   const mgr = (p.MngNm_Desc || "").toLowerCase();
@@ -610,9 +620,12 @@ async function loadPublicLand(){
     L.geoJSON(j, {
       style: f => {
         const c = PAD_CLASS[padClass(f.properties)];
+        // Restricted parcels get a dashed outline — that's a real gate
+        // (permit, season, limited entry), not a ranking — but the same
+        // weight and fill as everything else.
         const restricted = f.properties.Pub_Access === "RA";
-        return {color:c.color, weight:restricted?1.4:1.1, fillColor:c.fill,
-                fillOpacity: restricted ? c.op*0.6 : c.op,
+        return {color:c.color, weight:PAD_WEIGHT, fillColor:c.fill,
+                fillOpacity:PAD_FILL_OPACITY,
                 dashArray: restricted ? "5 4" : null};
       },
       onEachFeature: (f, lyr) => {
