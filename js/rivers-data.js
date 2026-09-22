@@ -792,7 +792,17 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"A cold, fast limestone creek dropping out of Minnesota into Allamakee County at Dorchester — one of the very few small Iowa trout streams with its own live USGS discharge gauge, which makes it the best single read on how wet the northeast corner is right now.",
   fish:"Wild brown trout with stocked rainbows layered in. Tight quarters and heavy bank cover — short rod, roll casts, and a willingness to crawl. Fishes well after the water drops and clears post-rain.",
-  coords:[[43.4900,-91.5500],[43.4700,-91.5250],[43.4511,-91.5051],[43.4300,-91.5050]]
+  coords:[
+    [43.49479,-91.56909],[43.49349,-91.56627],[43.49190,-91.56605],[43.48938,-91.56261],
+    [43.48670,-91.55754],[43.48668,-91.55193],[43.48690,-91.54858],[43.48767,-91.54498],
+    [43.48387,-91.54342],[43.48419,-91.53736],[43.48608,-91.53433],[43.48515,-91.53138],
+    [43.48376,-91.53170],[43.48078,-91.53084],[43.47957,-91.52963],[43.48090,-91.52256],
+    [43.47889,-91.51908],[43.47780,-91.51975],[43.47478,-91.52091],[43.47299,-91.52024],
+    [43.46952,-91.51386],[43.46762,-91.50356],[43.46588,-91.50130],[43.46093,-91.49839],
+    [43.45656,-91.49991],[43.45119,-91.50537],[43.44551,-91.50729],[43.44255,-91.50901],
+    [43.44019,-91.51066],[43.43513,-91.51160],[43.43454,-91.51359],[43.43352,-91.51516],
+    [43.43311,-91.51847],[43.43038,-91.52020]
+  ]
 },
 {
   id:"troutrunia", name:"Trout Run Creek — Decorah", color:"#3a8c4a",
@@ -824,7 +834,16 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"South Bear's quieter twin, joining it near Highlandville. Smaller, brushier, and less trafficked — the kind of creek where you fish a quarter-mile in three hours and don't mind.",
   fish:"Wild brown trout in tight water. Bring a short rod and expect to lose flies in the canopy. Best in spring before the bankside growth closes in, and again in October.",
-  coords:[[43.4650,-91.7800],[43.4500,-91.7550],[43.4350,-91.7350],[43.4122,-91.7290]]
+  coords:[
+    [43.55290,-91.66890],[43.54830,-91.66820],[43.54010,-91.66950],[43.53580,-91.66200],
+    [43.52710,-91.65190],[43.52570,-91.65060],[43.52530,-91.64840],[43.52140,-91.64270],
+    [43.51620,-91.63980],[43.51170,-91.63700],[43.50760,-91.63490],[43.50600,-91.63560],
+    [43.50250,-91.63830],[43.49750,-91.63810],[43.49760,-91.63670],[43.49370,-91.64330],
+    [43.49140,-91.64190],[43.48960,-91.63950],[43.48110,-91.63590],[43.48000,-91.63470],
+    [43.47550,-91.64470],[43.46980,-91.64260],[43.46300,-91.63930],[43.45420,-91.63360],
+    [43.45130,-91.63480],[43.45060,-91.62460],[43.44860,-91.62230],[43.45110,-91.62100],
+    [43.44990,-91.61660],[43.44880,-91.61570]
+  ]
 },
 {
   id:"canoecreek", name:"Canoe Creek", color:"#5b8c6e",
@@ -864,7 +883,16 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"A spring-fed Allamakee County creek in the bluffs behind Lansing — named for exactly the reason you'd guess, and technical because of it.",
   fish:"Clear, cold, and unforgiving of a heavy approach. Wild browns plus stockers. Best on overcast days or in the low light at either end of the day.",
-  coords:[[43.3200,-91.3600],[43.3100,-91.3200],[43.3000,-91.2800],[43.2900,-91.2400]]
+  coords:[
+    [43.35440,-91.33580],[43.35580,-91.33050],[43.35780,-91.32000],[43.35860,-91.31790],
+    [43.35730,-91.31120],[43.35870,-91.30650],[43.35930,-91.30470],[43.36010,-91.29590],
+    [43.36180,-91.29260],[43.36240,-91.28670],[43.36510,-91.27710],[43.36490,-91.27630],
+    [43.36390,-91.26790],[43.36290,-91.26450],[43.36270,-91.26180],[43.36180,-91.25990],
+    [43.36070,-91.25570],[43.35970,-91.25560],[43.36000,-91.25150],[43.35840,-91.24560],
+    [43.35790,-91.23210],[43.36080,-91.22930],[43.35960,-91.22800],[43.35910,-91.22610],
+    [43.35900,-91.22520],[43.35820,-91.22250],[43.35850,-91.21760],[43.35760,-91.21640],
+    [43.35980,-91.21230],[43.35890,-91.21010]
+  ]
 },
 {
   id:"yellowriver", name:"Yellow River", color:"#a07d2a",
@@ -872,7 +900,17 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"Runs from the Castalia/Volney farm country down through deep timber to the Mississippi at Effigy Mounds. The upper reaches and coldwater tributaries hold trout; the lower river is smallmouth water through a genuinely wild-feeling valley.",
   fish:"Trout in the spring-fed upper sections and side creeks; smallmouth bass below. The Ion gauge is a good general read on how much water the Allamakee/Clayton County trout creeks are carrying.",
-  coords:[[43.1800,-91.6500],[43.1500,-91.5000],[43.1300,-91.3800],[43.1119,-91.2651],[43.0957,-91.2202]]
+  coords:[
+    [43.13301,-91.42769],[43.13182,-91.41957],[43.12657,-91.40641],[43.13122,-91.39482],
+    [43.12296,-91.39115],[43.12291,-91.38515],[43.12821,-91.37240],[43.13271,-91.35985],
+    [43.13094,-91.35077],[43.13078,-91.34172],[43.12522,-91.33264],[43.12338,-91.30063],
+    [43.13371,-91.28979],[43.12596,-91.29106],[43.12031,-91.28432],[43.11590,-91.28599],
+    [43.12286,-91.27587],[43.12311,-91.26473],[43.11022,-91.26383],[43.11357,-91.25522],
+    [43.11527,-91.24697],[43.11168,-91.23550],[43.11406,-91.22695],[43.10761,-91.22992],
+    [43.10693,-91.22752],[43.10676,-91.21848],[43.09965,-91.21964],[43.09749,-91.22973],
+    [43.09535,-91.22127],[43.09706,-91.21500],[43.09456,-91.20404],[43.09356,-91.19743],
+    [43.08543,-91.18680],[43.08488,-91.17638]
+  ]
 },
 {
   id:"bloodyrun", name:"Bloody Run Creek", color:"#8c2a3a",
@@ -880,7 +918,17 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"An Outstanding Iowa Water running through Bloody Run County Park near Marquette — cold, spring-fed, and one of the most celebrated (and most fought-over) trout streams in the state. It carries its own live USGS discharge gauge, which for a creek this size is rare and very useful.",
   fish:"Wild browns plus stocked fish, in water cold enough to fish through the hottest part of summer. County park access with parking right on the creek; walk upstream from the campground for the better fish.",
-  coords:[[43.0900,-91.2900],[43.0700,-91.2500],[43.0408,-91.2065],[43.0350,-91.1900]]
+  coords:[
+    [43.03695,-91.26512],[43.03885,-91.26273],[43.03951,-91.25629],[43.04023,-91.25374],
+    [43.03796,-91.25133],[43.03704,-91.25014],[43.03955,-91.24877],[43.04144,-91.24254],
+    [43.03769,-91.24267],[43.03468,-91.24391],[43.03342,-91.24142],[43.03461,-91.23844],
+    [43.03055,-91.24123],[43.03132,-91.23780],[43.03003,-91.23514],[43.03090,-91.23321],
+    [43.03269,-91.23452],[43.03534,-91.22902],[43.03674,-91.22555],[43.03628,-91.22001],
+    [43.03906,-91.22102],[43.03868,-91.21605],[43.03931,-91.21326],[43.04343,-91.21193],
+    [43.04457,-91.20997],[43.04024,-91.20827],[43.03981,-91.20706],[43.04051,-91.20363],
+    [43.04022,-91.19709],[43.04112,-91.19612],[43.04146,-91.19204],[43.04275,-91.18729],
+    [43.04172,-91.18184],[43.04167,-91.17592]
+  ]
 },
 {
   id:"snymagill", name:"Sny Magill Creek", color:"#2a8c6e",
@@ -912,7 +960,15 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"The creek below Big Spring near Elkader, home of the Big Spring Fish Hatchery — one of the most reliably cold, steady flows in northeast Iowa because it comes straight out of the limestone.",
   fish:"Stocked trout in quantity near the hatchery, with better fish the further you walk. Very stable flows make this a dependable pick when rain has blown out the freestone-ier creeks.",
-  coords:[[42.8700,-91.5100],[42.8550,-91.4700],[42.8450,-91.4300],[42.8435,-91.4013]]
+  coords:[
+    [42.83570,-91.30030],[42.83380,-91.30050],[42.83260,-91.30130],[42.83020,-91.30310],
+    [42.82920,-91.30700],[42.82910,-91.30860],[42.82780,-91.30880],[42.82720,-91.30940],
+    [42.82520,-91.31060],[42.82380,-91.31150],[42.82370,-91.31190],[42.82330,-91.31180],
+    [42.82240,-91.31290],[42.81970,-91.31840],[42.81980,-91.32060],[42.81860,-91.32150],
+    [42.81850,-91.32290],[42.81780,-91.32290],[42.81750,-91.32340],[42.81680,-91.32510],
+    [42.81640,-91.32620],[42.81580,-91.32600],[42.81460,-91.32750],[42.81330,-91.32800],
+    [42.81180,-91.33210],[42.81000,-91.33270],[42.81010,-91.33280]
+  ]
 },
 {
   id:"grannis", name:"Grannis Creek", color:"#6e8c5b",
@@ -920,7 +976,16 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"A small Fayette County trout creek near West Union, in the gentler western edge of the Driftless where the bluffs give way to rolling farm ground.",
   fish:"Stocked trout with some holdover browns. Short season of prime water — it fishes best in spring and fall when flows are up and temperatures are down.",
-  coords:[[42.9900,-91.8600],[42.9750,-91.8350],[42.9611,-91.8118],[42.9450,-91.7900]]
+  coords:[
+    [42.80310,-91.77510],[42.80480,-91.77550],[42.81060,-91.77000],[42.81220,-91.77000],
+    [42.81730,-91.76830],[42.81740,-91.76810],[42.81750,-91.76760],[42.82050,-91.76510],
+    [42.82120,-91.76090],[42.82090,-91.75430],[42.82280,-91.74640],[42.82390,-91.74420],
+    [42.82030,-91.74220],[42.82010,-91.73770],[42.82290,-91.73760],[42.82310,-91.73490],
+    [42.82220,-91.73410],[42.82350,-91.72990],[42.82610,-91.72890],[42.82640,-91.72410],
+    [42.82570,-91.71980],[42.82610,-91.71960],[42.82640,-91.71820],[42.82790,-91.71680],
+    [42.82920,-91.71690],[42.83010,-91.71590],[42.83090,-91.71330],[42.83230,-91.71240],
+    [42.83420,-91.70940],[42.83470,-91.70750]
+  ]
 },
 {
   id:"ottercreekia", name:"Otter Creek — Fayette County", color:"#8c7d5b",
@@ -928,7 +993,16 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"A Fayette County trout stream near Elgin, feeding the Turkey River — quiet, rural water that rarely sees a crowd.",
   fish:"Stocked rainbows and browns. Pair it with Grannis Creek and the Volga for a day of small-water hopping through Fayette County.",
-  coords:[[42.9900,-91.7000],[42.9750,-91.6700],[42.9575,-91.6379],[42.9400,-91.6100]]
+  coords:[
+    [42.93985,-91.67750],[42.94119,-91.67665],[42.94159,-91.67402],[42.94203,-91.67370],
+    [42.94309,-91.67409],[42.94369,-91.67190],[42.94344,-91.66961],[42.94263,-91.66941],
+    [42.94175,-91.66591],[42.94165,-91.66311],[42.94089,-91.65968],[42.94177,-91.65606],
+    [42.94279,-91.65476],[42.94353,-91.65257],[42.94420,-91.65074],[42.94558,-91.64945],
+    [42.94968,-91.64439],[42.95074,-91.64409],[42.95123,-91.64472],[42.95214,-91.64425],
+    [42.95299,-91.64017],[42.95307,-91.63757],[42.95160,-91.63537],[42.95150,-91.63492],
+    [42.95281,-91.63378],[42.95271,-91.63139],[42.95308,-91.63057],[42.95675,-91.62597],
+    [42.95692,-91.62413],[42.95693,-91.62400]
+  ]
 },
 {
   id:"richmondsprings", name:"Richmond Springs — Backbone", color:"#4a7d8c",
@@ -936,7 +1010,17 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"The spring-fed trout stretch inside Backbone State Park — Iowa's oldest state park — where Richmond Springs feeds cold water into the Maquoketa River in Delaware County. The southern anchor of Iowa trout country.",
   fish:"Stocked trout in a park setting with excellent, easy access and facilities. Family-friendly rather than technical; the Maquoketa below the springs warms quickly downstream.",
-  coords:[[42.6500,-91.6100],[42.6350,-91.5900],[42.6203,-91.5697],[42.6000,-91.5500]]
+  coords:[
+    [42.68360,-91.60822],[42.67986,-91.60726],[42.67665,-91.59982],[42.67543,-91.59707],
+    [42.66945,-91.59461],[42.66374,-91.59726],[42.66496,-91.59431],[42.66195,-91.58881],
+    [42.65939,-91.58737],[42.65532,-91.58490],[42.65210,-91.58258],[42.64793,-91.57931],
+    [42.64510,-91.57909],[42.64026,-91.57755],[42.63639,-91.57477],[42.63075,-91.57095],
+    [42.62719,-91.56556],[42.62471,-91.56921],[42.61922,-91.56774],[42.61797,-91.56060],
+    [42.61348,-91.56164],[42.60687,-91.56167],[42.60733,-91.55732],[42.61134,-91.55960],
+    [42.61534,-91.55584],[42.60868,-91.54464],[42.60072,-91.53675],[42.59858,-91.54272],
+    [42.58958,-91.54850],[42.58191,-91.55085],[42.57631,-91.54891],[42.57148,-91.54671],
+    [42.56742,-91.54619],[42.56611,-91.54022]
+  ]
 },
 
 /* ================= DRIFTLESS AREA — SOUTHEAST MINNESOTA =================
@@ -960,7 +1044,17 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"The marquee branch: from Forestville through Preston and on to Lanesboro. Bigger water than most Driftless creeks — wide enough to make a real cast — with strong wild brown trout numbers and excellent Blue-Winged Olive and caddis hatches.",
   fish:"Wild browns, with the densest fish counts in the reaches between Preston and Lanesboro. Big enough to fish a 9-foot 5-weight comfortably. Extensive state angling easements; look for the brown-and-white signs and gravel pull-offs.",
-  coords:[[43.6300,-92.2000],[43.6500,-92.1400],[43.6702,-92.0824],[43.6950,-92.0200],[43.7183,-91.9762]]
+  coords:[
+    [43.61604,-92.24282],[43.62557,-92.23455],[43.62674,-92.22882],[43.62428,-92.22115],
+    [43.63293,-92.21931],[43.64197,-92.20967],[43.65414,-92.19984],[43.65762,-92.19032],
+    [43.66063,-92.18433],[43.65822,-92.16705],[43.65832,-92.15605],[43.66309,-92.14515],
+    [43.65927,-92.13130],[43.65879,-92.11952],[43.66332,-92.11212],[43.66646,-92.10305],
+    [43.66877,-92.09510],[43.66714,-92.08371],[43.67069,-92.07730],[43.67055,-92.06426],
+    [43.67929,-92.05334],[43.68351,-92.06133],[43.68706,-92.05041],[43.69501,-92.03854],
+    [43.70462,-92.03485],[43.71177,-92.03593],[43.71022,-92.02667],[43.71991,-92.03065],
+    [43.72179,-92.01135],[43.71341,-92.00490],[43.71041,-91.98188],[43.71971,-91.97739],
+    [43.72195,-91.96101],[43.73732,-91.95793]
+  ]
 },
 {
   id:"nbranchroot", name:"North Branch Root River", color:"#3a8c9c",
@@ -984,7 +1078,17 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"Drains the Spring Grove and Caledonia country in Houston County before joining the mainstem Root near Houston. One of the few Minnesota Driftless streams with a live USGS discharge gauge — a useful proxy for the whole southeast corner.",
   fish:"Trout in the cold upper reaches and tributaries, warming as it approaches the Root. The gauge near Houston is the single best number for judging conditions across Houston and Fillmore counties.",
-  coords:[[43.6200,-91.7000],[43.6700,-91.6500],[43.7100,-91.6000],[43.7388,-91.5643],[43.7600,-91.5600]]
+  coords:[
+    [43.68900,-91.68921],[43.69181,-91.68588],[43.69205,-91.67085],[43.69258,-91.66584],
+    [43.69270,-91.66322],[43.69684,-91.66044],[43.70144,-91.65684],[43.71196,-91.64712],
+    [43.71305,-91.64411],[43.71448,-91.64050],[43.71520,-91.63083],[43.71455,-91.62267],
+    [43.72004,-91.60736],[43.72370,-91.60339],[43.72770,-91.60443],[43.72966,-91.60024],
+    [43.73080,-91.59426],[43.73422,-91.58856],[43.73267,-91.58211],[43.73400,-91.57830],
+    [43.73618,-91.57342],[43.73852,-91.56888],[43.73872,-91.56528],[43.73765,-91.55580],
+    [43.74025,-91.55324],[43.74260,-91.55249],[43.74630,-91.54767],[43.75188,-91.54942],
+    [43.75777,-91.54747],[43.75948,-91.54635],[43.76068,-91.54352],[43.76363,-91.54014],
+    [43.76543,-91.53582],[43.77073,-91.53826]
+  ]
 },
 {
   id:"troutrunmn", name:"Trout Run Creek — Fillmore County", color:"#3a9c6e",
@@ -1000,7 +1104,17 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"A small, cold tributary entering the Root right at Lanesboro — close enough to town to fish before breakfast, and a reliable pick when the bigger branches are off-color after rain.",
   fish:"Wild brown trout in tight water. Its size makes it clear and fishable sooner than the South Branch after a storm.",
-  coords:[[43.6800,-91.9900],[43.6950,-91.9850],[43.7100,-91.9800],[43.7183,-91.9762]]
+  coords:[
+    [43.65289,-91.96045],[43.65506,-91.96363],[43.65602,-91.96729],[43.65873,-91.96884],
+    [43.66198,-91.97038],[43.66354,-91.97317],[43.66513,-91.97376],[43.66634,-91.97400],
+    [43.66822,-91.97370],[43.66923,-91.97436],[43.66943,-91.97626],[43.66917,-91.97861],
+    [43.67138,-91.97933],[43.67366,-91.98252],[43.67742,-91.97930],[43.67919,-91.98080],
+    [43.68164,-91.98342],[43.68238,-91.98231],[43.68712,-91.97853],[43.68848,-91.97689],
+    [43.69049,-91.97821],[43.68958,-91.98436],[43.69224,-91.98550],[43.69572,-91.97775],
+    [43.69569,-91.98019],[43.69328,-91.98898],[43.69536,-91.99143],[43.70004,-91.98976],
+    [43.70021,-91.99443],[43.70207,-91.99064],[43.70390,-91.98727],[43.70595,-91.98448],
+    [43.70881,-91.98842],[43.70940,-91.98420]
+  ]
 },
 {
   id:"canfield", name:"Canfield Creek", color:"#2a9c7d",
@@ -1040,7 +1154,17 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"The middle branch of the Whitewater system, running through the WMA above Elba — the quietest of the three forks.",
   fish:"Wild browns in small, brushy water. Good early-season and late-season choice when the mainstem is crowded.",
-  coords:[[44.0200,-92.1400],[44.0450,-92.1000],[44.0700,-92.0600],[44.0864,-92.0182]]
+  coords:[
+    [44.01366,-92.18674],[44.01564,-92.17474],[44.01932,-92.17069],[44.02443,-92.15918],
+    [44.02531,-92.15513],[44.02604,-92.14432],[44.02525,-92.13790],[44.02516,-92.13217],
+    [44.02639,-92.12219],[44.03166,-92.12020],[44.02885,-92.11947],[44.03025,-92.11434],
+    [44.03007,-92.11170],[44.03374,-92.10716],[44.03579,-92.10002],[44.04002,-92.10136],
+    [44.04212,-92.09139],[44.04664,-92.08125],[44.05139,-92.07970],[44.05042,-92.07241],
+    [44.05553,-92.06967],[44.05963,-92.06501],[44.05371,-92.06048],[44.05058,-92.05078],
+    [44.04927,-92.04308],[44.05826,-92.04741],[44.06289,-92.04663],[44.06760,-92.04265],
+    [44.07057,-92.03949],[44.07210,-92.03681],[44.07613,-92.03217],[44.08048,-92.02702],
+    [44.08165,-92.02313],[44.08464,-92.02168]
+  ]
 },
 {
   id:"sfwhitewater", name:"South Fork Whitewater River", color:"#4abccc",
@@ -1072,7 +1196,17 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"A Fillmore County trout creek joining the Root at Rushford. The USGS site here is a stage-only gauge — it reports water level, not discharge — so this stream is carried as ungauged rather than showing a number the flow status can't use.",
   fish:"Wild brown trout in a mix of meadow and wooded water. Use the Root at Pilot Mound or the South Fork Root gauge as a regional wetness read.",
-  coords:[[43.8800,-91.8500],[43.8600,-91.8100],[43.8324,-91.7767],[43.8083,-91.7524]]
+  coords:[
+    [43.91104,-91.82785],[43.90870,-91.82763],[43.90571,-91.83399],[43.90474,-91.83231],
+    [43.90139,-91.82961],[43.89601,-91.83367],[43.89106,-91.83182],[43.88786,-91.83099],
+    [43.88869,-91.83002],[43.88349,-91.82590],[43.88320,-91.82306],[43.88300,-91.81841],
+    [43.87956,-91.81648],[43.87512,-91.81143],[43.87025,-91.81352],[43.86595,-91.81022],
+    [43.86410,-91.80860],[43.86130,-91.80632],[43.85974,-91.79743],[43.85952,-91.79604],
+    [43.85458,-91.79440],[43.85163,-91.79533],[43.84766,-91.79741],[43.84249,-91.79565],
+    [43.84140,-91.79386],[43.83991,-91.78884],[43.84009,-91.77926],[43.83816,-91.77263],
+    [43.83278,-91.77654],[43.82975,-91.77648],[43.82092,-91.77160],[43.81813,-91.76104],
+    [43.81447,-91.75100],[43.80481,-91.74718]
+  ]
 },
 {
   id:"crookedcreekmn", name:"Crooked Creek — Houston County", color:"#8c9c3a",
@@ -1080,7 +1214,17 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"Runs through the Freeburg and Caledonia country in the far southeast corner of Minnesota, dropping to the Mississippi near Reno. Deep valleys, little traffic. Its USGS site is stage-only, so no CFS is available here.",
   fish:"Wild brown trout with good numbers in the upper branches. Among the least-pressured quality water in the Minnesota Driftless.",
-  coords:[[43.6400,-91.4500],[43.6250,-91.4100],[43.6107,-91.3612],[43.5900,-91.3100]]
+  coords:[
+    [43.60841,-91.39967],[43.60558,-91.39160],[43.60491,-91.38786],[43.59968,-91.38240],
+    [43.59929,-91.37799],[43.60405,-91.37324],[43.60773,-91.36710],[43.60989,-91.36308],
+    [43.61307,-91.34613],[43.61384,-91.33883],[43.61584,-91.33522],[43.61514,-91.33100],
+    [43.61551,-91.32435],[43.61240,-91.32127],[43.61178,-91.32022],[43.60799,-91.31752],
+    [43.60729,-91.31221],[43.60619,-91.30783],[43.60807,-91.30242],[43.60592,-91.29971],
+    [43.60357,-91.29852],[43.60061,-91.29624],[43.60067,-91.29265],[43.59804,-91.28890],
+    [43.59683,-91.28699],[43.59423,-91.28729],[43.59263,-91.28416],[43.58977,-91.27809],
+    [43.58348,-91.27618],[43.58006,-91.27710],[43.57752,-91.27570],[43.57485,-91.27374],
+    [43.57410,-91.27118],[43.57341,-91.26829]
+  ]
 },
 {
   id:"winnebagocr", name:"Winnebago Creek", color:"#9c8c4a",
@@ -1096,7 +1240,16 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"A cold Houston County creek in the bluffs above the Mississippi between La Crescent and Hokah, dropping fast out of the ridge country.",
   fish:"Wild brown trout in steep, small water. Short but good — an easy stop when you're passing La Crosse.",
-  coords:[[43.6700,-91.4200],[43.6850,-91.3900],[43.7000,-91.3600],[43.7150,-91.3300]]
+  coords:[
+    [43.88700,-91.53700],[43.88550,-91.51820],[43.88240,-91.49800],[43.88210,-91.48500],
+    [43.87600,-91.47210],[43.87020,-91.46590],[43.86800,-91.45860],[43.85550,-91.45410],
+    [43.85120,-91.45460],[43.84860,-91.45200],[43.84090,-91.44000],[43.83790,-91.43740],
+    [43.84190,-91.42570],[43.84650,-91.42160],[43.84810,-91.41360],[43.84730,-91.39150],
+    [43.84380,-91.38780],[43.84140,-91.37870],[43.83330,-91.36950],[43.83680,-91.36220],
+    [43.83160,-91.34890],[43.82910,-91.34060],[43.82330,-91.33540],[43.81590,-91.32750],
+    [43.81170,-91.31970],[43.81000,-91.31540],[43.80930,-91.30790],[43.80560,-91.29910],
+    [43.80150,-91.28840],[43.79550,-91.26250]
+  ]
 },
 {
   id:"haycreek", name:"Hay Creek", color:"#8c4a6e",
@@ -1104,7 +1257,17 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"The northern outpost of the Driftless: a spring creek running north into the Mississippi at Red Wing, through the Hay Creek Unit of the Richard J. Dorer Memorial Hardwood State Forest. The closest quality trout water to the Twin Cities.",
   fish:"Wild brown trout with stocking support. Gets weekend traffic from the metro — go on a weekday or walk further than the first bend. State forest parking along the valley road.",
-  coords:[[44.4800,-92.5600],[44.5100,-92.5500],[44.5400,-92.5400],[44.5625,-92.5338]]
+  coords:[
+    [44.46616,-92.60064],[44.47042,-92.59653],[44.47320,-92.59573],[44.47432,-92.59047],
+    [44.47708,-92.58699],[44.48013,-92.58332],[44.48084,-92.57837],[44.48214,-92.57488],
+    [44.48382,-92.57261],[44.48450,-92.57546],[44.48836,-92.57577],[44.48831,-92.56852],
+    [44.48949,-92.56637],[44.48946,-92.56340],[44.48678,-92.56041],[44.48635,-92.55590],
+    [44.48871,-92.55055],[44.49178,-92.55049],[44.49571,-92.54775],[44.49817,-92.55213],
+    [44.49707,-92.55898],[44.50228,-92.56280],[44.50740,-92.56502],[44.51322,-92.56356],
+    [44.51738,-92.56242],[44.52285,-92.56109],[44.52892,-92.56092],[44.53303,-92.56047],
+    [44.54012,-92.56507],[44.54813,-92.56440],[44.55518,-92.56331],[44.56190,-92.56265],
+    [44.56899,-92.56173],[44.57347,-92.55161]
+  ]
 },
 {
   id:"vermillionmn", name:"Vermillion River", color:"#9c5b7d",
@@ -1132,7 +1295,16 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"The crown jewel of Wisconsin trout streams and the birthplace of modern coldwater stream restoration — the Coon Valley watershed work that started here in the 1930s became the template for Driftless habitat projects everywhere since. A Class I spring creek running down Timber Coulee from the Westby ridge to Coon Valley.",
   fish:"Dense wild brown trout in restored riffle-pool-lunker-structure habitat. Summer caddis and Trico hatches bring excellent dry-fly fishing. Heavy roadside easement access along County P — and correspondingly heavy pressure, so walk past the first three pull-offs.",
-  coords:[[43.6100,-90.8900],[43.5800,-90.9200],[43.5400,-90.9600],[43.5022,-90.9932]]
+  coords:[
+    [43.66330,-90.85530],[43.66870,-90.85190],[43.67730,-90.84310],[43.68150,-90.84160],
+    [43.68780,-90.83970],[43.68760,-90.85010],[43.68710,-90.85480],[43.69150,-90.85800],
+    [43.69300,-90.85990],[43.69740,-90.86100],[43.70310,-90.86970],[43.70610,-90.86920],
+    [43.70860,-90.87530],[43.71120,-90.88370],[43.71220,-90.88530],[43.71550,-90.88680],
+    [43.71620,-90.89170],[43.71710,-90.89480],[43.72450,-90.91590],[43.72410,-90.92410],
+    [43.72520,-90.93240],[43.72580,-90.93460],[43.72500,-90.93770],[43.72450,-90.94620],
+    [43.72310,-90.94980],[43.72340,-90.95300],[43.72200,-90.96500],[43.71980,-90.96870],
+    [43.72170,-90.97140],[43.72120,-90.97700]
+  ]
 },
 {
   id:"cooncreek", name:"Coon Creek", color:"#1d8c5b",
@@ -1164,7 +1336,16 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"Another of the small Coon Creek feeders near Chaseburg, tucked into its own coulee.",
   fish:"Wild browns in very small water. Rewarding if you like fishing creeks you can jump across; frustrating if you don't.",
-  coords:[[43.6100,-91.0700],[43.6250,-91.0550],[43.6380,-91.0420],[43.6469,-91.0335]]
+  coords:[
+    [43.76480,-90.84310],[43.76250,-90.84070],[43.75940,-90.84230],[43.75740,-90.84010],
+    [43.75600,-90.83930],[43.75590,-90.83950],[43.75500,-90.84090],[43.74980,-90.84300],
+    [43.74860,-90.84690],[43.74830,-90.84810],[43.74690,-90.85110],[43.74350,-90.85630],
+    [43.74550,-90.86160],[43.74420,-90.86350],[43.74120,-90.87270],[43.73950,-90.87370],
+    [43.73990,-90.87640],[43.73900,-90.87810],[43.73920,-90.87960],[43.73880,-90.88290],
+    [43.73690,-90.88640],[43.73630,-90.88660],[43.73490,-90.88610],[43.73130,-90.89470],
+    [43.73180,-90.89730],[43.73090,-90.89970],[43.72910,-90.89960],[43.72780,-90.90030],
+    [43.72550,-90.90450],[43.72440,-90.90700]
+  ]
 },
 {
   id:"kickapoo", name:"Kickapoo River", color:"#8c6e2a",
@@ -1188,7 +1369,17 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"A Crawford/Vernon County creek running to the Kickapoo near Gays Mills, with an active watershed council driving habitat and farm-conservation work.",
   fish:"Wild brown trout in restored habitat. Less famous than the West Fork an easy drive away, which is exactly the appeal.",
-  coords:[[43.4200,-90.9500],[43.4000,-90.9100],[43.3700,-90.8800],[43.3400,-90.8600]]
+  coords:[
+    [43.42996,-90.88713],[43.42881,-90.88920],[43.42517,-90.89129],[43.42302,-90.89473],
+    [43.41943,-90.89359],[43.41787,-90.89289],[43.41505,-90.89270],[43.41170,-90.89101],
+    [43.40821,-90.88979],[43.40386,-90.88555],[43.40098,-90.88516],[43.39937,-90.88194],
+    [43.39850,-90.87945],[43.39596,-90.87472],[43.39308,-90.87497],[43.39147,-90.87254],
+    [43.39110,-90.86879],[43.38831,-90.86925],[43.38447,-90.86983],[43.38280,-90.86820],
+    [43.38132,-90.86601],[43.38050,-90.86160],[43.37792,-90.86050],[43.37161,-90.86176],
+    [43.36883,-90.86158],[43.36669,-90.85886],[43.36635,-90.85634],[43.36264,-90.85023],
+    [43.36031,-90.85032],[43.35902,-90.84661],[43.35842,-90.84616],[43.35528,-90.84396],
+    [43.35264,-90.84413],[43.35124,-90.84175]
+  ]
 },
 {
   id:"knappcreek", name:"Knapp Creek", color:"#6e8c3a",
@@ -1196,7 +1387,16 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"A Crawford County Kickapoo tributary in the Soldiers Grove area, running through a narrow wooded valley.",
   fish:"Wild browns in small water. A good add-on when you're already fishing the Kickapoo corridor.",
-  coords:[[43.4400,-90.8900],[43.4250,-90.8500],[43.4100,-90.8100],[43.3944,-90.7707]]
+  coords:[
+    [43.41590,-90.64790],[43.40470,-90.65570],[43.38790,-90.65620],[43.38170,-90.65730],
+    [43.37180,-90.66010],[43.36240,-90.66050],[43.35650,-90.66640],[43.34440,-90.67190],
+    [43.33970,-90.66550],[43.33230,-90.66230],[43.31780,-90.65580],[43.30850,-90.65430],
+    [43.29930,-90.65290],[43.29450,-90.65130],[43.29090,-90.65170],[43.28070,-90.64080],
+    [43.27710,-90.63380],[43.27020,-90.62840],[43.25860,-90.63850],[43.25470,-90.64150],
+    [43.25130,-90.62210],[43.24710,-90.62850],[43.23840,-90.63090],[43.22540,-90.63280],
+    [43.21730,-90.63080],[43.21720,-90.63570],[43.20260,-90.63990],[43.19940,-90.65050],
+    [43.18810,-90.66320],[43.17280,-90.68960]
+  ]
 },
 {
   id:"badaxe", name:"Bad Axe River", color:"#8c3a2a",
@@ -1212,7 +1412,16 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"A cold creek dropping off the ridge to the Mississippi near Ferryville, below the Rush Creek State Natural Area's dry bluff prairies.",
   fish:"Wild brown trout in steep, small water. The bluff-prairie setting above it is worth the trip on its own.",
-  coords:[[43.3400,-90.9700],[43.3300,-91.0200],[43.3200,-91.0700],[43.3050,-91.1100]]
+  coords:[
+    [43.45390,-91.00310],[43.44340,-91.00750],[43.43420,-91.02080],[43.43290,-91.02420],
+    [43.42560,-91.02580],[43.42110,-91.02430],[43.41640,-91.02700],[43.41110,-91.02860],
+    [43.41080,-91.03580],[43.41160,-91.03960],[43.40560,-91.04650],[43.40170,-91.05530],
+    [43.40330,-91.06450],[43.39810,-91.06680],[43.39740,-91.07340],[43.39570,-91.07810],
+    [43.39780,-91.08280],[43.39760,-91.08470],[43.39770,-91.09480],[43.40030,-91.10060],
+    [43.39730,-91.10630],[43.39240,-91.11530],[43.39090,-91.12080],[43.38850,-91.13250],
+    [43.38420,-91.13450],[43.38530,-91.13890],[43.37290,-91.14320],[43.36770,-91.14020],
+    [43.36240,-91.14540],[43.36470,-91.15160]
+  ]
 },
 {
   id:"blackearth", name:"Black Earth Creek", color:"#1d7a8c",
@@ -1220,7 +1429,17 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"Dane County's famous limestone spring creek, running from Cross Plains through Black Earth to Mazomanie — twenty-five minutes from Madison and one of the most heavily studied trout streams in the Midwest. Two live USGS gauges make it the best-instrumented small trout stream in the Driftless.",
   fish:"Wild brown trout, some of them large, in a stream that gets fished hard and stays good anyway. Classic spring-creek tactics: scuds, sowbugs, small BWOs, and a quiet approach. Urban pressure means educated fish.",
-  coords:[[43.1050,-89.6150],[43.1097,-89.6408],[43.1147,-89.6641],[43.1342,-89.7322],[43.1772,-89.7943],[43.1900,-89.8300]]
+  coords:[
+    [43.08630,-89.57568],[43.09461,-89.60105],[43.09481,-89.62336],[43.09835,-89.63545],
+    [43.10534,-89.63835],[43.11085,-89.64551],[43.11588,-89.66382],[43.11501,-89.67148],
+    [43.11476,-89.67828],[43.11696,-89.68446],[43.11692,-89.68955],[43.12206,-89.69930],
+    [43.12486,-89.70994],[43.12792,-89.71924],[43.13462,-89.73421],[43.13771,-89.74112],
+    [43.14197,-89.74330],[43.14514,-89.74698],[43.14576,-89.75720],[43.14780,-89.76363],
+    [43.15110,-89.76796],[43.15396,-89.77477],[43.15989,-89.77761],[43.16430,-89.77952],
+    [43.17618,-89.78786],[43.17961,-89.79483],[43.17949,-89.80603],[43.17826,-89.81666],
+    [43.17202,-89.82299],[43.16714,-89.82997],[43.16631,-89.83759],[43.16412,-89.84721],
+    [43.16207,-89.85394],[43.16266,-89.85951]
+  ]
 },
 {
   id:"mountvernon", name:"Mount Vernon Creek", color:"#2a8c9c",
@@ -1228,7 +1447,16 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"A Dane County limestone creek in the Mount Vernon valley south of Verona — spring-fed, clear, and close enough to Madison for an evening.",
   fish:"Wild brown trout in classic spring-creek water. Technical and clear; long leaders and small flies. DNR fishery area access in the valley.",
-  coords:[[42.9400,-89.5200],[42.9550,-89.5300],[42.9700,-89.5400],[42.9900,-89.5500]]
+  coords:[
+    [42.95590,-89.67110],[42.95400,-89.66660],[42.95140,-89.66280],[42.95000,-89.66100],
+    [42.94490,-89.65700],[42.94400,-89.65460],[42.94400,-89.65410],[42.94260,-89.64990],
+    [42.94190,-89.64900],[42.93910,-89.64400],[42.93780,-89.64130],[42.93750,-89.64030],
+    [42.93560,-89.63940],[42.93450,-89.63920],[42.93420,-89.63840],[42.93250,-89.63420],
+    [42.93170,-89.63320],[42.93220,-89.63220],[42.93070,-89.63100],[42.93050,-89.63070],
+    [42.92820,-89.62940],[42.92770,-89.62890],[42.92700,-89.62870],[42.92640,-89.62690],
+    [42.92560,-89.62510],[42.92480,-89.62380],[42.92230,-89.62350],[42.92170,-89.62350],
+    [42.91770,-89.61900],[42.91230,-89.61920]
+  ]
 },
 {
   id:"castlerock", name:"Castle Rock Creek", color:"#3a9cac",
@@ -1236,7 +1464,17 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"The Fennimore Fork of the Blue River in Grant County — a big-spring limestone creek with famously stable, cold flows and a reputation for growing large wild browns in a small stream. One of the marquee destinations of the Wisconsin Driftless.",
   fish:"Wild brown trout, with genuine trophy potential for a creek this size. Spring-creek fishing at its most technical: scuds, sowbugs, midges, and light tippet. A long catch-and-release stretch has historically applied — check current Wisconsin DNR regulations.",
-  coords:[[42.9800,-90.5800],[43.0100,-90.5600],[43.0400,-90.5500],[43.0700,-90.5500]]
+  coords:[
+    [42.98647,-90.62653],[42.99077,-90.61412],[42.99573,-90.60377],[42.99869,-90.59594],
+    [43.00338,-90.58920],[43.00839,-90.58107],[43.01618,-90.57770],[43.02721,-90.56759],
+    [43.02605,-90.56333],[43.03472,-90.56192],[43.03763,-90.55910],[43.04113,-90.55274],
+    [43.04320,-90.54764],[43.04477,-90.54143],[43.04675,-90.53663],[43.05032,-90.53200],
+    [43.04351,-90.52391],[43.04840,-90.52303],[43.05639,-90.53555],[43.06024,-90.52908],
+    [43.06097,-90.53116],[43.06190,-90.54295],[43.06421,-90.54542],[43.06776,-90.54008],
+    [43.07149,-90.53273],[43.07776,-90.53494],[43.07777,-90.54380],[43.08192,-90.54462],
+    [43.08933,-90.54913],[43.09493,-90.54898],[43.09737,-90.53980],[43.09731,-90.53571],
+    [43.10098,-90.53102],[43.10065,-90.52698]
+  ]
 },
 {
   id:"blueriver", name:"Blue River", color:"#2a6e9c",
@@ -1252,7 +1490,17 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"A Grant County spring creek in the Werley and Woodman country — remote-feeling, lightly travelled, and long regarded as one of the best wild brown trout streams in southwest Wisconsin.",
   fish:"Wild brown trout in cold, stable spring water. Meadow stretches with undercut banks; a careful approach pays. Gravel-road access with pull-offs at the crossings.",
-  coords:[[42.9700,-90.7800],[43.0100,-90.7900],[43.0500,-90.8000],[43.0800,-90.8200]]
+  coords:[
+    [43.01879,-90.74494],[43.01756,-90.74788],[43.01747,-90.75511],[43.01579,-90.75797],
+    [43.01528,-90.76168],[43.01709,-90.76457],[43.01963,-90.77204],[43.02134,-90.77529],
+    [43.02406,-90.77737],[43.02849,-90.78246],[43.03253,-90.78386],[43.03517,-90.78683],
+    [43.03743,-90.78990],[43.04079,-90.79121],[43.04483,-90.78693],[43.04686,-90.78596],
+    [43.04986,-90.78919],[43.05173,-90.79238],[43.04981,-90.79909],[43.05066,-90.80532],
+    [43.05300,-90.80786],[43.05481,-90.81081],[43.05731,-90.81126],[43.05823,-90.81650],
+    [43.06098,-90.81882],[43.06289,-90.82072],[43.06417,-90.82427],[43.06697,-90.82492],
+    [43.06541,-90.83317],[43.06562,-90.83508],[43.06686,-90.84244],[43.06839,-90.84305],
+    [43.07575,-90.84446],[43.07698,-90.84796]
+  ]
 },
 {
   id:"grantriver", name:"Grant River", color:"#5b8c2a",
@@ -1308,7 +1556,17 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"Runs through Spring Valley in the northern Driftless, above and below the Eau Galle Dam, to the Chippewa. Trout water in the upper river with a live USGS discharge gauge at Spring Valley.",
   fish:"Wild and stocked brown trout upstream of the reservoir. The gauge here is a useful proxy for the whole Pierce/St. Croix County cluster, including the ungauged Rush and Trimbelle.",
-  coords:[[44.9400,-92.2100],[44.9000,-92.2200],[44.8528,-92.2383],[44.7800,-92.2200],[44.7200,-92.1900]]
+  coords:[
+    [44.90616,-92.26535],[44.90374,-92.26451],[44.89822,-92.26110],[44.89283,-92.25940],
+    [44.89547,-92.25452],[44.88693,-92.25993],[44.88717,-92.25212],[44.88416,-92.25131],
+    [44.87920,-92.25826],[44.87274,-92.25404],[44.86745,-92.25142],[44.86671,-92.25438],
+    [44.86144,-92.24227],[44.85676,-92.23825],[44.84902,-92.23679],[44.84507,-92.23626],
+    [44.84014,-92.23689],[44.84246,-92.22482],[44.83800,-92.22520],[44.83306,-92.22229],
+    [44.83090,-92.22185],[44.82856,-92.21801],[44.82436,-92.21473],[44.81303,-92.20872],
+    [44.81255,-92.20332],[44.80952,-92.19592],[44.80728,-92.19235],[44.80409,-92.19152],
+    [44.79875,-92.19393],[44.79441,-92.18732],[44.79222,-92.18174],[44.79056,-92.18020],
+    [44.78728,-92.17534],[44.78217,-92.17218]
+  ]
 },
 {
   id:"lacrosseriver", name:"La Crosse River", color:"#6e5b9c",
@@ -1324,7 +1582,17 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"A cold Monroe County tributary of the La Crosse River near Angelo, north of Sparta — one of the smallest streams in the Driftless with its own live discharge gauge, which makes it a precise read on local conditions.",
   fish:"Wild brown trout in small spring-fed water. Because the gauge is right on the creek, this is one of the few places here where the CFS number genuinely describes the water you'll be standing in.",
-  coords:[[44.0100,-90.7300],[43.9900,-90.7450],[43.9672,-90.7650],[43.9500,-90.7900]]
+  coords:[
+    [43.95284,-90.72238],[43.95379,-90.72308],[43.95350,-90.72438],[43.95458,-90.72624],
+    [43.95618,-90.72793],[43.95817,-90.72874],[43.95893,-90.72955],[43.95943,-90.72971],
+    [43.96077,-90.72991],[43.96160,-90.73057],[43.96257,-90.73251],[43.96250,-90.73349],
+    [43.96376,-90.73481],[43.96292,-90.73620],[43.96305,-90.73787],[43.96326,-90.73881],
+    [43.96274,-90.74066],[43.96289,-90.74123],[43.96340,-90.74341],[43.96342,-90.74370],
+    [43.96319,-90.74634],[43.96395,-90.74737],[43.96362,-90.74788],[43.96338,-90.74933],
+    [43.96422,-90.75208],[43.96450,-90.75310],[43.96413,-90.75472],[43.96481,-90.75776],
+    [43.96521,-90.75976],[43.96572,-90.76153],[43.96586,-90.76383],[43.96869,-90.76689],
+    [43.97047,-90.76636],[43.97132,-90.76733]
+  ]
 },
 {
   id:"stillwell", name:"Stillwell Creek", color:"#4a5b9c",
@@ -1332,7 +1600,17 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"A small Monroe County trout creek near Tomah in the La Crosse River watershed, on the sandy northeastern margin of the Driftless. It carries its own gauge — and the numbers are small enough (single-digit CFS at low water) to show just how little water a good trout creek needs.",
   fish:"Brook and brown trout in very small water. Tight casting; a 7-foot rod is plenty. A worthwhile stop if you're passing Tomah on I-90.",
-  coords:[[44.0300,-90.6300],[44.0100,-90.6450],[43.9939,-90.6572],[43.9750,-90.6800]]
+  coords:[
+    [43.98092,-90.63065],[43.98590,-90.63757],[43.98617,-90.63836],[43.98828,-90.64406],
+    [43.99146,-90.64865],[43.99207,-90.64959],[43.99350,-90.65232],[43.99443,-90.66199],
+    [43.99572,-90.66422],[43.99598,-90.66457],[43.99634,-90.66583],[43.99666,-90.66633],
+    [43.99654,-90.66676],[43.99734,-90.66869],[43.99736,-90.66878],[43.99743,-90.66908],
+    [43.99785,-90.67011],[43.99793,-90.67066],[43.99804,-90.67113],[43.99805,-90.67190],
+    [43.99812,-90.67265],[43.99827,-90.67340],[43.99848,-90.67523],[43.99910,-90.67718],
+    [44.00035,-90.68045],[44.00067,-90.68226],[44.00117,-90.68341],[44.00212,-90.68472],
+    [44.00329,-90.68710],[44.00466,-90.68988],[44.00566,-90.69222],[44.00796,-90.69689],
+    [44.00772,-90.69801],[44.00938,-90.69959]
+  ]
 },
 {
   id:"elkcreekwi", name:"Elk Creek — Trempealeau County", color:"#6e9c5b",
@@ -1356,7 +1634,17 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"Runs west through Buffalo County past Mondovi toward the Chippewa, in the northern Driftless. Trout in the cold upper branches and tributary coulees; warmwater downstream.",
   fish:"Brown trout in the headwater branches; smallmouth in the lower river. The Buffalo County coulees are among the least-fished quality trout water in Wisconsin.",
-  coords:[[44.6400,-91.4800],[44.6000,-91.5800],[44.5666,-91.6712],[44.5000,-91.8000],[44.4300,-91.9000]]
+  coords:[
+    [44.57584,-91.54625],[44.57551,-91.55149],[44.57529,-91.55516],[44.57299,-91.55982],
+    [44.57408,-91.56213],[44.57524,-91.56607],[44.57224,-91.57150],[44.57212,-91.57689],
+    [44.57060,-91.57994],[44.57017,-91.58566],[44.57098,-91.59876],[44.56619,-91.62656],
+    [44.56704,-91.62978],[44.56643,-91.63411],[44.56727,-91.63867],[44.56600,-91.64081],
+    [44.56553,-91.64760],[44.56586,-91.65273],[44.56511,-91.65362],[44.56296,-91.65807],
+    [44.56213,-91.66328],[44.56222,-91.67419],[44.56140,-91.67779],[44.55918,-91.67909],
+    [44.55935,-91.68152],[44.55828,-91.68434],[44.55535,-91.68781],[44.55295,-91.68873],
+    [44.54974,-91.69018],[44.54665,-91.69155],[44.54465,-91.69049],[44.54278,-91.68882],
+    [44.53939,-91.69114],[44.53644,-91.69477]
+  ]
 },
 {
   id:"pineriverwi", name:"Pine River — Richland County", color:"#5b9c6e",
@@ -1364,7 +1652,17 @@ const RIVERS = [
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"Runs south through Richland Center to the Wisconsin River, gathering a set of trout tributaries out of the Richland County ridges along the way.",
   fish:"Trout in the upper river and the spring-fed feeder creeks; smallmouth below Richland Center. An overlooked corner of the Wisconsin Driftless.",
-  coords:[[43.5000,-90.4200],[43.4400,-90.4000],[43.3800,-90.3900],[43.3336,-90.3862],[43.2600,-90.4100]]
+  coords:[
+    [43.45580,-90.35885],[43.45365,-90.36489],[43.44720,-90.36329],[43.44362,-90.35965],
+    [43.43929,-90.35801],[43.43541,-90.36036],[43.43012,-90.36479],[43.42727,-90.36001],
+    [43.42026,-90.36597],[43.41835,-90.36869],[43.40340,-90.36331],[43.39989,-90.36830],
+    [43.39403,-90.36764],[43.39058,-90.37593],[43.38781,-90.37772],[43.38574,-90.37787],
+    [43.37707,-90.37865],[43.37427,-90.38762],[43.36898,-90.39648],[43.36707,-90.39384],
+    [43.36581,-90.38992],[43.36066,-90.38917],[43.35597,-90.38482],[43.34978,-90.38493],
+    [43.34421,-90.39395],[43.33187,-90.39058],[43.32421,-90.38625],[43.32001,-90.38535],
+    [43.31547,-90.37983],[43.31722,-90.37069],[43.31495,-90.36488],[43.31390,-90.36176],
+    [43.31189,-90.35751],[43.30918,-90.35189]
+  ]
 },
 
 /* ================= DRIFTLESS AREA — NORTHWEST ILLINOIS ================= */
@@ -1981,13 +2279,13 @@ const RAMPS = [
   {id:"coldw1",   river:"coldwaterIA", name:"Coldwater Creek access", role:"wade", pos:[43.4200,-91.8870], note:"Iowa DNR access in the Coldwater valley; spring-fed and cold through summer."},
   {id:"sbear1",   river:"southbear", name:"South Bear — Highlandville", role:"wade", pos:[43.4122,-91.7290], note:"DNR parking at Highlandville; special regulations apply on parts of this stream — read the current trout regs."},
   {id:"sbear2",   river:"southbear", name:"South Bear — lower valley", role:"wade", pos:[43.3960,-91.7120], note:"Pull-off downstream toward the Upper Iowa confluence."},
-  {id:"nbear1",   river:"northbear", name:"North Bear Creek access", role:"wade", pos:[43.4400,-91.7480], note:"Roadside parking in the North Bear valley; brushy small water."},
+  {id:"nbear1",   river:"northbear", name:"North Bear Creek access", role:"wade", pos:[43.46980,-91.64260], note:"Roadside parking in the North Bear valley; brushy small water."},
   {id:"canoe1",   river:"canoecreek", name:"Canoe Creek access", role:"wade", pos:[43.3860,-91.7080], note:"Bridge pull-off northeast of Decorah; quieter than Trout Run."},
   {id:"french1",  river:"frenchcreek", name:"French Creek Wildlife Area", role:"wade", pos:[43.4400,-91.3600], note:"DNR wildlife area parking; managed wild brown trout water — check current special regulations."},
   {id:"paint1",   river:"paintcreek", name:"Yellow River State Forest HQ", role:"wade", pos:[43.1800,-91.2420], note:"State forest parking and campground; miles of public bank on Paint Creek."},
   {id:"paint2",   river:"paintcreek", name:"Paint Creek — Waterville", role:"wade", pos:[43.2172,-91.2905], note:"Upper-valley access near Waterville; colder water, wild fish."},
   {id:"village1", river:"villagecreek", name:"Village Creek access", role:"wade", pos:[43.3600,-91.2800], note:"Roadside parking in the valley behind Lansing."},
-  {id:"clearia1", river:"clearcreekia", name:"Clear Creek access", role:"wade", pos:[43.3000,-91.2800], note:"Bluff-valley pull-off near Lansing; clear, technical water."},
+  {id:"clearia1", river:"clearcreekia", name:"Clear Creek access", role:"wade", pos:[43.36010,-91.29590], note:"Bluff-valley pull-off near Lansing; clear, technical water."},
   {id:"yellow1",  river:"yellowriver", name:"Yellow River — Ion gauge", role:"wade", pos:[43.1119,-91.2651], note:"Bridge access at the gauge; smallmouth water here, trout in the upper valley."},
   {id:"yellow2",  river:"yellowriver", name:"Effigy Mounds / river mouth", role:"wade", pos:[43.0957,-91.2202], note:"National monument parking near the Mississippi confluence."},
   {id:"bloody1",  river:"bloodyrun", name:"Bloody Run County Park", role:"wade", pos:[43.0408,-91.2065], note:"Clayton County park with campground and creekside parking; gauge on site. Walk upstream from the campground."},
@@ -1996,8 +2294,8 @@ const RAMPS = [
   {id:"turkey2",  river:"turkeyriver", name:"Turkey River — Spillville", role:"launch", pos:[43.2073,-91.9503], note:"Upper-river access and gauge in Winneshiek County."},
   {id:"volga1",   river:"volgariver", name:"Volga River State Recreation Area", role:"wade", pos:[42.8200,-91.7400], note:"State recreation area with camping, trails and public bank on the Volga."},
   {id:"volga2",   river:"volgariver", name:"Littleport gauge access", role:"takeout", pos:[42.7539,-91.3690], note:"Bridge access at the gauge near the Turkey confluence."},
-  {id:"bigspr1",  river:"springbranchia", name:"Big Spring Fish Hatchery", role:"wade", pos:[42.8450,-91.4300], note:"Hatchery parking on Spring Branch; very stable spring flows — a dependable wet-weather fallback."},
-  {id:"grannis1", river:"grannis", name:"Grannis Creek access", role:"wade", pos:[42.9611,-91.8118], note:"Roadside parking near West Union, Fayette County."},
+  {id:"bigspr1",  river:"springbranchia", name:"Big Spring Fish Hatchery", role:"wade", pos:[42.81180,-91.33210], note:"Hatchery parking on Spring Branch; very stable spring flows — a dependable wet-weather fallback."},
+  {id:"grannis1", river:"grannis", name:"Grannis Creek access", role:"wade", pos:[42.82050,-91.76510], note:"Roadside parking near West Union, Fayette County."},
   {id:"otteria1", river:"ottercreekia", name:"Otter Creek — Elgin", role:"wade", pos:[42.9575,-91.6379], note:"Fayette County access near Elgin; pairs well with Grannis Creek."},
   {id:"backbone1",river:"richmondsprings", name:"Backbone State Park — Richmond Springs", role:"wade", pos:[42.6203,-91.5697], note:"Iowa's oldest state park: paved parking, campground, trails, easy family access to the spring branch."},
 
@@ -2024,18 +2322,18 @@ const RAMPS = [
   {id:"rushmn1",  river:"rushcreekmn", name:"Rush Creek access — Rushford", role:"wade", pos:[43.8324,-91.7767], note:"Stage-only USGS gauge here — no CFS. Easement water up the valley."},
   {id:"crookmn1", river:"crookedcreekmn", name:"Crooked Creek — Freeburg", role:"wade", pos:[43.6107,-91.3612], note:"Far southeast corner; stage-only gauge. Very lightly fished."},
   {id:"winne1",   river:"winnebagocr", name:"Winnebago Creek — Eitzen", role:"wade", pos:[43.5400,-91.3400], note:"Minutes from the Iowa line; pairs with French Creek or Waterloo Creek."},
-  {id:"pinemn1",  river:"pinecreekmn", name:"Pine Creek access", role:"wade", pos:[43.7000,-91.3600], note:"Bluff-country creek between La Crescent and Hokah."},
+  {id:"pinemn1",  river:"pinecreekmn", name:"Pine Creek access", role:"wade", pos:[43.80150,-91.28840], note:"Bluff-country creek between La Crescent and Hokah."},
   {id:"hay1",     river:"haycreek", name:"Hay Creek Unit — state forest", role:"wade", pos:[44.5200,-92.5450], note:"Dorer Memorial Hardwood State Forest parking south of Red Wing; closest quality trout water to the Twin Cities."},
   {id:"verm1",    river:"vermillionmn", name:"Vermillion River — Hastings area", role:"wade", pos:[44.7400,-92.9500], note:"Metro-edge spring creek; special regulations apply on parts — check current MN DNR trout rules."},
 
   // ---- Wisconsin Driftless ----
-  {id:"timber1",  river:"timbercoulee", name:"Timber Coulee — County P pull-offs", role:"wade", pos:[43.5400,-90.9600], note:"A string of gravel easement pull-offs up the coulee. The first few fill early — keep driving."},
-  {id:"timber2",  river:"timbercoulee", name:"Timber Coulee — upper valley", role:"wade", pos:[43.5850,-90.9080], note:"Upper reaches toward the Westby ridge; smaller water, fewer anglers."},
+  {id:"timber1",  river:"timbercoulee", name:"Timber Coulee — County P pull-offs", role:"wade", pos:[43.66330,-90.85530], note:"A string of gravel easement pull-offs up the coulee. The first few fill early — keep driving."},
+  {id:"timber2",  river:"timbercoulee", name:"Timber Coulee — upper valley", role:"wade", pos:[43.66330,-90.85530], note:"Upper reaches toward the Westby ridge; smaller water, fewer anglers."},
   {id:"coon1",    river:"cooncreek", name:"Coon Valley village access", role:"wade", pos:[43.5022,-90.9932], note:"Where Timber Coulee meets Coon Creek — the historic heart of Driftless stream restoration."},
   {id:"coon2",    river:"cooncreek", name:"Coon Creek — Chaseburg", role:"wade", pos:[43.6469,-91.0335], note:"Bigger water downstream; room for a real cast and bigger average fish."},
   {id:"springc1", river:"springcoulee", name:"Spring Coulee Creek access", role:"wade", pos:[43.5300,-90.9600], note:"Restored tributary above Coon Valley; good overflow when Timber Coulee is busy."},
   {id:"bohem1",   river:"bohemianvalley", name:"Bohemian Valley access", role:"wade", pos:[43.6380,-90.9900], note:"La Crosse County coulee above Chaseburg; brushy small water."},
-  {id:"rulland1", river:"rullandscoulee", name:"Rullands Coulee access", role:"wade", pos:[43.6300,-91.0500], note:"Small Coon Creek feeder; jump-across water."},
+  {id:"rulland1", river:"rullandscoulee", name:"Rullands Coulee access", role:"wade", pos:[43.72440,-90.90700], note:"Small Coon Creek feeder; jump-across water."},
   {id:"kickont",  river:"kickapoo", name:"Ontario canoe landing", role:"launch", pos:[43.7299,-90.5889], note:"Top of the Kickapoo Valley Reserve paddle; trout water in this cold upper reach. Gauge at the Hwy 131 bridge."},
   {id:"kickkvr",  river:"kickapoo", name:"Kickapoo Valley Reserve HQ", role:"both", pos:[43.6100,-90.6250], note:"8,600-acre reserve: visitor center, trails, multiple river accesses between Ontario and La Farge."},
   {id:"kicklaf",  river:"kickapoo", name:"La Farge landing", role:"both", pos:[43.5742,-90.6432], note:"Canoe landing and USGS gauge; smallmouth water from here down."},
@@ -2044,14 +2342,14 @@ const RAMPS = [
   {id:"wfork2",   river:"wforkkickapoo", name:"Bloomingdale access", role:"wade", pos:[43.5905,-90.7274], note:"Upper West Fork; easement pull-offs along the valley road."},
   {id:"wfork3",   river:"wforkkickapoo", name:"West Fork Sports Club water", role:"wade", pos:[43.5500,-90.7180], note:"Club-stewarded habitat reaches; decades of lunker-structure and bank work."},
   {id:"tainter1", river:"tainter", name:"Tainter Creek access", role:"wade", pos:[43.3900,-90.9000], note:"Crawford/Vernon county line; active watershed council habitat work."},
-  {id:"knapp1",   river:"knappcreek", name:"Knapp Creek access", role:"wade", pos:[43.4200,-90.8400], note:"Soldiers Grove area Kickapoo tributary."},
+  {id:"knapp1",   river:"knappcreek", name:"Knapp Creek access", role:"wade", pos:[43.40470,-90.65570], note:"Soldiers Grove area Kickapoo tributary."},
   {id:"badaxe1",  river:"badaxe", name:"Bad Axe — Viroqua ridge", role:"wade", pos:[43.5870,-90.9500], note:"Upper forks above Viroqua; easement access with more casting room than the coulee creeks."},
   {id:"badaxe2",  river:"badaxe", name:"Bad Axe — Genoa", role:"wade", pos:[43.5760,-91.1800], note:"Lower river toward the Mississippi; warms downstream."},
-  {id:"rushwi1",  river:"rushcreekwi", name:"Rush Creek State Natural Area", role:"wade", pos:[43.3250,-91.0500], note:"Dry bluff prairie above Ferryville; steep walk down to cold small water."},
+  {id:"rushwi1",  river:"rushcreekwi", name:"Rush Creek State Natural Area", role:"wade", pos:[43.39570,-91.07810], note:"Dry bluff prairie above Ferryville; steep walk down to cold small water."},
   {id:"bec1",     river:"blackearth", name:"Black Earth Creek — Cross Plains", role:"wade", pos:[43.1147,-89.6641], note:"Upper creek with two USGS gauges nearby; 25 minutes from Madison, so expect company."},
   {id:"bec2",     river:"blackearth", name:"Black Earth Creek — Black Earth", role:"wade", pos:[43.1342,-89.7322], note:"Gauge site with village access; classic spring-creek water, educated fish."},
   {id:"bec3",     river:"blackearth", name:"Black Earth Creek — Mazomanie", role:"wade", pos:[43.1772,-89.7943], note:"Lower creek toward the Wisconsin River; DNR fishery area water."},
-  {id:"mtvern1",  river:"mountvernon", name:"Mount Vernon Creek fishery area", role:"wade", pos:[42.9700,-89.5400], note:"DNR fishery area south of Verona; clear, technical spring water."},
+  {id:"mtvern1",  river:"mountvernon", name:"Mount Vernon Creek fishery area", role:"wade", pos:[42.92480,-89.62380], note:"DNR fishery area south of Verona; clear, technical spring water."},
   {id:"castle1",  river:"castlerock", name:"Castle Rock Creek — Fennimore Fork", role:"wade", pos:[43.0300,-90.5550], note:"Marquee Grant County spring creek; long catch-and-release stretch historically applies — check current WI DNR regs."},
   {id:"blue1",    river:"blueriver", name:"Blue River access", role:"wade", pos:[43.1100,-90.5800], note:"Easement pull-offs along the valley; pairs naturally with Castle Rock Creek."},
   {id:"biggrn1",  river:"biggreen", name:"Big Green River — Werley", role:"wade", pos:[43.0300,-90.7950], note:"Gravel-road access with pull-offs at the crossings; meadow water with undercut banks."},

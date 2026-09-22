@@ -91,6 +91,47 @@ carry catch-and-release or artificial-only stretches whose boundaries
 change. The blurbs point at the current state regs rather than asserting a
 rule that may be stale.
 
+**No stream-level class on Driftless water.** An ungauged Driftless creek
+shows the nearest gauged river's raw CFS as a regional-wetness hint, but
+*not* its status badge — see `noGaugeHTML()`'s `showClass`. A "Below
+average" chip next to a creek with no gauge reads as that creek's level no
+matter what the caption says, and it's really a classification of different
+water a valley over. Gauged Driftless streams (Waterloo, Bloody Run, Black
+Earth, the Kinni…) still show a real class, because theirs is real. The
+North Shore keeps the badge; only `region==="driftless"` is suppressed.
+
+**Driftless geometry was re-snapped to real NHD channel linework.** The
+hand-drawn coords were correctly *located* — they ran through the true USGS
+gauge and access-point coordinates — but were straight chords between those
+anchors, so on a topo basemap they visibly cut across ridges instead of
+following the creek. 69 of the 72 now resolve to real channel geometry.
+
+Two traps to know if you ever redo this:
+
+- **Don't measure "is this river misplaced" by distance from its line to
+  the NHD channel.** A straight chord between two *correct* endpoints
+  scores terribly on that metric. It flagged 53 of 72 as misplaced when
+  almost all were fine. Measure distance from the line to that river's own
+  gauge/ramp anchors instead — those are authoritative coordinates.
+- **Don't pick the NHD match nearest a centroid.** Names like Clear Creek,
+  Pine Creek, Rush Creek and Coon Creek repeat all over the region, and
+  centroid-nearest happily grabbed a creek 16 km away. Choose the connected
+  cluster that minimises total distance to *all* the river's anchors.
+
+Ten creeks genuinely were on the wrong ground (Timber Coulee sat ~10 km
+south of Coon Valley) and were relocated, with their access markers
+re-projected onto the corrected channel. Each was confirmed twice: NHD
+returns that exact GNIS name there, *and* the town named in the river's own
+blurb sits on it.
+
+Three stay hand-drawn because NHD has no flowline under that name at that
+location: **Coldwater Creek** (IA — the only NHD "Coldwater Creek" in range
+is in Franklin County, ~60 mi from the Winneshiek County creek the blurb
+describes, so there's nothing safe to snap to), **Spring Coulee Creek** and
+**Bohemian Valley Creek** (both local Coon Valley-area names). Bohemian
+Valley's coords are already correct near Chaseburg; Spring Coulee's are
+still approximate.
+
 **North Shore (24).** 22 MN, 1 WI (the Bois Brule), plus the Pigeon River
 which is itself the US–Canada border. Steelhead/brown-trout tributaries of
 Lake Superior running Duluth → Grand Portage along Hwy 61: the Duluth-area
@@ -187,10 +228,23 @@ these are all actively gauged and carry no `region` tag.
   regional-wetness fallback with the cross-state-line distance penalty —
   reused as-is for the North Shore, no code changes needed.
 - Real NHD geometry upgrade (`trickleGeometry()`) and zoom-gated labels.
+  The background snap runs a few requests in parallel and re-prioritises
+  whatever is on screen on every map move, so the visible area resolves in
+  a second or two. It used to be strictly serial with a 500 ms gap — about
+  93 seconds to cover 181 rivers, long enough that the straight fallback
+  lines looked like the finished map.
 - `goodFlow` scaffolding, with starting-point ranges filled in for 28 of
   the original 56 West/Central Iowa rivers from public source reports.
 
 **In progress / TODO:**
+- **The flow API is being rate-limited (HTTP 429).** `refreshAll()` fetches
+  one latest-value request per gauge (plus per-gauge stats), which was fine
+  at 56 rivers and is ~200 requests now that there are 170 gauges —
+  `api.waterdata.usgs.gov` starts returning 429 partway through, which is
+  why the header can read "flows unavailable". The fix is to batch: request
+  many sites per call instead of one, and stagger the stats backfill. This
+  predates the region expansion but got worse with it, and it's the single
+  highest-value thing left.
 - Replace the 28 researched starting-point `goodFlow` ranges with your
   own experience-based numbers as you actually fish/float each river.
 - Fill in `goodFlow` for the remaining West/Central Iowa rivers that are
@@ -295,6 +349,23 @@ are worth calibrating first.
   `maxNativeZoom:16` with `maxZoom:20`; without that Leaflet refuses to
   zoom past 16 instead of upscaling. Imagery layers (Google, Esri, USGS
   Imagery+Topo) are still available in the layer control.
+- **Map layers and marker density.** Markers live in toggleable
+  `L.layerGroup`s wired into the layer control: *Wade access & parking* and
+  *USGS gauges* on by default, *Boat ramps* off, *Public hunting / fishing
+  land* on. Dropping ~280 access pins at every zoom made the map unreadable,
+  so `syncMarkers()` also zoom-gates membership — boat ramps from z8, wade
+  access from z9 — independently of whether the group is switched on. On a
+  Driftless creek "access" means a signed gravel pull-off, not a ramp, which
+  is why wade access is the one that defaults on. Zooming to a float section
+  switches boat ramps on, since that's an explicit "show me the ramps" move.
+- **Public land** is PAD-US (USGS Protected Areas Database) via its
+  `PADUS_Public_Access` FeatureServer — state Wildlife Management Areas,
+  Aquatic Management Areas (public fishing water by definition), state
+  forests, county parks. Drawn from z10 and fetched per-viewport, because the
+  whole five-state set is far too big to ship. Only `Pub_Access` OA (open)
+  and RA (restricted) are drawn; closed and unknown parcels are deliberately
+  left off — a closed parcel shaded green is worse than no parcel at all.
+  Boundaries are approximate and the popup says so.
 - USGS gauge IDs are verified at runtime against USGS monitoring-locations
   metadata; unresolved ones show "(unverified)" in the UI rather than failing
   silently.

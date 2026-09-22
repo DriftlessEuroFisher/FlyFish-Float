@@ -171,7 +171,11 @@ const gSat = L.tileLayer("https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",{
 const gHyb = L.tileLayer("https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}",{
   maxZoom:20, subdomains:["mt0","mt1","mt2","mt3"], attribution:"Imagery © Google"});
 usgsTopo.addTo(map);
-L.control.layers({"USGS Topo":usgsTopo,"USGS Imagery + Topo":usgsImgTopo,"Google Hybrid":gHyb,"Google Satellite":gSat,"Esri Satellite":sat,"OpenTopoMap":topo},null,{position:"bottomleft"}).addTo(map);
+/* Overlay toggles are wired in after the marker layers exist — see
+   layerControl.addOverlay() calls further down. */
+const layerControl = L.control.layers(
+  {"USGS Topo":usgsTopo,"USGS Imagery + Topo":usgsImgTopo,"Google Hybrid":gHyb,"Google Satellite":gSat,"Esri Satellite":sat,"OpenTopoMap":topo},
+  null, {position:"bottomleft"}).addTo(map);
 
 /* region quick-jump */
 const REGIONS = [
@@ -275,17 +279,51 @@ function apGlyph(role){
     '<path d="M2.6 18.2 q2 -1.7 4 0 t4 0 t4 0 t2.8 0"/>'+
     '<path d="M2.6 21 q2 -1.7 4 0 t4 0 t4 0 t2.8 0"/></svg>';
 }
+/* Marker layers. The map used to drop all ~280 access points and ~170 gauge
+   dots on at once, at every zoom — unreadable at statewide view and not much
+   better at regional. Now each kind lives in its own toggleable group:
+
+     Boat ramps          off by default — opt in when you're floating.
+     Wade access/parking on  by default — this is the whole game on a
+                             Driftless spring creek, where "access" means a
+                             signed gravel pull-off, not a ramp.
+     USGS gauges         on  by default — they're the live data.
+
+   syncMarkers() additionally zoom-gates membership so the groups stay empty
+   at statewide zoom and fill in as you get close enough for them to mean
+   something. */
+const rampLayer   = L.layerGroup();              // launch / takeout / both
+const wadeLayer   = L.layerGroup().addTo(map);   // role:"wade" parking & walk-in
+const gaugeLayer  = L.layerGroup().addTo(map);
+const RAMP_MIN_ZOOM = 8, WADE_MIN_ZOOM = 9;
+
 RAMPS.forEach(p=>{
-  const m = L.marker(p.pos,{icon:apIcon(p,"")}).addTo(map);
+  const m = L.marker(p.pos,{icon:apIcon(p,"")});
   m.bindPopup(`<b>${p.name}</b><br><span style="font-size:11px">${roleWord(p.role)} · ${p.note}</span>`);
   m.on("click",()=>{ openRiver(p.river); });
   rampMarkers[p.id]=m;
 });
+function groupFor(p){ return p.role==="wade" ? wadeLayer : rampLayer; }
+function minZoomFor(p){ return p.role==="wade" ? WADE_MIN_ZOOM : RAMP_MIN_ZOOM; }
+/* Membership is (passes the filter chips) AND (zoomed in far enough).
+   Toggling the group itself on/off is the layer control's job, so this
+   stays independent of whether the user has that group showing. */
+function syncMarkers(){
+  const z = map.getZoom();
+  RAMPS.forEach(p=>{
+    const m = rampMarkers[p.id], g = groupFor(p);
+    const show = rampPassesFilter(p) && z >= minZoomFor(p);
+    const has = g.hasLayer(m);
+    if(show && !has) g.addLayer(m);
+    else if(!show && has) g.removeLayer(m);
+  });
+}
+map.on("zoomend", syncMarkers);
 function apIcon(p, sel){ return L.divIcon({className:"", html:`<div class="ap ${p.role} ${sel}">${apGlyph(p.role)}</div>`, iconSize:[28,28], iconAnchor:[14,14]}); }
 function roleWord(r){ return {launch:"Put-in (boat launch)", takeout:"Take-out (boat ramp)", both:"Put-in & take-out ramp", wade:"Wade-fishing access"}[r]; }
 
 Object.keys(GAUGE_POS).forEach(key=>{
-  const m = L.marker(GAUGE_POS[key],{icon:gIcon(key), zIndexOffset:300}).addTo(map);
+  const m = L.marker(GAUGE_POS[key],{icon:gIcon(key), zIndexOffset:300}).addTo(gaugeLayer);
   m.on("click",()=>{
     const r = RIVERS.find(rv=>rv.gauges.includes(key));
     if(r) openRiver(r.id, key);
@@ -297,6 +335,78 @@ function gIcon(key){
   return L.divIcon({className:"", html:`<div class="gdot" style="background:${st.color}"></div>`, iconSize:[14,14], iconAnchor:[7,7]});
 }
 function repaintGauges(){ Object.keys(gaugeDots).forEach(k=>gaugeDots[k].setIcon(gIcon(k))); }
+
+/* ============================================================
+   PUBLIC LAND — PAD-US (USGS Protected Areas Database)
+   On a Driftless creek the question isn't only "how's the water",
+   it's "can I legally stand in it". This overlays the public
+   hunting/fishing ground the streams actually run through: state
+   Wildlife Management Areas, Aquatic Management Areas (public
+   fishing water by definition), state forests, county parks.
+
+   Pub_Access: OA = open access, RA = restricted (permit, seasonal,
+   or limited entry). XA (closed) and UK (unknown) are left off — a
+   closed parcel drawn in green is worse than no parcel at all.
+
+   Loaded per-viewport rather than all at once: these are detailed
+   polygons and the whole five-state set would be many megabytes.
+   ============================================================ */
+const PADUS_URL = "https://services.arcgis.com/v01gqwM5QqNysAAi/ArcGIS/rest/services/PADUS_Public_Access/FeatureServer/0/query";
+const PUBLIC_LAND_MIN_ZOOM = 10;
+const publicLand = L.layerGroup().addTo(map);
+let padusKey = null, padusBusy = false;
+const PAD_STYLE = {
+  OA:{color:"#2f7d3f", weight:1.2, fillColor:"#57a05f", fillOpacity:.22},
+  RA:{color:"#9c7a2a", weight:1.2, fillColor:"#c8a94e", fillOpacity:.18, dashArray:"4 3"}
+};
+async function loadPublicLand(){
+  if(!map.hasLayer(publicLand)) return;
+  if(map.getZoom() < PUBLIC_LAND_MIN_ZOOM){ publicLand.clearLayers(); padusKey = null; return; }
+  const b = map.getBounds().pad(0.15);
+  // before the container has been laid out, getBounds() collapses to a point —
+  // querying that returns nothing and poisons the cache key. Wait for a real box.
+  if(b.getWest() === b.getEast() || b.getNorth() === b.getSouth()) return;
+  // round the key so small pans don't refetch the same ground
+  const key = [b.getWest(),b.getSouth(),b.getEast(),b.getNorth()].map(v=>v.toFixed(2)).join(",");
+  if(key === padusKey || padusBusy) return;
+  padusBusy = true;
+  try{
+    const url = `${PADUS_URL}?where=${encodeURIComponent("Pub_Access IN ('OA','RA')")}`+
+      `&geometry=${b.getWest()},${b.getSouth()},${b.getEast()},${b.getNorth()}`+
+      `&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects`+
+      `&outFields=Unit_Nm,Pub_Access,MngNm_Desc,DesTp_Desc,GIS_Acres`+
+      `&returnGeometry=true&outSR=4326&maxAllowableOffset=0.0004`+
+      `&geometryPrecision=5&resultRecordCount=600&f=geojson`;
+    const j = await fetchJSON(url, 18000);
+    publicLand.clearLayers();
+    L.geoJSON(j, {
+      style: f => PAD_STYLE[f.properties.Pub_Access] || PAD_STYLE.RA,
+      onEachFeature: (f, lyr) => {
+        const p = f.properties;
+        const acres = p.GIS_Acres ? Math.round(p.GIS_Acres).toLocaleString()+" acres" : "";
+        const open = p.Pub_Access === "OA"
+          ? '<span style="color:#2f7d3f;font-weight:700">Open access</span>'
+          : '<span style="color:#9c7a2a;font-weight:700">Restricted access</span> — permit, season or limited entry';
+        lyr.bindPopup(
+          `<b>${p.Unit_Nm || "Public land"}</b><br>`+
+          `<span style="font-size:11px">${open}<br>`+
+          `${[p.DesTp_Desc, p.MngNm_Desc, acres].filter(Boolean).join(" · ")}<br>`+
+          `<i>PAD-US boundaries are approximate — check the state's current maps and signage at the parcel.</i></span>`);
+      }
+    }).addTo(publicLand);
+    padusKey = key;
+  }catch(e){
+    /* leave whatever is drawn; the basemap still shades public land */
+  }finally{ padusBusy = false; }
+}
+map.on("moveend", loadPublicLand);
+publicLand.on("add", () => { padusKey = null; loadPublicLand(); });
+publicLand.on("remove", () => { publicLand.clearLayers(); padusKey = null; });
+
+layerControl.addOverlay(publicLand, "Public hunting / fishing land");
+layerControl.addOverlay(wadeLayer,  "Wade access &amp; parking");
+layerControl.addOverlay(rampLayer,  "Boat ramps");
+layerControl.addOverlay(gaugeLayer, "USGS gauges");
 
 /* ============================================================
    EXACT RIVER GEOMETRY — live USGS NHD high-resolution flowlines
@@ -403,16 +513,46 @@ async function loadRealRiver(r){
     layer.tried = false;     // network/CORS failure — keep fallback, retry later
   }
 }
-// gentle background pass so the whole map fills in with real linework
-let geomQueue = null;
-function trickleGeometry(){
-  if(geomQueue) return; geomQueue = RIVERS.slice();
-  (async function step(){
-    const r = geomQueue.shift(); if(!r){ geomQueue=null; return; }
-    await loadRealRiver(r);
-    setTimeout(step, 500);
-  })();
+/* Background pass that fills the map in with real linework.
+   Two things matter here: what order, and how fast.
+
+   Order — rivers you can actually see come first. Re-sorted on every map
+   move, so panning to a new area snaps that area next instead of waiting
+   out the rest of the queue.
+
+   Speed — this used to run strictly one river at a time with a 500ms gap,
+   which is ~93 seconds to cover 181 rivers. Long enough that the straight
+   fallback lines looked like the finished map. A few in flight at once
+   with a short gap covers the visible area in a second or two while still
+   being gentle on The National Map. */
+const GEOM_CONCURRENCY = 5, GEOM_GAP = 60;
+let geomQueue = null, geomRunning = 0;
+function visibleFirst(list){
+  const b = map.getBounds();
+  const seen = r => r.coords.some(p => b.contains(p));
+  return list.slice().sort((a, c) => (seen(c) ? 1 : 0) - (seen(a) ? 1 : 0));
 }
+function trickleGeometry(){
+  if(geomQueue) return;
+  geomQueue = visibleFirst(RIVERS);
+  const pump = async () => {
+    while(geomRunning < GEOM_CONCURRENCY && geomQueue && geomQueue.length){
+      const r = geomQueue.shift();
+      geomRunning++;
+      loadRealRiver(r).finally(() => {
+        geomRunning--;
+        if(geomQueue && (geomQueue.length || geomRunning)) setTimeout(pump, GEOM_GAP);
+        else if(geomQueue && !geomQueue.length && !geomRunning) geomQueue = null;
+      });
+    }
+  };
+  pump();
+}
+// panning somewhere new re-prioritises whatever is now on screen
+map.on("moveend", () => {
+  if(geomQueue && geomQueue.length) geomQueue = visibleFirst(geomQueue);
+  else if(!geomQueue && RIVERS.some(r => !riverLayers[r.id].real)) trickleGeometry();
+});
 
 /* ============================================================
    UI — sheet, filters, legend, refresh
@@ -544,8 +684,16 @@ function noGaugeHTML(r){
   if(near){
     const k = near.primaryGauge, f = flows[k], st = statusOf(k);
     const cfs = f && f.cfs!=null ? Math.round(f.cfs).toLocaleString()+" CFS" : "—";
-    proxy = `<div class="plain" style="margin-top:8px">Nearest gauged water is the <b>${near.name}</b>, currently <b>${cfs}</b>
-      <span class="badge" style="background:${st.color};vertical-align:middle">${st.label}</span>.
+    /* No stream-level class on Driftless water. These creeks have no gauge,
+       so any "Below average / Around average" badge here is a classification
+       of a *different* stream several valleys over — it reads as this creek's
+       level whether or not the caption says otherwise. The raw number stays
+       as a regional-wetness hint; the judgement call doesn't. */
+    const showClass = r.region !== "driftless";
+    const badge = showClass
+      ? ` <span class="badge" style="background:${st.color};vertical-align:middle">${st.label}</span>`
+      : "";
+    proxy = `<div class="plain" style="margin-top:8px">Nearest gauged water is the <b>${near.name}</b>, currently <b>${cfs}</b>${badge}.
       That's a <i>different stream</i> — treat it only as a rough read on how wet the region is, not as this creek's flow.
       <button class="zoom" data-river="${near.id}" style="margin-top:8px">Open ${near.name.split("—")[0].trim()} →</button></div>`;
   }
@@ -582,6 +730,9 @@ function sectionHTML(s){
 
 function zoomSection(s){
   const put = RAMPS.find(p=>p.id===s.put), take = RAMPS.find(p=>p.id===s.take);
+  // zooming to a float is an explicit "show me the ramps" gesture, so switch
+  // the boat-ramp layer on even though it's off by default
+  if(!map.hasLayer(rampLayer)) rampLayer.addTo(map);
   // restyle the two ramps as put-in / take-out
   RAMPS.forEach(p=>rampMarkers[p.id].setIcon(apIcon(p,"")));
   rampMarkers[put.id].setIcon(apIcon(put,"sel-put"));
@@ -616,17 +767,17 @@ function applyFilters(){
     const on = riverVisible(r);
     riverLayers[r.id].line.setStyle({color:on?r.color:"#9aa49b", opacity:on?0.9:0.35, weight:on?5:3});
   });
-  RAMPS.forEach(p=>{
-    let show = true;
-    if(filters.act==="fish" && (p.role!=="wade")) show = true;      // ramps still useful for access
-    if(filters.act==="float" && p.role==="wade") show = false;
-    if((filters.beg||filters.dur||filters.cls) && p.role!=="wade"){
-      show = SECTIONS.some(s=>(s.put===p.id||s.take===p.id) && passFilter(s));
-    }
-    const m = rampMarkers[p.id];
-    show ? m.addTo(map) : map.removeLayer(m);
-  });
+  syncMarkers();
   if(curRiver) renderSheet(RIVERS.find(r=>r.id===curRiver));
+}
+/* Does this access point survive the current filter chips? Visibility also
+   depends on zoom and on whether its group is switched on — see syncMarkers. */
+function rampPassesFilter(p){
+  if(filters.act==="float" && p.role==="wade") return false;
+  if((filters.beg||filters.dur||filters.cls) && p.role!=="wade"){
+    return SECTIONS.some(s=>(s.put===p.id||s.take===p.id) && passFilter(s));
+  }
+  return true;
 }
 
 document.querySelectorAll(".chip").forEach(ch=>{
@@ -702,5 +853,7 @@ window.addEventListener("online",()=>refreshAll());
 setInterval(refreshAll, REFRESH_MS);
 refreshAll();
 // fill in exact USGS NHD linework across the map after first paint
-setTimeout(trickleGeometry, 2500);
+syncMarkers();          // seed marker groups for the starting zoom
+loadPublicLand();
+setTimeout(trickleGeometry, 600);
 
