@@ -200,6 +200,15 @@ const REGIONS = [
   ["Twin Cities (Mississippi/Minnesota)", [44.98,-93.20,10]],
   ["Rum / Snake / Kettle (north metro)", [45.65,-93.10,9]],
   ["Cannon River (Northfield/Welch)", [44.47,-92.95,10]],
+  ["── Lakes Country / Northwoods ──", null],
+  ["Brainerd / Crow Wing (MN)", [46.40,-94.40,9]],
+  ["Park Rapids / Itasca headwaters (MN)", [46.95,-95.05,9]],
+  ["Grand Rapids / Aitkin (MN)", [46.95,-93.60,9]],
+  ["Chippewa / Eau Claire (WI)", [44.85,-91.55,9]],
+  ["Flambeau / Northwoods (WI)", [45.70,-90.60,8]],
+  ["Minocqua / Manitowish (WI)", [45.95,-89.80,9]],
+  ["Wolf River (WI)", [44.90,-88.70,8]],
+  ["Lower Wisconsin Riverway", [43.20,-90.20,9]],
 ];
 const regionCtl = L.control({position:"topright"});
 regionCtl.onAdd = function(){

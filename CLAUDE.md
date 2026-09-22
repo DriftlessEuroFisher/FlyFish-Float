@@ -1,12 +1,13 @@
-# River Conditions — ID, WY, Central Iowa, the Driftless & MN North Shore — Fly Fishing / Float Map
+# River Conditions — ID, WY, Iowa, Minnesota & Wisconsin — Fly Fishing / Float Map
 
 A single-page, no-build, mobile-first web app: a Leaflet map of Idaho &
 Wyoming trout rivers, the Central Iowa (Des Moines area) state water
 trail system, the trout streams of the Driftless Area, the steelhead/
-trout tributaries of Minnesota's North Shore of Lake Superior, and the
+trout tributaries of Minnesota's North Shore of Lake Superior, the
 big warmwater float rivers of east-central Minnesota and the St. Croix
-valley, with live USGS flow conditions, built for checking "is it worth
-driving out today?" from a phone.
+valley, and the north-central Minnesota lakes country and Wisconsin
+Northwoods, with live USGS flow conditions, built for checking "is it
+worth driving out today?" from a phone.
 
 ## How I use this
 
@@ -31,13 +32,18 @@ like an app, not a browser tab.
 
 ## Rivers covered
 
-165 rivers. Full list and gauge IDs live in `js/rivers-data.js`; this file
+181 rivers. Full list and gauge IDs live in `js/rivers-data.js`; this file
 doesn't duplicate it since the code is the source of truth. Rivers carry a
-`region` field — `"driftless"` and `"northshore"` on the two spring/rain-fed
-sub-regions, absent on the original western rivers *and* on the
-East-Central Minnesota cluster (see below), `"ciowa"` conceptually for the
-Des Moines water trails (the code tests `state==="IA" && region!=="driftless"`
-so the central Iowa entries didn't need editing).
+`region` field — `"driftless"` and `"northshore"` on the two small-stream
+sub-regions, absent on the original western rivers *and* on the two
+Minnesota/Wisconsin big-water clusters (see below), `"ciowa"` conceptually
+for the Des Moines water trails (the code tests `state==="IA" &&
+region!=="driftless"` so the central Iowa entries didn't need editing).
+
+The `region` tag exists to drive *UI behavior* (ungauged cards, easement
+notes, tighter label zoom), not to catalogue geography. That's why only
+the two small-stream regions have one: if a cluster is fully gauged and
+needs no special copy, it deliberately gets no tag.
 
 **West (49).** Idaho/Wyoming trout rivers — 24 ID, 25 WY. All gauged.
 
@@ -139,15 +145,44 @@ inline in that river's `blurb`/`RAMPS` note rather than a new per-region
 flag, since only a few specific spots need it rather than the whole
 cluster the way Central Iowa's low-head-dam note works.
 
+**North-Central MN Lakes Country / WI Northwoods (16).** 5 MN, 11 WI. The
+outer ring of the 5-hour radius: the Mississippi Headwaters (Itasca →
+Bemidji → Grand Rapids → Aitkin → Brainerd → Royalton, where the Twin
+Cities entry picks it up), the Crow Wing and Long Prairie, the Straight
+River near Park Rapids, and Itasca County's Prairie River; then the
+Wisconsin Northwoods — Chippewa, Flambeau and its South Fork, Red Cedar,
+Jump, Wisconsin, Wolf, Black, Tomahawk, Bear, and the Prairie at Merrill.
+
+Two things make this cluster different from the others:
+
+- **Multi-gauge rivers are the norm, not the exception.** The Mississippi
+  Headwaters carries 6 gauges, the Wisconsin 6, the Chippewa 5, the Wolf
+  and Black 3 each. These rivers run 100–430 miles and a single number
+  describes only the reach around its gauge — same pattern as the Snake
+  through Jackson Hole, and the reason `primaryGauge` matters here.
+- **Two genuine coldwater trout streams outside the trout regions.** The
+  Straight River near Park Rapids and the Prairie River at Merrill are
+  spring-fed brown/brook trout water sitting in the middle of musky and
+  walleye country. They're `role:"wade"` and flagged wade-only despite
+  being in an otherwise big-water cluster. Note there are *two* Straight
+  Rivers in Minnesota — this is the Park Rapids one, not the Cannon
+  tributary near Faribault.
+
+Real whitewater exists here and is called out in `WADE_ONLY` and the
+safety copy: the Wolf above Shawano is Class III–IV through the Menominee
+Reservation (tribal permit required), and the South Fork Flambeau's Little
+Falls and Slough Gundy are real drops. Like the East-Central cluster,
+these are all actively gauged and carry no `region` tag.
+
 ## Status
 
 **Finished / working:**
 - Core app: Leaflet map, bottom sheet, live USGS flow fetch/render, the
   `statusOf()` relative-to-median status bucketing, home-screen install
   (`manifest.json` + icons).
-- All 165 rivers in place (49 West, 7 Central Iowa, 72 Driftless, 24 North
-  Shore, 13 East-Central MN/St. Croix), with gauges, ramps/access points,
-  blurbs, and region-aware copy in the sheet.
+- All 181 rivers in place (49 West, 7 Central Iowa, 72 Driftless, 24 North
+  Shore, 13 East-Central MN/St. Croix, 16 Lakes Country/Northwoods), with
+  gauges, ramps/access points, blurbs, and region-aware copy in the sheet.
 - Ungauged-river handling: the "Ungauged" card, `nearestGaugedRiver()`
   regional-wetness fallback with the cross-state-line distance penalty —
   reused as-is for the North Shore, no code changes needed.
@@ -168,13 +203,13 @@ cluster the way Central Iowa's low-head-dam note works.
   not hand-traced like the West rivers) — `trickleGeometry()` should snap
   most of them to real NHD linework on first load, but worth spot-checking
   a few against the map once you've actually driven to them.
-- Still inside the 5-hour-from-Forest-Lake radius and not yet added: the
-  north-central Minnesota lakes country (Crow Wing River, Long Prairie
-  River, Straight River near Park Rapids, the upper Mississippi above St.
-  Cloud through Brainerd/Bemidji), the Wisconsin Northwoods (Chippewa,
-  Flambeau, Red Cedar, Wolf River), and the Madison-area Dane County
-  spring creeks that are arguably Driftless but weren't in the original 72.
-  Natural next batches, staged the same way the last three were.
+- The 5-hour-from-Forest-Lake expansion is now essentially complete for
+  the major named rivers. What's left is thinner: the Madison-area Dane
+  County spring creeks that are arguably Driftless but weren't in the
+  original 72, the Fox/Wolf lower system around Green Bay, and the far
+  northern Wisconsin South Shore streams (Bad, White, Marengo, Brule
+  tributaries) out past the Bois Brule. All are edge-of-radius and lower
+  priority than filling in `goodFlow` on what's already here.
 
 ## Always / Never
 
@@ -232,12 +267,13 @@ CFS a made-up range would be worse than none. On this water, **clarity is
 the number that matters** — judge it on arrival. The ungauged card in the
 UI says exactly this.
 
-**All 13 East-Central MN/St. Croix rivers are also `null`**, for a simpler
-reason: no research pass has been done on public guide/paddler reports for
-this cluster yet, unlike the 28 West/Central Iowa rivers that got a
-starting-point pass. These are prime candidates for that same treatment —
-smallmouth/walleye good-flow ranges are genuinely published for water like
-the St. Croix and Cannon.
+**All 29 East-Central MN/St. Croix and Lakes Country/Northwoods rivers are
+also `null`**, for a simpler reason: no research pass has been done on
+public guide/paddler reports for these two clusters yet, unlike the 28
+West/Central Iowa rivers that got a starting-point pass. These are prime
+candidates for that same treatment — smallmouth/walleye/paddling good-flow
+ranges are genuinely published for water like the St. Croix, the Cannon,
+the Lower Wisconsin Riverway and the Flambeau.
 
 **TODO for me:** replace the researched starting points with my own
 experience-based numbers over time, and fill in the rest for whichever

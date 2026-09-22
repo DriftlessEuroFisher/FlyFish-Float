@@ -176,6 +176,49 @@ const GAUGES = {
   elkBigLake:       { site:"USGS-05275000", label:"Elk River near Big Lake, MN" },
   minnehaha:        { site:"USGS-05289800", label:"Minnehaha Creek at Hiawatha Ave, Minneapolis, MN" },
   saukStCloud:      { site:"USGS-05270500", label:"Sauk River near St. Cloud, MN" },
+  /* ---- NORTH-CENTRAL MINNESOTA LAKES COUNTRY + WISCONSIN NORTHWOODS ----
+     The outer ring of the 5-hour-from-Forest-Lake radius: the Mississippi
+     above St. Cloud, the Crow Wing system, and the big Northwoods
+     smallmouth/musky/whitewater rivers of northern Wisconsin. All active
+     discharge gauges, verified against the live USGS site list on
+     2026-09-21. Several of these are multi-gauge rivers running 200+
+     miles, same pattern as the Snake through Jackson Hole. */
+  crowWingNimrod:   { site:"USGS-05244000", label:"Crow Wing River at Nimrod, MN" },
+  crowWingPillager: { site:"USGS-05247500", label:"Crow Wing River near Pillager, MN" },
+  longPrairieMN:    { site:"USGS-05245100", label:"Long Prairie River at Long Prairie, MN" },
+  straightParkRapids:{ site:"USGS-05243725", label:"Straight River near Park Rapids, MN" },
+  msBemidji:        { site:"USGS-05200510", label:"Mississippi River near Bemidji, MN" },
+  msBallClub:       { site:"USGS-05207600", label:"Mississippi River at Willow Beach, Ball Club, MN" },
+  msGrandRapids:    { site:"USGS-05211000", label:"Mississippi River at Grand Rapids, MN" },
+  msAitkin:         { site:"USGS-05227500", label:"Mississippi River at Aitkin, MN" },
+  msBrainerd:       { site:"USGS-05242300", label:"Mississippi River at Brainerd, MN" },
+  msRoyalton:       { site:"USGS-05267000", label:"Mississippi River near Royalton, MN" },
+  prairieTaconite:  { site:"USGS-05212700", label:"Prairie River near Taconite, MN" },
+  chipWinter:       { site:"USGS-05356000", label:"Chippewa River at Bishops Bridge near Winter, WI" },
+  chipBruce:        { site:"USGS-05356500", label:"Chippewa River near Bruce, WI" },
+  chipFalls:        { site:"USGS-05365500", label:"Chippewa River at Chippewa Falls, WI" },
+  chipEauClaire:    { site:"USGS-05366800", label:"Chippewa River at Grand Ave, Eau Claire, WI" },
+  chipDurand:       { site:"USGS-05369500", label:"Chippewa River at Durand, WI" },
+  flambeauBruce:    { site:"USGS-05360500", label:"Flambeau River near Bruce, WI" },
+  sfFlambeauPhillips:{ site:"USGS-05359500", label:"South Fork Flambeau River near Phillips, WI" },
+  redCedarColfax:   { site:"USGS-05367500", label:"Red Cedar River near Colfax, WI" },
+  redCedarMenomonie:{ site:"USGS-05369000", label:"Red Cedar River at Menomonie, WI" },
+  jumpSheldon:      { site:"USGS-05362000", label:"Jump River at Sheldon, WI" },
+  wisRainbow:       { site:"USGS-05391000", label:"Wisconsin River at Rainbow Lake nr Lake Tomahawk, WI" },
+  wisMerrill:       { site:"USGS-05395000", label:"Wisconsin River at Merrill, WI" },
+  wisRothschild:    { site:"USGS-05398000", label:"Wisconsin River at Rothschild, WI" },
+  wisRapids:        { site:"USGS-05400760", label:"Wisconsin River at Wisconsin Rapids, WI" },
+  wisDells:         { site:"USGS-05404000", label:"Wisconsin River near Wisconsin Dells, WI" },
+  wisMuscoda:       { site:"USGS-05407000", label:"Wisconsin River at Muscoda, WI" },
+  wolfLanglade:     { site:"USGS-04074950", label:"Wolf River at Langlade, WI" },
+  wolfShawano:      { site:"USGS-04077400", label:"Wolf River near Shawano, WI" },
+  wolfNewLondon:    { site:"USGS-04079000", label:"Wolf River at New London, WI" },
+  blackNeillsville: { site:"USGS-05381000", label:"Black River at Neillsville, WI" },
+  blackFalls:       { site:"USGS-053813595", label:"Black River DS St Hwy 54 at Black River Falls, WI" },
+  blackGalesville:  { site:"USGS-05382000", label:"Black River near Galesville, WI" },
+  tomahawkMinocqua: { site:"USGS-05392102", label:"Tomahawk River at Hwy 70 near Minocqua, WI" },
+  bearManitowish:   { site:"USGS-05357335", label:"Bear River near Manitowish Waters, WI" },
+  prairieMerrill:   { site:"USGS-05394500", label:"Prairie River near Merrill, WI" },
 };
 
 // approximate gauge map positions [lat,lng]
@@ -241,6 +284,28 @@ const GAUGE_POS = {
   cannonNorthfield:[44.4586,-93.1597], cannonFalls:[44.5170,-92.9129],
   cannonWelch:[44.5642,-92.7316], elkBigLake:[45.3339,-93.6669],
   minnehaha:[44.9155,-93.2129], saukStCloud:[45.5596,-94.2338],
+  // North-central Minnesota lakes country + Wisconsin Northwoods
+  crowWingNimrod:[46.6406,-94.8804], crowWingPillager:[46.3048,-94.3775],
+  longPrairieMN:[45.9751,-94.8659], straightParkRapids:[46.8749,-95.0663],
+  msBemidji:[47.4831,-94.7283], msBallClub:[47.3022,-93.9014],
+  msGrandRapids:[47.2331,-93.5229], msAitkin:[46.5407,-93.7074],
+  msBrainerd:[46.3777,-94.1826], msRoyalton:[45.8258,-94.3556],
+  prairieTaconite:[47.3888,-93.3823],
+  chipWinter:[45.8486,-91.0789], chipBruce:[45.4522,-91.2610],
+  chipFalls:[44.9267,-91.4108], chipEauClaire:[44.8096,-91.5030],
+  chipDurand:[44.6310,-91.9713],
+  flambeauBruce:[45.4064,-91.2194], sfFlambeauPhillips:[45.7033,-90.6156],
+  redCedarColfax:[45.0531,-91.7119], redCedarMenomonie:[44.8753,-91.9381],
+  jumpSheldon:[45.3080,-90.9565],
+  wisRainbow:[45.8305,-89.5524], wisMerrill:[45.1783,-89.6817],
+  wisRothschild:[44.8868,-89.6357], wisRapids:[44.3922,-89.8271],
+  wisDells:[43.6050,-89.7567], wisMuscoda:[43.1981,-90.4433],
+  wolfLanglade:[45.1900,-88.7334], wolfShawano:[44.8358,-88.6250],
+  wolfNewLondon:[44.3922,-88.7404],
+  blackNeillsville:[44.5597,-90.6150], blackFalls:[44.2936,-90.8465],
+  blackGalesville:[44.0603,-91.2872],
+  tomahawkMinocqua:[45.8833,-89.7424], bearManitowish:[46.0488,-89.9846],
+  prairieMerrill:[45.2358,-89.6497],
 };
 
 const RIVERS = [
@@ -1630,6 +1695,145 @@ const RIVERS = [
   fish:"Smallmouth bass and a modest walleye fishery; a handful of low dams through the St. Cloud area to watch for.",
   coords:[[45.87,-95.15],[45.5596,-94.2338],[45.5900,-94.1900]]
 },
+
+/* ================= NORTH-CENTRAL MN LAKES COUNTRY + WI NORTHWOODS =================
+   The outer ring of the 5-hour-from-Forest-Lake radius. Big multi-gauge
+   rivers running 100–400 miles, so a single flow number describes only
+   the reach around its gauge — several entries carry 3–6 gauges for that
+   reason, same pattern as the Snake through Jackson Hole. Character
+   ranges from genuine coldwater trout (the Straight near Park Rapids, the
+   Prairie at Merrill) through Northwoods musky/smallmouth water to
+   Class III–IV whitewater (the Wolf at Langlade, the Flambeau forks).
+   No dedicated `region` tag — all actively gauged, so these behave like
+   the original western rivers. */
+{
+  id:"crowwing", name:"Crow Wing River", color:"#8c5f4a",
+  state:"MN", gauges:["crowWingNimrod","crowWingPillager"], primaryGauge:"crowWingPillager",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A classic sand-bottomed canoe river running out of the Crow Wing chain of lakes in Hubbard County down past Nimrod and Pillager to the Mississippi at Crow Wing State Park below Brainerd. Steady, gentle current and frequent sandbars make it one of Minnesota's easiest multi-day paddles.",
+  fish:"Smallmouth bass throughout, with northern pike and walleye in the deeper bends and a decent channel cat population down low. Wadeable at normal summer flows in many stretches — unusual for a river this size.",
+  coords:[[46.95,-94.98],[46.6406,-94.8804],[46.45,-94.60],[46.3048,-94.3775],[46.28,-94.33]]
+},
+{
+  id:"longprairie", name:"Long Prairie River", color:"#6e8c5f",
+  state:"MN", gauges:["longPrairieMN"], primaryGauge:"longPrairieMN",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"An unusual north-flowing river running from the Osakis/Lake Carlos country up through the town of Long Prairie to join the Crow Wing near Motley — small, quiet, and almost entirely overlooked by anglers driving past on their way to the lakes.",
+  fish:"Smallmouth bass and northern pike, with panfish in the slower stretches. A modest fishery, but genuinely uncrowded and an easy add-on to a Crow Wing trip.",
+  coords:[[45.80,-94.95],[45.9751,-94.8659],[46.15,-94.85],[46.28,-94.75]]
+},
+{
+  id:"straightmn", name:"Straight River — Park Rapids", color:"#2a8c8c",
+  state:"MN", gauges:["straightParkRapids"], primaryGauge:"straightParkRapids",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A short, exceptionally cold spring-fed stream near Park Rapids feeding the Crow Wing — one of the few genuine coldwater trout rivers in Minnesota outside the Driftless and the North Shore, and the reason there's a state trout hatchery in this part of the state. Not to be confused with the other Straight River down near Faribault.",
+  fish:"Wild brown trout in cold, stable, spring-fed water that holds temperature through the hottest part of summer. Small water and clear — approach carefully and fish upstream. Check current MN DNR trout regulations, which include special rules on parts of this stream.",
+  coords:[[46.95,-95.10],[46.8749,-95.0663],[46.80,-95.02]]
+},
+{
+  id:"mississippihdw", name:"Mississippi River — Headwaters", color:"#3a6e9c",
+  state:"MN", gauges:["msBemidji","msBallClub","msGrandRapids","msAitkin","msBrainerd","msRoyalton"], primaryGauge:"msBrainerd",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The Mississippi before it becomes the Mississippi — from Lake Itasca north through Bemidji, east past Grand Rapids, then south through Aitkin and Brainerd down to St. Cloud, where this app's Twin Cities entry picks it up. Small enough to wade near the headwaters and step across at the Itasca outlet; a real river by Brainerd.",
+  fish:"Genuinely different fisheries by reach: smallmouth bass through the rocky Grand Rapids and Brainerd stretches, walleye and northern pike in the slower Aitkin bottoms, and muskie in the deeper holes. The Brainerd-area water is the best-known smallmouth stretch.",
+  coords:[[47.20,-95.21],[47.4831,-94.7283],[47.3022,-93.9014],[47.2331,-93.5229],[46.85,-93.60],[46.5407,-93.7074],[46.3777,-94.1826],[45.8258,-94.3556]]
+},
+{
+  id:"prairiermn", name:"Prairie River — Itasca County", color:"#5f8c2a",
+  state:"MN", gauges:["prairieTaconite"], primaryGauge:"prairieTaconite",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A small Itasca County river running down through the Taconite/Coleraine iron-range country to the Mississippi near Grand Rapids.",
+  fish:"Northern pike and smallmouth, with trout reported in some of the colder upper reaches — check current MN DNR designations before planning a trout trip around it. Small, lightly fished water.",
+  coords:[[47.48,-93.30],[47.3888,-93.3823],[47.28,-93.45]]
+},
+{
+  id:"chippewawi", name:"Chippewa River (WI)", color:"#1f7a8b",
+  state:"WI", gauges:["chipWinter","chipBruce","chipFalls","chipEauClaire","chipDurand"], primaryGauge:"chipEauClaire",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Wisconsin's second-largest river system, running 180-odd miles from the Chippewa Flowage down through Bruce, Chippewa Falls and Eau Claire to the Mississippi below Durand. Heavily dammed through the middle, with long flowage pools between free-flowing stretches — know which kind of water your reach is before you plan a float.",
+  fish:"Smallmouth bass and walleye throughout, musky in the flowages and the lower river, and a genuine lake sturgeon population down near the Mississippi confluence. The free-flowing stretch below Eau Claire is the best-known smallmouth water.",
+  coords:[[45.95,-91.00],[45.8486,-91.0789],[45.4522,-91.2610],[45.15,-91.30],[44.9267,-91.4108],[44.8096,-91.5030],[44.6310,-91.9713],[44.55,-92.05]]
+},
+{
+  id:"flambeau", name:"Flambeau River", color:"#7a3a6e",
+  state:"WI", gauges:["flambeauBruce"], primaryGauge:"flambeauBruce",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The North Fork running out of the Turtle-Flambeau Flowage down through the Flambeau River State Forest to the Chippewa near Ladysmith — one of the Northwoods' great canoe-and-camp rivers, with a well-known set of rapids and state forest campsites along the way.",
+  fish:"Musky is the headline fishery — this is serious musky water — plus smallmouth bass and walleye. The state forest stretch is remote enough that a weekday float can feel like wilderness.",
+  coords:[[46.05,-90.20],[45.85,-90.55],[45.62,-90.90],[45.4064,-91.2194],[45.46,-91.10]]
+},
+{
+  id:"sfflambeau", name:"South Fork Flambeau River", color:"#9c4a7a",
+  state:"WI", gauges:["sfFlambeauPhillips"], primaryGauge:"sfFlambeauPhillips",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The wilder, pushier half of the Flambeau system, dropping through the state forest past Phillips to meet the North Fork at the Forks — genuine whitewater at spring flows, including the well-known Little Falls and Slough Gundy ledges.",
+  fish:"Smallmouth bass and musky in the pools between rapids. This is scout-first water at anything above moderate flow — the drops are real, not riffles.",
+  coords:[[45.80,-90.30],[45.7033,-90.6156],[45.62,-90.85]]
+},
+{
+  id:"redcedar", name:"Red Cedar River", color:"#8c6e3a",
+  state:"WI", gauges:["redCedarColfax","redCedarMenomonie"], primaryGauge:"redCedarMenomonie",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Runs from the Red Cedar Lake chain down through Colfax and Menomonie to the Chippewa near Dunnville, paralleled for its last 14 miles by the Red Cedar State Trail — an easy shuttle if you bike one way and float the other.",
+  fish:"A well-regarded smallmouth river, with walleye and catfish in the lower reaches near the Chippewa confluence. Wadeable in many stretches at summer flows.",
+  coords:[[45.60,-91.55],[45.30,-91.62],[45.0531,-91.7119],[44.8753,-91.9381],[44.70,-91.92]]
+},
+{
+  id:"jumpriver", name:"Jump River", color:"#6e5f8c",
+  state:"WI", gauges:["jumpSheldon"], primaryGauge:"jumpSheldon",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A Rusk/Taylor County tributary of the Chippewa, running past Sheldon down to the Holcombe Flowage — small, remote, and rarely written about.",
+  fish:"Smallmouth bass and northern pike, with musky moving up out of the Chippewa flowages. Lightly fished simply because nobody drives out here for it.",
+  coords:[[45.42,-90.65],[45.3080,-90.9565],[45.24,-91.15]]
+},
+{
+  id:"wisconsinriver", name:"Wisconsin River", color:"#2a7a5f",
+  state:"WI", gauges:["wisRainbow","wisMerrill","wisRothschild","wisRapids","wisDells","wisMuscoda"], primaryGauge:"wisMuscoda",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Wisconsin's longest river — 430 miles from Lac Vieux Desert on the Michigan border down through Merrill, Wausau and Wisconsin Rapids, past the Dells, to the Mississippi at Prairie du Chien. Famously \"the hardest-working river in the nation\" for its 25-plus dams, but the Lower Wisconsin State Riverway below Prairie du Sac is the longest free-flowing stretch in the upper Midwest and a superb sandbar canoe-camping trip.",
+  fish:"Smallmouth bass and catfish through the Lower Riverway sandbars, walleye and musky in the flowages up north, and a lake sturgeon population down near the Mississippi. The Muscoda gauge is the one that matters for the Lower Riverway sandbar float.",
+  coords:[[46.13,-89.13],[45.8305,-89.5524],[45.1783,-89.6817],[44.8868,-89.6357],[44.3922,-89.8271],[43.6050,-89.7567],[43.1981,-90.4433],[43.02,-91.15]]
+},
+{
+  id:"wolfriverwi", name:"Wolf River (WI)", color:"#9c5f2a",
+  state:"WI", gauges:["wolfLanglade","wolfShawano","wolfNewLondon"], primaryGauge:"wolfLanglade",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A National Wild & Scenic River in its upper reaches and one of the Midwest's premier whitewater runs — the Langlade-to-Markton stretch through the Menominee Reservation includes genuine Class III–IV drops. Below Shawano it flattens out into a big, slow river running down to Lake Poygan and the Winnebago system.",
+  fish:"Trout in the cold upper river above Langlade, smallmouth through the whitewater reaches, and the famous spring walleye run pushing up out of Lake Winnebago into the lower river. The Menominee Reservation water has its own tribal permit requirements — check before you fish or float it.",
+  coords:[[45.60,-88.85],[45.1900,-88.7334],[44.8358,-88.6250],[44.3922,-88.7404],[44.1109,-88.7101]]
+},
+{
+  id:"blackriverwi", name:"Black River (WI)", color:"#4a4a6e",
+  state:"WI", gauges:["blackNeillsville","blackFalls","blackGalesville"], primaryGauge:"blackFalls",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Runs from the Clark County forest country down through Neillsville and Black River Falls to the Mississippi near Galesville — tea-stained dark water (hence the name) cutting through sandstone as it reaches the Driftless edge.",
+  fish:"Smallmouth bass throughout, with walleye and catfish in the lower river and a fair northern pike population. The stretch below Black River Falls is the most-floated.",
+  coords:[[45.20,-90.50],[44.5597,-90.6150],[44.2936,-90.8465],[44.0603,-91.2872],[43.95,-91.32]]
+},
+{
+  id:"tomahawkriver", name:"Tomahawk River", color:"#5f6e9c",
+  state:"WI", gauges:["tomahawkMinocqua"], primaryGauge:"tomahawkMinocqua",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Connects the Minocqua-area lake chain down to the Wisconsin River at the town of Tomahawk — classic Northwoods water winding between flowages and lakes through Oneida and Lincoln County resort country.",
+  fish:"Musky and walleye, plus smallmouth bass — this is the heart of Wisconsin's Northwoods musky country, with the fishing culture and guide network to match.",
+  coords:[[45.95,-89.80],[45.8833,-89.7424],[45.65,-89.75],[45.47,-89.73]]
+},
+{
+  id:"bearriverwi", name:"Bear River (WI)", color:"#8c8c5f",
+  state:"WI", gauges:["bearManitowish"], primaryGauge:"bearManitowish",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A short connector in the Manitowish Waters chain up in Vilas County, feeding the Manitowish River and ultimately the Turtle-Flambeau Flowage.",
+  fish:"Musky, walleye and northern pike moving between the lakes of the chain. Small water, but it sits in the middle of some of the best musky country in the state.",
+  coords:[[46.15,-89.95],[46.0488,-89.9846],[46.00,-90.00]]
+},
+{
+  id:"prairiewi", name:"Prairie River — Merrill", color:"#3a8c5f",
+  state:"WI", gauges:["prairieMerrill"], primaryGauge:"prairieMerrill",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A Lincoln County trout stream running down to the Wisconsin River at Merrill — a genuine coldwater fishery in a part of the state better known for musky flowages, with a dells-and-ledges stretch above town.",
+  fish:"Brown and brook trout in the cold upper reaches, transitioning to smallmouth lower down near the Wisconsin River. Check current WI DNR trout regulations — classification varies by reach on this stream.",
+  coords:[[45.42,-89.55],[45.2358,-89.6497],[45.18,-89.69]]
+},
 ];
 
 /* ---------- Access points ---------- */
@@ -1924,6 +2128,38 @@ const RAMPS = [
   {id:"elkbiglake1",       river:"elkriverMN", name:"Big Lake river access", role:"wade", pos:[45.3339,-93.6669], note:"Gauge site; small-water fishing close to the metro."},
   {id:"minnehahafalls",    river:"minnehahacreek", name:"Minnehaha Falls Regional Park", role:"wade", pos:[44.9150,-93.2050], note:"The famous falls and gorge; more a scenic stop than a fishing trip."},
   {id:"saukstcloud1",      river:"saukriverMN", name:"St. Cloud area river access", role:"wade", pos:[45.5596,-94.2338], note:"Gauge site; watch for low dams through town."},
+
+  // ---- North-central MN lakes country + WI Northwoods ----
+  {id:"cwnimrod",    river:"crowwing", name:"Nimrod canoe landing", role:"both", pos:[46.6406,-94.8804], note:"Gauge site; classic upper-river put-in for the multi-day sandbar float."},
+  {id:"cwpillager",  river:"crowwing", name:"Pillager river access", role:"both", pos:[46.3048,-94.3775], note:"Gauge site; lower river toward the Mississippi confluence."},
+  {id:"cwstatepark", river:"crowwing", name:"Crow Wing State Park (Mississippi confluence)", role:"takeout", pos:[46.2780,-94.3330], note:"Vehicle permit required; bottom of the river where it meets the Mississippi."},
+  {id:"lptown",      river:"longprairie", name:"Long Prairie town access", role:"both", pos:[45.9751,-94.8659], note:"Gauge site; small-town put-in on a quiet, overlooked river."},
+  {id:"straightpr",  river:"straightmn", name:"Straight River — Park Rapids area", role:"wade", pos:[46.8749,-95.0663], note:"Gauge site on one of Minnesota's few coldwater trout rivers outside the Driftless/North Shore. Special regs apply on parts — check current MN DNR trout rules."},
+  {id:"msitasca",    river:"mississippihdw", name:"Itasca State Park (headwaters)", role:"wade", pos:[47.2000,-95.2100], note:"Vehicle permit required; the Mississippi's source — you can step across it here."},
+  {id:"msgrandrap",  river:"mississippihdw", name:"Grand Rapids river access", role:"both", pos:[47.2331,-93.5229], note:"Gauge site; rocky smallmouth water through this reach."},
+  {id:"msbrainerd",  river:"mississippihdw", name:"Brainerd river access", role:"both", pos:[46.3777,-94.1826], note:"Gauge site; the best-known smallmouth stretch of the upper river."},
+  {id:"msaitkin",    river:"mississippihdw", name:"Aitkin river access", role:"both", pos:[46.5407,-93.7074], note:"Gauge site; slower bottomland water — walleye and pike."},
+  {id:"prairietac",  river:"prairiermn", name:"Taconite area access", role:"wade", pos:[47.3888,-93.3823], note:"Gauge site; small, lightly fished iron-range water."},
+  {id:"chipeauclaire",river:"chippewawi", name:"Eau Claire — Grand Ave access", role:"both", pos:[44.8096,-91.5030], note:"Gauge site; the free-flowing smallmouth stretch below town is the best-known water."},
+  {id:"chipdurand",  river:"chippewawi", name:"Durand river access", role:"both", pos:[44.6310,-91.9713], note:"Gauge site; lower river toward the Mississippi confluence, sturgeon water."},
+  {id:"chipbruce",   river:"chippewawi", name:"Bruce river access", role:"both", pos:[45.4522,-91.2610], note:"Gauge site; upper river near the Flambeau confluence."},
+  {id:"flambstate",  river:"flambeau", name:"Flambeau River State Forest landing", role:"both", pos:[45.5500,-90.9000], note:"State forest canoe campsites along this stretch — the remote heart of the North Fork float."},
+  {id:"flambbruce",  river:"flambeau", name:"Bruce — lower Flambeau access", role:"takeout", pos:[45.4064,-91.2194], note:"Gauge site near the Chippewa confluence."},
+  {id:"sfflambphil", river:"sfflambeau", name:"Phillips area access", role:"launch", pos:[45.7033,-90.6156], note:"Gauge site; scout Little Falls and Slough Gundy before running them at higher flows."},
+  {id:"redcedarmen", river:"redcedar", name:"Menomonie — Red Cedar State Trail", role:"both", pos:[44.8753,-91.9381], note:"Gauge site; the state trail parallels the last 14 miles — bike one way, float the other."},
+  {id:"redcedarcol", river:"redcedar", name:"Colfax river access", role:"both", pos:[45.0531,-91.7119], note:"Gauge site; wadeable smallmouth water at summer flows."},
+  {id:"jumpsheld",   river:"jumpriver", name:"Sheldon river access", role:"both", pos:[45.3080,-90.9565], note:"Gauge site; remote, lightly fished Rusk County water."},
+  {id:"wismuscoda",  river:"wisconsinriver", name:"Muscoda landing (Lower Riverway)", role:"both", pos:[43.1981,-90.4433], note:"Gauge site; the number that matters for the Lower Wisconsin sandbar float."},
+  {id:"wissauk",     river:"wisconsinriver", name:"Prairie du Sac — top of the Lower Riverway", role:"launch", pos:[43.2900,-89.7200], note:"Below the last dam — start of the 92-mile free-flowing stretch to the Mississippi."},
+  {id:"wismerrill",  river:"wisconsinriver", name:"Merrill river access", role:"both", pos:[45.1783,-89.6817], note:"Gauge site; upper-river flowage country."},
+  {id:"wolflanglade",river:"wolfriverwi", name:"Langlade — whitewater put-in", role:"launch", pos:[45.1900,-88.7334], note:"Gauge site; Class III–IV below here through the Menominee Reservation. Tribal permit required on reservation water."},
+  {id:"wolfshawano", river:"wolfriverwi", name:"Shawano river access", role:"both", pos:[44.8358,-88.6250], note:"Gauge site; river flattens out below here toward the Winnebago system."},
+  {id:"wolfnewlondon",river:"wolfriverwi", name:"New London landing", role:"both", pos:[44.3922,-88.7404], note:"Gauge site; spring walleye run pushes up out of Lake Winnebago into this reach."},
+  {id:"blackfallswi",river:"blackriverwi", name:"Black River Falls access", role:"both", pos:[44.2936,-90.8465], note:"Gauge site; the most-floated stretch runs downstream from here."},
+  {id:"blackgales",  river:"blackriverwi", name:"Galesville — lower river", role:"takeout", pos:[44.0603,-91.2872], note:"Gauge site near the Mississippi confluence."},
+  {id:"tomahawkmin", river:"tomahawkriver", name:"Hwy 70 access near Minocqua", role:"both", pos:[45.8833,-89.7424], note:"Gauge site in the heart of Northwoods musky country."},
+  {id:"bearmanit",   river:"bearriverwi", name:"Manitowish Waters access", role:"both", pos:[46.0488,-89.9846], note:"Gauge site; connector water in the Manitowish chain."},
+  {id:"prairiemerr", river:"prairiewi", name:"Prairie River — Merrill area", role:"wade", pos:[45.2358,-89.6497], note:"Gauge site; coldwater trout above town. Trout classification varies by reach — check current WI DNR regs."},
 ];
 
 /* ---------- Float sections ---------- */
@@ -2290,4 +2526,25 @@ const WADE_ONLY = {
   elkriverMN:"Short and quick enough for a half-day paddle; a natural add-on to a Mississippi-at-Elk-River trip.",
   minnehahacreek:"Mostly too small and urban to paddle meaningfully — this is a walk-the-parkway-and-see-the-falls stream, not a float.",
   saukriverMN:"Canoeable through the St. Cloud-area farm country, with a handful of low dams to portage around.",
+
+  /* ---- North-central MN lakes country + WI Northwoods ----
+     Mostly big floatable water. The notes that matter here are which
+     reach you're on (free-flowing vs. flowage pool) and where the real
+     whitewater is. */
+  crowwing:"One of Minnesota's easiest multi-day canoe trips — steady current, frequent sandbars, regular landings. Wadeable in many stretches at summer flows, which is unusual for a river this size.",
+  longprairie:"An easy, quiet paddle; small water with limited formal access, so plan your own shuttle.",
+  straightmn:"Wade only. Small, cold, spring-fed trout water — approach carefully and fish upstream. Special regulations apply on parts; check current MN DNR trout rules.",
+  mississippihdw:"Floatable essentially end to end, but it changes completely by reach — step-across water at Itasca, rocky smallmouth runs at Grand Rapids and Brainerd, slow bottomland through Aitkin. Pick your stretch deliberately.",
+  prairiermn:"Small water — more a wade-and-explore stream than a float.",
+  chippewawi:"Floatable, but half the river is flowage pool behind dams and half is free-flowing. Check which kind of water your reach is before planning a float; the free-flowing stretch below Eau Claire is the one most people want.",
+  flambeau:"A great Northwoods canoe-and-camp river with state forest campsites along the North Fork. Known rapids in places — scout at higher flows, but manageable for competent paddlers.",
+  sfflambeau:"Genuine whitewater at spring flows — Little Falls and Slough Gundy are real drops, not riffles. Scout first, and don't treat this as a casual float.",
+  redcedar:"An easy float with a bike-trail shuttle built in: the Red Cedar State Trail parallels the last 14 miles, so you can ride one way and paddle the other.",
+  jumpriver:"Floatable and remote; limited formal access, so plan the shuttle yourself.",
+  wisconsinriver:"The Lower Wisconsin State Riverway below Prairie du Sac is the marquee float — 92 free-flowing miles of sandbar camping to the Mississippi. Upstream it's a chain of flowages and 25-plus dams; portage routes and reach choice matter.",
+  wolfriverwi:"Two completely different rivers. Above Shawano: Class III–IV whitewater through the Menominee Reservation, expert paddlers only and a tribal permit required. Below Shawano: big, slow, easy water down to Lake Poygan.",
+  blackriverwi:"An easy tea-colored float; the stretch below Black River Falls is the most popular and best-served for access.",
+  tomahawkriver:"Classic Northwoods flowage-and-lake paddling between the Minocqua chain and the Wisconsin River — more lake-connector than river float.",
+  bearriverwi:"A short connector paddle within the Manitowish Waters chain rather than a destination float on its own.",
+  prairiewi:"Wade only for the trout water above Merrill; the dells-and-ledges stretch is scenic but not a float.",
 };
