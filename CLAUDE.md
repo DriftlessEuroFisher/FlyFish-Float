@@ -82,6 +82,43 @@ carry catch-and-release or artificial-only stretches whose boundaries
 change. The blurbs point at the current state regs rather than asserting a
 rule that may be stale.
 
+## Status
+
+**Finished / working:**
+- Core app: Leaflet map, bottom sheet, live USGS flow fetch/render, the
+  `statusOf()` relative-to-median status bucketing, home-screen install
+  (`manifest.json` + icons).
+- All 128 rivers in place across the three regions (49 West, 7 Central
+  Iowa, 72 Driftless), with gauges, ramps/access points, blurbs, and
+  region-aware copy in the sheet.
+- Ungauged-river handling: the "Ungauged" card, `nearestGaugedRiver()`
+  regional-wetness fallback with the cross-state-line distance penalty.
+- Real NHD geometry upgrade (`trickleGeometry()`) and zoom-gated labels.
+- `goodFlow` scaffolding, with starting-point ranges filled in for 28 of
+  the original 56 West/Central Iowa rivers from public source reports.
+
+**In progress / TODO:**
+- Replace the 28 researched starting-point `goodFlow` ranges with your
+  own experience-based numbers as you actually fish/float each river.
+- Fill in `goodFlow` for the remaining West/Central Iowa rivers that are
+  still `null`.
+- All 72 Driftless rivers are `goodFlow: null` on purpose (see below) —
+  decide per-river, as you fish them, whether a range is worth adding at
+  all, starting with the 19 that have real gauges.
+
+## Always / Never
+
+- **Never** fabricate a flow number for an ungauged river — render the
+  "Ungauged" card instead of guessing.
+- **Never** add a stage-only USGS site (has 00065 but not 00060) into
+  `GAUGES` — the status logic needs discharge (CFS), not stage. This has
+  already been decided for Rush Creek, Crooked Creek, Campbell Creek, and
+  Root River above Rushford; don't "fix" it by adding them.
+- **Always** keep this a no-build, no-framework, hand-editable
+  single-page app — don't introduce a bundler, framework, or backend.
+- **Always** verify USGS gauge IDs against monitoring-locations metadata
+  at runtime rather than trusting a hardcoded ID silently.
+
 ## How flow status works
 
 `statusOf()` in `js/app.js` compares the live CFS reading against the
