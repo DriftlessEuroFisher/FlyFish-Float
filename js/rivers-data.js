@@ -98,6 +98,42 @@ const GAUGES = {
   sSkunkAmes:     { site:"USGS-05470000", label:"South Skunk River near Ames, IA" },
   sSkunkAboveAmes:{ site:"USGS-05469995", label:"South Skunk River above Ames, IA" },
   beaverCreekJohnston:{ site:"USGS-05481950", label:"Beaver Creek near Johnston/Grimes, IA" },
+  /* ---- DRIFTLESS AREA (NE Iowa / SE Minnesota / SW Wisconsin / NW Illinois) ----
+     Only sites that actually publish DISCHARGE (parameter 00060) are listed.
+     Several Driftless gauges are stage-only — Rush Creek and Crooked Creek in
+     MN, Campbell Creek, Root River above Rushford — so those streams are
+     carried as ungauged wade water rather than showing a number the status
+     logic can't interpret. Verified live against USGS on 2026-09-21. */
+  // --- Driftless: northeast Iowa ---
+  uiBluffton:     { site:"USGS-05387440", label:"Upper Iowa River at Bluffton, IA" },
+  uiDecorah:      { site:"USGS-05387500", label:"Upper Iowa River at Decorah, IA" },
+  uiDorchester:   { site:"USGS-05388250", label:"Upper Iowa River near Dorchester, IA" },
+  waterlooCr:     { site:"USGS-05388310", label:"Waterloo Creek near Dorchester, IA" },
+  yellowIon:      { site:"USGS-05389000", label:"Yellow River near Ion, IA" },
+  bloodyRun:      { site:"USGS-05389400", label:"Bloody Run Creek near Marquette, IA" },
+  turkeySpillville:{ site:"USGS-05411600", label:"Turkey River at Spillville, IA" },
+  turkeyEldorado: { site:"USGS-05411850", label:"Turkey River near Eldorado, IA" },
+  turkeyElkader:  { site:"USGS-05412020", label:"Turkey River at Elkader, IA" },
+  volgaLittleport:{ site:"USGS-05412400", label:"Volga River at Littleport, IA" },
+  // --- Driftless: southeast Minnesota ---
+  rootPilotMound: { site:"USGS-05383950", label:"Root River near Pilot Mound, MN" },
+  rootHouston:    { site:"USGS-05385000", label:"Root River near Houston, MN" },
+  sfRootHouston:  { site:"USGS-05385500", label:"South Fork Root River near Houston, MN" },
+  // --- Driftless: Wisconsin ---
+  kickOntario:    { site:"USGS-05407468", label:"Kickapoo River at Hwy 131, Ontario, WI" },
+  kickLaFarge:    { site:"USGS-05408000", label:"Kickapoo River at La Farge, WI" },
+  kickSteuben:    { site:"USGS-05410490", label:"Kickapoo River at Steuben, WI" },
+  blackEarthCP:   { site:"USGS-05406457", label:"Black Earth Creek at Cross Plains, WI" },
+  blackEarth:     { site:"USGS-05406500", label:"Black Earth Creek at Black Earth, WI" },
+  laCrosseSparta: { site:"USGS-05382325", label:"La Crosse River at Sparta, WI" },
+  silverAngelo:   { site:"USGS-05382284", label:"Silver Creek at Hwy 21 near Angelo, WI" },
+  stillwellTomah: { site:"USGS-05382255", label:"Stillwell Creek near Tomah, WI" },
+  kinniRiverFalls:{ site:"USGS-05342000", label:"Kinnickinnic River near River Falls, WI" },
+  eauGalleSV:     { site:"USGS-05370000", label:"Eau Galle River at Spring Valley, WI" },
+  grantBurton:    { site:"USGS-05413500", label:"Grant River at Burton, WI" },
+  platteRockville:{ site:"USGS-05414000", label:"Platte River near Rockville, WI" },
+  ebPecatonica:   { site:"USGS-05433000", label:"E. Br. Pecatonica River nr Blanchardville, WI" },
+  trempArcadia:   { site:"USGS-05379400", label:"Trempealeau River at Arcadia, WI" },
 };
 
 // approximate gauge map positions [lat,lng]
@@ -134,6 +170,18 @@ const GAUGE_POS = {
   mRaccoonPanora:[41.6942,-94.3700], sRaccoonRedfield:[41.5928,-94.1830],
   sSkunkAmes:[41.9900,-93.6280], sSkunkAboveAmes:[42.0450,-93.6100],
   beaverCreekJohnston:[41.6850,-93.7450],
+  // Driftless — coordinates taken straight from USGS site metadata
+  uiBluffton:[43.4069,-91.8990], uiDecorah:[43.3049,-91.7955], uiDorchester:[43.4211,-91.5088],
+  waterlooCr:[43.4511,-91.5051], yellowIon:[43.1119,-91.2651], bloodyRun:[43.0408,-91.2065],
+  turkeySpillville:[43.2073,-91.9503], turkeyEldorado:[43.0542,-91.8091],
+  turkeyElkader:[42.8435,-91.4013], volgaLittleport:[42.7539,-91.3690],
+  rootPilotMound:[43.7828,-92.0316], rootHouston:[43.7686,-91.5699], sfRootHouston:[43.7388,-91.5643],
+  kickOntario:[43.7299,-90.5889], kickLaFarge:[43.5742,-90.6432], kickSteuben:[43.1828,-90.8583],
+  blackEarthCP:[43.1097,-89.6408], blackEarth:[43.1342,-89.7322],
+  laCrosseSparta:[43.9375,-90.8106], silverAngelo:[43.9672,-90.7650], stillwellTomah:[43.9939,-90.6572],
+  kinniRiverFalls:[44.8308,-92.7331], eauGalleSV:[44.8528,-92.2383],
+  grantBurton:[42.7203,-90.8192], platteRockville:[42.7311,-90.6403], ebPecatonica:[42.7856,-89.8611],
+  trempArcadia:[44.2544,-91.5053],
 };
 
 const RIVERS = [
@@ -595,6 +643,615 @@ const RIVERS = [
   fish:"A small-water creek fishery — panfish, channel catfish, and the occasional smallmouth. Better known as a quick urban paddle than a fishing destination.",
   coords:[[41.7100,-93.7900],[41.6950,-93.7600],[41.6850,-93.7450],[41.6900,-93.7100],[41.7000,-93.6700]]
 },
+
+/* ================= DRIFTLESS AREA — NORTHEAST IOWA =================
+   Spring-fed limestone coulee country: cold, clear, hard-water streams
+   with wild brown trout, stocked rainbows, and reintroduced brook trout.
+   Nearly all of it is WALK-AND-WADE — these creeks are far too small and
+   brushy to float. The Iowa DNR maintains signed parking at most public
+   accesses, and much of the best water is on Public Fishing Easements
+   across private land: you may fish and walk the stream corridor, but
+   don't leave it. A trout fee stamp is required in addition to a license.
+   Streams with no USGS gauge carry gauges:[] — the app shows a "no gauge"
+   card rather than borrowing a number from a different watershed. */
+{
+  id:"upperiowa", name:"Upper Iowa River", color:"#2f7d5b",
+  state:"IA", region:"driftless", gauges:["uiBluffton","uiDecorah","uiDorchester"], primaryGauge:"uiDecorah",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The backbone of Iowa's Driftless: a bluff-lined river running from Lime Springs past Bluffton and Decorah out to the Mississippi at New Albin. Trout water up high where the springs come in, smallmouth water as it warms downstream — and the only stream here that's genuinely floatable, with limestone palisades most people don't expect in Iowa.",
+  fish:"The cold upper reaches near Bluffton and Kendallville hold trout; from Decorah down it becomes an excellent smallmouth river. Canoe-and-fish the Bluffton-to-Decorah stretch. Trout fishing is better in the spring-fed tributaries (Trout Run, Coldwater, Canoe, Bear) than in the mainstem itself.",
+  coords:[[43.4500,-92.2800],[43.4300,-92.0500],[43.4069,-91.8990],[43.3500,-91.8400],[43.3049,-91.7955],[43.3300,-91.6800],[43.4211,-91.5088],[43.4800,-91.3200],[43.5030,-91.2700]]
+},
+{
+  id:"waterloocreek", name:"Waterloo Creek", color:"#1d7a6e",
+  state:"IA", region:"driftless", gauges:["waterlooCr"], primaryGauge:"waterlooCr",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A cold, fast limestone creek dropping out of Minnesota into Allamakee County at Dorchester — one of the very few small Iowa trout streams with its own live USGS discharge gauge, which makes it the best single read on how wet the northeast corner is right now.",
+  fish:"Wild brown trout with stocked rainbows layered in. Tight quarters and heavy bank cover — short rod, roll casts, and a willingness to crawl. Fishes well after the water drops and clears post-rain.",
+  coords:[[43.4900,-91.5500],[43.4700,-91.5250],[43.4511,-91.5051],[43.4300,-91.5050]]
+},
+{
+  id:"troutrunia", name:"Trout Run Creek — Decorah", color:"#3a8c4a",
+  state:"IA", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Decorah's home water, running past the Decorah Fish Hatchery to the Upper Iowa on the edge of town. Heavily stocked, very accessible, and paralleled by the Trout Run Trail bike path — the easiest place in Iowa to get a fly in trout water without a long drive or a long walk.",
+  fish:"Stocked rainbows and browns plus holdovers; expect company on weekends and stocking days. Good for a first Driftless outing or an after-work hour. The hatchery stretch is pure put-and-take; walk away from the parking lots for better fish.",
+  coords:[[43.2500,-91.7300],[43.2700,-91.7450],[43.2870,-91.7550],[43.2990,-91.7800]]
+},
+{
+  id:"coldwaterIA", name:"Coldwater Creek", color:"#2a6e8c",
+  state:"IA", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A Winneshiek County spring creek fed by the Coldwater Cave system — one of the coldest, most stable flows in the state, which is why it holds trout through summers that shut other streams down.",
+  fish:"Wild browns in the upper spring reaches, stocked fish lower. Cold and clear enough that the fish see you first — approach low and fish upstream. A strong hot-weather fallback when the rest of the region gets warm.",
+  coords:[[43.4450,-91.8900],[43.4300,-91.8850],[43.4150,-91.8900],[43.4069,-91.8990]]
+},
+{
+  id:"southbear", name:"South Bear Creek", color:"#6e8c2a",
+  state:"IA", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The Highlandville classic — a small, beautiful coulee creek in northern Winneshiek County with a long history of habitat work and one of Iowa's better wild brown trout populations.",
+  fish:"Wild browns that are genuinely wild-fish spooky. Terrestrials in late summer, small nymphs the rest of the year. Special regulations apply on parts of this stream — read the current Iowa DNR trout regs before you fish it.",
+  coords:[[43.4400,-91.7600],[43.4250,-91.7400],[43.4122,-91.7290],[43.3950,-91.7100]]
+},
+{
+  id:"northbear", name:"North Bear Creek", color:"#8c8c2a",
+  state:"IA", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"South Bear's quieter twin, joining it near Highlandville. Smaller, brushier, and less trafficked — the kind of creek where you fish a quarter-mile in three hours and don't mind.",
+  fish:"Wild brown trout in tight water. Bring a short rod and expect to lose flies in the canopy. Best in spring before the bankside growth closes in, and again in October.",
+  coords:[[43.4650,-91.7800],[43.4500,-91.7550],[43.4350,-91.7350],[43.4122,-91.7290]]
+},
+{
+  id:"canoecreek", name:"Canoe Creek", color:"#5b8c6e",
+  state:"IA", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A Winneshiek County tributary of the Upper Iowa northeast of Decorah, running through steep pasture and timber. Close to town, far less pressured than Trout Run.",
+  fish:"Stocked and holdover trout with wild fish in the spring-fed upper reaches. Small water — a 7½-foot rod and a box of attractors covers it.",
+  coords:[[43.4100,-91.7400],[43.3950,-91.7200],[43.3800,-91.7000],[43.3600,-91.6700]]
+},
+{
+  id:"frenchcreek", name:"French Creek", color:"#1d8c7d",
+  state:"IA", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Allamakee County's wild-trout showpiece, protected in the French Creek Wildlife Area northwest of Lansing. Managed for a self-sustaining wild brown trout population rather than a stocking truck — and it shows.",
+  fish:"Wild browns, no stocking. Special catch-and-release / artificial-only regulations have historically applied here — check the current Iowa DNR trout regulations before fishing. Stealth matters more than fly choice.",
+  coords:[[43.4650,-91.4200],[43.4500,-91.3900],[43.4400,-91.3600],[43.4300,-91.3300]]
+},
+{
+  id:"paintcreek", name:"Paint Creek", color:"#8c5b2a",
+  state:"IA", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The trout stream running through Yellow River State Forest between Waterville and Harpers Ferry — big timber, steep ridges, campgrounds, and miles of public bank. The most 'away from it all' feeling trout water in Iowa.",
+  fish:"Stocked rainbows and browns with wild fish in the colder upper reaches. Combine it with a camp night in the state forest; the walk-in stretches away from the road crossings fish best.",
+  coords:[[43.2550,-91.3600],[43.2300,-91.3100],[43.2172,-91.2905],[43.1950,-91.2200],[43.1800,-91.1700]]
+},
+{
+  id:"villagecreek", name:"Village Creek", color:"#6e5b8c",
+  state:"IA", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A short, cold Allamakee County creek dropping to the Mississippi near Lansing through some of the steepest country in Iowa.",
+  fish:"Stocked trout with wild browns mixed in. Small water, big bluffs — an easy half-day paired with French or Clear Creek nearby.",
+  coords:[[43.3900,-91.3800],[43.3750,-91.3300],[43.3600,-91.2800],[43.3450,-91.2200]]
+},
+{
+  id:"clearcreekia", name:"Clear Creek — Allamakee", color:"#3a6e5b",
+  state:"IA", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A spring-fed Allamakee County creek in the bluffs behind Lansing — named for exactly the reason you'd guess, and technical because of it.",
+  fish:"Clear, cold, and unforgiving of a heavy approach. Wild browns plus stockers. Best on overcast days or in the low light at either end of the day.",
+  coords:[[43.3200,-91.3600],[43.3100,-91.3200],[43.3000,-91.2800],[43.2900,-91.2400]]
+},
+{
+  id:"yellowriver", name:"Yellow River", color:"#a07d2a",
+  state:"IA", region:"driftless", gauges:["yellowIon"], primaryGauge:"yellowIon",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Runs from the Castalia/Volney farm country down through deep timber to the Mississippi at Effigy Mounds. The upper reaches and coldwater tributaries hold trout; the lower river is smallmouth water through a genuinely wild-feeling valley.",
+  fish:"Trout in the spring-fed upper sections and side creeks; smallmouth bass below. The Ion gauge is a good general read on how much water the Allamakee/Clayton County trout creeks are carrying.",
+  coords:[[43.1800,-91.6500],[43.1500,-91.5000],[43.1300,-91.3800],[43.1119,-91.2651],[43.0957,-91.2202]]
+},
+{
+  id:"bloodyrun", name:"Bloody Run Creek", color:"#8c2a3a",
+  state:"IA", region:"driftless", gauges:["bloodyRun"], primaryGauge:"bloodyRun",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"An Outstanding Iowa Water running through Bloody Run County Park near Marquette — cold, spring-fed, and one of the most celebrated (and most fought-over) trout streams in the state. It carries its own live USGS discharge gauge, which for a creek this size is rare and very useful.",
+  fish:"Wild browns plus stocked fish, in water cold enough to fish through the hottest part of summer. County park access with parking right on the creek; walk upstream from the campground for the better fish.",
+  coords:[[43.0900,-91.2900],[43.0700,-91.2500],[43.0408,-91.2065],[43.0350,-91.1900]]
+},
+{
+  id:"snymagill", name:"Sny Magill Creek", color:"#2a8c6e",
+  state:"IA", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A Clayton County spring creek running to the Mississippi below McGregor, past the Sny Magill Mound Group. Consistently cold, heavily worked on for habitat, and a long-standing favorite of Iowa trout anglers.",
+  fish:"Wild brown trout with stocking support. A good hot-weather stream — the springs keep it fishable when other creeks go warm and lethargic.",
+  coords:[[42.9500,-91.2100],[42.9350,-91.1800],[42.9200,-91.1400],[42.9100,-91.1200]]
+},
+{
+  id:"turkeyriver", name:"Turkey River", color:"#8c6e3a",
+  state:"IA", region:"driftless", gauges:["turkeySpillville","turkeyEldorado","turkeyElkader"], primaryGauge:"turkeyEldorado",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The big river of the Iowa Driftless, running from Cresco and Spillville through Eldorado and Elkader to the Mississippi at Garber. Too warm for trout on the mainstem, but it drains the whole trout-country plateau — and it's a first-rate smallmouth float in its own right.",
+  fish:"Smallmouth bass, walleye, and catfish on the mainstem; the trout are in the spring-fed tributaries feeding it. Use the three gauges as a wetness gradient across Winneshiek, Fayette, and Clayton counties.",
+  coords:[[43.3400,-92.1200],[43.2073,-91.9503],[43.1200,-91.8800],[43.0542,-91.8091],[42.9500,-91.6000],[42.8435,-91.4013],[42.7400,-91.2618]]
+},
+{
+  id:"volgariver", name:"Volga River", color:"#5b6e8c",
+  state:"IA", region:"driftless", gauges:["volgaLittleport"], primaryGauge:"volgaLittleport",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A Fayette and Clayton County river running past the Volga River State Recreation Area to join the Turkey at Littleport. Coldwater tributaries feed trout into the upper valley; the mainstem is smallmouth water.",
+  fish:"Smallmouth on the river itself, trout in the feeder creeks (Grannis, Otter, and the spring branches). The state recreation area has good public bank and camping.",
+  coords:[[42.8800,-91.9500],[42.8397,-91.8000],[42.8000,-91.5500],[42.7900,-91.4500],[42.7539,-91.3690]]
+},
+{
+  id:"springbranchia", name:"Spring Branch Creek — Big Spring", color:"#2a8c8c",
+  state:"IA", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The creek below Big Spring near Elkader, home of the Big Spring Fish Hatchery — one of the most reliably cold, steady flows in northeast Iowa because it comes straight out of the limestone.",
+  fish:"Stocked trout in quantity near the hatchery, with better fish the further you walk. Very stable flows make this a dependable pick when rain has blown out the freestone-ier creeks.",
+  coords:[[42.8700,-91.5100],[42.8550,-91.4700],[42.8450,-91.4300],[42.8435,-91.4013]]
+},
+{
+  id:"grannis", name:"Grannis Creek", color:"#6e8c5b",
+  state:"IA", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A small Fayette County trout creek near West Union, in the gentler western edge of the Driftless where the bluffs give way to rolling farm ground.",
+  fish:"Stocked trout with some holdover browns. Short season of prime water — it fishes best in spring and fall when flows are up and temperatures are down.",
+  coords:[[42.9900,-91.8600],[42.9750,-91.8350],[42.9611,-91.8118],[42.9450,-91.7900]]
+},
+{
+  id:"ottercreekia", name:"Otter Creek — Fayette County", color:"#8c7d5b",
+  state:"IA", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A Fayette County trout stream near Elgin, feeding the Turkey River — quiet, rural water that rarely sees a crowd.",
+  fish:"Stocked rainbows and browns. Pair it with Grannis Creek and the Volga for a day of small-water hopping through Fayette County.",
+  coords:[[42.9900,-91.7000],[42.9750,-91.6700],[42.9575,-91.6379],[42.9400,-91.6100]]
+},
+{
+  id:"richmondsprings", name:"Richmond Springs — Backbone", color:"#4a7d8c",
+  state:"IA", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The spring-fed trout stretch inside Backbone State Park — Iowa's oldest state park — where Richmond Springs feeds cold water into the Maquoketa River in Delaware County. The southern anchor of Iowa trout country.",
+  fish:"Stocked trout in a park setting with excellent, easy access and facilities. Family-friendly rather than technical; the Maquoketa below the springs warms quickly downstream.",
+  coords:[[42.6500,-91.6100],[42.6350,-91.5900],[42.6203,-91.5697],[42.6000,-91.5500]]
+},
+
+/* ================= DRIFTLESS AREA — SOUTHEAST MINNESOTA =================
+   The Root River system plus the Whitewater — over 700 miles of trout
+   stream across Fillmore, Houston, Winona, Olmsted and Goodhue counties.
+   Access is exceptionally good: Minnesota holds angling easements on
+   hundreds of miles of private streambank, marked with brown-and-white
+   signs and served by gravel pull-offs. Most of these creeks have no
+   USGS discharge gauge — the Root mainstem gauges are the regional read. */
+{
+  id:"rootriver", name:"Root River", color:"#1d6e8c",
+  state:"MN", region:"driftless", gauges:["rootPilotMound","rootHouston"], primaryGauge:"rootPilotMound",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The main stem of Minnesota's Driftless: formed where the North and Middle branches meet above Lanesboro, then running through Whalan, Rushford and Houston to the Mississippi. Bigger, warmer water than the branches — trout up high, smallmouth down low — with the Root River State Trail following it the whole way.",
+  fish:"Trout in the upper mainstem and everywhere the cold tributaries come in; smallmouth from Rushford down. This is the one stretch of the Minnesota Driftless you can reasonably float in a canoe. Use the Pilot Mound gauge as the regional wetness read for all the Fillmore County creeks.",
+  coords:[[43.7828,-92.0316],[43.7400,-91.9600],[43.7325,-91.9260],[43.7600,-91.8500],[43.8083,-91.7524],[43.7900,-91.6600],[43.7686,-91.5699],[43.7200,-91.4200],[43.6800,-91.3500]]
+},
+{
+  id:"sbranchroot", name:"South Branch Root River", color:"#2a7d9c",
+  state:"MN", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The marquee branch: from Forestville through Preston and on to Lanesboro. Bigger water than most Driftless creeks — wide enough to make a real cast — with strong wild brown trout numbers and excellent Blue-Winged Olive and caddis hatches.",
+  fish:"Wild browns, with the densest fish counts in the reaches between Preston and Lanesboro. Big enough to fish a 9-foot 5-weight comfortably. Extensive state angling easements; look for the brown-and-white signs and gravel pull-offs.",
+  coords:[[43.6300,-92.2000],[43.6500,-92.1400],[43.6702,-92.0824],[43.6950,-92.0200],[43.7183,-91.9762]]
+},
+{
+  id:"nbranchroot", name:"North Branch Root River", color:"#3a8c9c",
+  state:"MN", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Runs from Chatfield southeast toward Lanesboro through classic bluff-and-pasture country. Smaller and more intimate than the South Branch, with long meadow stretches and good spring input.",
+  fish:"Wild brown trout with some stocking. Meadow water rewards a careful approach — the fish see the sky. Terrestrials from July on.",
+  coords:[[43.8800,-92.2600],[43.8458,-92.1888],[43.8000,-92.1000],[43.7500,-92.0300],[43.7200,-91.9800]]
+},
+{
+  id:"mbranchroot", name:"Middle Branch Root River", color:"#4a9cac",
+  state:"MN", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The quiet one — from near Fountain down to the North Branch confluence above Lanesboro. Smaller water in a steep, wooded valley, and the branch people tend to skip.",
+  fish:"Wild browns in tight, brushy water. Best in spring and fall when the canopy is open; bring a short rod and patience.",
+  coords:[[43.7800,-92.2200],[43.7600,-92.1700],[43.7402,-92.1357],[43.7300,-92.0500],[43.7183,-91.9762]]
+},
+{
+  id:"sfroot", name:"South Fork Root River", color:"#2a6e7d",
+  state:"MN", region:"driftless", gauges:["sfRootHouston"], primaryGauge:"sfRootHouston",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Drains the Spring Grove and Caledonia country in Houston County before joining the mainstem Root near Houston. One of the few Minnesota Driftless streams with a live USGS discharge gauge — a useful proxy for the whole southeast corner.",
+  fish:"Trout in the cold upper reaches and tributaries, warming as it approaches the Root. The gauge near Houston is the single best number for judging conditions across Houston and Fillmore counties.",
+  coords:[[43.6200,-91.7000],[43.6700,-91.6500],[43.7100,-91.6000],[43.7388,-91.5643],[43.7600,-91.5600]]
+},
+{
+  id:"troutrunmn", name:"Trout Run Creek — Fillmore County", color:"#3a9c6e",
+  state:"MN", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A Fillmore County spring creek in the Troy area feeding the Root system — long a showcase for stream restoration work and one of the better-known wild brown trout creeks in the Minnesota Driftless.",
+  fish:"Wild browns in restored riffle-and-pool habitat. Clear, cold, and technical. Extensive public easement water; walk well away from the crossings.",
+  coords:[[43.8200,-92.1600],[43.8000,-92.1300],[43.7800,-92.1000],[43.7600,-92.0700]]
+},
+{
+  id:"duschee", name:"Duschee Creek", color:"#5bac8c",
+  state:"MN", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A small, cold tributary entering the Root right at Lanesboro — close enough to town to fish before breakfast, and a reliable pick when the bigger branches are off-color after rain.",
+  fish:"Wild brown trout in tight water. Its size makes it clear and fishable sooner than the South Branch after a storm.",
+  coords:[[43.6800,-91.9900],[43.6950,-91.9850],[43.7100,-91.9800],[43.7183,-91.9762]]
+},
+{
+  id:"canfield", name:"Canfield Creek", color:"#2a9c7d",
+  state:"MN", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The spring creek inside Forestville / Mystery Cave State Park — fed by big karst springs, cold year-round, and set in one of the prettiest valleys in the state. Park facilities, marked trails, and a historic townsite thrown in.",
+  fish:"Wild brown trout in gin-clear spring water. Very stable flows; a dependable choice in a dry summer or after heavy rain. State park vehicle permit required.",
+  coords:[[43.6200,-92.2500],[43.6280,-92.2330],[43.6353,-92.2168],[43.6450,-92.2050]]
+},
+{
+  id:"campcreekmn", name:"Camp Creek", color:"#6eac5b",
+  state:"MN", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A Fillmore County creek in the Forestville–Preston corridor, feeding the South Branch. Small, spring-influenced water in steep pasture country.",
+  fish:"Wild browns in short pools and undercut banks. Easy to combine with Canfield Creek and the South Branch in one day.",
+  coords:[[43.6100,-92.1500],[43.6250,-92.1200],[43.6400,-92.0950],[43.6550,-92.0800]]
+},
+{
+  id:"whitewater", name:"Whitewater River", color:"#1d8c9c",
+  state:"MN", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Minnesota's most famous trout river, centered on Whitewater State Park at Elba. Three branches converge in a spectacular bluff valley with 27,000 acres of surrounding state wildlife management area — more public trout water in one place than anywhere else in the Driftless.",
+  fish:"Wild browns and stocked rainbows across the branches, with the biggest hatches of the Minnesota Driftless. The state park reach is busy; the WMA water above and below is not. The USGS gauge here was discontinued in 1993 — use the Root at Pilot Mound as a regional proxy, or read the water on arrival.",
+  coords:[[43.9800,-92.1000],[44.0400,-92.0600],[44.0864,-92.0182],[44.1400,-91.9700],[44.2100,-91.9300]]
+},
+{
+  id:"nfwhitewater", name:"North Fork Whitewater River", color:"#2a9cac",
+  state:"MN", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The northern branch of the Whitewater, dropping through the Whitewater WMA to join the others near Elba. Steep, wooded, and colder than the mainstem.",
+  fish:"Wild brown trout in pocket water and plunge pools. Less pressure than the state park stretch — the walk in is the filter.",
+  coords:[[44.1300,-92.1400],[44.1100,-92.0900],[44.0950,-92.0500],[44.0864,-92.0182]]
+},
+{
+  id:"mfwhitewater", name:"Middle Fork Whitewater River", color:"#3aacbc",
+  state:"MN", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The middle branch of the Whitewater system, running through the WMA above Elba — the quietest of the three forks.",
+  fish:"Wild browns in small, brushy water. Good early-season and late-season choice when the mainstem is crowded.",
+  coords:[[44.0200,-92.1400],[44.0450,-92.1000],[44.0700,-92.0600],[44.0864,-92.0182]]
+},
+{
+  id:"sfwhitewater", name:"South Fork Whitewater River", color:"#4abccc",
+  state:"MN", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The southern branch, running from the St. Charles area northeast to the Whitewater confluence. More open and meadow-like than its siblings, with long glides.",
+  fish:"Wild browns plus stocked fish. Open water means longer casts and spookier trout — a good stream for terrestrials in August.",
+  coords:[[43.9700,-92.0800],[44.0100,-92.0600],[44.0500,-92.0400],[44.0864,-92.0182]]
+},
+{
+  id:"garvinbrook", name:"Garvin Brook", color:"#5b9c3a",
+  state:"MN", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A Winona County spring creek running from Stockton down to Minnesota City and the Mississippi bottoms — the closest good trout water to Winona, and heavily worked on for habitat over the years.",
+  fish:"Wild brown trout with stocking support. Easy access from the valley road; the restored riffle sections hold fish well.",
+  coords:[[44.0100,-91.8600],[44.0250,-91.8100],[44.0322,-91.7793],[44.0600,-91.7400],[44.0900,-91.7100]]
+},
+{
+  id:"beavercreekmn", name:"Beaver Creek — Houston County", color:"#3a7d4a",
+  state:"MN", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The spring creek inside Beaver Creek Valley State Park near Caledonia, fed by Big Spring at the head of the valley. Cold, constant, and one of the prettiest small trout valleys anywhere in the Midwest.",
+  fish:"Wild brown trout and a brook trout population in the upper spring water. Reliable in hot weather thanks to the spring input. State park vehicle permit required; camping on site.",
+  coords:[[43.6700,-91.6100],[43.6550,-91.5900],[43.6425,-91.5722],[43.6250,-91.5500]]
+},
+{
+  id:"rushcreekmn", name:"Rush Creek — Rushford", color:"#6e9c4a",
+  state:"MN", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A Fillmore County trout creek joining the Root at Rushford. The USGS site here is a stage-only gauge — it reports water level, not discharge — so this stream is carried as ungauged rather than showing a number the flow status can't use.",
+  fish:"Wild brown trout in a mix of meadow and wooded water. Use the Root at Pilot Mound or the South Fork Root gauge as a regional wetness read.",
+  coords:[[43.8800,-91.8500],[43.8600,-91.8100],[43.8324,-91.7767],[43.8083,-91.7524]]
+},
+{
+  id:"crookedcreekmn", name:"Crooked Creek — Houston County", color:"#8c9c3a",
+  state:"MN", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Runs through the Freeburg and Caledonia country in the far southeast corner of Minnesota, dropping to the Mississippi near Reno. Deep valleys, little traffic. Its USGS site is stage-only, so no CFS is available here.",
+  fish:"Wild brown trout with good numbers in the upper branches. Among the least-pressured quality water in the Minnesota Driftless.",
+  coords:[[43.6400,-91.4500],[43.6250,-91.4100],[43.6107,-91.3612],[43.5900,-91.3100]]
+},
+{
+  id:"winnebagocr", name:"Winnebago Creek", color:"#9c8c4a",
+  state:"MN", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A small Houston County creek near Eitzen in Minnesota's southeast corner, minutes from the Iowa line — closer to Decorah than most Minnesota trout water.",
+  fish:"Wild browns in tight, brushy water. Worth pairing with Iowa's French Creek or Waterloo Creek on the same trip given how close the two are.",
+  coords:[[43.5700,-91.4400],[43.5550,-91.3900],[43.5400,-91.3400],[43.5300,-91.2900]]
+},
+{
+  id:"pinecreekmn", name:"Pine Creek — Houston County", color:"#4a8c6e",
+  state:"MN", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A cold Houston County creek in the bluffs above the Mississippi between La Crescent and Hokah, dropping fast out of the ridge country.",
+  fish:"Wild brown trout in steep, small water. Short but good — an easy stop when you're passing La Crosse.",
+  coords:[[43.6700,-91.4200],[43.6850,-91.3900],[43.7000,-91.3600],[43.7150,-91.3300]]
+},
+{
+  id:"haycreek", name:"Hay Creek", color:"#8c4a6e",
+  state:"MN", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The northern outpost of the Driftless: a spring creek running north into the Mississippi at Red Wing, through the Hay Creek Unit of the Richard J. Dorer Memorial Hardwood State Forest. The closest quality trout water to the Twin Cities.",
+  fish:"Wild brown trout with stocking support. Gets weekend traffic from the metro — go on a weekday or walk further than the first bend. State forest parking along the valley road.",
+  coords:[[44.4800,-92.5600],[44.5100,-92.5500],[44.5400,-92.5400],[44.5625,-92.5338]]
+},
+{
+  id:"vermillionmn", name:"Vermillion River", color:"#9c5b7d",
+  state:"MN", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A spring-fed metro-edge trout stream running through Dakota County to the Mississippi at Hastings — not strictly inside the Driftless, but the same limestone spring-creek character and the closest wild brown trout to Minneapolis and St. Paul.",
+  fish:"Wild brown trout in a stream squeezed by suburban development and defended hard by local conservation groups. Special regulations apply on parts of it — check current Minnesota DNR trout rules before fishing.",
+  coords:[[44.7200,-93.1200],[44.7300,-93.0300],[44.7400,-92.9500],[44.7433,-92.8520],[44.7100,-92.8000]]
+},
+
+/* ================= DRIFTLESS AREA — WISCONSIN =================
+   The largest share of the Driftless and its best-known trout water:
+   Vernon County's coulees, the Kickapoo watershed, the Grant County
+   spring creeks, and the Dane County limestone streams. Wisconsin's
+   stream-bank easement program plus DNR Fishery Areas put a huge
+   amount of this in reach on foot, with gravel parking pull-offs at
+   most bridges. Nearly all of it is walk-and-wade; the Kickapoo
+   mainstem is the one real paddling river in the group.
+   Note Wisconsin's stream classification: Class I = wild, self-
+   sustaining trout, no stocking needed; Class II = some natural
+   reproduction plus stocking; Class III = stocked, no reproduction. */
+{
+  id:"timbercoulee", name:"Timber Coulee Creek", color:"#0e7a4a",
+  state:"WI", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The crown jewel of Wisconsin trout streams and the birthplace of modern coldwater stream restoration — the Coon Valley watershed work that started here in the 1930s became the template for Driftless habitat projects everywhere since. A Class I spring creek running down Timber Coulee from the Westby ridge to Coon Valley.",
+  fish:"Dense wild brown trout in restored riffle-pool-lunker-structure habitat. Summer caddis and Trico hatches bring excellent dry-fly fishing. Heavy roadside easement access along County P — and correspondingly heavy pressure, so walk past the first three pull-offs.",
+  coords:[[43.6100,-90.8900],[43.5800,-90.9200],[43.5400,-90.9600],[43.5022,-90.9932]]
+},
+{
+  id:"cooncreek", name:"Coon Creek", color:"#1d8c5b",
+  state:"WI", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The main stem of the Coon Valley system, gathering Timber Coulee, Spring Coulee, Rullands Coulee and Bohemian Valley before running out to the Mississippi at Stoddard. Bigger water than its famous tributaries, and it holds bigger fish because of it.",
+  fish:"Wild brown trout, with the best of it above Chaseburg where the coulee creeks come in cold. More room for a real cast than Timber Coulee, and noticeably fewer anglers.",
+  coords:[[43.4700,-90.9300],[43.5022,-90.9932],[43.5700,-91.0100],[43.6469,-91.0335],[43.6600,-91.1300],[43.6608,-91.2185]]
+},
+{
+  id:"springcoulee", name:"Spring Coulee Creek", color:"#2a9c6e",
+  state:"WI", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"One of the restored Coon Valley tributaries above Coon Valley village — a small, cold, hard-working little creek that's had decades of habitat investment.",
+  fish:"Wild browns in tight quarters. A good overflow option on a busy Saturday when the Timber Coulee pull-offs are full.",
+  coords:[[43.5500,-90.9400],[43.5300,-90.9600],[43.5150,-90.9800],[43.5022,-90.9932]]
+},
+{
+  id:"bohemianvalley", name:"Bohemian Valley Creek", color:"#3aac7d",
+  state:"WI", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A Coon Creek tributary in the valley above Chaseburg, in La Crosse County — steep-sided, wooded, and small.",
+  fish:"Wild brown trout in brushy water. Short rod country. Best in spring and fall when the bankside cover is down.",
+  coords:[[43.6300,-90.9400],[43.6350,-90.9700],[43.6420,-91.0000],[43.6469,-91.0335]]
+},
+{
+  id:"rullandscoulee", name:"Rullands Coulee Creek", color:"#4abc8c",
+  state:"WI", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Another of the small Coon Creek feeders near Chaseburg, tucked into its own coulee.",
+  fish:"Wild browns in very small water. Rewarding if you like fishing creeks you can jump across; frustrating if you don't.",
+  coords:[[43.6100,-91.0700],[43.6250,-91.0550],[43.6380,-91.0420],[43.6469,-91.0335]]
+},
+{
+  id:"kickapoo", name:"Kickapoo River", color:"#8c6e2a",
+  state:"WI", region:"driftless", gauges:["kickOntario","kickLaFarge","kickSteuben"], primaryGauge:"kickLaFarge",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The crookedest river in the world — 125 twisting miles from Wilton through Ontario, La Farge, Viola, Readstown, Gays Mills and Steuben to the Wisconsin River. Trout water in the cold upper reaches around Ontario; a superb smallmouth paddle below. The Kickapoo Valley Reserve protects 8,600 acres of the upper valley.",
+  fish:"Trout above and around Ontario and in the cold tributaries; smallmouth bass from La Farge down. Three live gauges make this the best-instrumented river in the Wisconsin Driftless — it's the one here you'd actually float, and the flow number matters.",
+  coords:[[43.8100,-90.5400],[43.7299,-90.5889],[43.6400,-90.6200],[43.5742,-90.6432],[43.5033,-90.6707],[43.4461,-90.7574],[43.3944,-90.7707],[43.3181,-90.8496],[43.1828,-90.8583],[43.0855,-90.8935]]
+},
+{
+  id:"wforkkickapoo", name:"West Fork Kickapoo River", color:"#9c8c3a",
+  state:"WI", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The best-known Driftless stream outside the region, running from the Cashton ridge through Bloomingdale and Avalanche to meet the Kickapoo at Readstown. Bigger water than Timber Coulee — 15 to 20 feet wide through the main sections — and it grows a bigger average fish. The West Fork Sports Club has stewarded the habitat work here for decades.",
+  fish:"Wild brown trout with fish in the 12–18 inch range common, noticeably larger on average than the Coon Valley creeks. A long catch-and-release stretch runs through the Avalanche area — check current Wisconsin DNR regulations, which vary by reach. Its USGS gauge was discontinued in 2017, so this is a read-the-water stream now.",
+  coords:[[43.6900,-90.8100],[43.6300,-90.7600],[43.5905,-90.7274],[43.5183,-90.7118],[43.4800,-90.7300],[43.4461,-90.7574]]
+},
+{
+  id:"tainter", name:"Tainter Creek", color:"#7d9c2a",
+  state:"WI", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A Crawford/Vernon County creek running to the Kickapoo near Gays Mills, with an active watershed council driving habitat and farm-conservation work.",
+  fish:"Wild brown trout in restored habitat. Less famous than the West Fork an easy drive away, which is exactly the appeal.",
+  coords:[[43.4200,-90.9500],[43.4000,-90.9100],[43.3700,-90.8800],[43.3400,-90.8600]]
+},
+{
+  id:"knappcreek", name:"Knapp Creek", color:"#6e8c3a",
+  state:"WI", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A Crawford County Kickapoo tributary in the Soldiers Grove area, running through a narrow wooded valley.",
+  fish:"Wild browns in small water. A good add-on when you're already fishing the Kickapoo corridor.",
+  coords:[[43.4400,-90.8900],[43.4250,-90.8500],[43.4100,-90.8100],[43.3944,-90.7707]]
+},
+{
+  id:"badaxe", name:"Bad Axe River", color:"#8c3a2a",
+  state:"WI", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Vernon County's west-slope river, running from the Viroqua ridge out to the Mississippi at Genoa through a set of forks that each hold trout.",
+  fish:"Wild brown trout in the North and South forks and the upper mainstem, warming toward the Mississippi. Good easement access; more room to cast than the coulee creeks.",
+  coords:[[43.5900,-90.9200],[43.5850,-91.0100],[43.5800,-91.1000],[43.5747,-91.2313]]
+},
+{
+  id:"rushcreekwi", name:"Rush Creek — Crawford County", color:"#9c6e5b",
+  state:"WI", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A cold creek dropping off the ridge to the Mississippi near Ferryville, below the Rush Creek State Natural Area's dry bluff prairies.",
+  fish:"Wild brown trout in steep, small water. The bluff-prairie setting above it is worth the trip on its own.",
+  coords:[[43.3400,-90.9700],[43.3300,-91.0200],[43.3200,-91.0700],[43.3050,-91.1100]]
+},
+{
+  id:"blackearth", name:"Black Earth Creek", color:"#1d7a8c",
+  state:"WI", region:"driftless", gauges:["blackEarthCP","blackEarth"], primaryGauge:"blackEarth",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Dane County's famous limestone spring creek, running from Cross Plains through Black Earth to Mazomanie — twenty-five minutes from Madison and one of the most heavily studied trout streams in the Midwest. Two live USGS gauges make it the best-instrumented small trout stream in the Driftless.",
+  fish:"Wild brown trout, some of them large, in a stream that gets fished hard and stays good anyway. Classic spring-creek tactics: scuds, sowbugs, small BWOs, and a quiet approach. Urban pressure means educated fish.",
+  coords:[[43.1050,-89.6150],[43.1097,-89.6408],[43.1147,-89.6641],[43.1342,-89.7322],[43.1772,-89.7943],[43.1900,-89.8300]]
+},
+{
+  id:"mountvernon", name:"Mount Vernon Creek", color:"#2a8c9c",
+  state:"WI", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A Dane County limestone creek in the Mount Vernon valley south of Verona — spring-fed, clear, and close enough to Madison for an evening.",
+  fish:"Wild brown trout in classic spring-creek water. Technical and clear; long leaders and small flies. DNR fishery area access in the valley.",
+  coords:[[42.9400,-89.5200],[42.9550,-89.5300],[42.9700,-89.5400],[42.9900,-89.5500]]
+},
+{
+  id:"castlerock", name:"Castle Rock Creek", color:"#3a9cac",
+  state:"WI", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The Fennimore Fork of the Blue River in Grant County — a big-spring limestone creek with famously stable, cold flows and a reputation for growing large wild browns in a small stream. One of the marquee destinations of the Wisconsin Driftless.",
+  fish:"Wild brown trout, with genuine trophy potential for a creek this size. Spring-creek fishing at its most technical: scuds, sowbugs, midges, and light tippet. A long catch-and-release stretch has historically applied — check current Wisconsin DNR regulations.",
+  coords:[[42.9800,-90.5800],[43.0100,-90.5600],[43.0400,-90.5500],[43.0700,-90.5500]]
+},
+{
+  id:"blueriver", name:"Blue River", color:"#2a6e9c",
+  state:"WI", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Runs north through Grant and Iowa counties to the Wisconsin River at the village of Blue River, gathering Castle Rock Creek on the way. Cold spring input up high, warming as it goes.",
+  fish:"Wild brown trout in the upper reaches and the spring-fed forks. Good easement access; a strong pairing with Castle Rock Creek in the same day.",
+  coords:[[42.9900,-90.5700],[43.0500,-90.5700],[43.1100,-90.5800],[43.1836,-90.5896],[43.2000,-90.6000]]
+},
+{
+  id:"biggreen", name:"Big Green River", color:"#3a8c5b",
+  state:"WI", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A Grant County spring creek in the Werley and Woodman country — remote-feeling, lightly travelled, and long regarded as one of the best wild brown trout streams in southwest Wisconsin.",
+  fish:"Wild brown trout in cold, stable spring water. Meadow stretches with undercut banks; a careful approach pays. Gravel-road access with pull-offs at the crossings.",
+  coords:[[42.9700,-90.7800],[43.0100,-90.7900],[43.0500,-90.8000],[43.0800,-90.8200]]
+},
+{
+  id:"grantriver", name:"Grant River", color:"#5b8c2a",
+  state:"WI", region:"driftless", gauges:["grantBurton"], primaryGauge:"grantBurton",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Runs from the Lancaster country down through Burton to the Mississippi at Potosi. Trout in the cold upper branches, smallmouth bass as it warms downstream — and a live USGS gauge, which is rare in this corner.",
+  fish:"Trout in the upper river and its feeders; smallmouth below Burton. The Burton gauge is a useful regional wetness read for the whole Grant County spring-creek cluster including Big Green and Castle Rock.",
+  coords:[[42.9200,-90.6800],[42.8467,-90.7107],[42.7800,-90.7700],[42.7203,-90.8192],[42.6800,-90.7100]]
+},
+{
+  id:"platteriver", name:"Platte River", color:"#6e9c3a",
+  state:"WI", region:"driftless", gauges:["platteRockville"], primaryGauge:"platteRockville",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A Grant County river running past Platteville and Rockville to the Mississippi. Trout water in the upper branches, smallmouth downstream, with a live discharge gauge at Rockville.",
+  fish:"Trout in the cold headwater branches; smallmouth bass in the lower river. Good DNR fishery area access around Platteville.",
+  coords:[[42.8300,-90.4200],[42.7700,-90.4600],[42.7342,-90.4785],[42.7311,-90.6403],[42.6600,-90.7000]]
+},
+{
+  id:"ebpecatonica", name:"East Branch Pecatonica River", color:"#8c9c4a",
+  state:"WI", region:"driftless", gauges:["ebPecatonica"], primaryGauge:"ebPecatonica",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Runs through the Blanchardville and Hollandale country in Iowa and Lafayette counties, at the southeastern edge of the Driftless. Trout in the upper branches and the spring-fed feeder creeks.",
+  fish:"Wild and stocked brown trout in the cold upper water, warming downstream toward the Pecatonica mainstem. A live gauge here is a good read for the whole southeast Driftless corner.",
+  coords:[[42.9500,-89.8400],[42.8800,-89.8500],[42.7856,-89.8611],[42.7200,-89.8900]]
+},
+{
+  id:"kinnickinnic", name:"Kinnickinnic River", color:"#1d8c8c",
+  state:"WI", region:"driftless", gauges:["kinniRiverFalls"], primaryGauge:"kinniRiverFalls",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The Kinni — a spring-fed limestone river running through River Falls and down a deep gorge to the St. Croix at Kinnickinnic State Park. Extraordinarily dense wild brown trout numbers and a live USGS gauge; the best-known trout stream in the northern Driftless.",
+  fish:"Wild brown trout in exceptional density, especially in the town and lower-gorge sections. Fishes well nearly year-round thanks to the springs. The gorge below town requires a real hike in — and holds the better fish.",
+  coords:[[44.9000,-92.5300],[44.8800,-92.5800],[44.8613,-92.6237],[44.8308,-92.7331],[44.8069,-92.7469]]
+},
+{
+  id:"rushriverwi", name:"Rush River — Pierce County", color:"#2a9c9c",
+  state:"WI", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Runs south through Pierce County from the Baldwin area past El Paso to the Mississippi at Maiden Rock — the Kinni's quieter neighbour, with a long stretch of quality trout water and far fewer anglers.",
+  fish:"Wild brown trout through most of its length. Extensive easement and DNR fishery area access along the valley road; the middle river fishes best.",
+  coords:[[44.9000,-92.3400],[44.8300,-92.3200],[44.7500,-92.2900],[44.6500,-92.2600],[44.5600,-92.2900]]
+},
+{
+  id:"trimbelle", name:"Trimbelle River", color:"#3aacac",
+  state:"WI", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A small Pierce County trout stream running from near Ellsworth south to the Mississippi at Diamond Bluff, between the Kinni and the Rush.",
+  fish:"Wild and stocked brown trout in small water. A good third stop on a Pierce County day with the Kinnickinnic and Rush.",
+  coords:[[44.8000,-92.4600],[44.7314,-92.4877],[44.6700,-92.5100],[44.6200,-92.5500]]
+},
+{
+  id:"eaugalle", name:"Eau Galle River", color:"#4abcbc",
+  state:"WI", region:"driftless", gauges:["eauGalleSV"], primaryGauge:"eauGalleSV",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Runs through Spring Valley in the northern Driftless, above and below the Eau Galle Dam, to the Chippewa. Trout water in the upper river with a live USGS discharge gauge at Spring Valley.",
+  fish:"Wild and stocked brown trout upstream of the reservoir. The gauge here is a useful proxy for the whole Pierce/St. Croix County cluster, including the ungauged Rush and Trimbelle.",
+  coords:[[44.9400,-92.2100],[44.9000,-92.2200],[44.8528,-92.2383],[44.7800,-92.2200],[44.7200,-92.1900]]
+},
+{
+  id:"lacrosseriver", name:"La Crosse River", color:"#6e5b9c",
+  state:"WI", region:"driftless", gauges:["laCrosseSparta"], primaryGauge:"laCrosseSparta",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Runs from the Fort McCoy country through Sparta and West Salem to the Mississippi at La Crosse, paralleled by the La Crosse River State Trail. Trout in the upper river and the cold feeder creeks, warmer water below Sparta.",
+  fish:"Trout upstream of Sparta and in Silver Creek and the other spring-fed tributaries; smallmouth and northern pike downstream. Live gauge at Sparta.",
+  coords:[[44.0200,-90.6500],[43.9939,-90.7000],[43.9375,-90.8106],[43.9000,-90.9500],[43.8800,-91.0800],[43.8608,-91.2104]]
+},
+{
+  id:"silvercreekwi", name:"Silver Creek — Angelo", color:"#5b6eac",
+  state:"WI", region:"driftless", gauges:["silverAngelo"], primaryGauge:"silverAngelo",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A cold Monroe County tributary of the La Crosse River near Angelo, north of Sparta — one of the smallest streams in the Driftless with its own live discharge gauge, which makes it a precise read on local conditions.",
+  fish:"Wild brown trout in small spring-fed water. Because the gauge is right on the creek, this is one of the few places here where the CFS number genuinely describes the water you'll be standing in.",
+  coords:[[44.0100,-90.7300],[43.9900,-90.7450],[43.9672,-90.7650],[43.9500,-90.7900]]
+},
+{
+  id:"stillwell", name:"Stillwell Creek", color:"#4a5b9c",
+  state:"WI", region:"driftless", gauges:["stillwellTomah"], primaryGauge:"stillwellTomah",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A small Monroe County trout creek near Tomah in the La Crosse River watershed, on the sandy northeastern margin of the Driftless. It carries its own gauge — and the numbers are small enough (single-digit CFS at low water) to show just how little water a good trout creek needs.",
+  fish:"Brook and brown trout in very small water. Tight casting; a 7-foot rod is plenty. A worthwhile stop if you're passing Tomah on I-90.",
+  coords:[[44.0300,-90.6300],[44.0100,-90.6450],[43.9939,-90.6572],[43.9750,-90.6800]]
+},
+{
+  id:"elkcreekwi", name:"Elk Creek — Trempealeau County", color:"#6e9c5b",
+  state:"WI", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A Trempealeau County trout creek near Independence, in the northern coulee country where the Driftless bluffs start to spread out.",
+  fish:"Wild brown trout with brook trout in the cold headwaters. Quiet water — this corner sees a fraction of the Vernon County traffic.",
+  coords:[[44.4300,-91.3400],[44.4000,-91.3700],[44.3800,-91.4000],[44.3597,-91.4204]]
+},
+{
+  id:"trempealeau", name:"Trempealeau River", color:"#8c7d5b",
+  state:"WI", region:"driftless", gauges:["trempArcadia"], primaryGauge:"trempArcadia",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Runs from the Osseo country through Whitehall, Independence and Arcadia to the Mississippi. Too warm for trout on the lower mainstem, but it drains a whole set of trout coulees — and it's a good smallmouth paddle in its own right.",
+  fish:"Smallmouth bass on the mainstem, trout in Elk Creek and the other cold feeders. Use the Arcadia gauge as the regional read for Trempealeau and Buffalo county creeks.",
+  coords:[[44.5747,-91.2268],[44.4500,-91.2800],[44.3686,-91.3182],[44.3200,-91.4000],[44.2544,-91.5053],[44.1318,-91.5530]]
+},
+{
+  id:"buffalowi", name:"Buffalo River", color:"#9c8c6e",
+  state:"WI", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Runs west through Buffalo County past Mondovi toward the Chippewa, in the northern Driftless. Trout in the cold upper branches and tributary coulees; warmwater downstream.",
+  fish:"Brown trout in the headwater branches; smallmouth in the lower river. The Buffalo County coulees are among the least-fished quality trout water in Wisconsin.",
+  coords:[[44.6400,-91.4800],[44.6000,-91.5800],[44.5666,-91.6712],[44.5000,-91.8000],[44.4300,-91.9000]]
+},
+{
+  id:"pineriverwi", name:"Pine River — Richland County", color:"#5b9c6e",
+  state:"WI", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Runs south through Richland Center to the Wisconsin River, gathering a set of trout tributaries out of the Richland County ridges along the way.",
+  fish:"Trout in the upper river and the spring-fed feeder creeks; smallmouth below Richland Center. An overlooked corner of the Wisconsin Driftless.",
+  coords:[[43.5000,-90.4200],[43.4400,-90.4000],[43.3800,-90.3900],[43.3336,-90.3862],[43.2600,-90.4100]]
+},
+
+/* ================= DRIFTLESS AREA — NORTHWEST ILLINOIS ================= */
+{
+  id:"appleriver", name:"Apple River", color:"#9c4a3a",
+  state:"IL", region:"driftless", gauges:[], primaryGauge:null,
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The southern tip of the Driftless: a Jo Daviess County river cutting a limestone canyon through Apple River Canyon State Park before running down past Elizabeth and Hanover to the Mississippi. Illinois' only real piece of Driftless canyon country.",
+  fish:"Illinois has no wild trout fishery here — the state runs a stocked catch-and-keep trout season in spring and fall at designated sites, and the river otherwise fishes for smallmouth bass. Check current Illinois DNR trout site listings and season dates before planning a trip around it.",
+  coords:[[42.4700,-90.0200],[42.4408,-90.0447],[42.3800,-90.1400],[42.3192,-90.2262],[42.2542,-90.2871],[42.2200,-90.3300]]
+},
 ];
 
 /* ---------- Access points ---------- */
@@ -720,6 +1377,123 @@ const RAMPS = [
   {id:"sleepyhollow", river:"sskunk", name:"Sleepy Hollow Access", role:"launch", pos:[42.0450,-93.6280], note:"646 W. Riverside Rd, Ames."},
   {id:"rivervalley", river:"sskunk", name:"River Valley Park (Ames)", role:"takeout", pos:[41.9900,-93.6200], note:"Standard in-town take-out."},
   {id:"lewclarkson", river:"beavercreek", name:"Lew Clarkson Park (Johnston)", role:"wade", pos:[41.6900,-93.7100], note:"Kayak access point; small creek, no formal second access confirmed."},
+
+  /* ---- DRIFTLESS ACCESS ----
+     Almost everything here is role:"wade" — park and walk. These are
+     anchor points (state parks, DNR fishery/wildlife areas, county
+     parks, hatcheries, bridge pull-offs), not an exhaustive list:
+     Iowa, Minnesota and Wisconsin all run stream-bank easement
+     programs that open many more miles than are marked here, signed
+     at the road. Positions are approximate to the access area.
+     Always confirm the current easement map and regulations with the
+     state agency before you rely on a spot. */
+  // ---- Iowa Driftless ----
+  {id:"uibluff",  river:"upperiowa", name:"Bluffton access", role:"both", pos:[43.4069,-91.8990], note:"Canoe access and gauge site below the Bluffton bluffs; top of the classic float to Decorah."},
+  {id:"uichimney",river:"upperiowa", name:"Chimney Rock / Kendallville area", role:"launch", pos:[43.4330,-91.9650], note:"Outfitter and canoe access on the upper river; the coldest, most trout-like reach."},
+  {id:"uidecorah",river:"upperiowa", name:"Decorah — Twin Springs / city access", role:"both", pos:[43.3049,-91.7955], note:"In-town river access with parking; USGS gauge here. Smallmouth water through town."},
+  {id:"uidorch",  river:"upperiowa", name:"Dorchester bridge access", role:"takeout", pos:[43.4211,-91.5088], note:"Lower-river access near the Waterloo Creek confluence; gauge at the bridge."},
+  {id:"watcr1",   river:"waterloocreek", name:"Waterloo Creek — Dorchester", role:"wade", pos:[43.4511,-91.5051], note:"Roadside parking along the valley road north of Dorchester; gauge site. Walk upstream for better fish."},
+  {id:"watcr2",   river:"waterloocreek", name:"Waterloo Creek — upper valley", role:"wade", pos:[43.4800,-91.5400], note:"Pull-offs toward the Minnesota line; tight brushy water, short rod."},
+  {id:"trhatch",  river:"troutrunia", name:"Decorah Fish Hatchery", role:"wade", pos:[43.2870,-91.7550], note:"Hatchery parking on Trout Run; heavily stocked and heavily fished. Trout Run Trail parallels the creek."},
+  {id:"trupper",  river:"troutrunia", name:"Trout Run — upper valley", role:"wade", pos:[43.2600,-91.7380], note:"Trail and roadside parking upstream of the hatchery; walk away from the lots for better water."},
+  {id:"coldw1",   river:"coldwaterIA", name:"Coldwater Creek access", role:"wade", pos:[43.4200,-91.8870], note:"Iowa DNR access in the Coldwater valley; spring-fed and cold through summer."},
+  {id:"sbear1",   river:"southbear", name:"South Bear — Highlandville", role:"wade", pos:[43.4122,-91.7290], note:"DNR parking at Highlandville; special regulations apply on parts of this stream — read the current trout regs."},
+  {id:"sbear2",   river:"southbear", name:"South Bear — lower valley", role:"wade", pos:[43.3960,-91.7120], note:"Pull-off downstream toward the Upper Iowa confluence."},
+  {id:"nbear1",   river:"northbear", name:"North Bear Creek access", role:"wade", pos:[43.4400,-91.7480], note:"Roadside parking in the North Bear valley; brushy small water."},
+  {id:"canoe1",   river:"canoecreek", name:"Canoe Creek access", role:"wade", pos:[43.3860,-91.7080], note:"Bridge pull-off northeast of Decorah; quieter than Trout Run."},
+  {id:"french1",  river:"frenchcreek", name:"French Creek Wildlife Area", role:"wade", pos:[43.4400,-91.3600], note:"DNR wildlife area parking; managed wild brown trout water — check current special regulations."},
+  {id:"paint1",   river:"paintcreek", name:"Yellow River State Forest HQ", role:"wade", pos:[43.1800,-91.2420], note:"State forest parking and campground; miles of public bank on Paint Creek."},
+  {id:"paint2",   river:"paintcreek", name:"Paint Creek — Waterville", role:"wade", pos:[43.2172,-91.2905], note:"Upper-valley access near Waterville; colder water, wild fish."},
+  {id:"village1", river:"villagecreek", name:"Village Creek access", role:"wade", pos:[43.3600,-91.2800], note:"Roadside parking in the valley behind Lansing."},
+  {id:"clearia1", river:"clearcreekia", name:"Clear Creek access", role:"wade", pos:[43.3000,-91.2800], note:"Bluff-valley pull-off near Lansing; clear, technical water."},
+  {id:"yellow1",  river:"yellowriver", name:"Yellow River — Ion gauge", role:"wade", pos:[43.1119,-91.2651], note:"Bridge access at the gauge; smallmouth water here, trout in the upper valley."},
+  {id:"yellow2",  river:"yellowriver", name:"Effigy Mounds / river mouth", role:"wade", pos:[43.0957,-91.2202], note:"National monument parking near the Mississippi confluence."},
+  {id:"bloody1",  river:"bloodyrun", name:"Bloody Run County Park", role:"wade", pos:[43.0408,-91.2065], note:"Clayton County park with campground and creekside parking; gauge on site. Walk upstream from the campground."},
+  {id:"snymag1",  river:"snymagill", name:"Sny Magill Creek access", role:"wade", pos:[42.9200,-91.1400], note:"Public access near the Sny Magill Mound Group; cold spring water, good in hot weather."},
+  {id:"turkey1",  river:"turkeyriver", name:"Turkey River — Elkader", role:"both", pos:[42.8435,-91.4013], note:"In-town access and gauge; good smallmouth float water above and below."},
+  {id:"turkey2",  river:"turkeyriver", name:"Turkey River — Spillville", role:"launch", pos:[43.2073,-91.9503], note:"Upper-river access and gauge in Winneshiek County."},
+  {id:"volga1",   river:"volgariver", name:"Volga River State Recreation Area", role:"wade", pos:[42.8200,-91.7400], note:"State recreation area with camping, trails and public bank on the Volga."},
+  {id:"volga2",   river:"volgariver", name:"Littleport gauge access", role:"takeout", pos:[42.7539,-91.3690], note:"Bridge access at the gauge near the Turkey confluence."},
+  {id:"bigspr1",  river:"springbranchia", name:"Big Spring Fish Hatchery", role:"wade", pos:[42.8450,-91.4300], note:"Hatchery parking on Spring Branch; very stable spring flows — a dependable wet-weather fallback."},
+  {id:"grannis1", river:"grannis", name:"Grannis Creek access", role:"wade", pos:[42.9611,-91.8118], note:"Roadside parking near West Union, Fayette County."},
+  {id:"otteria1", river:"ottercreekia", name:"Otter Creek — Elgin", role:"wade", pos:[42.9575,-91.6379], note:"Fayette County access near Elgin; pairs well with Grannis Creek."},
+  {id:"backbone1",river:"richmondsprings", name:"Backbone State Park — Richmond Springs", role:"wade", pos:[42.6203,-91.5697], note:"Iowa's oldest state park: paved parking, campground, trails, easy family access to the spring branch."},
+
+  // ---- Minnesota Driftless ----
+  {id:"rootlane", river:"rootriver", name:"Lanesboro river access", role:"both", pos:[43.7183,-91.9762], note:"Town access with outfitters and the Root River State Trail; canoe and wade water both directions."},
+  {id:"rootrush", river:"rootriver", name:"Rushford access", role:"both", pos:[43.8083,-91.7524], note:"Trailhead town on the Root; canoe landing and bank access."},
+  {id:"roothous", river:"rootriver", name:"Houston — gauge access", role:"wade", pos:[43.7686,-91.5699], note:"Bridge access at the USGS gauge; smallmouth water this far down."},
+  {id:"sbrpreston",river:"sbranchroot", name:"Preston river access", role:"wade", pos:[43.6702,-92.0824], note:"In-town parking on the South Branch; extensive state easement water upstream and down."},
+  {id:"sbrforest",river:"sbranchroot", name:"Forestville State Park", role:"wade", pos:[43.6353,-92.2168], note:"State park lot (vehicle permit required); the South Branch and Canfield Creek both run through here."},
+  {id:"nbrchat",  river:"nbranchroot", name:"Chatfield river access", role:"wade", pos:[43.8458,-92.1888], note:"Town access on the North Branch; easement signs mark walk-in water down the valley."},
+  {id:"mbrfount", river:"mbranchroot", name:"Fountain area access", role:"wade", pos:[43.7402,-92.1357], note:"Gravel pull-offs along the Middle Branch valley; small, brushy water."},
+  {id:"sfroot1",  river:"sfroot", name:"South Fork — Houston gauge", role:"wade", pos:[43.7388,-91.5643], note:"Bridge access at the gauge; the best live number for the whole southeast corner."},
+  {id:"troutmn1", river:"troutrunmn", name:"Trout Run Creek — Troy", role:"wade", pos:[43.7800,-92.1000], note:"State easement parking in the Troy valley; restored riffle-pool habitat."},
+  {id:"duschee1", river:"duschee", name:"Duschee Creek access", role:"wade", pos:[43.7000,-91.9820], note:"Just south of Lanesboro; clears faster than the South Branch after rain."},
+  {id:"canfield1",river:"canfield", name:"Forestville / Mystery Cave State Park", role:"wade", pos:[43.6353,-92.2168], note:"Spring-fed and cold year-round; park vehicle permit required. Historic townsite and campground on site."},
+  {id:"campmn1",  river:"campcreekmn", name:"Camp Creek access", role:"wade", pos:[43.6400,-92.0950], note:"Fillmore County pull-off between Forestville and Preston."},
+  {id:"wwpark",   river:"whitewater", name:"Whitewater State Park (Elba)", role:"wade", pos:[44.0864,-92.0182], note:"Park lots, campground and visitor center right on the river; vehicle permit required. Busy on weekends."},
+  {id:"wwwma",    river:"whitewater", name:"Whitewater WMA — Elba north", role:"wade", pos:[44.1400,-91.9700], note:"27,000-acre wildlife management area: gravel lots, no permit needed, far fewer people than the park."},
+  {id:"nfww1",    river:"nfwhitewater", name:"North Fork — WMA access", role:"wade", pos:[44.1100,-92.0900], note:"WMA parking above Elba; steep wooded valley, plunge-pool water."},
+  {id:"mfww1",    river:"mfwhitewater", name:"Middle Fork — WMA access", role:"wade", pos:[44.0450,-92.1000], note:"Quietest of the three forks; gravel pull-off access."},
+  {id:"sfww1",    river:"sfwhitewater", name:"South Fork — St. Charles area", role:"wade", pos:[44.0100,-92.0600], note:"Open meadow water; longer casts and spookier trout."},
+  {id:"garvin1",  river:"garvinbrook", name:"Garvin Brook — Stockton", role:"wade", pos:[44.0322,-91.7793], note:"Valley-road parking near Stockton; restored habitat sections hold fish well."},
+  {id:"bcvsp",    river:"beavercreekmn", name:"Beaver Creek Valley State Park", role:"wade", pos:[43.6425,-91.5722], note:"Big Spring at the head of the valley keeps it cold all summer; campground, vehicle permit required."},
+  {id:"rushmn1",  river:"rushcreekmn", name:"Rush Creek access — Rushford", role:"wade", pos:[43.8324,-91.7767], note:"Stage-only USGS gauge here — no CFS. Easement water up the valley."},
+  {id:"crookmn1", river:"crookedcreekmn", name:"Crooked Creek — Freeburg", role:"wade", pos:[43.6107,-91.3612], note:"Far southeast corner; stage-only gauge. Very lightly fished."},
+  {id:"winne1",   river:"winnebagocr", name:"Winnebago Creek — Eitzen", role:"wade", pos:[43.5400,-91.3400], note:"Minutes from the Iowa line; pairs with French Creek or Waterloo Creek."},
+  {id:"pinemn1",  river:"pinecreekmn", name:"Pine Creek access", role:"wade", pos:[43.7000,-91.3600], note:"Bluff-country creek between La Crescent and Hokah."},
+  {id:"hay1",     river:"haycreek", name:"Hay Creek Unit — state forest", role:"wade", pos:[44.5200,-92.5450], note:"Dorer Memorial Hardwood State Forest parking south of Red Wing; closest quality trout water to the Twin Cities."},
+  {id:"verm1",    river:"vermillionmn", name:"Vermillion River — Hastings area", role:"wade", pos:[44.7400,-92.9500], note:"Metro-edge spring creek; special regulations apply on parts — check current MN DNR trout rules."},
+
+  // ---- Wisconsin Driftless ----
+  {id:"timber1",  river:"timbercoulee", name:"Timber Coulee — County P pull-offs", role:"wade", pos:[43.5400,-90.9600], note:"A string of gravel easement pull-offs up the coulee. The first few fill early — keep driving."},
+  {id:"timber2",  river:"timbercoulee", name:"Timber Coulee — upper valley", role:"wade", pos:[43.5850,-90.9080], note:"Upper reaches toward the Westby ridge; smaller water, fewer anglers."},
+  {id:"coon1",    river:"cooncreek", name:"Coon Valley village access", role:"wade", pos:[43.5022,-90.9932], note:"Where Timber Coulee meets Coon Creek — the historic heart of Driftless stream restoration."},
+  {id:"coon2",    river:"cooncreek", name:"Coon Creek — Chaseburg", role:"wade", pos:[43.6469,-91.0335], note:"Bigger water downstream; room for a real cast and bigger average fish."},
+  {id:"springc1", river:"springcoulee", name:"Spring Coulee Creek access", role:"wade", pos:[43.5300,-90.9600], note:"Restored tributary above Coon Valley; good overflow when Timber Coulee is busy."},
+  {id:"bohem1",   river:"bohemianvalley", name:"Bohemian Valley access", role:"wade", pos:[43.6380,-90.9900], note:"La Crosse County coulee above Chaseburg; brushy small water."},
+  {id:"rulland1", river:"rullandscoulee", name:"Rullands Coulee access", role:"wade", pos:[43.6300,-91.0500], note:"Small Coon Creek feeder; jump-across water."},
+  {id:"kickont",  river:"kickapoo", name:"Ontario canoe landing", role:"launch", pos:[43.7299,-90.5889], note:"Top of the Kickapoo Valley Reserve paddle; trout water in this cold upper reach. Gauge at the Hwy 131 bridge."},
+  {id:"kickkvr",  river:"kickapoo", name:"Kickapoo Valley Reserve HQ", role:"both", pos:[43.6100,-90.6250], note:"8,600-acre reserve: visitor center, trails, multiple river accesses between Ontario and La Farge."},
+  {id:"kicklaf",  river:"kickapoo", name:"La Farge landing", role:"both", pos:[43.5742,-90.6432], note:"Canoe landing and USGS gauge; smallmouth water from here down."},
+  {id:"kickgays", river:"kickapoo", name:"Gays Mills river access", role:"both", pos:[43.3181,-90.8496], note:"Lower-valley landing; the crookedest miles of the crookedest river."},
+  {id:"wfork1",   river:"wforkkickapoo", name:"Avalanche access", role:"wade", pos:[43.5183,-90.7118], note:"Heart of the catch-and-release stretch — check current WI DNR regs, they vary by reach. Campground nearby."},
+  {id:"wfork2",   river:"wforkkickapoo", name:"Bloomingdale access", role:"wade", pos:[43.5905,-90.7274], note:"Upper West Fork; easement pull-offs along the valley road."},
+  {id:"wfork3",   river:"wforkkickapoo", name:"West Fork Sports Club water", role:"wade", pos:[43.5500,-90.7180], note:"Club-stewarded habitat reaches; decades of lunker-structure and bank work."},
+  {id:"tainter1", river:"tainter", name:"Tainter Creek access", role:"wade", pos:[43.3900,-90.9000], note:"Crawford/Vernon county line; active watershed council habitat work."},
+  {id:"knapp1",   river:"knappcreek", name:"Knapp Creek access", role:"wade", pos:[43.4200,-90.8400], note:"Soldiers Grove area Kickapoo tributary."},
+  {id:"badaxe1",  river:"badaxe", name:"Bad Axe — Viroqua ridge", role:"wade", pos:[43.5870,-90.9500], note:"Upper forks above Viroqua; easement access with more casting room than the coulee creeks."},
+  {id:"badaxe2",  river:"badaxe", name:"Bad Axe — Genoa", role:"wade", pos:[43.5760,-91.1800], note:"Lower river toward the Mississippi; warms downstream."},
+  {id:"rushwi1",  river:"rushcreekwi", name:"Rush Creek State Natural Area", role:"wade", pos:[43.3250,-91.0500], note:"Dry bluff prairie above Ferryville; steep walk down to cold small water."},
+  {id:"bec1",     river:"blackearth", name:"Black Earth Creek — Cross Plains", role:"wade", pos:[43.1147,-89.6641], note:"Upper creek with two USGS gauges nearby; 25 minutes from Madison, so expect company."},
+  {id:"bec2",     river:"blackearth", name:"Black Earth Creek — Black Earth", role:"wade", pos:[43.1342,-89.7322], note:"Gauge site with village access; classic spring-creek water, educated fish."},
+  {id:"bec3",     river:"blackearth", name:"Black Earth Creek — Mazomanie", role:"wade", pos:[43.1772,-89.7943], note:"Lower creek toward the Wisconsin River; DNR fishery area water."},
+  {id:"mtvern1",  river:"mountvernon", name:"Mount Vernon Creek fishery area", role:"wade", pos:[42.9700,-89.5400], note:"DNR fishery area south of Verona; clear, technical spring water."},
+  {id:"castle1",  river:"castlerock", name:"Castle Rock Creek — Fennimore Fork", role:"wade", pos:[43.0300,-90.5550], note:"Marquee Grant County spring creek; long catch-and-release stretch historically applies — check current WI DNR regs."},
+  {id:"blue1",    river:"blueriver", name:"Blue River access", role:"wade", pos:[43.1100,-90.5800], note:"Easement pull-offs along the valley; pairs naturally with Castle Rock Creek."},
+  {id:"biggrn1",  river:"biggreen", name:"Big Green River — Werley", role:"wade", pos:[43.0300,-90.7950], note:"Gravel-road access with pull-offs at the crossings; meadow water with undercut banks."},
+  {id:"grant1",   river:"grantriver", name:"Grant River — Burton gauge", role:"wade", pos:[42.7203,-90.8192], note:"USGS gauge at the bridge; smallmouth here, trout in the upper branches."},
+  {id:"grant2",   river:"grantriver", name:"Grant River — Lancaster area", role:"wade", pos:[42.8467,-90.7107], note:"Upper river and cold feeder branches; the trout water of the system."},
+  {id:"platte1",  river:"platteriver", name:"Platte River — Platteville", role:"wade", pos:[42.7342,-90.4785], note:"DNR fishery area access near town; trout in the headwater branches."},
+  {id:"ebpec1",   river:"ebpecatonica", name:"East Branch — Blanchardville", role:"wade", pos:[42.7856,-89.8611], note:"USGS gauge site; trout upstream in the cold branches."},
+  {id:"kinni1",   river:"kinnickinnic", name:"River Falls city water", role:"wade", pos:[44.8613,-92.6237], note:"In-town access with parking; exceptional wild brown trout density right through the city."},
+  {id:"kinni2",   river:"kinnickinnic", name:"Kinnickinnic State Park (gorge)", role:"wade", pos:[44.8069,-92.7469], note:"Park lot at the top — the gorge is a real hike down and back. Bigger fish for the effort."},
+  {id:"rushriv1", river:"rushriverwi", name:"Rush River — El Paso", role:"wade", pos:[44.7500,-92.2900], note:"Middle river fishery area; the Kinni's quieter neighbour."},
+  {id:"rushriv2", river:"rushriverwi", name:"Rush River — lower valley", role:"wade", pos:[44.6200,-92.2700], note:"Valley-road pull-offs toward Maiden Rock."},
+  {id:"trimb1",   river:"trimbelle", name:"Trimbelle River access", role:"wade", pos:[44.6700,-92.5100], note:"Small Pierce County stream between the Kinni and the Rush."},
+  {id:"eaugal1",  river:"eaugalle", name:"Spring Valley — gauge access", role:"wade", pos:[44.8528,-92.2383], note:"USGS gauge in town; trout water upstream of the reservoir."},
+  {id:"lacr1",    river:"lacrosseriver", name:"Sparta river access", role:"both", pos:[43.9375,-90.8106], note:"Gauge site and trail town; trout above Sparta, warmwater below."},
+  {id:"silvwi1",  river:"silvercreekwi", name:"Silver Creek — Hwy 21, Angelo", role:"wade", pos:[43.9672,-90.7650], note:"Gauge is right on the creek — a rare case where the CFS describes the water you're standing in."},
+  {id:"still1",   river:"stillwell", name:"Stillwell Creek — Tomah", role:"wade", pos:[43.9939,-90.6572], note:"Very small water with its own gauge; single-digit CFS at low flow. Short rod."},
+  {id:"elkwi1",   river:"elkcreekwi", name:"Elk Creek — Independence", role:"wade", pos:[44.3800,-91.4000], note:"Trempealeau County coulee; brook trout in the cold headwaters."},
+  {id:"tremp1",   river:"trempealeau", name:"Arcadia — gauge access", role:"both", pos:[44.2544,-91.5053], note:"USGS gauge and river access; smallmouth here, trout in the feeder coulees."},
+  {id:"buffwi1",  river:"buffalowi", name:"Buffalo River — Mondovi", role:"wade", pos:[44.5666,-91.6712], note:"Northern Driftless; trout in the upper branches, among the least-fished quality water in the state."},
+  {id:"pinewi1",  river:"pineriverwi", name:"Pine River — Richland Center", role:"wade", pos:[43.3336,-90.3862], note:"Town access; trout in the upper river and the ridge-country feeder creeks."},
+
+  // ---- Illinois Driftless ----
+  {id:"applesp",  river:"appleriver", name:"Apple River Canyon State Park", role:"wade", pos:[42.4408,-90.0447], note:"Limestone canyon, campground and trails. Illinois runs a stocked catch-and-keep trout season at designated sites — check current IDNR listings and dates."},
+  {id:"appleeliz",river:"appleriver", name:"Apple River — Elizabeth area", role:"wade", pos:[42.3192,-90.2262], note:"Lower river; smallmouth bass water outside the stocked trout season."},
 ];
 
 /* ---------- Float sections ---------- */
@@ -958,4 +1732,84 @@ const WADE_ONLY = {
   snakeid:"Floatable in many reaches but dominated by reservoirs and diversions — go with local knowledge or a jet boat.",
   wind:"Above Boysen: wade fishing (permits on reservation water). The canyon float is listed below — permit and experience required.",
   beavercreek:"Only one confirmed formal access (Lew Clarkson Park in Johnston) — mostly an out-and-back paddle or a shuttle you arrange yourself. Small water; fishing is secondary to the paddle.",
+
+  /* ---- Driftless ----
+     The defining fact about Driftless trout water: it is walk-and-wade.
+     These are spring creeks a few feet to a few yards wide, in tight
+     wooded coulees, with fences, culverts and deadfall — you fish them
+     on foot, from the bank or in the stream, working upstream. The only
+     genuinely floatable water in the region is the handful of larger
+     mainstems noted below. */
+  upperiowa:"The one Iowa Driftless river you really can float — canoe/kayak the Bluffton→Decorah bluff run. Trout fishing is better on foot in the cold tributaries.",
+  waterloocreek:"Wade only. A few feet wide in places; short rod, roll casts, and a willingness to crawl.",
+  troutrunia:"Wade only, with the Trout Run Trail bike path paralleling the creek — easiest access in Iowa trout country.",
+  coldwaterIA:"Wade only. Cold spring water; approach low and fish upstream.",
+  southbear:"Wade only. Special regulations apply on parts of this stream — read the current Iowa DNR trout regs.",
+  northbear:"Wade only. Brushy enough that spring and October are the comfortable windows.",
+  canoecreek:"Wade only, despite the name — the canoe is historical, not practical.",
+  frenchcreek:"Wade only. Managed wild-trout water; check the current special regulations before you fish it.",
+  paintcreek:"Wade only. Yellow River State Forest gives you miles of public bank and a campground.",
+  villagecreek:"Wade only. Short creek, steep bluffs, easy to pair with French or Clear Creek.",
+  clearcreekia:"Wade only. Clear and technical — overcast days and low light are your friends.",
+  yellowriver:"Canoeable in the lower reaches for smallmouth; the trout water upstream is wade fishing.",
+  bloodyrun:"Wade only. County park parking right on the creek — walk upstream from the campground.",
+  snymagill:"Wade only. Cold enough to fish through the hottest part of summer.",
+  turkeyriver:"A legitimate smallmouth canoe river — the trout are in the spring-fed tributaries, fished on foot.",
+  volgariver:"Smallmouth paddling on the mainstem; trout fishing on foot in the feeder creeks.",
+  springbranchia:"Wade only. Very stable spring flows — the fallback when rain has blown out everything else.",
+  grannis:"Wade only. Best in spring and fall.",
+  ottercreekia:"Wade only. Quiet Fayette County small water.",
+  richmondsprings:"Wade only. Easy, family-friendly state park access.",
+  rootriver:"The one Minnesota Driftless stream you can reasonably canoe — the Root River State Trail follows it. The branches and tributaries are all wade fishing.",
+  sbranchroot:"Wade only, but big enough to fish a 9-foot 5-weight comfortably — rare for the Driftless. Extensive state easement access.",
+  nbranchroot:"Wade only. Long meadow stretches where the fish can see the sky — approach carefully.",
+  mbranchroot:"Wade only. Tight and brushy; short rod, spring and fall.",
+  sfroot:"Wade only. The gauge near Houston is the best live number for the southeast corner.",
+  troutrunmn:"Wade only. Restored riffle-and-pool habitat with extensive public easement — walk well away from the crossings.",
+  duschee:"Wade only. Clears faster than the South Branch after rain.",
+  canfield:"Wade only, inside Forestville / Mystery Cave State Park. Vehicle permit required.",
+  campcreekmn:"Wade only. Combine with Canfield Creek and the South Branch.",
+  whitewater:"Wade only. State park plus a 27,000-acre WMA — more public trout water in one place than anywhere else in the Driftless.",
+  nfwhitewater:"Wade only. The walk in from the WMA lots is the filter that keeps it quiet.",
+  mfwhitewater:"Wade only. Quietest of the three Whitewater forks.",
+  sfwhitewater:"Wade only. Open meadow water — longer casts, spookier trout, good terrestrial fishing in August.",
+  garvinbrook:"Wade only. Restored riffle sections hold fish well; easy valley-road access.",
+  beavercreekmn:"Wade only, inside Beaver Creek Valley State Park. Big Spring keeps it cold through summer; vehicle permit required.",
+  rushcreekmn:"Wade only. The USGS site here reports stage, not discharge — use the Root at Pilot Mound for a flow read.",
+  crookedcreekmn:"Wade only. Stage-only gauge, and among the least-pressured quality water in Minnesota.",
+  winnebagocr:"Wade only. Minutes from the Iowa line — pair it with French or Waterloo Creek.",
+  pinecreekmn:"Wade only. Short, steep, and easy to stop at when you're passing La Crosse.",
+  haycreek:"Wade only, in the Dorer Memorial Hardwood State Forest. Weekday visits beat weekend metro traffic.",
+  vermillionmn:"Wade only. Special regulations apply on parts — check current MN DNR trout rules.",
+  timbercoulee:"Wade only. A string of County P easement pull-offs — the first few fill early, so keep driving.",
+  cooncreek:"Wade only, but bigger than its famous tributaries: more room for a real cast and a bigger average fish.",
+  springcoulee:"Wade only. Good overflow when the Timber Coulee pull-offs are full.",
+  bohemianvalley:"Wade only. Brushy coulee water; short rod.",
+  rullandscoulee:"Wade only. Jump-across water.",
+  kickapoo:"The one real paddling river of the Wisconsin Driftless — 125 twisting miles, with the Kickapoo Valley Reserve protecting the upper valley. Trout fishing is on foot up around Ontario.",
+  wforkkickapoo:"Wade only. A long catch-and-release stretch runs through the Avalanche area — check current WI DNR regs, which vary by reach.",
+  tainter:"Wade only. Less famous than the West Fork a short drive away, which is the appeal.",
+  knappcreek:"Wade only. A good add-on to a Kickapoo-corridor day.",
+  badaxe:"Wade only. More casting room than the coulee creeks; good easement access.",
+  rushcreekwi:"Wade only. Steep walk down from the bluff-prairie natural area.",
+  blackearth:"Wade only. Two live gauges and heavy pressure — educated fish, classic spring-creek tactics.",
+  mountvernon:"Wade only. Clear and technical; long leaders, small flies.",
+  castlerock:"Wade only. Big-spring flows and genuine trophy potential for a creek this size. Check the current catch-and-release boundaries.",
+  blueriver:"Wade only. Pairs naturally with Castle Rock Creek in the same day.",
+  biggreen:"Wade only. Gravel-road access with pull-offs at the crossings.",
+  grantriver:"Smallmouth paddling in the lower river; the trout water in the upper branches is wade fishing.",
+  platteriver:"Smallmouth below, wade fishing for trout in the cold headwater branches.",
+  ebpecatonica:"Wade only for the trout water in the upper branches.",
+  kinnickinnic:"Wade only. The town water is easy; the gorge below is a real hike down and back — and holds the better fish.",
+  rushriverwi:"Wade only. Extensive easement and DNR fishery area access along the valley road.",
+  trimbelle:"Wade only. A good third stop on a Pierce County day.",
+  eaugalle:"Wade only for the trout water above the reservoir.",
+  lacrosseriver:"Canoeable below Sparta (and paralleled by the state trail); the trout water is upstream and in the feeder creeks, on foot.",
+  silvercreekwi:"Wade only — and the gauge is right on the creek, so the CFS actually describes the water you're standing in.",
+  stillwell:"Wade only. Single-digit CFS at low water; a 7-foot rod is plenty.",
+  elkcreekwi:"Wade only. Brook trout in the cold headwaters.",
+  trempealeau:"A decent smallmouth paddle; the trout are in Elk Creek and the other cold feeder coulees, fished on foot.",
+  buffalowi:"Wade only for the trout in the upper branches; smallmouth downstream.",
+  pineriverwi:"Smallmouth paddling below Richland Center; trout fishing on foot in the upper river and feeder creeks.",
+  appleriver:"Wade only. Illinois runs a stocked catch-and-keep trout season at designated sites — check current IDNR listings and dates before planning around it.",
 };

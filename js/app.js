@@ -129,10 +129,12 @@ function plainLanguage(key, riverId){
   }
 }
 
-/* float time estimate scaled by flow ratio (sqrt damping, clamped) */
+/* float time estimate scaled by flow ratio (sqrt damping, clamped).
+   Ungauged rivers (primaryGauge null) fall back to the typical-flow
+   estimate rather than throwing. */
 function floatEstimate(sec){
   const key = RIVERS.find(r=>r.id===sec.river).primaryGauge;
-  const st = statusOf(key);
+  const st = key ? statusOf(key) : {ratio:null};
   const scale = st.ratio ? Math.min(1.5, Math.max(0.6, Math.sqrt(st.ratio))) : 1;
   const eff = sec.typSpeed * scale;
   const lo = sec.miles/(eff*1.15), hi = sec.miles/(eff*0.85);
@@ -175,6 +177,17 @@ const REGIONS = [
   ["Wind River / Thermopolis", [43.40,-108.50,9]],
   ["Saratoga / North Platte", [42.00,-106.70,8]],
   ["Central Iowa / Des Moines", [41.65,-93.75,10]],
+  ["── Driftless Area ──", null],
+  ["Driftless — whole region", [43.55,-91.30,7]],
+  ["Decorah / NE Iowa", [43.30,-91.60,10]],
+  ["Allamakee / Yellow River", [43.15,-91.35,11]],
+  ["Lanesboro / Root River (MN)", [43.72,-92.00,11]],
+  ["Whitewater / Elba (MN)", [44.08,-92.02,11]],
+  ["Coon Valley / Timber Coulee (WI)", [43.55,-90.95,11]],
+  ["Kickapoo / West Fork (WI)", [43.58,-90.70,10]],
+  ["Grant County spring creeks (WI)", [43.02,-90.65,11]],
+  ["Black Earth / Madison (WI)", [43.13,-89.72,11]],
+  ["Kinnickinnic / River Falls (WI)", [44.84,-92.66,11]],
 ];
 const regionCtl = L.control({position:"topright"});
 regionCtl.onAdd = function(){
@@ -191,10 +204,15 @@ regionCtl.onAdd = function(){
 };
 regionCtl.addTo(map);
 
-/* river labels only at regional zoom — 49 labels at statewide zoom is soup */
+/* river labels only at regional zoom — 100+ labels at statewide zoom is
+   soup. The Driftless streams sit almost on top of each other, so they
+   need a tighter zoom than the big western rivers before labels help. */
 function syncLabels(){
-  const show = map.getZoom() >= 8;
-  Object.values(riverLayers).forEach(l => l.lbl.setOpacity(show ? 1 : 0));
+  const z = map.getZoom();
+  Object.values(riverLayers).forEach(l => {
+    const min = l.river && l.river.region === "driftless" ? 10 : 8;
+    l.lbl.setOpacity(z >= min ? 1 : 0);
+  });
 }
 map.on("zoomend", syncLabels);
 
@@ -206,7 +224,7 @@ RIVERS.forEach(r=>{
   line.on("click",()=>openRiver(r.id));
   const mid = r.coords[Math.floor(r.coords.length/2)];
   const lbl = L.marker(mid,{interactive:false,icon:L.divIcon({className:"riv-label",html:r.name.split("—")[0].split("(")[0].trim(),iconSize:null})}).addTo(map);
-  riverLayers[r.id]={line,lbl};
+  riverLayers[r.id]={line,lbl,river:r};
 });
 syncLabels();
 
@@ -271,6 +289,22 @@ const NHD_KEYWORD = {
   clarksfork:"CLARKS FORK YELLOWSTONE RIVER", cda:"COEUR D'ALENE RIVER",
   bighorn:"BIGHORN RIVER", wind:"WIND RIVER", nplatteupper:"NORTH PLATTE RIVER",
   nplattereef:"NORTH PLATTE RIVER", green:"GREEN RIVER", newfork:"NEW FORK RIVER",
+  /* Driftless — where the display name doesn't match the GNIS name.
+     Everything else derives correctly from the river name (the bbox
+     around each stream keeps same-named creeks in other counties out). */
+  troutrunia:"TROUT RUN",                 // Iowa's is GNIS "Trout Run", not "Trout Run Creek"
+  springbranchia:"SPRING BRANCH",
+  richmondsprings:"MAQUOKETA RIVER",      // Richmond Springs feeds the Maquoketa in Backbone SP
+  castlerock:"CASTLE ROCK CREEK",
+  wforkkickapoo:"WEST FORK KICKAPOO RIVER",
+  sbranchroot:"SOUTH BRANCH ROOT RIVER",
+  nbranchroot:"NORTH BRANCH ROOT RIVER",
+  mbranchroot:"MIDDLE BRANCH ROOT RIVER",
+  sfroot:"SOUTH FORK ROOT RIVER",
+  nfwhitewater:"NORTH FORK WHITEWATER RIVER",
+  mfwhitewater:"MIDDLE FORK WHITEWATER RIVER",
+  sfwhitewater:"SOUTH FORK WHITEWATER RIVER",
+  ebpecatonica:"EAST BRANCH PECATONICA RIVER",
 };
 function riverKeyword(r){
   if(NHD_KEYWORD[r.id]) return NHD_KEYWORD[r.id];
@@ -340,7 +374,8 @@ async function openRiver(id, focusGauge){
   curRiver = id;
   $("#sw").style.background = r.color;
   $("#sh-title").textContent = r.name;
-  $("#sh-sub").textContent = {ID:"Idaho", WY:"Wyoming", IA:"Iowa"}[r.state] || r.state;
+  const stateName = {ID:"Idaho", WY:"Wyoming", IA:"Iowa", MN:"Minnesota", WI:"Wisconsin", IL:"Illinois"}[r.state] || r.state;
+  $("#sh-sub").textContent = r.region==="driftless" ? stateName+" · Driftless Area" : stateName;
   sheet.classList.add("open");
   loadRealRiver(r);                    // snap this river to exact USGS linework
   renderSheet(r);                      // instant paint with whatever we have
@@ -353,7 +388,11 @@ async function openRiver(id, focusGauge){
 function renderSheet(r){
   let h = `<p style="margin:12px 2px 2px;font-size:13.5px">${r.blurb}</p>`;
 
-  r.gauges.forEach(k=>{ h += flowCardHTML(k, r.id); });
+  if(r.gauges.length){
+    r.gauges.forEach(k=>{ h += flowCardHTML(k, r.id); });
+  } else {
+    h += noGaugeHTML(r);
+  }
 
   h += `<div class="secthead">Fishing notes</div><div class="fishnote">🎣 ${r.fish}</div>`;
 
@@ -366,9 +405,13 @@ function renderSheet(r){
   } else if(WADE_ONLY[r.id]) {
     h += `<div class="secthead">Floating</div><div class="fishnote">🛶 ${WADE_ONLY[r.id]}</div>`;
   }
-  const regBody = r.state==="IA" ? "the Iowa DNR" : "WY Game &amp; Fish / Idaho Fish &amp; Game";
+  const regBody = {IA:"the Iowa DNR", MN:"the Minnesota DNR", WI:"the Wisconsin DNR", IL:"the Illinois DNR"}[r.state]
+    || "WY Game &amp; Fish / Idaho Fish &amp; Game";
   h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Flow data: USGS Water Data OGC API. River lines simplified — not for navigation. Verify regulations with ${regBody}.</p>`;
-  if(r.state==="IA"){
+  if(r.region==="driftless"){
+    h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🚶 Driftless access is mostly <b>walk-and-wade</b>, and a lot of the best water runs through <b>private land under a public angling easement</b> — you may fish and walk the stream corridor, but not leave it. Park only in the marked pull-offs, and check the state's current easement map and trout regulations (including any catch-and-release or artificial-only stretches) before you go. Iowa also requires a <b>trout fee</b> on top of a fishing license.</p>`;
+  }
+  if(r.state==="IA" && r.region!=="driftless"){
     h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">⚠ Central Iowa rivers have low-head dams — the "drowning machine" recirculating hydraulic at the base is dangerous at almost any flow. Scout unfamiliar stretches and check <a href="https://www.iowawhitewater.org/lhd/LHDrivers.html" target="_blank" rel="noopener">Iowa Whitewater's low-head dam list</a> before you put in.</p>`;
   }
   body.innerHTML = h;
@@ -376,6 +419,9 @@ function renderSheet(r){
   body.querySelectorAll("[data-zoom]").forEach(el=>el.addEventListener("click",()=>{
     const s = SECTIONS.find(x=>x.id===el.dataset.zoom);
     zoomSection(s);
+  }));
+  body.querySelectorAll("[data-river]").forEach(el=>el.addEventListener("click",()=>{
+    openRiver(el.dataset.river);
   }));
 }
 
@@ -411,6 +457,49 @@ function flowCardHTML(key, riverId){
     <div class="plain">${plainLanguage(key, riverId)}</div>
     ${inGoodFlow!=null?`<div class="goodflow ${inGoodFlow?'in':'out'}">${inGoodFlow?'✓ In your good-flow range':'Outside your good-flow range'} (${gf.min}–${gf.max} CFS)</div>`:""}
     ${f&&f.stale?`<div class="stale">⚠ Couldn't reach USGS — showing the last saved reading${f.fetchedAt?` from ${new Date(f.fetchedAt).toLocaleString([],{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})}`:""}. Cell service is patchy in these canyons; treat as out-of-date.</div>`:""}
+  </div>`;
+}
+
+/* Rivers with no USGS discharge gauge — most Driftless spring creeks.
+   Rather than borrow a number from another watershed and present it as
+   this stream's flow, show an honest "no gauge" card and point at the
+   nearest gauged river as a regional wetness read, clearly labelled as
+   a different stream. */
+function nearestGaugedRiver(r){
+  const mid = r.coords[Math.floor(r.coords.length/2)];
+  let best = null, bestD = Infinity;
+  RIVERS.forEach(o=>{
+    if(!o.primaryGauge || o.id===r.id) return;
+    if(r.region && o.region !== r.region) return;   // stay inside the region
+    const p = GAUGE_POS[o.primaryGauge]; if(!p) return;
+    // straight-line distance, longitude squeezed for latitude ~43.5N,
+    // then penalised across state lines. Without that penalty the
+    // nearest gauge to a Wisconsin coulee creek is often something on
+    // the Iowa side of the Mississippi — close on the map, wrong
+    // watershed, and under a different agency's regulations.
+    let d = Math.sqrt(Math.pow(p[0]-mid[0],2) + Math.pow((p[1]-mid[1])*0.73,2));
+    if(o.state !== r.state) d *= 1.8;
+    if(d < bestD){ bestD = d; best = o; }
+  });
+  return best;
+}
+function noGaugeHTML(r){
+  const near = nearestGaugedRiver(r);
+  let proxy = "";
+  if(near){
+    const k = near.primaryGauge, f = flows[k], st = statusOf(k);
+    const cfs = f && f.cfs!=null ? Math.round(f.cfs).toLocaleString()+" CFS" : "—";
+    proxy = `<div class="plain" style="margin-top:8px">Nearest gauged water is the <b>${near.name}</b>, currently <b>${cfs}</b>
+      <span class="badge" style="background:${st.color};vertical-align:middle">${st.label}</span>.
+      That's a <i>different stream</i> — treat it only as a rough read on how wet the region is, not as this creek's flow.
+      <button class="zoom" data-river="${near.id}" style="margin-top:8px">Open ${near.name.split("—")[0].trim()} →</button></div>`;
+  }
+  return `<div class="flowcard">
+    <div class="gname">No USGS gauge on this water</div>
+    <div class="flowrow"><span class="cfs">—<small> CFS</small></span>
+      <span class="badge" style="background:var(--st-na)">Ungauged</span></div>
+    <div class="plain">Most Driftless spring creeks are too small to gauge — there's no live number for this one, and the app doesn't invent one. Judge it on arrival: <b>clarity</b> is the thing that matters most. If you can see the bottom in two feet of water it's on; chocolate-brown after a storm means give it a day or two. Spring-fed creeks clear far faster than the bigger freestone rivers, and often fish well the day after rain that has the mainstems blown out.</div>
+    ${proxy}
   </div>`;
 }
 
