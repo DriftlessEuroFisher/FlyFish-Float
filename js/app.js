@@ -195,6 +195,11 @@ const REGIONS = [
   ["Tofte / Lutsen (Temperance–Cascade)", [47.65,-90.70,10]],
   ["Grand Marais to Grand Portage", [47.85,-90.05,9]],
   ["Bois Brule (WI)", [46.55,-91.58,11]],
+  ["── East-Central MN / St. Croix ──", null],
+  ["Stillwater / St. Croix", [45.15,-92.75,10]],
+  ["Twin Cities (Mississippi/Minnesota)", [44.98,-93.20,10]],
+  ["Rum / Snake / Kettle (north metro)", [45.65,-93.10,9]],
+  ["Cannon River (Northfield/Welch)", [44.47,-92.95,10]],
 ];
 const regionCtl = L.control({position:"topright"});
 regionCtl.onAdd = function(){

@@ -148,6 +148,34 @@ const GAUGES = {
   pigeonGauge:    { site:"USGS-04010500", label:"Pigeon River at Middle Falls nr Grand Portage, MN" },
   grandPortageGauge:{ site:"USGS-04010510", label:"Grand Portage River at Grand Portage, MN" },
   boisBruleGauge: { site:"USGS-04025500", label:"Bois Brule River at Brule, WI" },
+  /* ---- EAST-CENTRAL MINNESOTA / TWIN CITIES CORRIDOR + ST. CROIX SYSTEM ----
+     Big warmwater float rivers close to Forest Lake, MN — smallmouth,
+     walleye, catfish, musky. All active-discharge gauges, verified
+     against the live USGS site list on 2026-09-21. */
+  stCroixDanbury:   { site:"USGS-05333500", label:"St. Croix River near Danbury, WI" },
+  stCroixFalls:     { site:"USGS-05340500", label:"St. Croix River at St. Croix Falls, WI" },
+  stCroixStillwater:{ site:"USGS-05341550", label:"St. Croix River at Stillwater, MN" },
+  stCroixPrescott:  { site:"USGS-05344490", label:"St. Croix River at Prescott, WI" },
+  appleWI:          { site:"USGS-05341498", label:"Apple River above Hwy site, Somerset, WI" },
+  namekagon:        { site:"USGS-05331833", label:"Namekagon River at Leonards, WI" },
+  rumStFrancis:     { site:"USGS-05286000", label:"Rum River near St. Francis, MN" },
+  snakeMNPineCity:  { site:"USGS-05338500", label:"Snake River near Pine City, MN" },
+  kettleSandstone:  { site:"USGS-05336700", label:"Kettle River below Sandstone, MN" },
+  crowRockford:     { site:"USGS-05280000", label:"Crow River at Rockford, MN" },
+  msTCStCloud:      { site:"USGS-05270700", label:"Mississippi River at St. Cloud, MN" },
+  msTCChamplin:     { site:"USGS-05283500", label:"Mississippi River at Hwy 169, Champlin, MN" },
+  msTCBrooklynPark: { site:"USGS-05288500", label:"Mississippi River at Hwy 610, Brooklyn Park, MN" },
+  msTCStPaul:       { site:"USGS-05331000", label:"Mississippi River at St. Paul, MN" },
+  msTCHastings:     { site:"USGS-05331580", label:"Mississippi River below L&D 2, Hastings, MN" },
+  mnRiverJordan:    { site:"USGS-05330000", label:"Minnesota River near Jordan, MN" },
+  mnRiverMankato:   { site:"USGS-05325000", label:"Minnesota River at Mankato, MN" },
+  cannonFaribault:  { site:"USGS-05354500", label:"Cannon River at Co. Hwy 29 below Faribault, MN" },
+  cannonNorthfield: { site:"USGS-05355024", label:"Cannon River at Northfield, MN" },
+  cannonFalls:      { site:"USGS-05355092", label:"Cannon River at 9th St. Bridge, Cannon Falls, MN" },
+  cannonWelch:      { site:"USGS-05355200", label:"Cannon River at Welch, MN" },
+  elkBigLake:       { site:"USGS-05275000", label:"Elk River near Big Lake, MN" },
+  minnehaha:        { site:"USGS-05289800", label:"Minnehaha Creek at Hiawatha Ave, Minneapolis, MN" },
+  saukStCloud:      { site:"USGS-05270500", label:"Sauk River near St. Cloud, MN" },
 };
 
 // approximate gauge map positions [lat,lng]
@@ -200,6 +228,19 @@ const GAUGE_POS = {
   knifeNS:[46.9469,-91.7956], stLouisSkibo:[47.4811,-92.0400], stLouisScanlon:[46.7035,-92.4184],
   nemadjiGauge:[46.6333,-92.0939], pigeonGauge:[48.0122,-89.6162], grandPortageGauge:[47.9636,-89.6834],
   boisBruleGauge:[46.5378,-91.5953],
+  // East-central Minnesota / Twin Cities corridor + St. Croix system
+  stCroixDanbury:[46.0761,-92.2467], stCroixFalls:[45.4069,-92.6469],
+  stCroixStillwater:[45.0567,-92.8025], stCroixPrescott:[44.7487,-92.8041],
+  appleWI:[45.1286,-92.6776], namekagon:[46.1714,-91.3294],
+  rumStFrancis:[45.3277,-93.3725], snakeMNPineCity:[45.8399,-92.9363],
+  kettleSandstone:[46.1052,-92.8643], crowRockford:[45.0868,-93.7352],
+  msTCStCloud:[45.5472,-94.1457], msTCChamplin:[45.1916,-93.3947],
+  msTCBrooklynPark:[45.1290,-93.2987], msTCStPaul:[44.9444,-93.0881],
+  msTCHastings:[44.7461,-92.8479], mnRiverJordan:[44.6927,-93.6420],
+  mnRiverMankato:[44.1700,-94.0023], cannonFaribault:[44.3597,-93.2567],
+  cannonNorthfield:[44.4586,-93.1597], cannonFalls:[44.5170,-92.9129],
+  cannonWelch:[44.5642,-92.7316], elkBigLake:[45.3339,-93.6669],
+  minnehaha:[44.9155,-93.2129], saukStCloud:[45.5596,-94.2338],
 };
 
 const RIVERS = [
@@ -1477,6 +1518,118 @@ const RIVERS = [
   fish:"Big resident brown trout in the upper river, plus strong spring steelhead and fall coho/king salmon runs in the lower river below Copper Range. Famous, well-studied, and well worth the drive — book a guide for the lower river if you don't know it.",
   coords:[[46.65,-91.58],[46.60,-91.57],[46.5378,-91.5953]]
 },
+
+/* ================= EAST-CENTRAL MINNESOTA / TWIN CITIES + ST. CROIX =================
+   Big warmwater float rivers within an hour or two of Forest Lake, MN —
+   smallmouth, walleye, catfish, musky, the occasional muskie legend.
+   No dedicated `region` tag: these are all actively gauged (unlike the
+   Driftless/North Shore small-stream regions), so the ungauged-card
+   machinery doesn't apply, and they behave like the original western
+   rivers — default zoom-gating, no special sheet footer. */
+{
+  id:"stcroix", name:"St. Croix River", color:"#1f6f8b",
+  state:"MN", gauges:["stCroixDanbury","stCroixFalls","stCroixStillwater","stCroixPrescott"], primaryGauge:"stCroixStillwater",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A National Scenic Riverway from its headwaters near the old Brule portage down to the Mississippi at Prescott — the closest big river to Forest Lake, with the historic river town of Stillwater as its most popular access. The dalles at Taylors Falls/St. Croix Falls are scenic and genuinely dangerous at high water; know the reach before you put in.",
+  fish:"Smallmouth bass, walleye, musky, channel cats, and one of the best remaining lake sturgeon fisheries in the Midwest. Lower river below Stillwater is wide and lake-like near the Mississippi confluence; upper river above St. Croix Falls is faster, rockier, and better wading.",
+  coords:[[46.28,-91.62],[46.0761,-92.2467],[45.4069,-92.6469],[45.0567,-92.8025],[44.7487,-92.8041]]
+},
+{
+  id:"appleriverwi", name:"Apple River (WI)", color:"#6e9c4a",
+  state:"WI", gauges:["appleWI"], primaryGauge:"appleWI",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A short, warm St. Croix tributary near Somerset best known as a summer tubing river — the tube liveries mean the lower miles are a party scene on a hot weekend. Fish it early or late in the day, or upstream of the tubing put-ins.",
+  fish:"Smallmouth bass and panfish; a modest fishery mostly overshadowed by the tubing traffic. Best fished off-peak.",
+  coords:[[45.35,-92.35],[45.20,-92.50],[45.1286,-92.6776]]
+},
+{
+  id:"namekagonriver", name:"Namekagon River", color:"#3a7a9c",
+  state:"WI", gauges:["namekagon"], primaryGauge:"namekagon",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The St. Croix's National Scenic Riverway twin — a designated Wild & Scenic river in its own right, running from Namekagon Lake near Cable down to join the St. Croix near Riverside. Quieter and narrower than the St. Croix mainstem.",
+  fish:"Trout water in the cold headwater stretch near Cable; smallmouth and musky take over as it warms downstream. A genuine multi-day canoe trip for paddlers, with Park Service campsites along the way.",
+  coords:[[46.05,-91.15],[46.1714,-91.3294],[45.95,-91.85],[45.85,-92.25]]
+},
+{
+  id:"rumriver", name:"Rum River", color:"#8c3a5f",
+  state:"MN", gauges:["rumStFrancis"], primaryGauge:"rumStFrancis",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Minnesota's first State Wild & Scenic River, flowing out of Lake Mille Lacs down to the Mississippi at Anoka — the closest real float-and-fish river to Forest Lake itself, most of it through quiet farmland and county parks rather than the metro.",
+  fish:"Smallmouth bass in the rockier upper reaches, walleye and channel cats as it nears the Mississippi. A relaxed, mostly-Class-I paddle with regular county-park access.",
+  coords:[[46.13,-93.67],[45.60,-93.55],[45.3277,-93.3725],[45.1980,-93.3866]]
+},
+{
+  id:"snakeriverMN", name:"Snake River (MN)", color:"#4a8c6e",
+  state:"MN", gauges:["snakeMNPineCity"], primaryGauge:"snakeMNPineCity",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Not the famous one out west — Minnesota's own Snake River runs from Kanabec County through Mora and Pine City to join the St. Croix, a mellow smallmouth-and-walleye float that's an easy weeknight trip from Forest Lake.",
+  fish:"Smallmouth bass and walleye, with a fall run of St. Croix River fish pushing up into the lower reaches. Straightforward Class I paddling; a handful of low dams to watch for near Mora.",
+  coords:[[45.85,-93.15],[45.8399,-92.9363],[45.82,-92.85]]
+},
+{
+  id:"kettleriver", name:"Kettle River", color:"#2a6e9c",
+  state:"MN", gauges:["kettleSandstone"], primaryGauge:"kettleSandstone",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A state Wild & Scenic river and one of Minnesota's best whitewater runs — Banning State Park's Class II–III rapids at Sandstone draw kayakers and rafters all summer. Fishing is secondary to the paddling on this one.",
+  fish:"Smallmouth bass in the pools between rapids; scout before you fish, since this is genuine whitewater at moderate-to-high flow, not a wade-and-cast river.",
+  coords:[[46.45,-92.85],[46.1052,-92.8643],[45.99,-92.72]]
+},
+{
+  id:"crowriver", name:"Crow River", color:"#7a6e2a",
+  state:"MN", gauges:["crowRockford"], primaryGauge:"crowRockford",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The North and South Forks join at Rockford and run on to the Mississippi at Dayton — a slow, muddy-bottomed prairie river that's a sleeper smallmouth and channel cat fishery west of the metro.",
+  fish:"Smallmouth bass, channel catfish, and a surprising number of big flathead cats in the deeper holes. Canoe-friendly, mostly flat water.",
+  coords:[[45.13,-94.53],[45.0868,-93.7352],[45.20,-93.55],[45.245,-93.470]]
+},
+{
+  id:"mississippiTC", name:"Mississippi River — Twin Cities", color:"#2a5f8c",
+  state:"MN", gauges:["msTCStCloud","msTCChamplin","msTCBrooklynPark","msTCStPaul","msTCHastings"], primaryGauge:"msTCStPaul",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The big river running right through the metro, from St. Cloud down past St. Anthony Falls, the Twin Cities, and the Lock & Dam pools to the St. Croix confluence at Prescott. The Coon Rapids Dam and the downtown locks are real low-head hazards — know where they are before you put in.",
+  fish:"One of the best urban smallmouth and walleye fisheries in the country, plus musky, catfish, and a genuine sturgeon fishery in the pools below the locks. Character changes completely by reach — braided and rocky above St. Cloud, big and lake-like through the Lock & Dam pools below St. Paul.",
+  coords:[[45.5472,-94.1457],[45.1916,-93.3947],[45.1290,-93.2987],[44.9444,-93.0881],[44.7461,-92.8479],[44.7471,-92.8022]]
+},
+{
+  id:"minnesotariver", name:"Minnesota River", color:"#9c6e3a",
+  state:"MN", gauges:["mnRiverJordan","mnRiverMankato"], primaryGauge:"mnRiverJordan",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A big, slow, muddy prairie river running from Mankato through Jordan to meet the Mississippi at Fort Snelling — better known for catfish than for fly water, but a legitimate float and a genuine trophy flathead and channel cat fishery. Continues another 200 miles of mostly similar water upstream past Mankato.",
+  fish:"Channel and flathead catfish are the headline fishery, plus walleye and smallmouth in the rockier stretches near Jordan and above. Not a wading river — expect soft mud banks and limited visibility.",
+  coords:[[44.1700,-94.0023],[44.6927,-93.6420],[44.8930,-93.1810]]
+},
+{
+  id:"cannonriver", name:"Cannon River", color:"#6e2a5f",
+  state:"MN", gauges:["cannonFaribault","cannonNorthfield","cannonFalls","cannonWelch"], primaryGauge:"cannonFalls",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"One of southern Minnesota's most popular canoe rivers, running through Faribault and Northfield before a rockier, faster finish through Cannon Falls and Welch to the Mississippi near Red Wing. The old Cannon Falls milldam site is worth knowing about before you float through town.",
+  fish:"Smallmouth bass throughout, especially good in the faster Cannon Falls-to-Welch stretch; catfish and walleye in the slower reaches upstream. A well-outfitted paddling river with liveries in both Cannon Falls and Northfield.",
+  coords:[[44.28,-93.30],[44.3597,-93.2567],[44.4586,-93.1597],[44.5170,-92.9129],[44.5642,-92.7316],[44.5700,-92.5700]]
+},
+{
+  id:"elkriverMN", name:"Elk River", color:"#5f8c4a",
+  state:"MN", gauges:["elkBigLake"], primaryGauge:"elkBigLake",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A short, quick river joining the Mississippi at the city of Elk River — small enough to fish in an evening, close enough to the metro that it rarely feels like a destination trip.",
+  fish:"Smallmouth bass in the faster upper reaches; a modest but genuine fishery for a river this size and this close to the Cities.",
+  coords:[[45.45,-93.75],[45.3339,-93.6669],[45.3010,-93.5680]]
+},
+{
+  id:"minnehahacreek", name:"Minnehaha Creek", color:"#3a8c8c",
+  state:"MN", gauges:["minnehaha"], primaryGauge:"minnehaha",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Minneapolis's most famous small stream — the outlet of Lake Minnetonka, running through a chain of city lakes and parkways to the 53-foot Minnehaha Falls, made famous by Longfellow's \"Song of Hiawatha\" and now the centerpiece of a busy city park.",
+  fish:"Mostly a scenic urban creek rather than a fishing destination — panfish and the occasional stocked trout in isolated stretches. Worth a stop for the falls and the walk more than the rod.",
+  coords:[[44.94,-93.53],[44.92,-93.35],[44.9155,-93.2129],[44.9150,-93.2050]]
+},
+{
+  id:"saukriverMN", name:"Sauk River", color:"#8c5f2a",
+  state:"MN", gauges:["saukStCloud"], primaryGauge:"saukStCloud",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Runs out of Lake Osakis through St. Cloud-area farm country to join the Mississippi at Sauk Rapids — a solid smallmouth river that's a natural add-on to a St. Cloud/Mississippi headwaters trip.",
+  fish:"Smallmouth bass and a modest walleye fishery; a handful of low dams through the St. Cloud area to watch for.",
+  coords:[[45.87,-95.15],[45.5596,-94.2338],[45.5900,-94.1900]]
+},
 ];
 
 /* ---------- Access points ---------- */
@@ -1746,6 +1899,31 @@ const RAMPS = [
   {id:"grandportriv",river:"grandportageriver", name:"Grand Portage River access", role:"wade", pos:[47.9636,-89.6834], note:"On Grand Portage Band land — check current tribal fishing regulations."},
   {id:"boisbrule1", river:"boisbrulewi", name:"Bois Brule — Stones Bridge (upper river)", role:"wade", pos:[46.4200,-91.5800], note:"Classic upper-river brown trout water, walk-and-wade."},
   {id:"boisbrule2", river:"boisbrulewi", name:"Bois Brule — Hwy 2 / town of Brule (lower river)", role:"both", pos:[46.5378,-91.5953], note:"Gauge site; drift-boat put-in for the lower river's steelhead and salmon water below Copper Range."},
+
+  // ---- East-central Minnesota / Twin Cities + St. Croix ----
+  {id:"stillwaterlanding", river:"stcroix", name:"Stillwater town landing", role:"both", pos:[45.0567,-92.8025], note:"Gauge site and the most popular St. Croix access; historic downtown."},
+  {id:"taylorsfalls",      river:"stcroix", name:"Taylors Falls / Interstate State Park", role:"launch", pos:[45.4030,-92.6560], note:"Top of the scenic dalles — Class II water and genuinely dangerous currents at high flow. Scout first."},
+  {id:"prescottlanding",   river:"stcroix", name:"Prescott confluence landing, WI", role:"takeout", pos:[44.7487,-92.8041], note:"Gauge site at the Mississippi confluence — the bottom of the St. Croix."},
+  {id:"applewi1",          river:"appleriverwi", name:"Somerset tubing landing", role:"both", pos:[45.1286,-92.6776], note:"Gauge site; the main tube-livery put-in — expect crowds on hot weekends."},
+  {id:"namekagon1",        river:"namekagonriver", name:"Leonards landing", role:"both", pos:[46.1714,-91.3294], note:"Gauge site; National Park Service canoe campsite network runs the length of the river."},
+  {id:"namekagon2",        river:"namekagonriver", name:"Cable — headwaters access", role:"launch", pos:[46.2200,-91.2500], note:"Upper river near Namekagon Lake; the cold trout-water stretch."},
+  {id:"rumstfrancis",      river:"rumriver", name:"St. Francis river access", role:"both", pos:[45.3277,-93.3725], note:"Gauge site and county park landing."},
+  {id:"rumanoka",          river:"rumriver", name:"Anoka — Mississippi confluence", role:"takeout", pos:[45.1980,-93.3866], note:"Bottom of the Rum, right at the Mississippi."},
+  {id:"snakemnpine",       river:"snakeriverMN", name:"Pine City river access", role:"both", pos:[45.8399,-92.9363], note:"Gauge site; easy small-town put-in."},
+  {id:"kettlebanning",     river:"kettleriver", name:"Banning State Park (Sandstone rapids)", role:"wade", pos:[46.1052,-92.8643], note:"Gauge site; scout the Class II-III rapids before running them."},
+  {id:"crowrockford",      river:"crowriver", name:"Rockford river access", role:"both", pos:[45.0868,-93.7352], note:"Gauge site, at the North/South Fork confluence."},
+  {id:"msstcloud",         river:"mississippiTC", name:"St. Cloud river access", role:"both", pos:[45.5472,-94.1457], note:"Gauge site; upper end of this stretch."},
+  {id:"mscoonrapids",      river:"mississippiTC", name:"Coon Rapids Dam Regional Park", role:"wade", pos:[45.1730,-93.3040], note:"Low-head dam — a genuine drowning hazard at the base at almost any flow. Popular walleye/sturgeon spot below it, but respect the water."},
+  {id:"msstpaul",          river:"mississippiTC", name:"St. Paul — Harriet Island", role:"both", pos:[44.9444,-93.0881], note:"Gauge site; downtown access below the Ford and High Bridge dams."},
+  {id:"mshastings",        river:"mississippiTC", name:"Hastings — below Lock & Dam 2", role:"both", pos:[44.7461,-92.8479], note:"Gauge site; popular walleye and sauger water below the dam."},
+  {id:"mnriverjordan",     river:"minnesotariver", name:"Jordan river access", role:"both", pos:[44.6927,-93.6420], note:"Gauge site; rockier smallmouth water in this stretch."},
+  {id:"mnrivermankato",    river:"minnesotariver", name:"Mankato river access", role:"both", pos:[44.1700,-94.0023], note:"Gauge site; upstream end of this app's coverage — the river continues another 200 miles west."},
+  {id:"cannonfalls1",      river:"cannonriver", name:"Cannon Falls — old milldam site", role:"both", pos:[44.5170,-92.9129], note:"Gauge site; know where the old dam structure is before floating through town."},
+  {id:"cannonwelch1",      river:"cannonriver", name:"Welch village landing", role:"takeout", pos:[44.5642,-92.7316], note:"Gauge site; popular take-out for the Cannon Falls-to-Welch smallmouth stretch."},
+  {id:"cannonnorthfield1", river:"cannonriver", name:"Northfield river access", role:"launch", pos:[44.4586,-93.1597], note:"Gauge site; in-town put-in."},
+  {id:"elkbiglake1",       river:"elkriverMN", name:"Big Lake river access", role:"wade", pos:[45.3339,-93.6669], note:"Gauge site; small-water fishing close to the metro."},
+  {id:"minnehahafalls",    river:"minnehahacreek", name:"Minnehaha Falls Regional Park", role:"wade", pos:[44.9150,-93.2050], note:"The famous falls and gorge; more a scenic stop than a fishing trip."},
+  {id:"saukstcloud1",      river:"saukriverMN", name:"St. Cloud area river access", role:"wade", pos:[45.5596,-94.2338], note:"Gauge site; watch for low dams through town."},
 ];
 
 /* ---------- Float sections ---------- */
@@ -2094,4 +2272,22 @@ const WADE_ONLY = {
   pigeonriver:"No floating — the lower river is unrunnable falls and gorge, and it's the international border besides.",
   grandportageriver:"Wade only. Check current Grand Portage Band regulations before you fish reservation water.",
   boisbrulewi:"The lower river below Copper Range is a genuine drift-boat float for steelhead and salmon season; the upper river is walk-and-wade.",
+
+  /* ---- East-central Minnesota / Twin Cities + St. Croix ----
+     Big warmwater rivers, all genuinely floatable — the opposite problem
+     from the Driftless/North Shore, so these notes are about paddling
+     character and hazards rather than "wade only." */
+  stcroix:"A classic multi-day canoe trip end to end — liveries in Taylors Falls, Stillwater and along the way. The dalles above St. Croix Falls are scenic but genuinely hazardous at high water; scout before you run them.",
+  appleriverwi:"The area's classic tubing river — liveries run the lower miles all summer. Canoe/kayak the upper river if you want to avoid the crowds.",
+  namekagonriver:"A National Park Service-administered Wild & Scenic river with a mapped campsite network — a serious multi-day canoe trip, not a quick paddle.",
+  rumriver:"An easy, mostly Class I canoe river with regular county-park access from Lake Mille Lacs down to Anoka — a good beginner overnight trip.",
+  snakeriverMN:"Mellow Class I paddling with a handful of low dams near Mora to portage around.",
+  kettleriver:"Real whitewater — Banning State Park's Class II-III rapids are a destination for kayakers and rafters, not a casual float. Scout before you run it.",
+  crowriver:"Slow, flat, canoe-friendly water from the Rockford confluence down to the Mississippi at Dayton.",
+  mississippiTC:"Floatable the whole stretch, but character varies hugely by reach — rocky and braided above St. Cloud, big lake-like Lock & Dam pools below St. Paul. The Coon Rapids Dam and the downtown St. Anthony Falls locks are real low-head hazards; know where they are.",
+  minnesotariver:"A genuine float, but slow, muddy, and mostly current-driven rather than technical — plan for soft banks and limited bailout points.",
+  cannonriver:"One of southern Minnesota's most popular canoe rivers, with liveries in both Northfield and Cannon Falls; faster and rockier below Cannon Falls, flat and slow above Northfield.",
+  elkriverMN:"Short and quick enough for a half-day paddle; a natural add-on to a Mississippi-at-Elk-River trip.",
+  minnehahacreek:"Mostly too small and urban to paddle meaningfully — this is a walk-the-parkway-and-see-the-falls stream, not a float.",
+  saukriverMN:"Canoeable through the St. Cloud-area farm country, with a handful of low dams to portage around.",
 };

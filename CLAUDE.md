@@ -2,10 +2,11 @@
 
 A single-page, no-build, mobile-first web app: a Leaflet map of Idaho &
 Wyoming trout rivers, the Central Iowa (Des Moines area) state water
-trail system, the trout streams of the Driftless Area, and the steelhead/
-trout tributaries of Minnesota's North Shore of Lake Superior, with live
-USGS flow conditions, built for checking "is it worth driving out today?"
-from a phone.
+trail system, the trout streams of the Driftless Area, the steelhead/
+trout tributaries of Minnesota's North Shore of Lake Superior, and the
+big warmwater float rivers of east-central Minnesota and the St. Croix
+valley, with live USGS flow conditions, built for checking "is it worth
+driving out today?" from a phone.
 
 ## How I use this
 
@@ -30,13 +31,13 @@ like an app, not a browser tab.
 
 ## Rivers covered
 
-152 rivers across four regions. Full list and gauge IDs live in
-`js/rivers-data.js`; this file doesn't duplicate it since the code is the
-source of truth. Rivers carry a `region` field — `"driftless"` and
-`"northshore"` on the two spring/rain-fed sub-regions, absent on the
-original western rivers, `"ciowa"` conceptually for the Des Moines water
-trails (the code tests `state==="IA" && region!=="driftless"` so the
-central Iowa entries didn't need editing).
+165 rivers. Full list and gauge IDs live in `js/rivers-data.js`; this file
+doesn't duplicate it since the code is the source of truth. Rivers carry a
+`region` field — `"driftless"` and `"northshore"` on the two spring/rain-fed
+sub-regions, absent on the original western rivers *and* on the
+East-Central Minnesota cluster (see below), `"ciowa"` conceptually for the
+Des Moines water trails (the code tests `state==="IA" && region!=="driftless"`
+so the central Iowa entries didn't need editing).
 
 **West (49).** Idaho/Wyoming trout rivers — 24 ID, 25 WY. All gauged.
 
@@ -112,14 +113,40 @@ gating for labels uses the same ≥10 threshold as the Driftless (`syncLabels()`
 in `js/app.js`) since these streams are packed almost as tightly along the
 shore.
 
+**East-Central Minnesota / St. Croix (13).** 10 MN, 3 WI. Big warmwater
+float rivers within roughly two hours of Forest Lake, MN — the St. Croix
+(National Scenic Riverway), the Namekagon and Apple River (both St. Croix
+tributaries), the Rum, Snake (MN's own, not the western one), Kettle, Crow,
+Cannon and Sauk Rivers, the Mississippi's Twin Cities stretch, the
+Minnesota River, Elk River, and Minnehaha Creek. Smallmouth, walleye,
+musky, catfish, and a real Lake Superior-run sturgeon fishery on the St.
+Croix — a completely different character from the Driftless/North Shore
+trout water.
+
+Deliberately **no new `region` tag** for this cluster: every one of the 13
+is actively gauged (unlike Driftless/North Shore, where most streams
+aren't), so the ungauged-card machinery, the angling-easement note, and the
+North-Shore-style footer don't apply — these rivers behave exactly like the
+original western ones (default 8-zoom label threshold, no special sheet
+copy). Several — the St. Croix, Mississippi, Minnesota River, and Cannon —
+are multi-gauge rivers with several USGS sites along their length, same
+pattern as the Snake River through Jackson Hole.
+
+Real low-head dams exist on this water (Coon Rapids Dam and the downtown
+St. Anthony Falls locks on the Mississippi, the old Cannon Falls milldam
+site) but there's no new UI mechanism for it — the hazard is called out
+inline in that river's `blurb`/`RAMPS` note rather than a new per-region
+flag, since only a few specific spots need it rather than the whole
+cluster the way Central Iowa's low-head-dam note works.
+
 ## Status
 
 **Finished / working:**
 - Core app: Leaflet map, bottom sheet, live USGS flow fetch/render, the
   `statusOf()` relative-to-median status bucketing, home-screen install
   (`manifest.json` + icons).
-- All 152 rivers in place across the four regions (49 West, 7 Central
-  Iowa, 72 Driftless, 24 North Shore), with gauges, ramps/access points,
+- All 165 rivers in place (49 West, 7 Central Iowa, 72 Driftless, 24 North
+  Shore, 13 East-Central MN/St. Croix), with gauges, ramps/access points,
   blurbs, and region-aware copy in the sheet.
 - Ungauged-river handling: the "Ungauged" card, `nearestGaugedRiver()`
   regional-wetness fallback with the cross-state-line distance penalty —
@@ -136,18 +163,18 @@ shore.
 - All 72 Driftless rivers and all 24 North Shore rivers are `goodFlow:
   null` on purpose (see below) — decide per-river, as you fish them,
   whether a range is worth adding at all.
-- North Shore coordinates are approximate (source/mouth anchor points from
-  official river-mouth coordinates plus reasonable interpolation, not
-  hand-traced like the West rivers) — `trickleGeometry()` should snap most
-  of them to real NHD linework on first load, but worth spot-checking a
-  few against the map once you've actually driven up there.
-- Only the North Shore's Duluth-to-Grand Portage core is added so far.
-  Other rivers inside the 5-hour-from-Forest-Lake radius — the Twin
-  Cities/east-central Minnesota corridor (St. Croix, Mississippi, Rum,
-  Minnesota River, Cannon), the St. Croix/Namekagon system, and the
-  north-central Minnesota lakes country (Crow Wing, Straight River near
-  Park Rapids, upper Mississippi) — are natural next batches, staged the
-  same way Central Iowa and the Driftless were.
+- North Shore and East-Central MN coordinates are approximate (gauge
+  metadata plus source/mouth anchor points and reasonable interpolation,
+  not hand-traced like the West rivers) — `trickleGeometry()` should snap
+  most of them to real NHD linework on first load, but worth spot-checking
+  a few against the map once you've actually driven to them.
+- Still inside the 5-hour-from-Forest-Lake radius and not yet added: the
+  north-central Minnesota lakes country (Crow Wing River, Long Prairie
+  River, Straight River near Park Rapids, the upper Mississippi above St.
+  Cloud through Brainerd/Bemidji), the Wisconsin Northwoods (Chippewa,
+  Flambeau, Red Cedar, Wolf River), and the Madison-area Dane County
+  spring creeks that are arguably Driftless but weren't in the original 72.
+  Natural next batches, staged the same way the last three were.
 
 ## Always / Never
 
@@ -204,6 +231,13 @@ streams this small, and on a creek running single-digit to low-double-digit
 CFS a made-up range would be worse than none. On this water, **clarity is
 the number that matters** — judge it on arrival. The ungauged card in the
 UI says exactly this.
+
+**All 13 East-Central MN/St. Croix rivers are also `null`**, for a simpler
+reason: no research pass has been done on public guide/paddler reports for
+this cluster yet, unlike the 28 West/Central Iowa rivers that got a
+starting-point pass. These are prime candidates for that same treatment —
+smallmouth/walleye good-flow ranges are genuinely published for water like
+the St. Croix and Cannon.
 
 **TODO for me:** replace the researched starting points with my own
 experience-based numbers over time, and fill in the rest for whichever
