@@ -285,6 +285,16 @@ are worth calibrating first.
 ## Conventions
 
 - No frameworks, no build tooling — keep it editable by hand.
+- The default basemap is **USGS "US Topo"** (`basemap.nationalmap.gov`,
+  service `USGSTopo`) — the same quadrangle cartography as the paper
+  sheets: cream ground, blue hydrography in italic serif, green public
+  land, tan contours, PLSS section grid. It was picked over satellite
+  imagery because it shows the things that actually decide a trip —
+  public land boundaries, the access two-track, the contour of the
+  valley. Its cached tiles stop at z16, so the layer sets
+  `maxNativeZoom:16` with `maxZoom:20`; without that Leaflet refuses to
+  zoom past 16 instead of upscaling. Imagery layers (Google, Esri, USGS
+  Imagery+Topo) are still available in the layer control.
 - USGS gauge IDs are verified at runtime against USGS monitoring-locations
   metadata; unresolved ones show "(unverified)" in the UI rather than failing
   silently.

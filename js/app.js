@@ -148,6 +148,17 @@ function floatEstimate(sec){
 const map = L.map("map",{zoomControl:true, attributionControl:true})
   .setView([44.30,-112.90], 6);
 
+/* USGS "US Topo" — the default. Same quadrangle cartography the paper
+   sheets use: cream ground, blue hydrography in italic serif, green
+   public land, tan contours, and the PLSS section grid. It reads better
+   than imagery for the job this app actually does — seeing where the
+   public land, the access two-track and the contour lines are before you
+   drive out. Cached tiles stop at z16, so maxNativeZoom lets the map keep
+   zooming past that on upscaled tiles instead of refusing to zoom in. */
+const usgsTopo = L.tileLayer("https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}",{
+  maxZoom:20, maxNativeZoom:16, attribution:'Topo © <a href="https://www.usgs.gov/">USGS</a> The National Map'});
+const usgsImgTopo = L.tileLayer("https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryTopo/MapServer/tile/{z}/{y}/{x}",{
+  maxZoom:20, maxNativeZoom:16, attribution:'Imagery+Topo © <a href="https://www.usgs.gov/">USGS</a> The National Map'});
 const topo = L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",{
   maxZoom:17, attribution:'© OpenStreetMap, SRTM | © <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA)'});
 const sat = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{
@@ -159,8 +170,8 @@ const gSat = L.tileLayer("https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",{
   maxZoom:20, subdomains:["mt0","mt1","mt2","mt3"], attribution:"Imagery © Google"});
 const gHyb = L.tileLayer("https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}",{
   maxZoom:20, subdomains:["mt0","mt1","mt2","mt3"], attribution:"Imagery © Google"});
-gHyb.addTo(map);
-L.control.layers({"Google Hybrid":gHyb,"Google Satellite":gSat,"Topo":topo,"Esri Satellite":sat},null,{position:"bottomleft"}).addTo(map);
+usgsTopo.addTo(map);
+L.control.layers({"USGS Topo":usgsTopo,"USGS Imagery + Topo":usgsImgTopo,"Google Hybrid":gHyb,"Google Satellite":gSat,"Esri Satellite":sat,"OpenTopoMap":topo},null,{position:"bottomleft"}).addTo(map);
 
 /* region quick-jump */
 const REGIONS = [
@@ -303,7 +314,7 @@ const NHD_KEYWORD = {
   hellscanyon:"SNAKE RIVER", teton:"TETON RIVER", grosventre:"GROS VENTRE RIVER",
   hoback:"HOBACK RIVER", flatcreek:"FLAT CREEK", buffalofork:"BUFFALO FORK",
   salt:"SALT RIVER", greys:"GREYS RIVER", henrysfork:"HENRYS FORK",
-  fallriver:"FALLS RIVER", sfboise:"SOUTH FORK BOISE RIVER",
+  fallriver:"FALL RIVER", sfboise:"SOUTH FORK BOISE RIVER",
   nfpayette:"NORTH FORK PAYETTE RIVER", sfpayette:"SOUTH FORK PAYETTE RIVER",
   mfsalmon:"MIDDLE FORK SALMON RIVER", sfclearwater:"SOUTH FORK CLEARWATER RIVER",
   nfclearwater:"NORTH FORK CLEARWATER RIVER", nfshoshone:"NORTH FORK SHOSHONE RIVER",
@@ -314,9 +325,12 @@ const NHD_KEYWORD = {
      Everything else derives correctly from the river name (the bbox
      around each stream keeps same-named creeks in other counties out). */
   troutrunia:"TROUT RUN",                 // Iowa's is GNIS "Trout Run", not "Trout Run Creek"
+  troutrunmn:"TROUT RUN",                 // and so is Minnesota's, in Fillmore County
+  bloodyrun:"BLOODY RUN",                 // GNIS "Bloody Run", not "Bloody Run Creek"
   springbranchia:"SPRING BRANCH",
   richmondsprings:"MAQUOKETA RIVER",      // Richmond Springs feeds the Maquoketa in Backbone SP
-  castlerock:"CASTLE ROCK CREEK",
+  castlerock:"FENNIMORE FORK",            // locally "Castle Rock Creek"; GNIS calls it the
+                                          // Fennimore Fork (of the Blue River), Grant County WI
   wforkkickapoo:"WEST FORK KICKAPOO RIVER",
   sbranchroot:"SOUTH BRANCH ROOT RIVER",
   nbranchroot:"NORTH BRANCH ROOT RIVER",
@@ -328,14 +342,32 @@ const NHD_KEYWORD = {
   ebpecatonica:"EAST BRANCH PECATONICA RIVER",
 };
 function riverKeyword(r){
-  if(NHD_KEYWORD[r.id]) return NHD_KEYWORD[r.id];
-  return r.name.split("—")[0].split("(")[0].replace(/&amp;[^]*$/,"").trim().toUpperCase();
+  const raw = NHD_KEYWORD[r.id] ||
+    r.name.split("—")[0].split("(")[0].replace(/&amp;[^]*$/,"").trim();
+  // GNIS always spells it out — "Saint Croix River", never "St. Croix River".
+  // Without this the St. Croix, St. Louis and St. Joe all silently match nothing.
+  return raw.replace(/\bST\.?\s+/i, "SAINT ").toUpperCase();
 }
 function bboxOf(coords, pad){
   pad = pad||0.025;
   let a=90,b=-90,c=180,d=-180;
   coords.forEach(p=>{a=Math.min(a,p[0]);b=Math.max(b,p[0]);c=Math.min(c,p[1]);d=Math.max(d,p[1]);});
   return [c-pad, a-pad, d+pad, b+pad];   // xmin,ymin,xmax,ymax (lng/lat)
+}
+function nhdURL(where, bb){
+  return `${NHD_URL}?where=${encodeURIComponent(where)}&geometry=${bb.join(",")}`+
+    `&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects`+
+    `&outFields=GNIS_NAME&returnGeometry=true&outSR=4326`+
+    `&maxAllowableOffset=0.0006&geometryPrecision=5&resultRecordCount=4000&f=geojson`;
+}
+function nhdSegments(j){
+  const segs = [];
+  (j.features||[]).forEach(f=>{
+    const g = f.geometry; if(!g) return;
+    if(g.type==="LineString") segs.push(g.coordinates.map(c=>[c[1],c[0]]));
+    else if(g.type==="MultiLineString") g.coordinates.forEach(l=>segs.push(l.map(c=>[c[1],c[0]])));
+  });
+  return segs;
 }
 async function loadRealRiver(r){
   const layer = riverLayers[r.id];
@@ -347,20 +379,19 @@ async function loadRealRiver(r){
     layer.line.setLatLngs(cached.g); layer.real = true; return;
   }
   const bb = bboxOf(r.coords);
-  const kw = riverKeyword(r).replace(/[%']/g,"");
-  const where = encodeURIComponent(`UPPER(GNIS_NAME) LIKE '%${kw}%'`);
-  const url = `${NHD_URL}?where=${where}&geometry=${bb.join(",")}`+
-    `&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects`+
-    `&outFields=GNIS_NAME&returnGeometry=true&outSR=4326`+
-    `&maxAllowableOffset=0.0006&geometryPrecision=5&resultRecordCount=4000&f=geojson`;
+  // ' is the SQL string delimiter — doubling escapes it. Stripping it (the old
+  // behaviour) turned "Coeur d'Alene River" into a name that matches nothing.
+  const kw = riverKeyword(r).replace(/%/g,"").replace(/'/g,"''");
   try{
-    const j = await fetchJSON(url, 16000);
-    const segs = [];
-    (j.features||[]).forEach(f=>{
-      const g = f.geometry; if(!g) return;
-      if(g.type==="LineString") segs.push(g.coordinates.map(c=>[c[1],c[0]]));
-      else if(g.type==="MultiLineString") g.coordinates.forEach(l=>segs.push(l.map(c=>[c[1],c[0]])));
-    });
+    // Exact GNIS name first. LIKE '%SALMON RIVER%' also drags in the Little
+    // Salmon, the East Fork, the Middle Fork and so on, so the river you tapped
+    // gets drawn as a web of its own tributaries rather than a channel. Fall
+    // back to LIKE only when the exact name matches nothing — some streams
+    // (the Bad Axe, Castle Rock) exist in NHD only as their named forks.
+    let segs = nhdSegments(await fetchJSON(nhdURL(`UPPER(GNIS_NAME) = '${kw}'`, bb), 16000));
+    if(!segs.length){
+      segs = nhdSegments(await fetchJSON(nhdURL(`UPPER(GNIS_NAME) LIKE '%${kw}%'`, bb), 16000));
+    }
     if(segs.length){
       layer.line.setLatLngs(segs);
       layer.real = true;
