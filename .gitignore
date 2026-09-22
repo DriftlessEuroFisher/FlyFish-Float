@@ -1,2 +1,13 @@
 .DS_Store
 *.log
+
+# Local reference material — design screenshots, map-style grabs, scratch
+# notes. Kept in the project folder on purpose, just not pushed to GitHub.
+# Anchored to the repo root with a leading slash so the real app icons in
+# icons/ stay tracked.
+/*.png
+/*.jpg
+/*.jpeg
+/*.pdf
+/reference/
+/scratch/
