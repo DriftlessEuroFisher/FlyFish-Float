@@ -233,6 +233,18 @@ these are all actively gauged and carry no `region` tag.
   a second or two. It used to be strictly serial with a 500 ms gap — about
   93 seconds to cover 181 rivers, long enough that the straight fallback
   lines looked like the finished map.
+
+  **`hydro.nationalmap.gov` is periodically unreliable**, and it matters
+  because a dropped call leaves a river drawn straight. In the browser the
+  failure shows up confusingly as a *CORS error* — an error response from
+  the CDN comes back without the `Access-Control-Allow-Origin` header the
+  good ones carry, so it looks like a config problem rather than an outage.
+  It isn't concurrency: during one episode 5 sequential curl requests
+  returned `504, fail, 200, fail, 200`, the same hit rate as 5 parallel
+  ones. Retrying genuinely recovers — 4 of 4 failed rivers snapped on a
+  second attempt. Hence `NHD_TIMEOUT` is short (9s; a healthy query answers
+  in ~1.5s, and a long timeout just parks one of the few slots) and
+  `GEOM_SWEEPS` re-runs the queue after it drains.
 - `goodFlow` scaffolding, with starting-point ranges filled in for 28 of
   the original 56 West/Central Iowa rivers from public source reports.
 
@@ -406,13 +418,31 @@ are worth calibrating first.
   is why wade access is the one that defaults on. Zooming to a float section
   switches boat ramps on, since that's an explicit "show me the ramps" move.
 - **Public land** is PAD-US (USGS Protected Areas Database) via its
-  `PADUS_Public_Access` FeatureServer — state Wildlife Management Areas,
-  Aquatic Management Areas (public fishing water by definition), state
-  forests, county parks. Drawn from z10 and fetched per-viewport, because the
-  whole five-state set is far too big to ship. Only `Pub_Access` OA (open)
-  and RA (restricted) are drawn; closed and unknown parcels are deliberately
-  left off — a closed parcel shaded green is worse than no parcel at all.
-  Boundaries are approximate and the popup says so.
+  `PADUS_Public_Access` FeatureServer, fetched per-viewport because the whole
+  multi-state set is far too big to ship. Verified working across Minnesota,
+  Wisconsin and Michigan — Superior/Chequamegon-Nicolet/Ottawa/Hiawatha
+  national forests, state forests, WMAs and AMAs all resolve.
+
+  Shaded by **who manages it** (`padClass()` reads `MngNm_Desc`/`DesTp_Desc`),
+  because the manager decides the rules you fish and hunt under:
+  `nforest` national forest, `federal` NPS/USFWS/BLM/Corps, `wildlife` state
+  WMAs and Aquatic Management Areas, `state` state forest/park, `local`
+  county/city, `private` easement or NGO land recorded as publicly
+  accessible. Fill opacity is deliberately uneven — a national forest block
+  would swamp the basemap at the strength a 40-acre WMA needs, and the
+  wildlife class is drawn strongest because it's the layer anglers are
+  actually hunting for. `private` is pointedly *not* green: it's someone's
+  land and the access can lapse.
+
+  Only `Pub_Access` OA (open) and RA (restricted, dashed outline) are drawn;
+  closed and unknown parcels are deliberately left off — a closed parcel
+  shaded green is worse than no parcel at all. The BWCAW correctly comes
+  through as restricted, since it needs a permit.
+
+  Drawn from z8, with `padMinAcres()` raising the minimum parcel size as you
+  zoom out (2000ac at z8 down to everything at z12). Without that floor a
+  wide view is thousands of half-acre village parks, which is both illegible
+  and over the service's record cap.
 - USGS gauge IDs are verified at runtime against USGS monitoring-locations
   metadata; unresolved ones show "(unverified)" in the UI rather than failing
   silently.

@@ -519,60 +519,114 @@ function repaintGauges(){ Object.keys(gaugeDots).forEach(k=>gaugeDots[k].setIcon
 
 /* ============================================================
    PUBLIC LAND — PAD-US (USGS Protected Areas Database)
-   On a Driftless creek the question isn't only "how's the water",
-   it's "can I legally stand in it". This overlays the public
-   hunting/fishing ground the streams actually run through: state
-   Wildlife Management Areas, Aquatic Management Areas (public
-   fishing water by definition), state forests, county parks.
+   On a Driftless creek or a Northwoods river the question isn't only
+   "how's the water", it's "can I legally stand in it". This shades the
+   ground the streams actually run through, coloured by who manages it,
+   because the manager is what decides the rules you fish under:
 
-   Pub_Access: OA = open access, RA = restricted (permit, seasonal,
-   or limited entry). XA (closed) and UK (unknown) are left off — a
-   closed parcel drawn in green is worse than no parcel at all.
+     National forest   Chequamegon-Nicolet, Superior, Ottawa, Hiawatha.
+                       Huge, so drawn faint — it's context, not a parcel.
+     Other federal     NPS, USFWS refuges, BLM, Corps.
+     State wildlife    WMAs and Aquatic Management Areas — the walk-in
+                       hunting and fishing ground. Drawn strongest: this
+                       is the layer you're actually looking for.
+     State other       State forests, state parks, DNR holdings.
+     County / city     Local parks and forests, often river frontage.
+     Private w/ access Easements and NGO land that PAD-US records as
+                       publicly accessible. Deliberately NOT green —
+                       it's someone's land and the access can lapse.
+
+   Pub_Access: OA = open access, RA = restricted (permit, seasonal, or
+   limited entry) and gets a dashed outline. XA (closed) and UK (unknown)
+   are left off — a closed parcel shaded green is worse than none.
 
    Loaded per-viewport rather than all at once: these are detailed
-   polygons and the whole five-state set would be many megabytes.
+   polygons and the whole multi-state set would be many megabytes. At
+   wider zooms only the big units are requested, so the map stays legible
+   and the response stays under the service's record cap.
    ============================================================ */
 const PADUS_URL = "https://services.arcgis.com/v01gqwM5QqNysAAi/ArcGIS/rest/services/PADUS_Public_Access/FeatureServer/0/query";
-const PUBLIC_LAND_MIN_ZOOM = 10;
+const PUBLIC_LAND_MIN_ZOOM = 8;
 const publicLand = L.layerGroup().addTo(map);
 let padusKey = null, padusBusy = false;
-const PAD_STYLE = {
-  OA:{color:"#2f7d3f", weight:1.2, fillColor:"#57a05f", fillOpacity:.22},
-  RA:{color:"#9c7a2a", weight:1.2, fillColor:"#c8a94e", fillOpacity:.18, dashArray:"4 3"}
+
+/* Manager -> colour. Fill opacity is deliberately uneven: national forest
+   and state forest blocks are enormous and would swamp the basemap at full
+   strength, while a 40-acre WMA needs to be obvious. */
+const PAD_CLASS = {
+  nforest: {label:"National forest",      color:"#1f6b3a", fill:"#3f8f57", op:.13},
+  federal: {label:"Federal land",         color:"#1f6f8b", fill:"#4a97ad", op:.16},
+  wildlife:{label:"State wildlife / fishing area", color:"#1d7a2e", fill:"#5fbf62", op:.30},
+  state:   {label:"State forest / park",  color:"#2f7d3f", fill:"#6fae70", op:.18},
+  local:   {label:"County / city land",   color:"#5f7a3a", fill:"#93ad6e", op:.20},
+  private: {label:"Private land with public access", color:"#9c7a2a", fill:"#c8a94e", op:.16}
 };
+function padClass(p){
+  const mgr = (p.MngNm_Desc || "").toLowerCase();
+  const des = (p.DesTp_Desc || "").toLowerCase();
+  if(mgr.includes("forest service")) return "nforest";
+  if(mgr.includes("fish and wildlife") && mgr.includes("state")) return "wildlife";
+  if(des.includes("wildlife management") || des.includes("aquatic management")
+     || des.includes("wildlife area") || des.includes("fishery")) return "wildlife";
+  if(/national park|u\.s\. fish|bureau of|department of defense|army corps|tennessee valley/.test(mgr)) return "federal";
+  if(mgr.includes("state") || mgr.includes("territory")) return "state";
+  if(mgr.includes("city") || mgr.includes("county") || mgr.includes("local") || mgr.includes("regional")) return "local";
+  if(mgr.includes("private") || mgr.includes("non-governmental")) return "private";
+  return "state";
+}
+/* Smallest unit worth drawing at this zoom. Zoomed out you want the forests
+   and the big WMAs, not every half-acre village park. */
+function padMinAcres(z){
+  if(z >= 12) return 0;
+  if(z >= 11) return 20;
+  if(z >= 10) return 60;
+  if(z >= 9)  return 400;
+  return 2000;
+}
 async function loadPublicLand(){
   if(!map.hasLayer(publicLand)) return;
-  if(map.getZoom() < PUBLIC_LAND_MIN_ZOOM){ publicLand.clearLayers(); padusKey = null; return; }
+  const z = map.getZoom();
+  if(z < PUBLIC_LAND_MIN_ZOOM){ publicLand.clearLayers(); padusKey = null; return; }
   const b = map.getBounds().pad(0.15);
   // before the container has been laid out, getBounds() collapses to a point —
   // querying that returns nothing and poisons the cache key. Wait for a real box.
   if(b.getWest() === b.getEast() || b.getNorth() === b.getSouth()) return;
-  // round the key so small pans don't refetch the same ground
-  const key = [b.getWest(),b.getSouth(),b.getEast(),b.getNorth()].map(v=>v.toFixed(2)).join(",");
+  const minAc = padMinAcres(z);
+  // round the key so small pans don't refetch the same ground; the acreage
+  // floor is part of it so a zoom change does refetch
+  const key = [b.getWest(),b.getSouth(),b.getEast(),b.getNorth()].map(v=>v.toFixed(2)).join(",")+"@"+minAc;
   if(key === padusKey || padusBusy) return;
   padusBusy = true;
   try{
-    const url = `${PADUS_URL}?where=${encodeURIComponent("Pub_Access IN ('OA','RA')")}`+
+    const where = `Pub_Access IN ('OA','RA')` + (minAc ? ` AND GIS_Acres >= ${minAc}` : "");
+    const url = `${PADUS_URL}?where=${encodeURIComponent(where)}`+
       `&geometry=${b.getWest()},${b.getSouth()},${b.getEast()},${b.getNorth()}`+
       `&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects`+
-      `&outFields=Unit_Nm,Pub_Access,MngNm_Desc,DesTp_Desc,GIS_Acres`+
-      `&returnGeometry=true&outSR=4326&maxAllowableOffset=0.0004`+
-      `&geometryPrecision=5&resultRecordCount=600&f=geojson`;
-    const j = await fetchJSON(url, 18000);
+      `&outFields=Unit_Nm,Pub_Access,MngNm_Desc,MngTp_Desc,DesTp_Desc,GIS_Acres`+
+      `&returnGeometry=true&outSR=4326&maxAllowableOffset=${z>=12?0.0002:0.0006}`+
+      `&geometryPrecision=5&resultRecordCount=1200&f=geojson`;
+    const j = await fetchJSON(url, 20000);
     publicLand.clearLayers();
     L.geoJSON(j, {
-      style: f => PAD_STYLE[f.properties.Pub_Access] || PAD_STYLE.RA,
+      style: f => {
+        const c = PAD_CLASS[padClass(f.properties)];
+        const restricted = f.properties.Pub_Access === "RA";
+        return {color:c.color, weight:restricted?1.4:1.1, fillColor:c.fill,
+                fillOpacity: restricted ? c.op*0.6 : c.op,
+                dashArray: restricted ? "5 4" : null};
+      },
       onEachFeature: (f, lyr) => {
-        const p = f.properties;
+        const p = f.properties, c = PAD_CLASS[padClass(p)];
         const acres = p.GIS_Acres ? Math.round(p.GIS_Acres).toLocaleString()+" acres" : "";
         const open = p.Pub_Access === "OA"
-          ? '<span style="color:#2f7d3f;font-weight:700">Open access</span>'
+          ? '<span style="color:#1d7a2e;font-weight:700">Open access</span>'
           : '<span style="color:#9c7a2a;font-weight:700">Restricted access</span> — permit, season or limited entry';
         lyr.bindPopup(
-          `<b>${p.Unit_Nm || "Public land"}</b><br>`+
-          `<span style="font-size:11px">${open}<br>`+
+          `<b>${p.Unit_Nm || c.label}</b><br>`+
+          `<span style="font-size:11px">`+
+          `<span style="color:${c.color};font-weight:700">${c.label}</span> · ${open}<br>`+
           `${[p.DesTp_Desc, p.MngNm_Desc, acres].filter(Boolean).join(" · ")}<br>`+
-          `<i>PAD-US boundaries are approximate — check the state's current maps and signage at the parcel.</i></span>`);
+          `<i>PAD-US boundaries are approximate — check the state's current maps and the signage at the parcel.</i></span>`);
       }
     }).addTo(publicLand);
     padusKey = key;
@@ -584,7 +638,7 @@ map.on("moveend", loadPublicLand);
 publicLand.on("add", () => { padusKey = null; loadPublicLand(); });
 publicLand.on("remove", () => { publicLand.clearLayers(); padusKey = null; });
 
-layerControl.addOverlay(publicLand, "Public hunting / fishing land");
+layerControl.addOverlay(publicLand, "Public land (state, federal, county)");
 layerControl.addOverlay(wadeLayer,  "Wade access &amp; parking");
 layerControl.addOverlay(rampLayer,  "Boat ramps");
 layerControl.addOverlay(gaugeLayer, "USGS gauges");
@@ -599,6 +653,7 @@ layerControl.addOverlay(gaugeLayer, "USGS gauges");
    ~30 days in local storage so it loads instantly next time.
    ============================================================ */
 const NHD_URL = "https://hydro.nationalmap.gov/arcgis/rest/services/nhd/MapServer/6/query";
+const NHD_TIMEOUT = 9000;
 // GNIS_NAME keyword per river; others derive from the river name.
 const NHD_KEYWORD = {
   snake:"SNAKE RIVER", southfork:"SNAKE RIVER", snakeid:"SNAKE RIVER",
@@ -679,9 +734,13 @@ async function loadRealRiver(r){
     // gets drawn as a web of its own tributaries rather than a channel. Fall
     // back to LIKE only when the exact name matches nothing — some streams
     // (the Bad Axe, Castle Rock) exist in NHD only as their named forks.
-    let segs = nhdSegments(await fetchJSON(nhdURL(`UPPER(GNIS_NAME) = '${kw}'`, bb), 16000));
+    // Short timeout on purpose. A healthy NHD query answers in ~1.5s; when
+    // the service is having a bad day it hangs instead of refusing, and a
+    // long timeout parks one of the few concurrent slots doing nothing.
+    // Failing fast and sweeping again beats waiting.
+    let segs = nhdSegments(await fetchJSON(nhdURL(`UPPER(GNIS_NAME) = '${kw}'`, bb), NHD_TIMEOUT));
     if(!segs.length){
-      segs = nhdSegments(await fetchJSON(nhdURL(`UPPER(GNIS_NAME) LIKE '%${kw}%'`, bb), 16000));
+      segs = nhdSegments(await fetchJSON(nhdURL(`UPPER(GNIS_NAME) LIKE '%${kw}%'`, bb), NHD_TIMEOUT));
     }
     if(segs.length){
       layer.line.setLatLngs(segs);
@@ -713,6 +772,14 @@ function visibleFirst(list){
   const seen = r => r.coords.some(p => b.contains(p));
   return list.slice().sort((a, c) => (seen(c) ? 1 : 0) - (seen(a) ? 1 : 0));
 }
+/* The National Map drops a fair share of requests when several are in
+   flight — the failure surfaces in the browser as a CORS error, because an
+   error response from the CDN comes back without the CORS header the good
+   ones carry. loadRealRiver() already resets `tried` on failure so the
+   river is eligible again; these sweeps are what actually retry it, rather
+   than leaving a third of the map straight until you happen to pan. */
+const GEOM_SWEEPS = 6, GEOM_SWEEP_GAP = 5000;
+let geomSweeps = 0;
 function trickleGeometry(){
   if(geomQueue) return;
   geomQueue = visibleFirst(RIVERS);
@@ -723,7 +790,15 @@ function trickleGeometry(){
       loadRealRiver(r).finally(() => {
         geomRunning--;
         if(geomQueue && (geomQueue.length || geomRunning)) setTimeout(pump, GEOM_GAP);
-        else if(geomQueue && !geomQueue.length && !geomRunning) geomQueue = null;
+        else if(geomQueue && !geomQueue.length && !geomRunning){
+          geomQueue = null;
+          // anything that failed transiently is now retryable — sweep again
+          const left = RIVERS.some(r => !riverLayers[r.id].real && riverLayers[r.id].tried === false);
+          if(left && geomSweeps < GEOM_SWEEPS){
+            geomSweeps++;
+            setTimeout(trickleGeometry, GEOM_SWEEP_GAP);
+          }
+        }
       });
     }
   };
@@ -732,7 +807,10 @@ function trickleGeometry(){
 // panning somewhere new re-prioritises whatever is now on screen
 map.on("moveend", () => {
   if(geomQueue && geomQueue.length) geomQueue = visibleFirst(geomQueue);
-  else if(!geomQueue && RIVERS.some(r => !riverLayers[r.id].real)) trickleGeometry();
+  else if(!geomQueue && RIVERS.some(r => !riverLayers[r.id].real)){
+    geomSweeps = 0;                 // a deliberate move earns a fresh set of sweeps
+    trickleGeometry();
+  }
 });
 
 /* ============================================================
