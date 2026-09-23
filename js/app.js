@@ -327,7 +327,7 @@ function floatEstimate(sec){
    MAP
    ============================================================ */
 const map = L.map("map",{zoomControl:true, attributionControl:true})
-  .setView([44.30,-112.90], 6);
+  .setView([43.6,-100.5], 4);        // whole-country view; the zone picker opens over it
 
 /* USGS "US Topo" — the default. Same quadrangle cartography the paper
    sheets use: cream ground, blue hydrography in italic serif, green
@@ -1113,24 +1113,10 @@ function rampPassesFilter(p){
   return true;
 }
 
-document.querySelectorAll(".chip").forEach(ch=>{
-  ch.addEventListener("click",()=>{
-    const f=ch.dataset.f, v=ch.dataset.v;
-    if(f==="act"){
-      document.querySelectorAll('.chip[data-f="act"]').forEach(c=>c.classList.remove("on"));
-      ch.classList.add("on"); filters.act=v;
-    } else {
-      const on = ch.classList.toggle("on");
-      if(f==="beg") filters.beg=on;
-      if(f==="cls") filters.cls=on?v:null;
-      if(f==="dur"){
-        document.querySelectorAll('.chip[data-f="dur"]').forEach(c=>{ if(c!==ch)c.classList.remove("on"); });
-        filters.dur=on?v:null;
-      }
-    }
-    applyFilters();
-  });
-});
+/* Chip toolbar removed from index.html for now. filters{} stays at its
+   defaults (everything visible) and the machinery below it — passFilter(),
+   riverVisible(), applyFilters() — is untouched, so re-adding the markup
+   and this listener is all it takes to get the filters back. */
 
 /* ---------- sheet drag / close ---------- */
 $("#sheet-x").addEventListener("click",()=>{ sheet.classList.remove("open"); curRiver=null; });
@@ -1208,6 +1194,144 @@ window.addEventListener("online",()=>refreshAll());
 setInterval(refreshAll, REFRESH_MS);
 refreshAll();
 // fill in exact USGS NHD linework across the map after first paint
+/* ============================================================
+   ZONE PICKER
+   The map opens on the country with the covered areas drawn over it, so the
+   first question ("where am I fishing?") is answered by pointing rather than
+   by panning around a continent looking for coloured lines. Picking a zone
+   flies there and dismisses the picker; the Regions button brings it back.
+   ============================================================ */
+const zonePane = map.createPane("zonePane");
+zonePane.style.zIndex = 450;
+const zoneLayer = L.layerGroup();
+let zonesShown = false;
+
+const ZONE_STYLE = {
+  region:{color:"#12566b", fillColor:"#2f8fa8", fillOpacity:.26, weight:2.5},
+  park:  {color:"#8a5a12", fillColor:"#e0ac48", fillOpacity:.34, weight:2.8, dashArray:"6 4"},
+};
+
+/* Leaflet's fly* animations divide by the container size. If the map is laid
+   out at zero size when this runs — a hidden tab, a pane that hasn't been
+   shown yet, a slow first paint — that arithmetic produces NaN and throws
+   "Invalid LatLng", which kills the rest of the script. Fall back to an
+   un-animated setView until the container has real dimensions. */
+function canAnimate(){
+  const s = map.getSize();
+  // Animations run on requestAnimationFrame, which is paused while the
+  // document is hidden — a fly started in a background tab never finishes
+  // and the map silently stays put. Jump instead when we can't animate.
+  return s.x > 0 && s.y > 0 && document.visibilityState !== "hidden";
+}
+function goTo(target, zoom){
+  if(target instanceof L.LatLngBounds){
+    if(canAnimate()) map.flyToBounds(target, {duration:0.9});
+    else map.fitBounds(target, {animate:false});
+  } else {
+    if(canAnimate()) map.flyTo(target, zoom, {duration:0.7});
+    else map.setView(target, zoom, {animate:false});
+  }
+}
+
+const zoneCards = [];   // {zone, marker, home:LatLng}
+
+function enterZone(z){
+  hideZones();
+  goTo(L.latLngBounds(z.bounds).pad(0.08));
+}
+function buildZones(){
+  ZONES.forEach(z=>{
+    const poly = L.polygon(z.poly, {...ZONE_STYLE[z.kind], pane:"zonePane"}).addTo(zoneLayer);
+    poly.on("click", ()=>enterZone(z));
+    poly.on("mouseover", ()=>poly.setStyle({fillOpacity:ZONE_STYLE[z.kind].fillOpacity+0.16}));
+    poly.on("mouseout",  ()=>poly.setStyle({fillOpacity:ZONE_STYLE[z.kind].fillOpacity}));
+
+    const has  = z.count > 0;
+    const home = L.latLngBounds(z.bounds).getCenter();
+    const m = L.marker(home, {pane:"zonePane", riseOnHover:true,
+      icon:L.divIcon({className:"", iconSize:null, html:
+        `<div class="zone-card ${z.kind} ${has?"":"empty"}">
+           <div class="zc-label">${z.label}</div>
+           <div class="zc-count">${has ? z.count+" rivers" : "not mapped yet"}</div>
+         </div>`})}).addTo(zoneLayer);
+    m.bindTooltip(`<b>${z.label}</b><br><span style="font-size:11px">${z.sub}</span>`,
+                  {direction:"top", offset:[0,-16], className:"zone-tip"});
+    m.on("click", ()=>enterZone(z));
+    zoneCards.push({zone:z, marker:m, home});
+  });
+}
+
+/* The upper-midwest zones sit almost on top of each other at country zoom,
+   so their cards would overlap into an unreadable stack. Lay them out in
+   screen space and push colliding cards apart, then convert back to
+   coordinates. Re-run on zoom because the collisions change with scale. */
+function layoutZoneCards(){
+  if(!zonesShown) return;
+  const PAD = 6;
+  /* Measure each card rather than assuming one size: a two-line label
+     ("Minnesota & North Shore", "Grand Teton National Park") makes a taller
+     card, and a single fixed height silently under-reserves for those and
+     lets them overlap. */
+  const items = zoneCards.map(c => {
+    const el = c.marker.getElement() && c.marker.getElement().querySelector(".zone-card");
+    return {c, p: map.latLngToLayerPoint(c.home),
+            w: el ? el.offsetWidth  : 144,
+            h: el ? el.offsetHeight : 48};
+  }).sort((a,b) => a.p.y - b.p.y);
+  /* Greedy slot placement, top to bottom. Pushing two cards apart from each
+     other oscillates — separating A from B walks A onto C, and fixing that
+     walks it back. Placing each card into the first free slot below its
+     preferred spot, and never moving one that's already settled, always
+     terminates and stacks the crowded upper-midwest zones neatly. */
+  const placed = [];
+  const hits = (a, b) =>
+    Math.abs(a.p.x-b.p.x) < (a.w+b.w)/2 + PAD &&
+    Math.abs(a.p.y-b.p.y) < (a.h+b.h)/2 + PAD;
+  items.forEach(it => {
+    for(let guard=0; guard<40; guard++){
+      const clash = placed.find(q => hits(it, q));
+      if(!clash) break;
+      it.p.y = clash.p.y + (clash.h + it.h)/2 + PAD;
+    }
+    placed.push(it);
+  });
+  items.forEach(({c,p}) => c.marker.setLatLng(map.layerPointToLatLng(p)));
+}
+map.on("zoomend moveend", layoutZoneCards);
+
+function showZones(){
+  if(zonesShown) return;
+  zonesShown = true;
+  zoneLayer.addTo(map);
+  document.body.classList.add("zones-open");
+  goTo([43.6,-100.5], 4);
+  map.once("moveend", layoutZoneCards);
+  setTimeout(layoutZoneCards, 60);
+}
+function hideZones(){
+  if(!zonesShown) return;
+  zonesShown = false;
+  map.removeLayer(zoneLayer);
+  document.body.classList.remove("zones-open");
+}
+
+buildZones();
+showZones();
+
+/* Regions button — always available, so you can get back to the chooser
+   without hunting for the right zoom level. */
+const zoneCtl = L.control({position:"topright"});
+zoneCtl.onAdd = function(){
+  const d = L.DomUtil.create("div");
+  d.innerHTML = `<button id="btn-zones" title="Back to region chooser">◄ Regions</button>`;
+  L.DomEvent.disableClickPropagation(d);
+  d.querySelector("button").addEventListener("click", ()=>{
+    if(zonesShown) hideZones(); else showZones();
+  });
+  return d;
+};
+zoneCtl.addTo(map);
+
 syncMarkers();          // seed marker groups for the starting zoom
 loadPublicLand();
 setTimeout(trickleGeometry, 600);

@@ -269,3 +269,40 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
   *,*::before,*::after{animation:none !important;transition:none !important}
 }
 :focus-visible{outline:3px solid var(--flag);outline-offset:2px}
+
+/* ---------- zone picker ----------
+   The opening chooser: coverage areas drawn over a country-wide view. Cards
+   are plain DOM markers so they stay legible at zoom 4, where a Leaflet
+   tooltip would be too small to read and too fiddly to tap. */
+#btn-zones{
+  font:700 12px "Barlow Condensed",sans-serif; letter-spacing:.06em; text-transform:uppercase;
+  padding:8px 11px; border-radius:9px; cursor:pointer;
+  border:1px solid var(--line); background:var(--paper-2); color:var(--txt);
+  box-shadow:0 1px 4px rgba(15,30,22,.2);
+}
+#btn-zones:hover{ background:var(--paper); }
+
+.zone-card{
+  transform:translate(-50%,-50%);
+  width:144px; text-align:center;
+  padding:6px 9px; border-radius:10px;
+  background:rgba(21,36,31,.92); color:#f2ece0;
+  border:1px solid rgba(255,255,255,.22);
+  box-shadow:0 3px 10px rgba(0,0,0,.35);
+  cursor:pointer; pointer-events:auto;
+}
+.zone-card:hover{ background:rgba(21,36,31,.99); border-color:rgba(255,255,255,.45); }
+.zone-card.park{ border-color:#d9a441; }
+.zone-card.empty{ opacity:.72; }
+.zc-label{ font:700 13px "Barlow Condensed",sans-serif; letter-spacing:.05em;
+           text-transform:uppercase; line-height:1.15; }
+.zc-count{ font:600 10.5px "IBM Plex Mono",monospace; color:#7fd4b4; margin-top:4px; }
+.zone-card.empty .zc-count{ color:#c8a94e; font-style:italic; }
+.zone-tip{ font-family:"Public Sans",sans-serif; }
+
+/* while the chooser is up, the river furniture would just be noise */
+body.zones-open #safety{ display:none !important; }
+body.zones-open .leaflet-pane.riversPane,
+body.zones-open .leaflet-marker-pane,
+body.zones-open .riv-label{ opacity:.25; transition:opacity .25s; }
+body.zones-open .leaflet-pane.zonePane{ opacity:1; }

@@ -32,6 +32,18 @@ like an app, not a browser tab.
   polyline itself must go through `flatCoords()` / `midCoord()` in
   `js/app.js`; don't index `r.coords[0]` directly. Segments are kept apart
   on purpose: welding them draws a channel across a gap that isn't there.
+- `js/zones.js` — the opening zone chooser. The map opens on the whole
+  country with coverage areas drawn over it; tap one and it zooms there.
+  Two kinds: `region` zones are a convex hull of the rivers actually in
+  them, so the shape shows real coverage rather than an invented box, and
+  `park` zones use the real NPS boundary, because the reason a national
+  park is its own zone is that its regulations are its own and a rectangle
+  would misrepresent where those rules start. Zones are navigation targets,
+  **not exclusive buckets** — the Snake runs through Grand Teton *and*
+  Wyoming and counts toward both; picking one hides nothing. `count` is
+  rivers currently mapped there, and 0 renders as "not mapped yet" rather
+  than pretending the zone is populated (Yellowstone is 0 today). Rebuild
+  with `zones.py` in the scratchpad if regions or coverage change.
 - `js/app.js` — fetch/render/status logic. Talks directly to the USGS OGC API
   (`api.waterdata.usgs.gov`) client-side — no backend, no API key.
 - `manifest.json` + `icons/` — home-screen install support.
@@ -470,6 +482,23 @@ are worth calibrating first.
 ## Conventions
 
 - No frameworks, no build tooling — keep it editable by hand.
+- **Never call Leaflet's `fly*` animations directly — use `goTo()`.** Those
+  animations divide by the container size and run on requestAnimationFrame,
+  so in a zero-size container they produce `NaN` and throw "Invalid LatLng"
+  (which killed the rest of app.js at startup once), and in a hidden tab
+  they simply never finish and the map silently stays put. `goTo()` checks
+  both and falls back to an un-animated `setView`/`fitBounds`.
+- **The filter chips are gone but their machinery isn't.** The toolbar was
+  removed from `index.html` and its listener from `app.js`; `filters{}`,
+  `passFilter()`, `riverVisible()` and `applyFilters()` are untouched and
+  sitting at defaults (everything visible). Restoring the markup and the
+  one listener brings the filters back — don't delete the rest.
+- **Zone cards are measured, not assumed.** `layoutZoneCards()` reads each
+  card's real `offsetWidth/Height` before resolving collisions, because a
+  two-line label ("Minnesota & North Shore") makes a taller card and one
+  fixed height silently under-reserves for those and lets them overlap.
+  Placement is greedy top-to-bottom into the first free slot; pushing two
+  cards apart from each other oscillates instead of converging.
 - **Vector stacking is explicit, via panes.** Everything used to share
   Leaflet's default overlayPane, where paint order is DOM order — and since
   the public land layer is cleared and re-added on every map move, its

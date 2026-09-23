@@ -27,15 +27,11 @@
   <button class="iconbtn" id="btn-legend" aria-label="Legend and help" title="Legend">?</button>
 </header>
 
-<div id="chips" role="toolbar" aria-label="Filters">
-  <button class="chip on" data-f="act" data-v="all"><span class="dot"></span>Everything</button>
-  <button class="chip" data-f="act" data-v="fish">🎣 Fishing</button>
-  <button class="chip" data-f="act" data-v="float">🛶 Floating</button>
-  <button class="chip" data-f="beg" data-v="1">Beginner-friendly</button>
-  <button class="chip" data-f="dur" data-v="half">≤ Half-day floats</button>
-  <button class="chip" data-f="dur" data-v="full">Full-day floats</button>
-  <button class="chip" data-f="cls" data-v="1">Class I only</button>
-</div>
+<!-- Filter chips (Everything / Fishing / Floating / Beginner-friendly /
+     float-duration / Class I) removed for now. The filter machinery behind
+     them is still in js/app.js — filters{}, passFilter(), riverVisible(),
+     applyFilters() — so restoring this toolbar is the only step needed to
+     bring them back. -->
 
 <div id="safety" role="note">
   <b>Read me first:</b> Mountain water is <b>cold enough to incapacitate</b> even in July. The Snake River Canyon (West Table–Sheep Gulch) is real Class III whitewater. The South Fork is dam-controlled — <b>flows can change with little warning</b>. Central Iowa rivers have <b>low-head dams</b> — dangerous "drowning machine" hydraulics at the base, at almost any flow. Driftless spring creeks are <b>walk-and-wade</b>, and much of the best water crosses <b>private land under a public angling easement</b> — stay in the stream corridor and park only in the marked pull-offs. North Shore streams are <b>snowmelt-driven and cold</b>, with slick basalt ledges at the falls and gorges — the Pigeon River is the literal US–Canada border, so check jurisdiction before you wade across. In the Northwoods, the <b>Wolf River above Shawano is Class III–IV</b> through the Menominee Reservation (tribal permit required) and the <b>South Fork Flambeau</b> has real drops — scout before you run either. Wear a PFD, scout logjams and dams, and check current regs &amp; licenses with <b>WY Game &amp; Fish</b>, <b>Idaho Fish &amp; Game</b>, or the <b>Iowa</b>, <b>Minnesota</b>, <b>Wisconsin</b> and <b>Illinois DNR</b> before you go.
@@ -101,6 +97,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="js/rivers-data.js"></script>
+<script src="js/zones.js"></script>
 <script src="js/app.js"></script>
 
 </body>
