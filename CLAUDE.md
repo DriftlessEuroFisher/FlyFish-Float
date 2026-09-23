@@ -32,18 +32,26 @@ like an app, not a browser tab.
   polyline itself must go through `flatCoords()` / `midCoord()` in
   `js/app.js`; don't index `r.coords[0]` directly. Segments are kept apart
   on purpose: welding them draws a channel across a gap that isn't there.
-- `js/zones.js` — the opening zone chooser. The map opens on the whole
-  country with coverage areas drawn over it; tap one and it zooms there.
-  Two kinds: `region` zones are a convex hull of the rivers actually in
-  them, so the shape shows real coverage rather than an invented box, and
-  `park` zones use the real NPS boundary, because the reason a national
-  park is its own zone is that its regulations are its own and a rectangle
-  would misrepresent where those rules start. Zones are navigation targets,
-  **not exclusive buckets** — the Snake runs through Grand Teton *and*
-  Wyoming and counts toward both; picking one hides nothing. `count` is
-  rivers currently mapped there, and 0 renders as "not mapped yet" rather
-  than pretending the zone is populated (Yellowstone is 0 today). Rebuild
-  with `zones.py` in the scratchpad if regions or coverage change.
+- `js/zones.js` — the opening zone chooser. The map opens fitted to the
+  area actually covered, with the zones drawn over it; tap one and it zooms
+  there. It is a **true partition**: no two zones overlap and every river
+  belongs to exactly one of them, so a tap is never ambiguous about which
+  zone you meant. Region shapes start as the convex hull of their own
+  rivers and are then clipped into a Voronoi partition; national parks keep
+  their real NPS boundary instead of a Voronoi cell, because the reason a
+  park is its own zone is that its regulations start and stop at that line,
+  and the surrounding region recedes from it. A park also wins the rivers
+  inside it — the Snake through Grand Teton counts toward the park, not
+  toward Wyoming — since the park's rules are the more specific fact.
+  `rings[0]` is the outer boundary and any further rings are holes (Leaflet
+  paints with `fill-rule: evenodd`, so a hole takes no clicks either).
+  `short` is the name used when the zone is too small at the current zoom
+  to carry the full one. `count` is rivers mapped there, and 0 renders as
+  "not mapped yet" rather than pretending the zone is populated
+  (Yellowstone is 0 today). Rebuild with `zones2.py` in the scratchpad if
+  regions or coverage change — it prints the overlap check and the
+  per-zone river totals.
+
 - `js/app.js` — fetch/render/status logic. Talks directly to the USGS OGC API
   (`api.waterdata.usgs.gov`) client-side — no backend, no API key.
 - `manifest.json` + `icons/` — home-screen install support.
@@ -482,23 +490,61 @@ are worth calibrating first.
 ## Conventions
 
 - No frameworks, no build tooling — keep it editable by hand.
-- **Never call Leaflet's `fly*` animations directly — use `goTo()`.** Those
+- **Never move the map directly — use `goTo()`.** Leaflet's `fly*`
   animations divide by the container size and run on requestAnimationFrame,
   so in a zero-size container they produce `NaN` and throw "Invalid LatLng"
   (which killed the rest of app.js at startup once), and in a hidden tab
   they simply never finish and the map silently stays put. `goTo()` checks
   both and falls back to an un-animated `setView`/`fitBounds`.
+
+  It also **defers any move made before the container has a size**, which
+  is a separate trap: `fitBounds` derives its zoom from the container too,
+  and with no width the answer is the whole world — that is how the opening
+  chooser once came up as a zoom-0 view of the globe with every zone a few
+  pixels wide. A pending move replays on the map's `resize`.
 - **The filter chips are gone but their machinery isn't.** The toolbar was
   removed from `index.html` and its listener from `app.js`; `filters{}`,
   `passFilter()`, `riverVisible()` and `applyFilters()` are untouched and
   sitting at defaults (everything visible). Restoring the markup and the
   one listener brings the filters back — don't delete the rest.
-- **Zone cards are measured, not assumed.** `layoutZoneCards()` reads each
-  card's real `offsetWidth/Height` before resolving collisions, because a
-  two-line label ("Minnesota & North Shore") makes a taller card and one
-  fixed height silently under-reserves for those and lets them overlap.
-  Placement is greedy top-to-bottom into the first free slot; pushing two
-  cards apart from each other oscillates instead of converging.
+- **A zone's name stays inside that zone.** `layoutZoneCards()` puts each
+  card at the pole of inaccessibility — the interior point furthest from
+  any edge — of the part of the zone currently on screen, recomputed on
+  every move. A bounding-box centre drifts outside any shape that isn't a
+  rectangle, and it leaves the screen entirely when you zoom into one
+  corner of a zone. Working on the *visible* part is what keeps the name
+  with its zone when you're looking at a corner of it.
+
+  Cards still mustn't stack, so placement chooses among all the roomy
+  interior points rather than the single best one — every candidate is
+  inside the zone, so dodging a neighbour never moves a name onto someone
+  else's water. Three things matter and are easy to get wrong:
+
+  - Candidates must be **spatially spread**. Taking the top N interior
+    points by clearance returns N points in the same small neighbourhood
+    as the pole itself, and the card then has nowhere to go.
+  - The "stay well inside" term is measured against **the room this zone
+    actually has** (`Math.min(34, p.room)`), not a fixed ideal. A narrow
+    zone whose best point is 20px from an edge would otherwise be pinned
+    to that one point and park itself on a neighbour.
+  - Cards are **measured, not assumed** — a two-line label ("Minnesota &
+    North Shore") is a taller card, and one fixed height under-reserves.
+
+  When a zone is too small at this zoom to hold its name, the card shrinks
+  (`tight`, then `mini` with the `short` name) and, failing that, drops out
+  until you zoom in — it never moves outside its own boundary to fit. The
+  polygon stays drawn and clickable either way.
+- **The chooser has to own the clicks while it's up.** Gauge dots and
+  access markers sit in Leaflet's marker pane at z-index 600, above the
+  zone pane, so a tap meant for a zone was landing on whatever river
+  furniture happened to be underneath and opening that river's sheet.
+  `body.zones-open` sets `pointer-events:none` on the river panes *and on
+  their children* — Leaflet marks every interactive marker and path
+  `pointer-events:auto`, and a child that opts back in is hit-tested even
+  when its pane says none.
+- **The Regions button is top-left, under the zoom control.** The safety
+  panel opens over the top-right corner the moment you enter a zone, and
+  it was burying the one control that gets you back out.
 - **Vector stacking is explicit, via panes.** Everything used to share
   Leaflet's default overlayPane, where paint order is DOM order — and since
   the public land layer is cleared and re-added on every map move, its

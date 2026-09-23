@@ -1223,7 +1223,27 @@ function canAnimate(){
   // and the map silently stays put. Jump instead when we can't animate.
   return s.x > 0 && s.y > 0 && document.visibilityState !== "hidden";
 }
+let pendingView = null;
+map.on("resize", () => {
+  if(!pendingView) return;
+  const v = pendingView; pendingView = null; goTo(v.target, v.zoom);
+});
 function goTo(target, zoom){
+  const s = map.getSize();
+  if(!s.x || !s.y){
+    // A zero-size container doesn't only break the animation: fitBounds
+    // derives its zoom from the container too, and with no width the
+    // answer is the whole world. That is how the opening chooser once
+    // landed on a zoom-0 view of the globe with every zone a few pixels
+    // wide. Hold the move until the map has real dimensions.
+    pendingView = {target, zoom};
+    setTimeout(() => {
+      if(pendingView && map.getSize().x){
+        const v = pendingView; pendingView = null; goTo(v.target, v.zoom);
+      }
+    }, 200);
+    return;
+  }
   if(target instanceof L.LatLngBounds){
     if(canAnimate()) map.flyToBounds(target, {duration:0.9});
     else map.fitBounds(target, {animate:false});
@@ -1233,7 +1253,7 @@ function goTo(target, zoom){
   }
 }
 
-const zoneCards = [];   // {zone, marker, home:LatLng}
+const zoneCards = [];   // {zone, marker, poly}
 
 function enterZone(z){
   hideZones();
@@ -1241,61 +1261,199 @@ function enterZone(z){
 }
 function buildZones(){
   ZONES.forEach(z=>{
-    const poly = L.polygon(z.poly, {...ZONE_STYLE[z.kind], pane:"zonePane"}).addTo(zoneLayer);
+    // rings[0] is the outer boundary, any further rings are holes; Leaflet
+    // paints with fill-rule evenodd, so a hole is genuinely not part of the
+    // shape — it doesn't take clicks either
+    const poly = L.polygon(z.rings, {...ZONE_STYLE[z.kind], pane:"zonePane"}).addTo(zoneLayer);
     poly.on("click", ()=>enterZone(z));
     poly.on("mouseover", ()=>poly.setStyle({fillOpacity:ZONE_STYLE[z.kind].fillOpacity+0.16}));
     poly.on("mouseout",  ()=>poly.setStyle({fillOpacity:ZONE_STYLE[z.kind].fillOpacity}));
 
-    const has  = z.count > 0;
-    const home = L.latLngBounds(z.bounds).getCenter();
-    const m = L.marker(home, {pane:"zonePane", riseOnHover:true,
-      icon:L.divIcon({className:"", iconSize:null, html:
+    const has = z.count > 0;
+    const m = L.marker(L.latLngBounds(z.bounds).getCenter(),
+      {pane:"zonePane", riseOnHover:true,
+       icon:L.divIcon({className:"", iconSize:null, html:
         `<div class="zone-card ${z.kind} ${has?"":"empty"}">
            <div class="zc-label">${z.label}</div>
+           <div class="zc-short">${z.short || z.label}</div>
            <div class="zc-count">${has ? z.count+" rivers" : "not mapped yet"}</div>
          </div>`})}).addTo(zoneLayer);
     m.bindTooltip(`<b>${z.label}</b><br><span style="font-size:11px">${z.sub}</span>`,
                   {direction:"top", offset:[0,-16], className:"zone-tip"});
     m.on("click", ()=>enterZone(z));
-    zoneCards.push({zone:z, marker:m, home});
+    zoneCards.push({zone:z, marker:m, poly});
   });
 }
 
-/* The upper-midwest zones sit almost on top of each other at country zoom,
-   so their cards would overlap into an unreadable stack. Lay them out in
-   screen space and push colliding cards apart, then convert back to
-   coordinates. Re-run on zoom because the collisions change with scale. */
+/* ---- keeping a zone's name inside its own boundary ----
+   A label parked at the bounding-box centre sits outside the shape as soon
+   as the shape isn't rectangular — and slides off screen entirely once you
+   zoom into one corner of a zone. So the label is placed at the pole of
+   inaccessibility (the interior point furthest from any edge) of the part
+   of the zone you can currently *see*. That keeps the name inside its own
+   boundary at every zoom, and inside the visible part of it when you're
+   only looking at a corner of the zone.
+
+   Cards still can't be allowed to sit on top of each other, so placement
+   picks among the roomiest interior points rather than only the single
+   best one — but every candidate is an interior point, so avoiding a
+   neighbour never pushes a name out of its own zone. If nothing fits, the
+   card goes tight (smaller) instead of moving out. */
+function clipToRect(poly, r){          // Sutherland-Hodgman against the viewport
+  const edges = [
+    p => p.x >= r.min.x, p => p.x <= r.max.x,
+    p => p.y >= r.min.y, p => p.y <= r.max.y ];
+  const isect = [
+    (a,b) => ({x:r.min.x, y:a.y+(b.y-a.y)*((r.min.x-a.x)/((b.x-a.x)||1e-9))}),
+    (a,b) => ({x:r.max.x, y:a.y+(b.y-a.y)*((r.max.x-a.x)/((b.x-a.x)||1e-9))}),
+    (a,b) => ({y:r.min.y, x:a.x+(b.x-a.x)*((r.min.y-a.y)/((b.y-a.y)||1e-9))}),
+    (a,b) => ({y:r.max.y, x:a.x+(b.x-a.x)*((r.max.y-a.y)/((b.y-a.y)||1e-9))}) ];
+  let out = poly;
+  for(let e=0;e<4 && out.length;e++){
+    const inp = out; out = [];
+    for(let i=0;i<inp.length;i++){
+      const cur = inp[i], prv = inp[(i-1+inp.length)%inp.length];
+      const ci = edges[e](cur), pi = edges[e](prv);
+      if(ci){ if(!pi) out.push(isect[e](prv,cur)); out.push(cur); }
+      else if(pi) out.push(isect[e](prv,cur));
+    }
+  }
+  return out;
+}
+function pointInPoly(pt, poly){
+  let ins = false;
+  for(let i=0,j=poly.length-1;i<poly.length;j=i++){
+    const a=poly[i], b=poly[j];
+    if((a.y>pt.y)!==(b.y>pt.y) && pt.x < (b.x-a.x)*(pt.y-a.y)/((b.y-a.y)||1e-9)+a.x) ins=!ins;
+  }
+  return ins;
+}
+function distToEdges(pt, poly){
+  let best = Infinity;
+  for(let i=0,j=poly.length-1;i<poly.length;j=i++){
+    const a=poly[i], b=poly[j];
+    const dx=b.x-a.x, dy=b.y-a.y, L2=dx*dx+dy*dy;
+    let t = L2 ? ((pt.x-a.x)*dx + (pt.y-a.y)*dy)/L2 : 0;
+    t = Math.max(0, Math.min(1, t));
+    best = Math.min(best, Math.hypot(pt.x-(a.x+dx*t), pt.y-(a.y+dy*t)));
+  }
+  return best;
+}
+function sampleInterior(poly, box, N){
+  const out=[];
+  for(let i=0;i<=N;i++) for(let j=0;j<=N;j++){
+    const pt={x:box.minx+(box.maxx-box.minx)*i/N, y:box.miny+(box.maxy-box.miny)*j/N};
+    if(!pointInPoly(pt, poly)) continue;
+    pt.d = distToEdges(pt, poly);
+    out.push(pt);
+  }
+  return out;
+}
+function labelSpots(poly){
+  const xs=poly.map(p=>p.x), ys=poly.map(p=>p.y);
+  let box = {minx:Math.min(...xs), maxx:Math.max(...xs),
+             miny:Math.min(...ys), maxy:Math.max(...ys)};
+  const coarse = sampleInterior(poly, box, 12);
+  if(!coarse.length) return {best:null, spots:[]};
+  coarse.sort((a,b)=>b.d-a.d);
+  let best = coarse[0];
+  for(let pass=0; pass<3; pass++){          // refine around the current winner
+    const rx=(box.maxx-box.minx)/6, ry=(box.maxy-box.miny)/6;
+    box = {minx:best.x-rx, maxx:best.x+rx, miny:best.y-ry, maxy:best.y+ry};
+    const fine = sampleInterior(poly, box, 6);
+    for(const p of fine) if(p.d > best.d) best = p;
+  }
+  return {best, spots:coarse};
+}
+function rectAt(pt, w, h){
+  return {x0:pt.x-w/2, y0:pt.y-h/2, x1:pt.x+w/2, y1:pt.y+h/2};
+}
+function rectOverlap(a, b){
+  const w = Math.min(a.x1,b.x1) - Math.max(a.x0,b.x0);
+  const h = Math.min(a.y1,b.y1) - Math.max(a.y0,b.y0);
+  return (w>0 && h>0) ? w*h : 0;
+}
+function offScreenArea(r, size){
+  const vis = rectOverlap(r, {x0:8, y0:8, x1:size.x-8, y1:size.y-8});
+  return Math.max(0, (r.x1-r.x0)*(r.y1-r.y0) - vis);
+}
 function layoutZoneCards(){
   if(!zonesShown) return;
-  const PAD = 6;
-  /* Measure each card rather than assuming one size: a two-line label
-     ("Minnesota & North Shore", "Grand Teton National Park") makes a taller
-     card, and a single fixed height silently under-reserves for those and
-     lets them overlap. */
-  const items = zoneCards.map(c => {
-    const el = c.marker.getElement() && c.marker.getElement().querySelector(".zone-card");
-    return {c, p: map.latLngToLayerPoint(c.home),
-            w: el ? el.offsetWidth  : 144,
-            h: el ? el.offsetHeight : 48};
-  }).sort((a,b) => a.p.y - b.p.y);
-  /* Greedy slot placement, top to bottom. Pushing two cards apart from each
-     other oscillates — separating A from B walks A onto C, and fixing that
-     walks it back. Placing each card into the first free slot below its
-     preferred spot, and never moving one that's already settled, always
-     terminates and stacks the crowded upper-midwest zones neatly. */
-  const placed = [];
-  const hits = (a, b) =>
-    Math.abs(a.p.x-b.p.x) < (a.w+b.w)/2 + PAD &&
-    Math.abs(a.p.y-b.p.y) < (a.h+b.h)/2 + PAD;
-  items.forEach(it => {
-    for(let guard=0; guard<40; guard++){
-      const clash = placed.find(q => hits(it, q));
-      if(!clash) break;
-      it.p.y = clash.p.y + (clash.h + it.h)/2 + PAD;
-    }
-    placed.push(it);
+  const size = map.getSize();
+  if(!size.x || !size.y) return;
+  // Container space, not layer space: after a drag the map pane carries a
+  // CSS offset, so projecting against the pixel origin would put the
+  // viewport rectangle in the wrong place — the clip would then decide a
+  // zone was off screen while you were looking straight at it.
+  const rect = {min:{x:0,y:0}, max:{x:size.x, y:size.y}};
+
+  const plans = [];
+  zoneCards.forEach(c => {
+    // outer ring only — the holes (national parks punched out of a region)
+    // are small next to the region, and excluding them would push the name
+    // off the part of the zone the label is actually describing
+    const ring = c.zone.rings[0].map(ll => {
+      const p = map.latLngToContainerPoint(L.latLng(ll[0], ll[1]));
+      return {x:p.x, y:p.y};
+    });
+    const vis = clipToRect(ring, rect);
+    const s = labelSpots(vis.length >= 3 ? vis : ring);
+    if(s.best) plans.push({c, best:s.best, spots:s.spots, room:s.best.d});
+    else { const el=c.marker.getElement(); if(el) el.style.display="none"; }
   });
-  items.forEach(({c,p}) => c.marker.setLatLng(map.layerPointToLatLng(p)));
+
+  // Tightest zone first: a cramped cell has almost no choice of interior
+  // point, so it should claim its one good spot before a roomy neighbour —
+  // which has plenty of other interior points — parks a card on it.
+  plans.sort((a,b) => a.room - b.room);
+
+  const placed = [];
+  plans.forEach(p => {
+    const el = p.c.marker.getElement();
+    const card = el && el.querySelector(".zone-card");
+    if(el) el.style.display = "";
+    // Three sizes, chosen by how much room the zone actually has. Grand
+    // Teton is a narrow north–south strip: at country zoom it is a few
+    // pixels wide, and a full-size card on it would read as Wyoming's.
+    if(card){
+      card.classList.toggle("tight", p.room < 46 && p.room >= 20);
+      card.classList.toggle("mini",  p.room < 20);
+    }
+    // Measured, never assumed — a two-line label ("Minnesota & North Shore")
+    // makes a taller card, and one fixed height under-reserves for those.
+    const w = card ? card.offsetWidth  : 144;
+    const h = card ? card.offsetHeight : 46;
+
+    // Candidates need to be spread out, not just the 24 highest-scoring
+    // interior points — those all sit in the same small neighbourhood as
+    // the pole itself, so the card would have nowhere to go to dodge a
+    // neighbour. Every interior sample with reasonable clearance is fair
+    // game; there are at most a couple of hundred and the maths is cheap.
+    const cand = [p.best].concat(p.spots.filter(s => s.d >= p.room * 0.45));
+    let pick = p.best, bestScore = Infinity, bestOver = 0;
+    for(const s of cand){
+      const r = rectAt(s, w, h);
+      let over = 0;
+      for(const q of placed) over += rectOverlap(r, q);
+      let score = over * 3;
+      score += offScreenArea(r, size) * 6;   // a clipped card is unreadable
+      // Measured against the room this zone actually has, not a fixed
+      // ideal: a narrow zone's best point may only be 20px from an edge,
+      // and penalising every candidate against an unreachable 30 would
+      // pin the card to that one point and let it sit on a neighbour.
+      score += Math.max(0, Math.min(34, p.room) - s.d) * 12;     // stay well inside
+      score += Math.hypot(s.x-p.best.x, s.y-p.best.y) * 4;       // stay near centre
+      if(score < bestScore){ bestScore = score; pick = s; bestOver = over; }
+    }
+    // Names never leave their own zone to dodge a neighbour — that was the
+    // old behaviour and it put labels on the wrong water. When a zone is
+    // too small at this zoom to hold its name clear of one already placed,
+    // the card drops out and comes back as you zoom in. The polygon stays
+    // drawn and stays clickable either way.
+    if(bestOver > 0.45 * w * h){ if(el) el.style.display = "none"; return; }
+    placed.push(rectAt(pick, w, h));
+    p.c.marker.setLatLng(map.containerPointToLatLng(L.point(pick.x, pick.y)));
+  });
 }
 map.on("zoomend moveend", layoutZoneCards);
 
@@ -1304,9 +1462,13 @@ function showZones(){
   zonesShown = true;
   zoneLayer.addTo(map);
   document.body.classList.add("zones-open");
-  goTo([43.6,-100.5], 4);
+  // Fit the covered area rather than a fixed zoom: z4 fills a laptop but
+  // shows a fraction of the country on a phone, which is the screen this
+  // actually gets opened on.
+  goTo(L.latLngBounds([].concat(...ZONES.map(z=>z.bounds))).pad(0.04));
   map.once("moveend", layoutZoneCards);
   setTimeout(layoutZoneCards, 60);
+  setTimeout(layoutZoneCards, 400);   // after a move deferred for container size
 }
 function hideZones(){
   if(!zonesShown) return;
@@ -1319,8 +1481,10 @@ buildZones();
 showZones();
 
 /* Regions button — always available, so you can get back to the chooser
-   without hunting for the right zoom level. */
-const zoneCtl = L.control({position:"topright"});
+   without hunting for the right zoom level. Top *left*, under the zoom
+   control: the safety panel opens over the top-right corner the moment you
+   enter a zone, and it was burying the one control that gets you back. */
+const zoneCtl = L.control({position:"topleft"});
 zoneCtl.onAdd = function(){
   const d = L.DomUtil.create("div");
   d.innerHTML = `<button id="btn-zones" title="Back to region chooser">◄ Regions</button>`;

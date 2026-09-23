@@ -88,6 +88,10 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 #map{position:fixed;inset:0;z-index:1}
 .leaflet-control-attribution{font-size:9px}
 .leaflet-control-zoom{margin-top:104px !important}
+/* the app bar floats over the map, so the top-right controls need the same
+   clearance the zoom control already has, or the Regions button hides
+   behind the title */
+.leaflet-top.leaflet-right{margin-top:96px}
 
 /* river labels */
 /* River lines sit on a USGS topo sheet that is already full of thin blue
@@ -297,7 +301,19 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .zc-label{ font:700 13px "Barlow Condensed",sans-serif; letter-spacing:.05em;
            text-transform:uppercase; line-height:1.15; }
 .zc-count{ font:600 10.5px "IBM Plex Mono",monospace; color:#7fd4b4; margin-top:4px; }
+.zc-short{ display:none; }
 .zone-card.empty .zc-count{ color:#c8a94e; font-style:italic; }
+/* A cell with no room for a full card gets a smaller one rather than a
+   card shoved outside its own zone — the name staying inside the boundary
+   matters more than the card keeping one size. */
+.zone-card.tight{ width:104px; padding:4px 6px; border-radius:8px; }
+.zone-card.tight .zc-label{ font-size:11px; letter-spacing:.03em; }
+.zone-card.tight .zc-count{ font-size:9px; margin-top:2px; }
+.zone-card.mini{ width:max-content; max-width:96px; padding:3px 6px; border-radius:7px; }
+.zone-card.mini .zc-label{ display:none; }
+.zone-card.mini .zc-short{ display:block; font:700 10px "Barlow Condensed",sans-serif;
+                           letter-spacing:.04em; text-transform:uppercase; white-space:nowrap; }
+.zone-card.mini .zc-count{ display:none; }
 .zone-tip{ font-family:"Public Sans",sans-serif; }
 
 /* while the chooser is up, the river furniture would just be noise */
@@ -305,4 +321,19 @@ body.zones-open #safety{ display:none !important; }
 body.zones-open .leaflet-pane.riversPane,
 body.zones-open .leaflet-marker-pane,
 body.zones-open .riv-label{ opacity:.25; transition:opacity .25s; }
+/* …and they mustn't take the click either. Gauge dots and access markers
+   live in Leaflet's marker pane at z-index 600, above the zone pane, so
+   while the chooser is up a tap aimed at a zone was landing on whatever
+   river furniture happened to be under it and opening that river's sheet.
+   Zone cards are markers in zonePane, so they keep their clicks. */
+body.zones-open .leaflet-pane.riversPane,
+body.zones-open .leaflet-pane.landPane,
+body.zones-open .leaflet-marker-pane,
+body.zones-open .riv-label{ pointer-events:none; }
+/* Leaflet marks every interactive marker and path pointer-events:auto, and
+   a child that opts back in is hit-tested even when its pane says none —
+   so the children have to be named too. */
+body.zones-open .leaflet-marker-pane > *,
+body.zones-open .leaflet-pane.riversPane path,
+body.zones-open .leaflet-pane.landPane path{ pointer-events:none !important; }
 body.zones-open .leaflet-pane.zonePane{ opacity:1; }
