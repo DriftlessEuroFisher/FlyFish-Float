@@ -454,11 +454,26 @@ const isMulti = c => Array.isArray(c[0]) && Array.isArray(c[0][0]);
 const flatCoords = c => isMulti(c) ? c.flat() : c;
 function midCoord(c){ const f = flatCoords(c); return f[Math.floor(f.length/2)]; }
 
+/* Where a state agency publishes a regulation class for a stream, that class
+   drives the line colour instead of the river's own arbitrary hue — on trout
+   water the rules you fish under matter more than telling two adjacent creeks
+   apart. Currently populated for the Iowa DNR's northeast Driftless streams;
+   any river without a troutClass keeps its own colour. */
+const TROUT_CLASS = {
+  restrictive:{color:"#7b2d8e", label:"Restrictive regulations"},
+  wild:       {color:"#0e6f7d", label:"Fingerling / natural reproduction"},
+  stocked:    {color:"#a8552a", label:"Catchable stocked"},
+};
+function riverColor(r){
+  const c = r.troutClass && TROUT_CLASS[r.troutClass];
+  return c ? c.color : r.color;
+}
+
 const riverLayers = {}, rampMarkers = {}, gaugeDots = {};
 let highlight = null;
 
 RIVERS.forEach(r=>{
-  const line = L.polyline(r.coords,{color:r.color, weight:4.5, opacity:.92,
+  const line = L.polyline(r.coords,{color:riverColor(r), weight:4.5, opacity:.92,
     lineCap:"round", lineJoin:"round", smoothFactor:1.2, pane:"riversPane"}).addTo(map);
   line.on("click",()=>openRiver(r.id));
   const mid = midCoord(r.coords);
@@ -754,6 +769,13 @@ function nhdSegments(j){
 async function loadRealRiver(r){
   const layer = riverLayers[r.id];
   if(!layer || layer.real || layer.tried) return;
+  /* Geometry from a state fisheries agency outranks NHD and must not be
+     overwritten by it. NHD draws the whole creek; the DNR layer draws the
+     reach that is actually designated trout water, which is the reach you
+     may fish. It also disambiguates names NHD can't — a plain
+     "BEAR CREEK" lookup in this corner of Iowa can match any of four
+     different Bear Creeks. */
+  if(r.geom === "iadnr"){ layer.real = true; layer.tried = true; return; }
   layer.tried = true;
   const ck = "nhd:"+r.id;
   const cached = store.get(ck);
@@ -859,7 +881,7 @@ let curRiver = null;
 async function openRiver(id, focusGauge){
   const r = RIVERS.find(x=>x.id===id); if(!r) return;
   curRiver = id;
-  $("#sw").style.background = r.color;
+  $("#sw").style.background = riverColor(r);
   $("#sh-title").textContent = r.name;
   const stateName = {ID:"Idaho", WY:"Wyoming", IA:"Iowa", MN:"Minnesota", WI:"Wisconsin", IL:"Illinois"}[r.state] || r.state;
   $("#sh-sub").textContent = r.region==="driftless" ? stateName+" · Driftless Area" : r.region==="northshore" ? stateName+" · North Shore" : stateName;
@@ -884,6 +906,20 @@ function renderSheet(r){
   }
 
   h += `<div class="secthead">Fishing notes</div><div class="fishnote">🎣 ${r.fish}</div>`;
+
+  /* Regulation class, straight from the state's own trout-stream layer.
+     The special-regulation text is reproduced verbatim rather than
+     paraphrased — on a catch-and-release or artificial-only stretch the
+     exact wording is the thing that keeps you legal. */
+  if(r.troutClass){
+    const tc = TROUT_CLASS[r.troutClass];
+    h += `<div class="secthead">Trout regulations</div><div class="fishnote">`+
+      `<span class="badge" style="background:${tc.color}">${tc.label}</span>`+
+      (r.wildTrout ? ` <span style="font-size:11.5px">Wild trout present: <b>${r.wildTrout}</b></span>` : "")+
+      (r.troutRegs ? `<div style="margin-top:8px"><b>Special regulations:</b> ${r.troutRegs}</div>` : "")+
+      `<div style="font-size:10.5px;color:var(--txt-dim);margin-top:8px">Classification and any special-regulation wording come from the Iowa DNR trout-stream layer. Regulations change — confirm against the current Iowa DNR trout regulations before you fish.</div>`+
+      `</div>`;
+  }
 
   const secs = SECTIONS.filter(s=>s.river===r.id && passFilter(s));
   const allSecs = SECTIONS.filter(s=>s.river===r.id);
@@ -1062,7 +1098,7 @@ function riverVisible(r){
 function applyFilters(){
   RIVERS.forEach(r=>{
     const on = riverVisible(r);
-    riverLayers[r.id].line.setStyle({color:on?r.color:"#9aa49b", opacity:on?0.9:0.35, weight:on?5:3});
+    riverLayers[r.id].line.setStyle({color:on?riverColor(r):"#9aa49b", opacity:on?0.92:0.35, weight:on?4.5:3});
   });
   syncMarkers();
   if(curRiver) renderSheet(RIVERS.find(r=>r.id===curRiver));

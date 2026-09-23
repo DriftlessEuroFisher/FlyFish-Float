@@ -39,7 +39,7 @@ like an app, not a browser tab.
 
 ## Rivers covered
 
-181 rivers. Full list and gauge IDs live in `js/rivers-data.js`; this file
+226 rivers. Full list and gauge IDs live in `js/rivers-data.js`; this file
 doesn't duplicate it since the code is the source of truth. Rivers carry a
 `region` field — `"driftless"` and `"northshore"` on the two small-stream
 sub-regions, absent on the original western rivers *and* on the two
@@ -61,14 +61,55 @@ paddling system rather than trout wade-fishing — same data model, different
 character. They carry a low-head-dam safety note in the UI (a real,
 documented hazard on these rivers) that no other region needs.
 
-**Driftless (72).** 20 IA, 21 MN, 30 WI, 1 IL. Spring-fed limestone trout
+### Northeast Iowa comes from the Iowa DNR, not NHD
+
+The NE Iowa trout streams were rebuilt from the **Iowa DNR Fishing Atlas**
+(`programs.iowadnr.gov/geospatial/…/Recreation/fishing/MapServer` layer 4,
+"Trout Streams"). 65 streams now, up from 20 — the app was missing about
+two thirds of the designated trout water in those counties.
+
+Use the DNR layer rather than NHD for this region, for three reasons:
+
+- **NHD doesn't know which water you may fish.** The DNR layer draws the
+  reach that is actually *designated trout water*; NHD draws the whole
+  creek regardless.
+- **NHD can't tell these creeks apart.** A plain `BEAR CREEK` lookup in
+  these counties can match any of four — the DNR disambiguates them by
+  county (Bear Creek, Bear Creek (Allamakee), (Clayton), (Fayette), plus
+  North, South and Middle Bear).
+- **It carries the regulations.** `TYPE` is the DNR's own three-way
+  regulation class, and `SR_INFO` is the special-regulation wording.
+
+So rivers sourced this way carry `geom:"iadnr"`, and **`loadRealRiver()`
+refuses to snap them to NHD** — state fisheries geometry outranks NHD here.
+Don't remove that guard; without it the background sweep quietly replaces
+the designated reach with the wrong Bear Creek.
+
+Each carries `troutClass` (`restrictive` / `wild` / `stocked`), `wildTrout`
+(species actually present) and, where there are special regulations,
+`troutRegs` — reproduced **verbatim**, because on a catch-and-release or
+artificial-only stretch the exact wording is what keeps you legal. The line
+colour is driven by `troutClass` via `riverColor()` rather than the river's
+own hue: on trout water the rules matter more than telling two neighbouring
+creeks apart. Rivers with no `troutClass` keep their own colour.
+
+Two corrections that came out of this, both of which the app previously had
+wrong: **South Bear Creek** ran to the wrong ground entirely and stopped
+short of its confluence — South Bear and North Bear join and continue as
+**Bear Creek**, which was missing outright. And **Spring Branch Creek** is
+in Delaware County near Manchester (a restrictive-regulation stream), not
+near Elkader as its blurb claimed. **Village Creek** is kept but is *not*
+on the DNR's designated trout list, and now says so rather than implying
+trout water.
+
+**Driftless (117).** 65 IA (see above), 21 MN, 30 WI, 1 IL. Spring-fed limestone trout
 streams across the unglaciated region: the Upper Iowa and the Allamakee /
 Clayton county creeks, the Root River system and the Whitewater in SE
 Minnesota, Vernon County's coulees and the Kickapoo watershed, the Grant
 County spring creeks, the Dane County limestone streams, and the
 Kinnickinnic / Rush / Trimbelle cluster up in Pierce County.
 
-Only **19 of the 72** Driftless rivers have a USGS gauge. That's the
+Only 19 Driftless rivers have a USGS gauge — almost none of the NE Iowa creeks do. That's the
 defining constraint of the region and it drove two deliberate decisions:
 
 - **No borrowed gauges.** A stream with no gauge gets `gauges: []` and
@@ -228,8 +269,9 @@ these are all actively gauged and carry no `region` tag.
 - Core app: Leaflet map, bottom sheet, live USGS flow fetch/render, the
   `statusOf()` relative-to-median status bucketing, home-screen install
   (`manifest.json` + icons).
-- All 181 rivers in place (49 West, 7 Central Iowa, 72 Driftless, 24 North
-  Shore, 13 East-Central MN/St. Croix, 16 Lakes Country/Northwoods), with
+- All 226 rivers in place (49 West, 7 Central Iowa, 117 Driftless incl. 65
+  NE-Iowa trout streams from the DNR, 24 North Shore, 13 East-Central
+  MN/St. Croix, 16 Lakes Country/Northwoods), with
   gauges, ramps/access points, blurbs, and region-aware copy in the sheet.
 - Ungauged-river handling: the "Ungauged" card, `nearestGaugedRiver()`
   regional-wetness fallback with the cross-state-line distance penalty —
