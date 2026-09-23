@@ -1,7 +1,7 @@
 {
-  "name": "River Conditions — ID, WY & Central Iowa Fly Fishing & Float Map",
-  "short_name": "River Conditions",
-  "description": "Live USGS flow conditions for Idaho, Wyoming, and Central Iowa water trail rivers.",
+  "name": "DeLanoit's Fly Routes",
+  "short_name": "Fly Routes",
+  "description": "Live USGS flow conditions, public land and access for the trout and float rivers of Idaho, Wyoming, Iowa, Minnesota and Wisconsin.",
   "start_url": "index.html",
   "display": "standalone",
   "orientation": "portrait",

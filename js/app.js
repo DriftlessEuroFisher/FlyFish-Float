@@ -433,13 +433,35 @@ function syncLabels(){
 }
 map.on("zoomend", syncLabels);
 
+/* Stacking order. Everything vector used to share Leaflet's default
+   overlayPane, where paint order is just DOM order — and because the public
+   land layer is cleared and re-added on every map move, its polygons ended
+   up drawn ON TOP of the rivers, washing the water out behind a green wash.
+   Explicit panes fix the order for good:
+     landPane   390  public land, under everything
+     riversPane 410  river lines, over the land, under the markers (600)
+   The halo on riversPane lives in css/styles.css. */
+map.createPane("landPane").style.zIndex = 390;
+map.createPane("riversPane").style.zIndex = 410;
+
+/* A river's `coords` is either a single [lat,lng] list or — for rivers
+   snapped to real NHD linework — a list of those, one per channel segment.
+   Leaflet draws both, but the rest of the app wants a flat point list to
+   measure against, so everything that isn't the polyline itself goes
+   through here. Keeping the segments separate matters: chaining them into
+   one line draws a false channel across every gap between them. */
+const isMulti = c => Array.isArray(c[0]) && Array.isArray(c[0][0]);
+const flatCoords = c => isMulti(c) ? c.flat() : c;
+function midCoord(c){ const f = flatCoords(c); return f[Math.floor(f.length/2)]; }
+
 const riverLayers = {}, rampMarkers = {}, gaugeDots = {};
 let highlight = null;
 
 RIVERS.forEach(r=>{
-  const line = L.polyline(r.coords,{color:r.color,weight:5,opacity:.9,lineCap:"round"}).addTo(map);
+  const line = L.polyline(r.coords,{color:r.color, weight:4.5, opacity:.92,
+    lineCap:"round", lineJoin:"round", smoothFactor:1.2, pane:"riversPane"}).addTo(map);
   line.on("click",()=>openRiver(r.id));
-  const mid = r.coords[Math.floor(r.coords.length/2)];
+  const mid = midCoord(r.coords);
   const lbl = L.marker(mid,{interactive:false,icon:L.divIcon({className:"riv-label",html:r.name.split("—")[0].split("(")[0].trim(),iconSize:null})}).addTo(map);
   riverLayers[r.id]={line,lbl,river:r};
 });
@@ -618,6 +640,7 @@ async function loadPublicLand(){
     const j = await fetchJSON(url, 20000);
     publicLand.clearLayers();
     L.geoJSON(j, {
+      pane: "landPane",
       style: f => {
         const c = PAD_CLASS[padClass(f.properties)];
         // Restricted parcels get a dashed outline — that's a real gate
@@ -737,7 +760,7 @@ async function loadRealRiver(r){
   if(cached && cached.g && (Date.now()-(cached.t||0) < 1000*60*60*24*30)){
     layer.line.setLatLngs(cached.g); layer.real = true; return;
   }
-  const bb = bboxOf(r.coords);
+  const bb = bboxOf(flatCoords(r.coords));
   // ' is the SQL string delimiter — doubling escapes it. Stripping it (the old
   // behaviour) turned "Coeur d'Alene River" into a name that matches nothing.
   const kw = riverKeyword(r).replace(/%/g,"").replace(/'/g,"''");
@@ -782,7 +805,7 @@ const GEOM_CONCURRENCY = 5, GEOM_GAP = 60;
 let geomQueue = null, geomRunning = 0;
 function visibleFirst(list){
   const b = map.getBounds();
-  const seen = r => r.coords.some(p => b.contains(p));
+  const seen = r => flatCoords(r.coords).some(p => b.contains(p));
   return list.slice().sort((a, c) => (seen(c) ? 1 : 0) - (seen(a) ? 1 : 0));
 }
 /* The National Map drops a fair share of requests when several are in
@@ -935,7 +958,7 @@ function flowCardHTML(key, riverId){
    nearest gauged river as a regional wetness read, clearly labelled as
    a different stream. */
 function nearestGaugedRiver(r){
-  const mid = r.coords[Math.floor(r.coords.length/2)];
+  const mid = midCoord(r.coords);
   let best = null, bestD = Infinity;
   RIVERS.forEach(o=>{
     if(!o.primaryGauge || o.id===r.id) return;

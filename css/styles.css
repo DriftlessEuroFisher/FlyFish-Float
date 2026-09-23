@@ -90,6 +90,16 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .leaflet-control-zoom{margin-top:104px !important}
 
 /* river labels */
+/* River lines sit on a USGS topo sheet that is already full of thin blue
+   hydrography, brown contours and black section lines. A soft white halo
+   separates the coloured line from all of that without making it heavier —
+   the cartographer's casing trick. One filter on the pane is far cheaper on
+   a phone than giving 181 polylines a second casing path each. */
+.leaflet-pane.riversPane > svg{
+  filter: drop-shadow(0 0 1.6px rgba(255,255,255,.95))
+          drop-shadow(0 0 3px rgba(255,255,255,.55));
+}
+
 .riv-label{
   background:none;border:none;box-shadow:none;
   font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:13px;

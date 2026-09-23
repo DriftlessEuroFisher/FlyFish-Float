@@ -1,4 +1,4 @@
-# River Conditions — ID, WY, Iowa, Minnesota & Wisconsin — Fly Fishing / Float Map
+# DeLanoit's Fly Routes — ID, WY, Iowa, Minnesota & Wisconsin
 
 A single-page, no-build, mobile-first web app: a Leaflet map of Idaho &
 Wyoming trout rivers, the Central Iowa (Des Moines area) state water
@@ -25,6 +25,13 @@ like an app, not a browser tab.
 - `js/rivers-data.js` — the file to edit when adding a river, fixing a gauge
   ID, or setting a good-flow range. Contains `GAUGES`, `GAUGE_POS`, `RIVERS`,
   `RAMPS`, `SECTIONS`, `WADE_ONLY`.
+
+  **`coords` takes two shapes.** Either a flat `[[lat,lng],…]` list, or —
+  for a river whose channel comes back from NHD in disconnected pieces — a
+  list of those, one per piece. Leaflet draws both. Anything that isn't the
+  polyline itself must go through `flatCoords()` / `midCoord()` in
+  `js/app.js`; don't index `r.coords[0]` directly. Segments are kept apart
+  on purpose: welding them draws a channel across a gap that isn't there.
 - `js/app.js` — fetch/render/status logic. Talks directly to the USGS OGC API
   (`api.waterdata.usgs.gov`) client-side — no backend, no API key.
 - `manifest.json` + `icons/` — home-screen install support.
@@ -234,6 +241,29 @@ these are all actively gauged and carry no `region` tag.
   93 seconds to cover 181 rivers, long enough that the straight fallback
   lines looked like the finished map.
 
+  **127 of 181 rivers now have real channel geometry baked into
+  `rivers-data.js`**, so the map is correct the moment it loads and correct
+  offline — which is the actual use case, a phone in a parking lot with
+  patchy service. The runtime snap is now refinement, not the thing
+  correctness depends on. The remaining 54 keep anchored placeholder lines
+  and still upgrade at runtime when The National Map is healthy.
+
+  Baking it took three attempts and the two failures are worth knowing:
+  chaining every NHD segment into one line and keeping the longest run
+  stranded the anchors of long rivers (92/144 rejected); replacing the
+  cluster step with a flat distance filter then accepted a Coon Creek 18 km
+  from the right one. What works is *both* — pick the connected cluster
+  nearest the river's own anchors, then keep its segments separate. NHD
+  splits a river at every confluence, so those segments then need welding
+  where their endpoints genuinely touch: the Salmon arrived as 1,214 pieces
+  and 3,004 points, and across all rivers that collapsed from 11,893
+  segments to 162 runs, 42k points to 12k.
+
+  Validation is split by anchor type, which both earlier attempts got wrong
+  by treating them alike: a USGS gauge sits *on* the channel and is
+  authoritative (tight tolerance), while a RAMPS point is a parking area and
+  on a system with named forks can legitimately sit on a tributary (loose).
+
   **`hydro.nationalmap.gov` is periodically unreliable**, and it matters
   because a dropped call leaves a river drawn straight. In the browser the
   failure shows up confusingly as a *CORS error* — an error response from
@@ -398,6 +428,21 @@ are worth calibrating first.
 ## Conventions
 
 - No frameworks, no build tooling — keep it editable by hand.
+- **Vector stacking is explicit, via panes.** Everything used to share
+  Leaflet's default overlayPane, where paint order is DOM order — and since
+  the public land layer is cleared and re-added on every map move, its
+  polygons ended up drawn *over* the rivers. `landPane` (390) sits under
+  `riversPane` (410), which sits under the markers (600). The white halo on
+  the river lines is one `drop-shadow` filter on `riversPane` in
+  `css/styles.css`, not a second casing path per river — 181 extra polylines
+  would cost real frames on a phone.
+- **The icon is generated, not hand-drawn.** A Snell Roundhand capital D
+  with a dry fly tied onto the letter: the thread body wraps the D's own
+  outer downstroke and the hook bend continues where that stroke ends, so
+  the letter's tail *is* the hook. The fly's coordinates were measured off
+  the rasterised glyph rather than guessed, so they move if the font or
+  size changes. Ground is flat, deliberately: a radial gradient looked
+  richer but pushed the 512 PNG to ~256KB against 65KB flat.
 - The default basemap is **USGS "US Topo"** (`basemap.nationalmap.gov`,
   service `USGSTopo`) — the same quadrangle cartography as the paper
   sheets: cream ground, blue hydrography in italic serif, green public
