@@ -391,6 +391,14 @@ const REGIONS = [
   ["Tofte / Lutsen (Temperance–Cascade)", [47.65,-90.70,10]],
   ["Grand Marais to Grand Portage", [47.85,-90.05,9]],
   ["Bois Brule (WI)", [46.55,-91.58,11]],
+  ["── Door Peninsula ──", null],
+  ["Door County — whole peninsula", [44.95,-87.25,9]],
+  ["Jacksonport (Hibbards / Logan)", [44.99,-87.20,12]],
+  ["Baileys Harbor / Heins", [45.02,-87.16,12]],
+  ["Ephraim / Sister Bay", [45.14,-87.17,12]],
+  ["Little Sturgeon (Keyes Creek)", [44.77,-87.58,12]],
+  ["Ahnapee River / Algoma", [44.66,-87.47,11]],
+  ["Mink River / Rowleys Bay", [45.24,-87.05,12]],
   ["── East-Central MN / St. Croix ──", null],
   ["Stillwater / St. Croix", [45.15,-92.75,10]],
   ["Twin Cities (Mississippi/Minnesota)", [44.98,-93.20,10]],
@@ -427,7 +435,9 @@ regionCtl.addTo(map);
 function syncLabels(){
   const z = map.getZoom();
   Object.values(riverLayers).forEach(l => {
-    const min = l.river && (l.river.region === "driftless" || l.river.region === "northshore") ? 10 : 8;
+    const tight = l.river && (l.river.region === "driftless" || l.river.region === "northshore"
+                              || l.river.region === "doorcounty");
+    const min = tight ? 10 : 8;
     l.lbl.setOpacity(z >= min ? 1 : 0);
   });
 }
@@ -459,10 +469,22 @@ function midCoord(c){ const f = flatCoords(c); return f[Math.floor(f.length/2)];
    water the rules you fish under matter more than telling two adjacent creeks
    apart. Currently populated for the Iowa DNR's northeast Driftless streams;
    any river without a troutClass keeps its own colour. */
+/* Two states, two vocabularies, deliberately kept apart. Iowa's classes are
+   a *regulation* class (what you may do); Wisconsin's I/II/III is a
+   *biological* classification (whether the trout reproduce there). Folding
+   them into one set of three would have meant labelling a Wisconsin stream
+   with an Iowa rule it isn't under. The colours are a family — teal means
+   wild fish either way — but the wording is each state's own. */
 const TROUT_CLASS = {
   restrictive:{color:"#7b2d8e", label:"Restrictive regulations"},
   wild:       {color:"#0e6f7d", label:"Fingerling / natural reproduction"},
   stocked:    {color:"#a8552a", label:"Catchable stocked"},
+  wi1:        {color:"#0e6f7d", label:"Class I — wild, self-sustaining"},
+  wi2:        {color:"#5a9ea8", label:"Class II — partial natural reproduction"},
+};
+const TROUT_SOURCE = {
+  iadnr:{agency:"Iowa DNR",      what:"trout-stream layer",          regs:"Iowa DNR trout regulations"},
+  wdnr: {agency:"Wisconsin DNR", what:"classified trout water layer", regs:"Wisconsin DNR trout regulations"},
 };
 function riverColor(r){
   const c = r.troutClass && TROUT_CLASS[r.troutClass];
@@ -774,8 +796,9 @@ async function loadRealRiver(r){
      reach that is actually designated trout water, which is the reach you
      may fish. It also disambiguates names NHD can't — a plain
      "BEAR CREEK" lookup in this corner of Iowa can match any of four
-     different Bear Creeks. */
-  if(r.geom === "iadnr"){ layer.real = true; layer.tried = true; return; }
+     different Bear Creeks, and there is another one in Door County. */
+  // "iadnr" (NE Iowa) or "widnr" (Door Peninsula) — either way, leave it alone
+  if(r.geom){ layer.real = true; layer.tried = true; return; }
   layer.tried = true;
   const ck = "nhd:"+r.id;
   const cached = store.get(ck);
@@ -884,7 +907,9 @@ async function openRiver(id, focusGauge){
   $("#sw").style.background = riverColor(r);
   $("#sh-title").textContent = r.name;
   const stateName = {ID:"Idaho", WY:"Wyoming", IA:"Iowa", MN:"Minnesota", WI:"Wisconsin", IL:"Illinois"}[r.state] || r.state;
-  $("#sh-sub").textContent = r.region==="driftless" ? stateName+" · Driftless Area" : r.region==="northshore" ? stateName+" · North Shore" : stateName;
+  const subRegion = {driftless:" · Driftless Area", northshore:" · North Shore",
+                     doorcounty:" · Door Peninsula"}[r.region] || "";
+  $("#sh-sub").textContent = stateName + subRegion;
   sheet.classList.add("open");
   loadRealRiver(r);                    // snap this river to exact USGS linework
   renderSheet(r);                      // instant paint with whatever we have
@@ -913,11 +938,12 @@ function renderSheet(r){
      exact wording is the thing that keeps you legal. */
   if(r.troutClass){
     const tc = TROUT_CLASS[r.troutClass];
-    h += `<div class="secthead">Trout regulations</div><div class="fishnote">`+
+    const src = TROUT_SOURCE[r.troutSource || "iadnr"];
+    h += `<div class="secthead">Trout class &amp; regulations</div><div class="fishnote">`+
       `<span class="badge" style="background:${tc.color}">${tc.label}</span>`+
       (r.wildTrout ? ` <span style="font-size:11.5px">Wild trout present: <b>${r.wildTrout}</b></span>` : "")+
-      (r.troutRegs ? `<div style="margin-top:8px"><b>Special regulations:</b> ${r.troutRegs}</div>` : "")+
-      `<div style="font-size:10.5px;color:var(--txt-dim);margin-top:8px">Classification and any special-regulation wording come from the Iowa DNR trout-stream layer. Regulations change — confirm against the current Iowa DNR trout regulations before you fish.</div>`+
+      (r.troutRegs ? `<div style="margin-top:8px"><b>Regulations:</b> ${r.troutRegs}</div>` : "")+
+      `<div style="font-size:10.5px;color:var(--txt-dim);margin-top:8px">Classification and any special-regulation wording come from the ${src.agency} ${src.what}. Regulations change — confirm against the current ${src.regs} before you fish.</div>`+
       `</div>`;
   }
 
@@ -938,6 +964,9 @@ function renderSheet(r){
   }
   if(r.region==="northshore"){
     h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🌊 North Shore streams drop fast and cold straight off the ridge — spring steelhead runs are driven by snowmelt timing more than the calendar, so check current run reports before making the drive. Most access is <b>state park or DNR wayside</b> parking (many require a vehicle permit); a Minnesota <b>trout stamp</b> is required in addition to a fishing license. The Pigeon River and Grand Portage River cross into tribal or international jurisdiction — check current Grand Portage Band and Ontario licensing before fishing those reaches.</p>`;
+  }
+  if(r.region==="doorcounty"){
+    h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🌊 Door County has <b>no USGS gauge anywhere in the county</b> — every stream here is ungauged on purpose, and the nearest gauged water is a long way off. These creeks are small and rain-driven: judge them on the water. Almost all of them are <b>Great Lakes tributary</b> water, which carries its own season, a 10" minimum, a hook-gap limit and a <b>night-fishing closure</b> from September 15 — read the current Wisconsin regs before you go. Access is county park, state park and land-trust ground rather than DNR easement; there are no angling easements on the peninsula.</p>`;
   }
   if(r.state==="IA" && r.region!=="driftless"){
     h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">⚠ Central Iowa rivers have low-head dams — the "drowning machine" recirculating hydraulic at the base is dangerous at almost any flow. Scout unfamiliar stretches and check <a href="https://www.iowawhitewater.org/lhd/LHDrivers.html" target="_blank" rel="noopener">Iowa Whitewater's low-head dam list</a> before you put in.</p>`;
@@ -1022,7 +1051,7 @@ function noGaugeHTML(r){
        of a *different* stream several valleys over — it reads as this creek's
        level whether or not the caption says otherwise. The raw number stays
        as a regional-wetness hint; the judgement call doesn't. */
-    const showClass = r.region !== "driftless";
+    const showClass = r.region !== "driftless" && r.region !== "doorcounty";
     const badge = showClass
       ? ` <span class="badge" style="background:${st.color};vertical-align:middle">${st.label}</span>`
       : "";
@@ -1030,7 +1059,13 @@ function noGaugeHTML(r){
       That's a <i>different stream</i> — treat it only as a rough read on how wet the region is, not as this creek's flow.
       <button class="zoom" data-river="${near.id}" style="margin-top:8px">Open ${near.name.split("—")[0].trim()} →</button></div>`;
   }
-  const ungaugedNote = r.region==="northshore"
+  /* Door County has no gauge at all — not on these creeks, not anywhere in
+     the county — and nearestGaugedRiver() stays inside a region, so there is
+     deliberately no proxy reading offered here. The note says so rather than
+     leaving an empty card that looks like a loading failure. */
+  const ungaugedNote = r.region==="doorcounty"
+    ? "There is <b>no USGS discharge gauge anywhere in Door County</b> — not on this creek and not on a neighbouring one — so there is no number to show and nothing close enough to borrow as a regional read. Nearly all of this water is short and rain-driven: <b>clarity and recent rain</b> are the whole story. On the Great Lakes tributaries the other half of the question is whether fish have run yet, which is driven by lake temperature and a rise in the creek, not by the calendar — a soaking rain in spring or from mid-September on is what turns them on."
+    : r.region==="northshore"
     ? "Most North Shore streams are too small to gauge — there's no live number for this one, and the app doesn't invent one. Judge it on arrival: <b>clarity</b> is the thing that matters most. These are rain- and snowmelt-driven freestone streams, not spring creeks — they blow out fast after a heavy rain or a warm melt day and can take several days to clear and drop back into shape, longer than a Driftless spring creek would."
     : "Most Driftless spring creeks are too small to gauge — there's no live number for this one, and the app doesn't invent one. Judge it on arrival: <b>clarity</b> is the thing that matters most. If you can see the bottom in two feet of water it's on; chocolate-brown after a storm means give it a day or two. Spring-fed creeks clear far faster than the bigger freestone rivers, and often fish well the day after rain that has the mainstems blown out.";
   return `<div class="flowcard">

@@ -6987,6 +6987,265 @@ const RIVERS = [
     [45.17867,-89.69209],[45.17767,-89.69070]
   ]
 },
+
+/* ---- Door Peninsula (Door County, WI) ----
+   Eight classified trout streams plus the Ahnapee and the Mink. Geometry for
+   the eight is the WDNR's own classified-trout-water line — the reach that is
+   actually trout water under trout regulations — and the trout class and the
+   regulation wording come from the same agency's layers. The Ahnapee and the
+   Mink aren't classified trout water and use NHD linework instead.
+   None of these has a USGS gauge: there is not one discharge station in Door
+   County, so every entry here is deliberately ungauged. */
+{
+  id:"hibbardscr", name:"Hibbards Creek", color:"#0e6f7d",
+  state:"WI", region:"doorcounty", gauges:[], primaryGauge:null,
+  troutClass:"wi2", troutSource:"wdnr", geom:"widnr",
+  troutRegs:"Great Lakes tributary regulations: 5 trout and salmon in total, minimum length limit 10\". From September 15 to the first Saturday of the following May you may not use hooks with a gap larger than one-half inch from point to shank. From Sep 15 to Dec 31 fishing by any method is prohibited from one-half hour after sunset to one-half hour before sunrise; from Jan 1 to the first Saturday in May hook-and-line fishing is prohibited in those same night hours.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The longest piece of classified trout water on the Door Peninsula — 5.3 miles of Class II stream from the mouth up to Honold Road, running out of the woods west of Jacksonport. The WDNR carries it as \"Hibbard Creek\"; locally it's Hibbards.",
+  fish:"Great Lakes tributary rules apply, which is the tell — this is run water. Fish move up from Lake Michigan rather than living here all year, so it's worth the drive after a rain in spring or late fall and not much of a stream in August. Class II means the DNR records some natural reproduction as well.",
+  coords:[
+    [45.02527,-87.20290],[45.02494,-87.20310],[45.02503,-87.20414],[45.02461,-87.20421],
+    [45.02452,-87.20471],[45.02435,-87.20479],[45.02383,-87.20450],[45.02375,-87.20353],
+    [45.02320,-87.20339],[45.02305,-87.20270],[45.02205,-87.20307],[45.02164,-87.20252],
+    [45.02182,-87.20199],[45.02150,-87.20119],[45.02085,-87.20129],[45.02067,-87.20180],
+    [45.01993,-87.20164],[45.01937,-87.20261],[45.01866,-87.20271],[45.01802,-87.20254],
+    [45.01783,-87.20238],[45.01749,-87.20110],[45.01659,-87.20031],[45.01593,-87.20024],
+    [45.01552,-87.19996],[45.01451,-87.19815],[45.01384,-87.19771],[45.01369,-87.19855],
+    [45.01346,-87.19883],[45.01332,-87.19887],[45.01303,-87.19842],[45.01251,-87.19834],
+    [45.01226,-87.19905],[45.01150,-87.19952],[45.01097,-87.20128],[45.01002,-87.20090],
+    [45.00979,-87.20145],[45.00930,-87.20115],[45.00958,-87.20222],[45.00901,-87.20201],
+    [45.00820,-87.20232],[45.00771,-87.20196],[45.00723,-87.20109],[45.00703,-87.20026],
+    [45.00649,-87.20023],[45.00606,-87.20053],[45.00579,-87.19981],[45.00501,-87.19920],
+    [45.00459,-87.19914],[45.00450,-87.19803],[45.00415,-87.19791],[45.00335,-87.19806],
+    [45.00311,-87.19758],[45.00262,-87.19728],[45.00184,-87.19748],[45.00084,-87.19737],
+    [44.99951,-87.19757],[44.99927,-87.19682],[44.99850,-87.19702],[44.99795,-87.19661],
+    [44.99761,-87.19666],[44.99720,-87.19643],[44.99707,-87.19679],[44.99666,-87.19662],
+    [44.99658,-87.19730],[44.99639,-87.19734],[44.99596,-87.19606],[44.99496,-87.19646],
+    [44.99426,-87.19525],[44.99297,-87.19629],[44.99209,-87.19593],[44.99128,-87.19612],
+    [44.99064,-87.19566],[44.98961,-87.19411],[44.98891,-87.19377],[44.98844,-87.19396],
+    [44.98818,-87.19469],[44.98786,-87.19473],[44.98589,-87.19274],[44.98554,-87.19199],
+    [44.98547,-87.19089],[44.98516,-87.19016],[44.98519,-87.18994],[44.98564,-87.18966],
+    [44.98585,-87.18910],[44.98554,-87.18815],[44.98561,-87.18760],[44.98624,-87.18662],
+    [44.98672,-87.18626],[44.98697,-87.18564],[44.98760,-87.18499],[44.98802,-87.18494],
+    [44.98836,-87.18395],[44.98893,-87.18341],[44.98892,-87.18207],[44.98847,-87.18195],
+    [44.98787,-87.18138],[44.98798,-87.18092],[44.98772,-87.18091],[44.98781,-87.18062],
+    [44.98759,-87.18043],[44.98758,-87.17997],[44.98733,-87.17998],[44.98709,-87.18046],
+    [44.98694,-87.18043],[44.98665,-87.17984],[44.98637,-87.17957],[44.98622,-87.17986],
+    [44.98609,-87.17948],[44.98563,-87.17915],[44.98582,-87.17885],[44.98617,-87.17877],
+    [44.98633,-87.17819],[44.98670,-87.17792],[44.98681,-87.17707],[44.98707,-87.17663],
+    [44.98736,-87.17679],[44.98795,-87.17538],[44.98679,-87.17516],[44.98648,-87.17485]
+  ]
+},
+{
+  id:"heinscr", name:"Heins Creek", color:"#0e6f7d",
+  state:"WI", region:"doorcounty", gauges:[], primaryGauge:null,
+  troutClass:"wi2", troutSource:"wdnr", geom:"widnr",
+  troutRegs:"Great Lakes tributary regulations: 5 trout and salmon in total, minimum length limit 10\". From September 15 to the first Saturday of the following May you may not use hooks with a gap larger than one-half inch from point to shank. From Sep 15 to Dec 31 fishing by any method is prohibited from one-half hour after sunset to one-half hour before sunrise; from Jan 1 to the first Saturday in May hook-and-line fishing is prohibited in those same night hours.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A short, sandy creek between Kangaroo Lake and Lake Michigan north of Jacksonport, classified Class II over its entire length. It crosses Highway 57 and drops through dune country to the beach — the whole classified reach is barely half a mile.",
+  fish:"A spring run stream: steelhead push in from Lake Michigan on high water, and the window closes fast once flows drop. Great Lakes tributary regulations, including the night-fishing closure, apply the length of it.",
+  coords:[
+    [45.01717,-87.15306],[45.01685,-87.15247],[45.01710,-87.15127],[45.01698,-87.15022],
+    [45.01624,-87.14865],[45.01593,-87.14743],[45.01449,-87.14553],[45.01424,-87.14351],
+    [45.01370,-87.14298],[45.01302,-87.14140],[45.01261,-87.14099],[45.01211,-87.14096]
+  ]
+},
+{
+  id:"whitefishbaycr", name:"Whitefish Bay Creek", color:"#0e6f7d",
+  state:"WI", region:"doorcounty", gauges:[], primaryGauge:null,
+  troutClass:"wi2", troutSource:"wdnr", geom:"widnr",
+  troutRegs:"Great Lakes tributary regulations: 5 trout and salmon in total, minimum length limit 10\". From September 15 to the first Saturday of the following May you may not use hooks with a gap larger than one-half inch from point to shank. From Sep 15 to Dec 31 fishing by any method is prohibited from one-half hour after sunset to one-half hour before sunrise; from Jan 1 to the first Saturday in May hook-and-line fishing is prohibited in those same night hours.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The outlet of Clark Lake, running down to Lake Michigan at Whitefish Bay below Whitefish Dunes. The DNR classifies the entire stream — mouth to Clark Lake — as Class II trout water.",
+  fish:"Lake-run fish use it in spring and fall; the lake above keeps a little water moving through it in between. Great Lakes tributary regulations apply, so mind the hook-gap rule and the night closure from September 15 on.",
+  coords:[
+    [44.92494,-87.21066],[44.92436,-87.21063],[44.92415,-87.20997],[44.92360,-87.20997],
+    [44.92347,-87.20936],[44.92310,-87.20931],[44.92290,-87.20976],[44.92226,-87.21000],
+    [44.92137,-87.21107],[44.92099,-87.21085],[44.92042,-87.21093],[44.91889,-87.21174],
+    [44.91878,-87.21215],[44.91817,-87.21285],[44.91808,-87.21350],[44.91746,-87.21338],
+    [44.91707,-87.21407],[44.91575,-87.21434],[44.91380,-87.21437],[44.91339,-87.21391],
+    [44.91269,-87.21412],[44.91216,-87.21404],[44.91158,-87.21333],[44.91110,-87.21319],
+    [44.91089,-87.21251]
+  ]
+},
+{
+  id:"logancr", name:"Logan Creek", color:"#0e6f7d",
+  state:"WI", region:"doorcounty", gauges:[], primaryGauge:null,
+  troutClass:"wi1", troutSource:"wdnr", geom:"widnr",
+  troutRegs:"Inland trout regulations: 5 trout in total of any length.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The one Door County trout stream that isn't under Great Lakes tributary rules — the DNR lists it under ordinary inland trout regulations, which says it fishes as a resident stream rather than a run. Class I in its lowest fifth of a mile, Class II for the mile and a half above that, in the woods west of Jacksonport.",
+  fish:"Class I water means wild trout that sustain themselves here without stocking. It is a small, brushy, spring-fed creek — short casts, light tippet, and the inland five-trout bag rather than the Great Lakes limits.",
+  coords:[
+    [44.94969,-87.21390],[44.95013,-87.21393],[44.95111,-87.21470],[44.95197,-87.21476],
+    [44.96240,-87.23290],[44.96368,-87.22949],[44.96363,-87.22899],[44.96292,-87.22821],
+    [44.96276,-87.22760],[44.96338,-87.22495],[44.96318,-87.22254],[44.96395,-87.22090],
+    [44.96393,-87.22013],[44.96350,-87.21911],[44.96275,-87.21875],[44.96170,-87.21869],
+    [44.96101,-87.21953],[44.95961,-87.21936],[44.95875,-87.21894],[44.95696,-87.21744],
+    [44.95576,-87.21788],[44.95530,-87.21722],[44.95339,-87.21614],[44.95225,-87.21493]
+  ]
+},
+{
+  id:"lillybaycr", name:"Lilly Bay Creek", color:"#0e6f7d",
+  state:"WI", region:"doorcounty", gauges:[], primaryGauge:null,
+  troutClass:"wi2", troutSource:"wdnr", geom:"widnr",
+  troutRegs:"Great Lakes tributary regulations: 5 trout and salmon in total, minimum length limit 10\". From September 15 to the first Saturday of the following May you may not use hooks with a gap larger than one-half inch from point to shank. From Sep 15 to Dec 31 fishing by any method is prohibited from one-half hour after sunset to one-half hour before sunrise; from Jan 1 to the first Saturday in May hook-and-line fishing is prohibited in those same night hours.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A short Class II creek running into Lake Michigan at Lilly Bay, on the stretch of shore between the Sturgeon Bay ship canal and Whitefish Dunes. The classified reach runs from the mouth up to a quarter mile north of County T.",
+  fish:"Run water again — Great Lakes tributary regulations, fish up from the lake on spring flows. Half a mile of classified stream, so treat it as one stop on a day that includes two or three of these creeks rather than a destination on its own.",
+  coords:[
+    [44.85363,-87.28315],[44.85301,-87.28300],[44.85291,-87.28360],[44.85248,-87.28422],
+    [44.85196,-87.28424],[44.85137,-87.28389],[44.84998,-87.28368],[44.84942,-87.28242],
+    [44.84948,-87.28134],[44.84919,-87.28054],[44.84915,-87.27863],[44.84881,-87.27779],
+    [44.84839,-87.27785],[44.84792,-87.27762],[44.84784,-87.27721],[44.84815,-87.27710],
+    [44.84792,-87.27628],[44.84816,-87.27629],[44.84845,-87.27599],[44.84829,-87.27547],
+    [44.84881,-87.27513],[44.84913,-87.27558],[44.84938,-87.27546],[44.84940,-87.27438],
+    [44.84970,-87.27425],[44.84973,-87.27374],[44.85025,-87.27323],[44.85043,-87.27260],
+    [44.85033,-87.27195],[44.85053,-87.27085],[44.85143,-87.26971],[44.85136,-87.26834],
+    [44.85026,-87.26744],[44.84989,-87.26739],[44.84816,-87.26843],[44.84759,-87.26839],
+    [44.84772,-87.26767],[44.84733,-87.26762],[44.84691,-87.26718]
+  ]
+},
+{
+  id:"ephraimcr", name:"Ephraim Creek", color:"#0e6f7d",
+  state:"WI", region:"doorcounty", gauges:[], primaryGauge:null,
+  troutClass:"wi2", troutSource:"wdnr", geom:"widnr",
+  troutRegs:"Great Lakes tributary regulations: 5 trout and salmon in total, minimum length limit 10\". From September 15 to the first Saturday of the following May you may not use hooks with a gap larger than one-half inch from point to shank. From Sep 15 to Dec 31 fishing by any method is prohibited from one-half hour after sunset to one-half hour before sunrise; from Jan 1 to the first Saturday in May hook-and-line fishing is prohibited in those same night hours.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Classified Class II over its entire length, dropping off the Niagara escarpment into Green Bay at Ephraim. A Green Bay side stream rather than a Lake Michigan one, but it still fishes under Great Lakes tributary rules.",
+  fish:"Small and steep. Spring is the window; the escarpment springs keep the upper end cooler than the surrounding country through summer.",
+  coords:[
+    [45.12844,-87.15434],[45.12917,-87.15476],[45.12967,-87.15566],[45.12966,-87.15623],
+    [45.12932,-87.15696],[45.12943,-87.15789],[45.13017,-87.15902],[45.13077,-87.16079],
+    [45.13112,-87.16331],[45.13174,-87.16421],[45.13190,-87.16542],[45.13177,-87.16661],
+    [45.13214,-87.16840],[45.13238,-87.16900],[45.13395,-87.16982],[45.13436,-87.17025],
+    [45.13456,-87.17284],[45.13494,-87.17304],[45.13601,-87.17301],[45.13787,-87.17471],
+    [45.13872,-87.17625],[45.13924,-87.17856],[45.14004,-87.17912],[45.14087,-87.17910],
+    [45.14161,-87.17954],[45.14207,-87.17948],[45.14275,-87.17917],[45.14371,-87.17830],
+    [45.14444,-87.17834],[45.14505,-87.17780],[45.14526,-87.17807],[45.14555,-87.17938],
+    [45.14637,-87.18011],[45.14706,-87.18044],[45.14788,-87.17997],[45.14833,-87.17934],
+    [45.14887,-87.17958]
+  ]
+},
+{
+  id:"hiddenspringscr", name:"Hidden Springs Creek", color:"#0e6f7d",
+  state:"WI", region:"doorcounty", gauges:[], primaryGauge:null,
+  troutClass:"wi1", troutSource:"wdnr", geom:"widnr",
+  troutRegs:"Great Lakes tributary regulations: 5 trout and salmon in total, minimum length limit 10\". From September 15 to the first Saturday of the following May you may not use hooks with a gap larger than one-half inch from point to shank. From Sep 15 to Dec 31 fishing by any method is prohibited from one-half hour after sunset to one-half hour before sunrise; from Jan 1 to the first Saturday in May hook-and-line fishing is prohibited in those same night hours.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The only stream on the north end of the peninsula the DNR classifies Class I over its whole length — wild trout sustaining themselves without stocking. Tiny: the classified reach is about a mile of spring-fed water above Ephraim.",
+  fish:"Class I spring creek. Small, cold and clear, which means it is also fragile — fish it gently and expect to be casting into pockets, not runs. Great Lakes tributary regulations apply.",
+  coords:[
+    [45.14170,-87.17364],[45.14255,-87.17364],[45.14309,-87.17342],[45.14423,-87.17233],
+    [45.14504,-87.17213],[45.14692,-87.17087],[45.14935,-87.17205],[45.15029,-87.17226],
+    [45.15088,-87.17217],[45.15145,-87.17267]
+  ]
+},
+{
+  id:"keyescr", name:"Keyes Creek", color:"#0e6f7d",
+  state:"WI", region:"doorcounty", gauges:[], primaryGauge:null,
+  troutClass:"wi1", troutSource:"wdnr", geom:"widnr",
+  troutRegs:"Great Lakes tributary regulations: 5 trout and salmon in total, minimum length limit 10\". From September 15 to the first Saturday of the following May you may not use hooks with a gap larger than one-half inch from point to shank. From Sep 15 to Dec 31 fishing by any method is prohibited from one-half hour after sunset to one-half hour before sunrise; from Jan 1 to the first Saturday in May hook-and-line fishing is prohibited in those same night hours.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The peninsula's Green Bay side creek, running into Little Sturgeon Bay in southern Door County. Class II for the mile and a half above the mouth and Class I for the 2.2 miles above that — and the DNR flags the Section 33 reach as an Exceptional Resource Water.",
+  fish:"The best odds on the peninsula of finding wild fish holding rather than running: the upper half is Class I, self-sustaining water. Great Lakes tributary regulations still apply the whole length, so the night closure and hook-gap rule are in force.",
+  coords:[
+    [44.79193,-87.59402],[44.79167,-87.59384],[44.79130,-87.59285],[44.78945,-87.59101],
+    [44.78923,-87.58998],[44.78806,-87.58919],[44.78781,-87.58928],[44.78780,-87.58991],
+    [44.78744,-87.58981],[44.78710,-87.59019],[44.78689,-87.59019],[44.78660,-87.58981],
+    [44.78672,-87.58944],[44.78644,-87.58906],[44.78574,-87.58930],[44.78548,-87.58919],
+    [44.78546,-87.58780],[44.78510,-87.58742],[44.78404,-87.58801],[44.78363,-87.58726],
+    [44.78333,-87.58729],[44.78293,-87.58820],[44.78229,-87.58725],[44.78163,-87.58718],
+    [44.78099,-87.58748],[44.77945,-87.58607],[44.77915,-87.58500],[44.77887,-87.58496],
+    [44.77862,-87.58461],[44.77795,-87.58437],[44.77756,-87.58469],[44.77681,-87.58481],
+    [44.77571,-87.58417],[44.77476,-87.58332],[44.77429,-87.58316],[44.77400,-87.58264],
+    [44.77397,-87.58184],[44.77336,-87.58054],[44.77278,-87.58021],[44.75540,-87.56431],
+    [44.75654,-87.56345],[44.76037,-87.56527],[44.76095,-87.56514],[44.76202,-87.56546],
+    [44.76277,-87.56621],[44.76344,-87.56631],[44.76358,-87.56667],[44.76341,-87.56705],
+    [44.76350,-87.56753],[44.76409,-87.56865],[44.76458,-87.56903],[44.76461,-87.56961],
+    [44.76503,-87.57050],[44.76557,-87.57102],[44.76545,-87.57153],[44.76569,-87.57172],
+    [44.76594,-87.57242],[44.76587,-87.57369],[44.76622,-87.57472],[44.76625,-87.57805],
+    [44.76684,-87.57821],[44.76964,-87.57812],[44.77045,-87.57860],[44.77086,-87.57941],
+    [44.77207,-87.57969],[44.77260,-87.58006]
+  ]
+},
+{
+  id:"ahnapee", name:"Ahnapee River", color:"#3a6ea8",
+  state:"WI", region:"doorcounty", gauges:[], primaryGauge:null,
+  // geom tag = leave this line alone. NHD returns the Ahnapee in seven
+  // pieces because the named flowline stops at each millpond; these coords
+  // are those pieces chained in downstream order, which is better than what
+  // a fresh runtime snap would draw.
+  geom:"nhd",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The peninsula's only real river: from the Forestville Flowage down through the millponds to Lake Michigan at Algoma, with the Ahnapee State Trail following the old rail grade beside it most of the way. Not classified trout water — it fishes as a Great Lakes run river and a warmwater river the rest of the year.",
+  fish:"Steelhead and brown trout run up from Lake Michigan in spring and fall, and the flowage and lower river hold smallmouth, pike and panfish through the summer — the WDNR lists the Ahnapee as smallmouth nursery water. The dam at Forestville is the upstream limit for running fish.",
+  coords:[
+    [44.61728,-87.44478],[44.61755,-87.44394],[44.61733,-87.44355],[44.61586,-87.44229],
+    [44.61355,-87.44112],[44.61203,-87.43926],[44.61102,-87.43770],[44.61019,-87.43535],
+    [44.60843,-87.43226],[44.61781,-87.44765],[44.61922,-87.44833],[44.61981,-87.44886],
+    [44.62019,-87.44972],[44.62553,-87.45478],[44.62365,-87.45275],[44.63473,-87.45915],
+    [44.63432,-87.45852],[44.63316,-87.45768],[44.63232,-87.45786],[44.63188,-87.45851],
+    [44.63148,-87.45867],[44.62960,-87.45712],[44.62880,-87.45684],[44.62683,-87.45680],
+    [44.62604,-87.45599],[44.62553,-87.45478],[44.63544,-87.46034],[44.63623,-87.45944],
+    [44.63661,-87.45939],[44.63705,-87.46004],[44.63760,-87.46203],[44.63813,-87.46225],
+    [44.63881,-87.46170],[44.63943,-87.46174],[44.64078,-87.46411],[44.64178,-87.46518],
+    [44.64746,-87.46737],[44.64651,-87.46669],[44.64572,-87.46566],[44.64490,-87.46562],
+    [44.64398,-87.46682],[44.64272,-87.46574],[44.64746,-87.46737],[44.64826,-87.46705],
+    [44.64918,-87.46611],[44.64985,-87.46586],[44.65018,-87.46638],[44.65000,-87.46779],
+    [44.65016,-87.46870],[44.65073,-87.46890],[44.65213,-87.46874],[44.65269,-87.46900],
+    [44.65283,-87.46995],[44.65259,-87.47160],[44.65304,-87.47240],[44.65491,-87.47213],
+    [44.65588,-87.47294],[44.65684,-87.47465],[44.65769,-87.47533],[44.65870,-87.47542],
+    [44.66007,-87.47485],[44.66108,-87.47418],[44.66203,-87.47463],[44.66269,-87.47711],
+    [44.66425,-87.47765],[44.66614,-87.48004],[44.66739,-87.47987],[44.66846,-87.47927],
+    [44.66895,-87.47931],[44.66981,-87.47998],[44.67850,-87.48520],[44.67766,-87.48407],
+    [44.67683,-87.48361],[44.67452,-87.48333],[44.67221,-87.48246],[44.66981,-87.47998],
+    [44.67897,-87.48591],[44.67988,-87.48496],[44.68056,-87.48476],[44.68172,-87.48614],
+    [44.68188,-87.48573],[44.68169,-87.48395],[44.68202,-87.48368],[44.68247,-87.48453],
+    [44.68354,-87.48490],[44.68496,-87.48422],[44.68566,-87.48563],[44.68639,-87.48588],
+    [44.68775,-87.48558],[44.68841,-87.48585],[44.69153,-87.48827],[44.69172,-87.48936],
+    [44.69321,-87.49062],[44.69299,-87.49011],[44.69230,-87.49036],[44.69162,-87.48986],
+    [44.69321,-87.49062],[44.69871,-87.50060],[44.70053,-87.50296],[44.70246,-87.50421],
+    [44.70336,-87.50547],[44.70687,-87.50525],[44.70733,-87.50570],[44.70943,-87.50652],
+    [44.71118,-87.50850],[44.71169,-87.50866],[44.71287,-87.50967],[44.71406,-87.51015],
+    [44.71601,-87.51425],[44.71553,-87.51341],[44.71511,-87.51138],[44.71601,-87.51425],
+    [44.71721,-87.51635],[44.71882,-87.51763],[44.71962,-87.51786],[44.72042,-87.51879],
+    [44.72133,-87.51899],[44.72211,-87.51825],[44.72354,-87.51851],[44.72488,-87.51936],
+    [44.72622,-87.51934],[44.72764,-87.52111],[44.72799,-87.52120],[44.72907,-87.52068],
+    [44.73012,-87.52168],[44.73116,-87.52214],[44.73149,-87.52200],[44.73278,-87.52275],
+    [44.73305,-87.52257],[44.73342,-87.52289],[44.73390,-87.52274],[44.73474,-87.52381],
+    [44.73540,-87.52395],[44.73584,-87.52497],[44.73650,-87.52545],[44.73785,-87.52615],
+    [44.73729,-87.52564],[44.73685,-87.52572],[44.73650,-87.52545],[44.73911,-87.52667],
+    [44.73980,-87.52597],[44.74070,-87.52595],[44.74161,-87.52677],[44.74245,-87.52813],
+    [44.74403,-87.53419],[44.74523,-87.53561],[44.74571,-87.53520],[44.74603,-87.53527],
+    [44.74625,-87.53602],[44.74597,-87.53665],[44.74620,-87.53705],[44.74687,-87.53640],
+    [44.74834,-87.53661],[44.74904,-87.53618],[44.75038,-87.53594],[44.75084,-87.53450],
+    [44.75160,-87.53471],[44.75199,-87.53448],[44.75208,-87.53333],[44.75265,-87.53189],
+    [44.75294,-87.53166],[44.75472,-87.53213],[44.75537,-87.53131],[44.75606,-87.53198],
+    [44.75732,-87.53237],[44.75860,-87.53331],[44.76049,-87.53343],[44.76116,-87.53387],
+    [44.76161,-87.53558],[44.76190,-87.53598],[44.76316,-87.53562],[44.76415,-87.53606],
+    [44.76513,-87.53714],[44.76690,-87.53768],[44.76742,-87.53806],[44.76880,-87.53820],
+    [44.76934,-87.53873]
+  ]
+},
+{
+  id:"minkriver", name:"Mink River", color:"#2f7d6a",
+  state:"WI", region:"doorcounty", gauges:[], primaryGauge:null,
+  geom:"nhd",   // already NHD, and joined across the one break — don't re-snap
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Not a trout stream at all — a spring-fed estuary running into Rowleys Bay at the top of the peninsula, and one of the least disturbed estuaries on the Great Lakes. Most of it is inside the Nature Conservancy's Mink River Estuary preserve.",
+  fish:"Northern pike come in to spawn in spring and smallmouth work the bay side through summer — this is a pike-and-smallmouth fishery on a big fly, not trout water. Quiet, shallow and easy to spook.",
+  coords:[
+    [45.22975,-87.03860],[45.23047,-87.03916],[45.23135,-87.03947],[45.23420,-87.03913],
+    [45.23701,-87.03916],[45.23762,-87.03954],[45.23854,-87.04101],[45.23930,-87.04311],
+    [45.24035,-87.04387],[45.24534,-87.04889],[45.24426,-87.04738],[45.24295,-87.04666],
+    [45.24534,-87.04889],[45.24635,-87.04881],[45.24834,-87.04781],[45.24903,-87.04910],
+    [45.25031,-87.05041],[45.25088,-87.05077],[45.25168,-87.05079],[45.25222,-87.05132],
+    [45.25318,-87.05157],[45.25330,-87.05252],[45.25396,-87.05287],[45.25420,-87.05331],
+    [45.25479,-87.05338]
+  ]
+},
 ];
 
 /* ---------- Access points ---------- */
@@ -7517,6 +7776,17 @@ const SECTIONS = [
 
 /* rivers with no float sections — floating note shown instead */
 const WADE_ONLY = {
+  // ---- Door Peninsula ----
+  hibbardscr:"Walk-and-wade, and small enough that a 7-8ft rod is the right tool. No floating.",
+  heinscr:"Wade only. Short enough to fish end to end in an afternoon.",
+  whitefishbaycr:"Wade only, and short. State park ground covers part of the corridor — check the posted boundaries before you cut across.",
+  logancr:"Wade only, and tight. Nothing here to float.",
+  lillybaycr:"Wade only.",
+  ephraimcr:"Wade only. Village and shoreline property lines are tight here — stay in the stream corridor and use the public road crossings.",
+  hiddenspringscr:"Wade only, and as small as it sounds.",
+  keyescr:"Wade only. The upper, Class I half is the reason to make the drive.",
+  ahnapee:"Wadeable in the upper reaches; the lower river and the flowage are paddling water — the Ahnapee is a canoe route as well as a trail. Watch for the dam at Forestville.",
+  minkriver:"Paddle it. The estuary is soft-bottomed and largely protected ground — a kayak or canoe from Rowleys Bay is the way in, and the preserve's rules come before anything else here.",
   flatcreek:"No floating — Flat Creek on the refuge is walk-in wade fishing only, open Aug 1–Oct 31 with special regulations.",
   grosventre:"Treated locally as a wade fishery. Kayakers run the upper canyon in runoff, but there are no maintained ramps — not a beginner float.",
   buffalofork:"Wade fishing from Turpin Meadow down. Deadfall and channel-spanning wood make floating a chore.",

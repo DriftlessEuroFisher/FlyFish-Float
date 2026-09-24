@@ -5,8 +5,9 @@ Wyoming trout rivers, the Central Iowa (Des Moines area) state water
 trail system, the trout streams of the Driftless Area, the steelhead/
 trout tributaries of Minnesota's North Shore of Lake Superior, the
 big warmwater float rivers of east-central Minnesota and the St. Croix
-valley, and the north-central Minnesota lakes country and Wisconsin
-Northwoods, with live USGS flow conditions, built for checking "is it
+valley, the north-central Minnesota lakes country and Wisconsin
+Northwoods, and the trout creeks of the Door Peninsula, with live USGS flow
+conditions, built for checking "is it
 worth driving out today?" from a phone.
 
 ## How I use this
@@ -48,9 +49,9 @@ like an app, not a browser tab.
   `short` is the name used when the zone is too small at the current zoom
   to carry the full one. `count` is rivers mapped there, and 0 renders as
   "not mapped yet" rather than pretending the zone is populated
-  (Yellowstone is 0 today). Rebuild with `zones2.py` in the scratchpad if
-  regions or coverage change — it prints the overlap check and the
-  per-zone river totals.
+  (Yellowstone is 0 today). Nine zones as of the Door Peninsula pass.
+  Rebuild with `zones2.py` in the scratchpad — it rewrites `js/zones.js`
+  itself and prints the overlap check and the per-zone river totals.
 
 - `js/app.js` — fetch/render/status logic. Talks directly to the USGS OGC API
   (`api.waterdata.usgs.gov`) client-side — no backend, no API key.
@@ -59,7 +60,7 @@ like an app, not a browser tab.
 
 ## Rivers covered
 
-226 rivers. Full list and gauge IDs live in `js/rivers-data.js`; this file
+236 rivers. Full list and gauge IDs live in `js/rivers-data.js`; this file
 doesn't duplicate it since the code is the source of truth. Rivers carry a
 `region` field — `"driftless"` and `"northshore"` on the two small-stream
 sub-regions, absent on the original western rivers *and* on the two
@@ -100,8 +101,9 @@ Use the DNR layer rather than NHD for this region, for three reasons:
 - **It carries the regulations.** `TYPE` is the DNR's own three-way
   regulation class, and `SR_INFO` is the special-regulation wording.
 
-So rivers sourced this way carry `geom:"iadnr"`, and **`loadRealRiver()`
-refuses to snap them to NHD** — state fisheries geometry outranks NHD here.
+So rivers sourced this way carry `geom:"iadnr"` (Door County's carry
+`geom:"widnr"`), and **`loadRealRiver()` refuses to snap any river with a
+`geom` tag to NHD** — state fisheries geometry outranks NHD here.
 Don't remove that guard; without it the background sweep quietly replaces
 the designated reach with the wrong Bear Creek.
 
@@ -283,15 +285,77 @@ Reservation (tribal permit required), and the South Fork Flambeau's Little
 Falls and Slough Gundy are real drops. Like the East-Central cluster,
 these are all actively gauged and carry no `region` tag.
 
+## Door Peninsula
+
+**Door Peninsula (10).** All Wisconsin, all Door County. Eight classified
+trout streams — Hibbards, Heins, Whitefish Bay, Logan, Lilly Bay, Ephraim,
+Hidden Springs and Keyes — plus the **Ahnapee River** (Forestville Flowage
+down to Lake Michigan at Algoma) and the **Mink River**, the spring-fed
+estuary at Rowleys Bay.
+
+Sourced from the **Wisconsin DNR**, not NHD, for the same reasons northeast
+Iowa is:
+
+- Geometry for the eight is the DNR's *classified trout water* line
+  (`WY_FISHERIES_WATERS` layer 9, "Trout Stream Lines") — the reach that is
+  actually trout water under trout regulations, not the whole drainage.
+  They carry `geom:"widnr"` and `loadRealRiver()` refuses to snap them to
+  NHD, exactly like `iadnr`.
+- `TROUT_CLASS_CODE` gives the Class I/II classification, and
+  `FM_TROUT_REGS` gives the regulation category and its wording, reproduced
+  verbatim in `troutRegs`.
+- The Ahnapee and the Mink are *not* classified trout water, so they use
+  NHD linework and carry no class. They still carry a `geom` tag
+  (`geom:"nhd"`) to stop the runtime snap from overwriting them: NHD hands
+  back the Ahnapee in seven pieces, because the named flowline stops at each
+  millpond, and the baked coords are those pieces chained in downstream
+  order. A fresh snap would draw the gaps back in.
+
+**Wisconsin's classes are kept separate from Iowa's, deliberately.** Iowa's
+`restrictive` / `wild` / `stocked` is a *regulation* class (what you may
+do); Wisconsin's Class I/II/III is a *biological* classification (whether
+the trout reproduce there). Folding them together would label a Wisconsin
+stream with an Iowa rule it isn't under, so `TROUT_CLASS` carries `wi1` and
+`wi2` with Wisconsin's own wording, and `troutSource` picks which agency the
+sheet footer credits. The colours are a family — teal means wild fish either
+way — but nothing else is shared.
+
+**Every one of these is ungauged, and there is no proxy.** There is not one
+USGS discharge gauge in Door County. The dozen USGS site numbers on these
+creeks are water-quality sampling points from the peninsula's groundwater
+work, not gauges — don't add them. `nearestGaugedRiver()` stays inside a
+region and so returns nothing here, which is correct: the closest gauged
+water is 60+ miles away in a different watershed. The ungauged card says so
+in as many words rather than leaving a card that looks like a failed load,
+and the status badge is suppressed the same way it is on Driftless water.
+
+**Almost all of it is Great Lakes tributary water** — a 10" minimum, a
+hook-gap limit, and a night-fishing closure from September 15. Logan Creek
+is the single exception, carried under ordinary inland trout regulations,
+which is also the tell that it fishes as a resident stream rather than a
+run. That distinction is worth preserving if this region is ever rebuilt.
+
+**No `RAMPS` entries, on purpose.** The WDNR has no trout habitat sites and
+no angling easements in Door County — access here is county park, state park
+and land-trust ground, which PAD-US already shades on the map. Rather than
+invent access pins from guesswork, there are none; add them from your own
+knowledge of where you actually park.
+
+**Left out and why:** Silver, Threemile, Casco, Scarboro and Little Scarboro
+Creeks are classified trout water but sit in **Kewaunee** County, not Door.
+Stony, Bear, Fish and Shivering Sands Creeks are in Door County but carry no
+trout classification and no designated fishery, so they'd be lines on a map
+with nothing to say.
+
 ## Status
 
 **Finished / working:**
 - Core app: Leaflet map, bottom sheet, live USGS flow fetch/render, the
   `statusOf()` relative-to-median status bucketing, home-screen install
   (`manifest.json` + icons).
-- All 226 rivers in place (49 West, 7 Central Iowa, 117 Driftless incl. 65
+- All 236 rivers in place (49 West, 7 Central Iowa, 117 Driftless incl. 65
   NE-Iowa trout streams from the DNR, 24 North Shore, 13 East-Central
-  MN/St. Croix, 16 Lakes Country/Northwoods), with
+  MN/St. Croix, 16 Lakes Country/Northwoods, 10 Door Peninsula), with
   gauges, ramps/access points, blurbs, and region-aware copy in the sheet.
 - Ungauged-river handling: the "Ungauged" card, `nearestGaugedRiver()`
   regional-wetness fallback with the cross-state-line distance penalty —
@@ -623,6 +687,13 @@ are worth calibrating first.
 - Labels are zoom-gated in `syncLabels()`: zoom ≥ 8 for the western rivers,
   ≥ 10 for Driftless and North Shore ones, because those creeks sit almost
   on top of each other and dozens of labels at regional zoom is soup.
-- Adding a new region means touching five things: the `region` field on the
-  rivers, the state-name map and `regBody` in `openRiver`/`renderSheet`, the
-  `REGIONS` quick-jump list, and the legend/safety copy in `index.html`.
+- Adding a new region means touching seven things, as the Door Peninsula
+  pass confirmed: the `region` field on the rivers; the `subRegion` map in
+  `openRiver` (the sheet subtitle); the per-region footer note in
+  `renderSheet`; the ungauged-card copy in `noGaugeHTML()` if the region's
+  streams aren't gauged — the default text talks about Driftless spring
+  creeks and is wrong everywhere else; the zoom gate in `syncLabels()` if
+  the streams sit close together; the `REGIONS` quick-jump list; and the
+  legend copy in `index.html`. If the region is geographically distinct it
+  also needs a predicate in `zones2.py`, or the nearest existing zone's hull
+  stretches across the state to swallow it.
