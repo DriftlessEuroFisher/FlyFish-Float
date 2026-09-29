@@ -126,6 +126,33 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
   .flow-line{ animation: none; display:none; }
 }
 
+/* ---------- lakes ----------
+   Still water needs its own signal. Rivers drift downstream; a lake has no
+   direction to point, so its outline breathes instead — slow enough to read
+   as "water", never as "loading". */
+.lake-shape{
+  animation: lakeshimmer 7s ease-in-out infinite;
+}
+@keyframes lakeshimmer{
+  0%,100%{ stroke-opacity:.55; stroke-width:1.8; }
+  50%    { stroke-opacity:1;   stroke-width:2.8; }
+}
+@media (prefers-reduced-motion: reduce){
+  .lake-shape{ animation:none; stroke-opacity:.9; }
+}
+.lake-label{
+  transform:translate(-50%,-50%); white-space:nowrap; cursor:pointer;
+  padding:2px 8px; border-radius:99px;
+  background:rgba(14,95,114,.88); color:#eaf7fb;
+  border:1px solid rgba(255,255,255,.35);
+  box-shadow:0 1px 4px rgba(0,0,0,.3);
+}
+.lake-label span{
+  font:700 10.5px "Barlow Condensed",sans-serif;
+  letter-spacing:.1em; text-transform:uppercase;
+}
+.lake-label::before{ content:"≈ "; opacity:.75; }
+
 /* river labels */
 /* River lines sit on a USGS topo sheet that is already full of thin blue
    hydrography, brown contours and black section lines. A soft white halo

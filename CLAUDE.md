@@ -447,6 +447,33 @@ surprising and none of it is guessable:
 agency for this region, because a Wyoming or Montana licence is not valid in
 the park and pointing a reader at Game & Fish would be actively wrong.
 
+### Lakes
+
+Nine still waters: **Yellowstone, Shoshone, Lewis, Heart, Grebe, Ice, Wolf
+and Trout Lakes, plus Blacktail Pond** — outlines from NHD waterbodies,
+carried in `LAKES` in `rivers-data.js`.
+
+**Which lakes is a sourced question, not a judgement call.** The park has
+about 150 lakes and its own literature says **more than 40% of its waters
+were historically barren of fish**, so "every lake" and "every fishable
+lake" are very different lists. These nine are the ones Yellowstone's
+fishing regulations name — which is the only source here that actually
+distinguishes them — and each entry's `regs` is quoted from that document.
+If you know others that fish, they are a one-line addition; I wasn't willing
+to assert a fishery from a lake's presence on a map.
+
+**Still water is marked as still water.** Lakes draw in their own pane
+*under* the river lines, so an inlet or outlet still reads on top of the
+water it runs into, and they carry a slow **shimmer** — the outline breathes
+— rather than the rivers' directional drift. A lake has no direction to
+point, and animating one as though it did would be the same mistake as
+running a river's current backwards. The sheet says so too: no gauge, no CFS,
+because ice-off, temperature and wind are what decide the day.
+
+Labels appear by size — the big lakes from zoom 8, ponds not until 12 — so
+Yellowstone Lake is named at the scale you can see it and Blacktail Pond
+isn't shouting from three valleys away.
+
 ### Gauges
 
 Nine live-discharge stations cover the park, verified against

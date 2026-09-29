@@ -465,6 +465,64 @@ regionCtl.onAdd = function(){
 regionCtl.addTo(map);
 
 /* ============================================================
+   LAKES — still water, marked as still water.
+
+   Rivers get a line and a current. A lake gets a shape and a shimmer: the
+   outline breathes slowly instead of drifting, because there is no
+   direction to point and pretending otherwise would be the same mistake as
+   animating a river the wrong way. Lakes sit *under* the river lines so an
+   inlet or outlet still reads on top of the water it runs into.
+   ============================================================ */
+const lakePane = map.createPane("lakePane");
+lakePane.style.zIndex = 405;                 // under the rivers, over public land
+const lakeLayer = L.layerGroup().addTo(map);
+const lakeShapes = {};
+const LAKE_LABEL_ZOOM = 8;
+
+(typeof LAKES === "undefined" ? [] : LAKES).forEach(k => {
+  const poly = L.polygon(k.ring, {pane:"lakePane", color:"#0e5f72", weight:1.8,
+    fillColor:"#3aa7c2", fillOpacity:.34, className:"lake-shape"}).addTo(lakeLayer);
+  poly.on("click", () => openLake(k.id));
+  poly.bindTooltip(`<b>${k.name}</b>`, {direction:"top", className:"zone-tip"});
+  const mark = L.marker(k.at, {pane:"lakePane", riseOnHover:true,
+    icon:L.divIcon({className:"", iconSize:null,
+      html:`<div class="lake-label"><span>${k.short}</span></div>`})}).addTo(lakeLayer);
+  mark.on("click", () => openLake(k.id));
+  lakeShapes[k.id] = {lake:k, poly, mark};
+});
+function syncLakes(){
+  const z = map.getZoom();
+  Object.values(lakeShapes).forEach(({lake, mark}) => {
+    // a big lake earns its name earlier than a pond does
+    const min = lake.areaKm2 > 20 ? LAKE_LABEL_ZOOM
+              : lake.areaKm2 > 1  ? LAKE_LABEL_ZOOM + 2 : LAKE_LABEL_ZOOM + 4;
+    const el = mark.getElement();
+    if(el) el.style.display = (!zonesShown && z >= min) ? "" : "none";
+  });
+}
+map.on("zoomend moveend", syncLakes);
+
+function openLake(id){
+  const k = LAKES.find(x => x.id === id); if(!k) return;
+  curRiver = null;
+  $("#sw").style.background = "#3aa7c2";
+  $("#sh-title").textContent = k.name;
+  $("#sh-sub").textContent = "Wyoming · Yellowstone National Park · lake";
+  sheet.classList.add("open");
+  body.innerHTML =
+    `<p style="margin:12px 2px 2px;font-size:13.5px">${k.blurb}</p>` +
+    `<div class="flowcard"><div class="gname">Still water — ${k.areaKm2} km²</div>` +
+    `<div class="plain">No gauge and no flow number: a lake doesn't have one. What "in shape" means here is ice-off, water temperature and wind, not CFS — and on the big lakes the wind is the thing that decides the day.</div></div>` +
+    `<div class="secthead">Fishing notes</div><div class="fishnote">🎣 ${k.fish}</div>` +
+    `<div class="secthead">Park regulations</div><div class="fishnote">` +
+      `<span class="badge" style="background:#4a6f8a">National Park Service</span> ` +
+      `<span style="font-size:11.5px">${k.regs}</span>` +
+      `<div style="font-size:10.5px;color:var(--txt-dim);margin-top:8px">From the park's <b>2026</b> fishing regulations. A park permit is required at 16 and over and a state licence is not valid; tackle is lead-free artificial lures or flies, barbless. Attractors such as dodgers and lake trolls may be used <b>in lakes only</b>. Re-issued every year — read the current edition before you fish.</div>` +
+    `</div>` +
+    `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Lake outlines: USGS NHD waterbodies. Verify regulations with the National Park Service (a state fishing licence is <b>not</b> valid in the park).</p>`;
+}
+
+/* ============================================================
    FLOW ANIMATION — a slow travelling highlight down each river.
 
    It is a dashed overlay stroke whose dash offset animates, which makes the
@@ -1898,6 +1956,7 @@ function showZones(){
   document.body.classList.add("zones-open");
   syncRegionLabels();
   if(typeof syncFlow === "function") syncFlow();
+  if(typeof syncLakes === "function") syncLakes();
   // Fit the covered area rather than a fixed zoom: z4 fills a laptop but
   // shows a fraction of the country on a phone, which is the screen this
   // actually gets opened on.
@@ -1913,12 +1972,14 @@ function hideZones(){
   document.body.classList.remove("zones-open");
   syncRegionLabels();
   if(typeof syncFlow === "function") syncFlow();
+  if(typeof syncLakes === "function") syncLakes();
 }
 
 buildZones();
 showZones();
 syncRegionLabels();
 syncFlow();
+syncLakes();
 
 /* Regions button — always available, so you can get back to the chooser
    without hunting for the right zoom level. Top *left*, under the zoom
