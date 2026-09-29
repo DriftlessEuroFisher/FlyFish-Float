@@ -412,3 +412,11 @@ body.zones-open .leaflet-marker-pane > *,
 body.zones-open .leaflet-pane.riversPane path,
 body.zones-open .leaflet-pane.landPane path{ pointer-events:none !important; }
 body.zones-open .leaflet-pane.zonePane{ opacity:1; }
+
+/* Closed water — hazard tape over the river. The bar pulses very slightly so
+   it reads as a warning rather than as map furniture; the dashes don't move,
+   because a closure isn't going anywhere. */
+.closed-bar{ animation: closedpulse 3.4s ease-in-out infinite; }
+@keyframes closedpulse{ 0%,100%{ opacity:.24 } 50%{ opacity:.42 } }
+.closed-line{ pointer-events: stroke; }
+@media (prefers-reduced-motion: reduce){ .closed-bar{ animation:none; opacity:.34 } }

@@ -507,7 +507,9 @@ function openLake(id){
   curRiver = null;
   $("#sw").style.background = "#3aa7c2";
   $("#sh-title").textContent = k.name;
-  $("#sh-sub").textContent = "Wyoming · Yellowstone National Park · lake";
+  const grte = k.park === "grandteton";
+  $("#sh-sub").textContent = grte ? "Wyoming · Grand Teton National Park · lake"
+                                  : "Wyoming · Yellowstone National Park · lake";
   sheet.classList.add("open");
   body.innerHTML =
     `<p style="margin:12px 2px 2px;font-size:13.5px">${k.blurb}</p>` +
@@ -515,12 +517,70 @@ function openLake(id){
     `<div class="plain">No gauge and no flow number: a lake doesn't have one. What "in shape" means here is ice-off, water temperature and wind, not CFS — and on the big lakes the wind is the thing that decides the day.</div></div>` +
     `<div class="secthead">Fishing notes</div><div class="fishnote">🎣 ${k.fish}</div>` +
     `<div class="secthead">Park regulations</div><div class="fishnote">` +
-      `<span class="badge" style="background:#4a6f8a">National Park Service</span> ` +
+      `<span class="badge" style="background:#4a6f8a">${grte ? "Grand Teton · Wyoming regs" : "National Park Service"}</span> ` +
       `<span style="font-size:11.5px">${k.regs}</span>` +
-      `<div style="font-size:10.5px;color:var(--txt-dim);margin-top:8px">From the park's <b>2026</b> fishing regulations. A park permit is required at 16 and over and a state licence is not valid; tackle is lead-free artificial lures or flies, barbless. Attractors such as dodgers and lake trolls may be used <b>in lakes only</b>. Re-issued every year — read the current edition before you fish.</div>` +
+      `<div style="font-size:10.5px;color:var(--txt-dim);margin-top:8px">${grte
+        ? `From the National Park Service's Grand Teton fishing information, which follows <b>Wyoming Game &amp; Fish</b> regulations. Bait is allowed on park lakes that aren't otherwise restricted — the artificial-only rule covers the streams. Seasons and limits are re-issued every year; check the current Wyoming regulations and carry a Wyoming licence.`
+        : `From the park's <b>2026</b> fishing regulations. A park permit is required at 16 and over and a state licence is not valid; tackle is lead-free artificial lures or flies, barbless. Attractors such as dodgers and lake trolls may be used <b>in lakes only</b>. Re-issued every year — read the current edition before you fish.`}</div>` +
     `</div>` +
-    `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Lake outlines: USGS NHD waterbodies. Verify regulations with the National Park Service (a state fishing licence is <b>not</b> valid in the park).</p>`;
+    `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Lake outlines: USGS NHD waterbodies. Verify regulations with ${grte
+      ? "WY Game &amp; Fish and the park — Grand Teton takes a <b>Wyoming licence</b>, unlike Yellowstone"
+      : "the National Park Service (a state fishing licence is <b>not</b> valid in the park)"}.</p>`;
 }
+
+/* ============================================================
+   CLOSED WATER — the reaches that are shut whatever day you show up.
+
+   Yellowstone describes these by landmark ("Fishing Bridge and an area one
+   mile downstream"), which is unusable on a phone in a pullout: you cannot
+   tell from the bank where a mile downstream ends. So they are drawn.
+   `CLOSURES` in rivers-data.js is built by walking the drawn channel
+   between located points — USGS gauges, the USGS gazetteer, the park
+   boundary — and every reach's length was checked against the regulation's
+   own wording.
+
+   It is drawn as hazard tape over the river rather than as a colour change
+   on it: a closed reach has to read as closed even on top of the animated
+   current, and recolouring the line would collide with the trout-class
+   colours the Driftless and Door County water already uses. Red appears
+   nowhere else on this map — survey orange is reserved for the live
+   readout, teal is water.
+
+   Only PERMANENT closures are here. Seasonal ones are dates, not places,
+   and they live in each river's parkRegs where they can say when.
+   ============================================================ */
+const closurePane = map.createPane("closurePane");
+closurePane.style.zIndex = 418;          // over the rivers and the current, under the labels
+const closureLayer = L.layerGroup().addTo(map);
+const closureShapes = [];
+const CLOSURE_MIN_ZOOM = 9;
+
+(typeof CLOSURES === "undefined" ? [] : CLOSURES).forEach(c => {
+  const tip = `<b>\u26d4 Closed &mdash; ${c.label}</b><br><span style="font-size:11px">${c.note}</span>`;
+  c.coords.forEach(seg => {
+    // a wide translucent bar under a dashed line: the bar is what you see at
+    // a glance, the dashes are what say "barrier" rather than "another river"
+    const bar = L.polyline(seg, {pane:"closurePane", color:"#b3261e", weight:9,
+      opacity:.30, lineCap:"round", lineJoin:"round", className:"closed-bar"}).addTo(closureLayer);
+    const hatch = L.polyline(seg, {pane:"closurePane", color:"#8c1d16", weight:3.2,
+      opacity:.95, lineCap:"butt", dashArray:"2 7", className:"closed-line"}).addTo(closureLayer);
+    [bar, hatch].forEach(l => {
+      l.bindTooltip(tip, {direction:"top", className:"zone-tip", sticky:true});
+      closureShapes.push(l);
+    });
+  });
+});
+/* Zoom-gated for the same reason the labels are: at regional zoom these are
+   a few pixels long and just stipple the river red. */
+function syncClosures(){
+  const on = !zonesShown && map.getZoom() >= CLOSURE_MIN_ZOOM;
+  closureShapes.forEach(l => {
+    const has = closureLayer.hasLayer(l);
+    if(on && !has) closureLayer.addLayer(l);
+    else if(!on && has) closureLayer.removeLayer(l);
+  });
+}
+map.on("zoomend moveend", syncClosures);
 
 /* ============================================================
    FLOW ANIMATION — a slow travelling highlight down each river.
@@ -970,6 +1030,7 @@ layerControl.addOverlay(publicLand, "Public land (state, federal, county)");
 layerControl.addOverlay(wadeLayer,  "Wade access &amp; parking");
 layerControl.addOverlay(rampLayer,  "Boat ramps");
 layerControl.addOverlay(gaugeLayer, "USGS gauges");
+layerControl.addOverlay(closureLayer, "Closed water (year-round)");
 
 /* ============================================================
    EXACT RIVER GEOMETRY — live USGS NHD high-resolution flowlines
@@ -1961,6 +2022,7 @@ function showZones(){
   syncRegionLabels();
   if(typeof syncFlow === "function") syncFlow();
   if(typeof syncLakes === "function") syncLakes();
+  if(typeof syncClosures === "function") syncClosures();
   // Fit the covered area rather than a fixed zoom: z4 fills a laptop but
   // shows a fraction of the country on a phone, which is the screen this
   // actually gets opened on.
@@ -1977,6 +2039,7 @@ function hideZones(){
   syncRegionLabels();
   if(typeof syncFlow === "function") syncFlow();
   if(typeof syncLakes === "function") syncLakes();
+  if(typeof syncClosures === "function") syncClosures();
 }
 
 buildZones();
@@ -1984,6 +2047,7 @@ showZones();
 syncRegionLabels();
 syncFlow();
 syncLakes();
+syncClosures();
 
 /* Regions button — always available, so you can get back to the chooser
    without hunting for the right zoom level. Top *left*, under the zoom

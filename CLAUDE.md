@@ -436,6 +436,61 @@ Three traps, all of which cost real time here:
   lakes, and chaining stitched separate braids of the same-named creek into
   a line that zigzagged between them. The gap tolerance is 350 m.
 
+### Closed water is drawn, not described
+
+`CLOSURES` in `js/rivers-data.js` holds the seven reaches Yellowstone shuts
+**all year**, as geometry. The park states them by landmark — "Fishing
+Bridge and an area one mile downstream" — which is unusable standing in a
+pullout, so each one is drawn on the channel: Fishing Bridge, LeHardys
+Rapids, Hayden Valley, the Grand Canyon, lower Pelican Creek, and the two
+Firehole closures at Old Faithful and the Midway footbridge.
+
+Every endpoint is a **located point**, never an estimate: USGS monitoring
+stations for Fishing Bridge and Old Faithful, the USGS gazetteer for
+LeHardys Rapids, Sulphur Caldron, Silver Cord Cascade, the Upper Falls and
+the geyser basins, Alum Creek's own geometry for its confluence, and the
+Yellowstone Lake ring for Pelican Creek's mouth. `closures.py` in the
+scratchpad rebuilds them and **prints each reach's length against the
+regulation's own wording** — that check is the safeguard, and all seven
+match (LeHardys 0.18 km for "100 yards either side", Pelican 3.22 km for
+"two miles", Fishing Bridge 2.01 km for "a mile down and a quarter up").
+
+Three traps, all of which produced a wrong-length closure first:
+
+- **"Between two landmarks" is a path, not a slice.** The drawn Yellowstone
+  is 28 pieces — NHD splits at every confluence, then this map clips to the
+  boundary and cuts the lakes out. Taking the longest piece put every
+  landmark 30–50 km from the channel. The builder welds pieces whose ends
+  touch and walks the network.
+- **Vertices are 300–440 m apart, wider than some closures.** A 100-yard
+  radius measured vertex-to-vertex can only ever return the two vertices
+  either side of the landmark, which is how LeHardys first came out 60 m
+  long. Everything is cut at an **interpolated** position along the segment.
+- **A piece's own orientation is not reliable.** Piece 26 has its downstream
+  link off its *head*, so a walk trusting `FLOW_REV` went into the lake and
+  Fishing Bridge came out 0.85 km of 2 km. Direction for the asymmetric
+  closures is asked of the **lake ring** instead — away from the lake is
+  downstream, which is true by construction at an outlet.
+
+`WELD_KM` is 0.5, not the 0.35 the fetch used: the baked channel has holes a
+few hundred metres wide below the lake outlet. It only decides what is
+*connected* — `coords` stays a **list of pieces**, so a closure is never
+drawn across a hole, a boundary or a lake.
+
+**Seasonal closures are deliberately not in `CLOSURES`.** Those are dates,
+not places, and they live in each river's `parkRegs` where they can say
+when. Three described closures are also left off because nothing in the
+data locates them — the Madison's 250 yards above Seven Mile Bridge, Trout
+Lake's inlet, and the Yellowstone Lake shoreline from West Thumb Geyser
+Basin to Little Thumb Creek. A guessed line on real water is worse than no
+line.
+
+Rendered as **hazard tape over the river**, not as a colour change on it: a
+closed reach has to read as closed on top of the flow animation, and
+recolouring would collide with the trout-class colours. Red is used nowhere
+else on this map. `closurePane` is z418, above the rivers and the current;
+zoom-gated at 9 like the park labels, and toggleable in the layer control.
+
 ### Regulations are the point, and they are sourced
 
 `parkRegs` on each river comes from the **National Park Service's 2026
