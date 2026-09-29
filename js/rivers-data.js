@@ -11986,6 +11986,3905 @@ const RIVERS = [
     ]
   ]
 },
+
+/* ---- Yellowstone: the rest of the named water ----
+   The 42 above were curated and hand-written. These 166 are every other
+   named stream with at least 2 km inside the park boundary — the park's own
+   rule is that water not listed by name in the regulations is open under
+   general regulations, so "fishable" here means named, inside the boundary,
+   and not closed.
+
+   They carry what can be stated as fact: where the water is, how much of it
+   is in the park, what it is nearest to, and the park-wide rules. They do
+   NOT carry invented fishing character. A creek nobody has written about
+   does not get prose pretending otherwise, and `fish` says so plainly.
+
+   `minor:true` keeps them out of the label soup until you are close enough
+   to be choosing between them, and their geometry is baked coarse on
+   purpose — the zoom refinement sharpens whatever you actually look at,
+   and 166 creeks at full resolution is a quarter of a megabyte for detail
+   you only ever see one creek at a time. */
+{
+  id:"ywagateCreek", name:"Agate Creek", color:"#3f8f7f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Agate Creek inside Yellowstone: 7.6 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 1 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.85735,-110.31948],[44.85285,-110.33516],[44.85041,-110.33884],[44.85195,-110.34374],
+      [44.85159,-110.35270],[44.85285,-110.35677],[44.85012,-110.36047]
+    ],
+    [
+      [44.86607,-110.31148],[44.87027,-110.31112],[44.87399,-110.30700],[44.85735,-110.31948],
+      [44.86350,-110.31433]
+    ]
+  ]
+},
+{
+  id:"ywalluviumCreek", name:"Alluvium Creek", color:"#4f8f6f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Alluvium Creek inside Yellowstone: 4.8 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.38537,-110.24159],[44.38612,-110.23572],[44.38769,-110.23429],[44.39186,-110.22265],
+      [44.39433,-110.22669],[44.39132,-110.22947]
+    ],
+    [
+      [44.39186,-110.22265],[44.38980,-110.22186],[44.38846,-110.21914],[44.38079,-110.21617],
+      [44.38361,-110.21646],[44.38745,-110.21894]
+    ]
+  ]
+},
+{
+  id:"ywalumCreek", name:"Alum Creek", color:"#5f8f5f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Alum Creek inside Yellowstone: 32.0 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 4 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.58924,-110.56615],[44.58597,-110.56528],[44.59031,-110.56697],[44.59522,-110.57698],
+      [44.59710,-110.57681],[44.59817,-110.58069],[44.59748,-110.58797],[44.60308,-110.58955],
+      [44.60656,-110.58546],[44.61032,-110.58635],[44.61113,-110.58864],[44.61239,-110.58853],
+      [44.61398,-110.58788],[44.61450,-110.58568],[44.61728,-110.58453],[44.61665,-110.58323],
+      [44.61988,-110.58056],[44.61898,-110.56650],[44.61986,-110.56690],[44.61998,-110.56534],
+      [44.62246,-110.56493],[44.62321,-110.56351],[44.62404,-110.56426],[44.62409,-110.56249],
+      [44.62626,-110.56191],[44.62735,-110.55889],[44.62648,-110.55765],[44.62863,-110.55271],
+      [44.63124,-110.55194],[44.63198,-110.54940],[44.63392,-110.55291],[44.63710,-110.55283],
+      [44.63429,-110.55265]
+    ],
+    [
+      [44.65357,-110.54444],[44.65115,-110.54567],[44.64913,-110.54907],[44.65402,-110.54396],
+      [44.65552,-110.53426],[44.65836,-110.53442],[44.65928,-110.52676],[44.66110,-110.52519],
+      [44.66150,-110.52264],[44.66319,-110.52200],[44.66293,-110.52338],[44.66941,-110.49886],
+      [44.66831,-110.49838],[44.66918,-110.50155],[44.66793,-110.50220],[44.66810,-110.51433],
+      [44.66339,-110.52390]
+    ],
+    [
+      [44.63710,-110.55283],[44.63902,-110.55397],[44.63896,-110.55262],[44.64201,-110.55175],
+      [44.64204,-110.54982],[44.64326,-110.55106],[44.64632,-110.54850],[44.64560,-110.54900]
+    ],
+    [
+      [44.58597,-110.56528],[44.58333,-110.56810],[44.57948,-110.56744],[44.57628,-110.55970],
+      [44.57007,-110.56135],[44.56805,-110.56032],[44.56540,-110.54897],[44.55912,-110.56481],
+      [44.56084,-110.55505],[44.56422,-110.54953]
+    ],
+    [
+      [44.67829,-110.48554],[44.67386,-110.49247],[44.67213,-110.49320],[44.67213,-110.49799],
+      [44.67008,-110.49617],[44.66961,-110.49819]
+    ],
+    [
+      [44.64632,-110.54850],[44.64761,-110.54750],[44.64913,-110.54907]
+    ]
+  ]
+},
+{
+  id:"ywamethystCreek", name:"Amethyst Creek", color:"#6f8f4f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Amethyst Creek inside Yellowstone: 13.3 km of it, nearest mapped water is the <b>Lamar River</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.89297,-110.24955],[44.88933,-110.24461],[44.87973,-110.25788],[44.88348,-110.25587],
+      [44.88629,-110.24790],[44.88895,-110.24541]
+    ],
+    [
+      [44.86816,-110.26669],[44.86563,-110.27026],[44.86007,-110.27329],[44.87460,-110.26153],
+      [44.87043,-110.26518]
+    ],
+    [
+      [44.86007,-110.27329],[44.85090,-110.27384],[44.85748,-110.27408]
+    ],
+    [
+      [44.85090,-110.27384],[44.83579,-110.25698],[44.84764,-110.26950]
+    ],
+    [
+      [44.87460,-110.26153],[44.87973,-110.25788]
+    ]
+  ]
+},
+{
+  id:"ywamphitheaterCreek", name:"Amphitheater Creek", color:"#7f8f3f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Amphitheater Creek inside Yellowstone: 12.4 km of it, nearest mapped water is the <b>Soda Butte Creek</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.97454,-110.00516],[44.97231,-110.01480],[44.96679,-110.01619],[44.95978,-110.02214],
+      [44.95102,-110.03646],[44.94903,-110.03680],[44.94395,-110.04181],[44.94347,-110.04371],
+      [44.93911,-110.04497],[44.93414,-110.05003]
+    ],
+    [
+      [44.93043,-110.05280],[44.93379,-110.05147],[44.93414,-110.05003],[44.92854,-110.05385],
+      [44.92955,-110.05293]
+    ],
+    [
+      [44.92087,-110.09528],[44.91946,-110.09181],[44.92332,-110.07533],[44.92076,-110.08392]
+    ],
+    [
+      [44.92601,-110.06375],[44.92737,-110.05851],[44.92332,-110.07533],[44.92501,-110.06917]
+    ]
+  ]
+},
+{
+  id:"ywantelopeCreek", name:"Antelope Creek", color:"#8f7f3f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Antelope Creek inside Yellowstone: 12.7 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.89438,-110.38232],[44.89217,-110.38522],[44.89020,-110.38550],[44.88742,-110.38275],
+    [44.88543,-110.38329],[44.88222,-110.38134],[44.87370,-110.38168],[44.86444,-110.39210],
+    [44.86167,-110.39275],[44.85915,-110.39120],[44.85545,-110.39449],[44.85194,-110.39129],
+    [44.84247,-110.39308],[44.83354,-110.38994],[44.82464,-110.39932],[44.82187,-110.40591],
+    [44.81496,-110.41114],[44.81312,-110.41694],[44.80639,-110.42398],[44.80449,-110.43008],
+    [44.80159,-110.43171]
+  ]
+},
+{
+  id:"ywarnicaCreek", name:"Arnica Creek", color:"#8f6f4f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Arnica Creek inside Yellowstone: 9.8 km of it, nearest mapped water is the <b>De Lacy Creek</b>, about 11 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.53146,-110.56745],[44.52940,-110.57006],[44.52292,-110.56729],[44.51345,-110.56843],
+      [44.51253,-110.56484],[44.50790,-110.55844],[44.50033,-110.55273],[44.49367,-110.54988],
+      [44.48700,-110.55037],[44.48989,-110.55126],[44.49356,-110.54990]
+    ],
+    [
+      [44.47897,-110.54430],[44.48022,-110.54722],[44.48398,-110.55029],[44.48700,-110.55037],
+      [44.47664,-110.54086],[44.47326,-110.53513],[44.47498,-110.53481],[44.47537,-110.53593]
+    ]
+  ]
+},
+{
+  id:"ywarrowCanyonCreek", name:"Arrow Canyon Creek", color:"#7f6f5f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Arrow Canyon Creek inside Yellowstone: 11.2 km of it, nearest mapped water is the <b>Lava Creek</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.78627,-110.59688],[44.78514,-110.60411],[44.78581,-110.60880],[44.77909,-110.61752],
+      [44.77804,-110.62226],[44.78154,-110.62604],[44.78602,-110.62561],[44.78780,-110.62734],
+      [44.78795,-110.63935],[44.79105,-110.64371],[44.80027,-110.64453],[44.81008,-110.63351],
+      [44.81397,-110.62645],[44.81610,-110.62708],[44.81960,-110.62578]
+    ],
+    [
+      [44.83797,-110.62193],[44.83454,-110.62118],[44.82754,-110.62272],[44.82284,-110.62568],
+      [44.82205,-110.62479],[44.81960,-110.62578],[44.82069,-110.62482]
+    ]
+  ]
+},
+{
+  id:"ywasterCreek", name:"Aster Creek", color:"#6f7f7f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Aster Creek inside Yellowstone: 9.3 km of it, nearest mapped water is the <b>Lewis River</b>, about 1 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.29574,-110.56991],[44.29736,-110.57188],[44.29354,-110.57818],[44.29317,-110.58332],
+      [44.29111,-110.58492],[44.29022,-110.58868],[44.29141,-110.59029],[44.28708,-110.59605],
+      [44.28745,-110.60116],[44.28502,-110.60598],[44.28549,-110.60835],[44.28304,-110.61629],
+      [44.27818,-110.62553],[44.27221,-110.62654]
+    ],
+    [
+      [44.30120,-110.56085],[44.30099,-110.55679],[44.29933,-110.56409],[44.29749,-110.56502],
+      [44.29574,-110.56991],[44.29653,-110.56608]
+    ],
+    [
+      [44.27080,-110.62752],[44.27221,-110.62654],[44.26734,-110.63378]
+    ]
+  ]
+},
+{
+  id:"ywastringentCreek", name:"Astringent Creek", color:"#4f7f9f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Astringent Creek inside Yellowstone: 8.9 km of it, nearest mapped water is the <b>Pelican Creek</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.62959,-110.27302],[44.63148,-110.27226],[44.63074,-110.26770],[44.63361,-110.26703],
+      [44.63460,-110.26437],[44.63308,-110.26218],[44.63620,-110.25936],[44.63455,-110.25674],
+      [44.62693,-110.25432],[44.62545,-110.25248],[44.62414,-110.25288],[44.62262,-110.24951],
+      [44.61897,-110.25113],[44.61364,-110.24964],[44.60573,-110.24452],[44.60118,-110.24823]
+    ],
+    [
+      [44.58704,-110.24140],[44.58809,-110.24407],[44.59077,-110.24485],[44.59323,-110.24786],
+      [44.60118,-110.24823],[44.59874,-110.24951],[44.59741,-110.24801],[44.59621,-110.24844]
+    ]
+  ]
+},
+{
+  id:"ywbaconRindCreek", name:"Bacon Rind Creek", color:"#5f6f9f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Bacon Rind Creek inside Yellowstone: 5.6 km of it, nearest mapped water is the <b>Gallatin River</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.93766,-111.09176],[44.93497,-111.09577],[44.93872,-111.08763],[44.93947,-111.08111],
+      [44.94314,-111.07435],[44.94104,-111.07609],[44.94005,-111.08034]
+    ],
+    [
+      [44.96111,-111.06702],[44.95712,-111.06689],[44.95346,-111.07096],[44.94721,-111.06938],
+      [44.94329,-111.07473]
+    ]
+  ]
+},
+{
+  id:"ywbadgerCreek", name:"Badger Creek", color:"#2f7f8f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Badger Creek inside Yellowstone: 10.3 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.22875,-110.18109],[44.22837,-110.18467],[44.20972,-110.18942],[44.21408,-110.18981],
+      [44.21704,-110.19177],[44.22518,-110.19186],[44.22681,-110.18780]
+    ],
+    [
+      [44.22959,-110.18030],[44.22875,-110.18109],[44.23065,-110.17992],[44.23303,-110.17532],
+      [44.23737,-110.15972],[44.23637,-110.16324]
+    ],
+    [
+      [44.23944,-110.14067],[44.23883,-110.14201],[44.24575,-110.13433],[44.24514,-110.13595],
+      [44.24246,-110.13584],[44.24131,-110.13879]
+    ],
+    [
+      [44.23737,-110.15972],[44.23883,-110.14201]
+    ]
+  ]
+},
+{
+  id:"ywbartlettSlough", name:"Bartlett Slough", color:"#3f8f7f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Bartlett Slough inside Yellowstone: 7.1 km of it, nearest mapped water is the <b>Boundary Creek</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.18002,-111.06405],[44.18443,-111.05269],[44.18852,-111.05391],[44.18885,-111.06037],
+    [44.19274,-111.06069],[44.19494,-111.05421],[44.19825,-111.04979],[44.20029,-111.03753],
+    [44.19803,-111.03073],[44.19564,-111.02764],[44.19523,-111.02416],[44.19258,-111.02062],
+    [44.19079,-111.01282]
+  ]
+},
+{
+  id:"ywbasinCreek", name:"Basin Creek", color:"#4f8f6f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Basin Creek inside Yellowstone: 14.6 km of it, nearest mapped water is the <b>Snake River</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.19147,-110.49207],[44.19519,-110.49580],[44.19689,-110.49996],[44.19890,-110.50006],
+      [44.19948,-110.50314],[44.20192,-110.50429],[44.20798,-110.49917],[44.21013,-110.50302],
+      [44.21251,-110.50375],[44.21438,-110.50626],[44.21588,-110.50563],[44.21731,-110.50749],
+      [44.21763,-110.51147],[44.21944,-110.51179],[44.21986,-110.51398],[44.21967,-110.51256]
+    ],
+    [
+      [44.21986,-110.51398],[44.22107,-110.51647],[44.22336,-110.51695],[44.22793,-110.51075],
+      [44.22899,-110.51094],[44.24387,-110.52695],[44.23887,-110.52246],[44.23873,-110.51875],
+      [44.24006,-110.51742],[44.23932,-110.51465],[44.22938,-110.51060]
+    ],
+    [
+      [44.24387,-110.52695],[44.24869,-110.52868],[44.26104,-110.54091],[44.25949,-110.53903]
+    ],
+    [
+      [44.26391,-110.54974],[44.26104,-110.54091]
+    ]
+  ]
+},
+{
+  id:"ywbearCreek", name:"Bear Creek", color:"#5f8f5f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Bear Creek inside Yellowstone: 14.7 km of it, nearest mapped water is the <b>Cub Creek</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.53583,-110.24741],[44.52955,-110.24551],[44.53708,-110.24818],[44.54087,-110.25383],
+      [44.53890,-110.25273],[44.53814,-110.24923]
+    ],
+    [
+      [44.52955,-110.24551],[44.52740,-110.23865],[44.52200,-110.23580],[44.51923,-110.23045],
+      [44.51866,-110.20504],[44.51947,-110.22390]
+    ],
+    [
+      [44.54968,-110.25866],[44.54087,-110.25383],[44.54298,-110.25474],[44.54557,-110.25959],
+      [44.54792,-110.25889]
+    ],
+    [
+      [44.51866,-110.20504],[44.52988,-110.17991],[44.52608,-110.18505],[44.52551,-110.19089]
+    ],
+    [
+      [44.53510,-110.17164],[44.52988,-110.17991]
+    ]
+  ]
+},
+{
+  id:"ywbeaverCreek", name:"Beaver Creek", color:"#6f8f4f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Beaver Creek inside Yellowstone: 9.6 km of it, nearest mapped water is the <b>Heart River</b>, about 4 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.32574,-110.48722],[44.32528,-110.48408],[44.31830,-110.47879],[44.31458,-110.47784],
+      [44.31267,-110.47490],[44.30405,-110.46776],[44.30201,-110.46807],[44.29822,-110.46505],
+      [44.29156,-110.46624],[44.28892,-110.46339],[44.28422,-110.46513],[44.28178,-110.46734],
+      [44.27919,-110.46715],[44.27590,-110.47349]
+    ],
+    [
+      [44.33679,-110.48550],[44.33724,-110.48472],[44.33315,-110.48827],[44.32574,-110.48722],
+      [44.32706,-110.48849],[44.33166,-110.48883]
+    ],
+    [
+      [44.34229,-110.48149],[44.34069,-110.48365],[44.33724,-110.48472]
+    ]
+  ]
+},
+{
+  id:"ywbigThumbCreek", name:"Big Thumb Creek", color:"#7f8f3f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Big Thumb Creek inside Yellowstone: 17.8 km of it, nearest mapped water is the <b>De Lacy Creek</b>, about 5 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.40246,-110.62577],[44.40425,-110.62499],[44.40522,-110.62664],[44.39831,-110.62731],
+      [44.39749,-110.62179],[44.39535,-110.61914],[44.39128,-110.62037],[44.38961,-110.60716],
+      [44.38595,-110.60443],[44.39008,-110.59084],[44.40188,-110.58469],[44.39557,-110.58730],
+      [44.39264,-110.58552],[44.38951,-110.58861]
+    ],
+    [
+      [44.42179,-110.63528],[44.42176,-110.64176],[44.42005,-110.64556],[44.42138,-110.65104],
+      [44.41737,-110.65884],[44.41983,-110.66251],[44.42161,-110.63458],[44.40522,-110.62664],
+      [44.40982,-110.62944],[44.41242,-110.62915]
+    ],
+    [
+      [44.40188,-110.58469],[44.40067,-110.58186],[44.40075,-110.57297],[44.40518,-110.56946],
+      [44.40469,-110.56682]
+    ]
+  ]
+},
+{
+  id:"ywblackButteCreek", name:"Black Butte Creek", color:"#8f7f3f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Black Butte Creek inside Yellowstone: 6.5 km of it, nearest mapped water is the <b>Specimen Creek</b>, about 4 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [45.03365,-111.11443],[45.04053,-111.10405],[45.04890,-111.09559],[45.05267,-111.09319],
+      [45.05218,-111.09384]
+    ],
+    [
+      [45.07120,-111.06730],[45.06856,-111.06630],[45.06544,-111.06821],[45.06335,-111.07383],
+      [45.05947,-111.07839]
+    ],
+    [
+      [45.05267,-111.09319],[45.05372,-111.09286],[45.05947,-111.07839],[45.05673,-111.08392]
+    ]
+  ]
+},
+{
+  id:"ywbluffCreek", name:"Bluff Creek", color:"#8f6f4f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Bluff Creek inside Yellowstone: 7.6 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 4 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.66785,-110.37199],[44.66186,-110.37436],[44.66088,-110.37220],[44.65532,-110.36825],
+      [44.65369,-110.36175],[44.64800,-110.35898],[44.64004,-110.35188],[44.64475,-110.35577]
+    ],
+    [
+      [44.64004,-110.35188],[44.62874,-110.33591],[44.63184,-110.33810],[44.63606,-110.34648]
+    ]
+  ]
+},
+{
+  id:"ywbogCreek", name:"Bog Creek", color:"#7f6f5f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Bog Creek inside Yellowstone: 4.8 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 5 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.67818,-110.37214],[44.67864,-110.36895],[44.67866,-110.37332],[44.68247,-110.37576]
+    ],
+    [
+      [44.68604,-110.38758],[44.68646,-110.39732],[44.68188,-110.40353]
+    ],
+    [
+      [44.68350,-110.37926],[44.68247,-110.37576],[44.68604,-110.38758],[44.68427,-110.38248]
+    ],
+    [
+      [44.67635,-110.37166],[44.67813,-110.36892]
+    ]
+  ]
+},
+{
+  id:"ywbridgeCreek", name:"Bridge Creek", color:"#6f7f7f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Bridge Creek inside Yellowstone: 6.0 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 8 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.52862,-110.48679],[44.52915,-110.48996],[44.53183,-110.49165],[44.53236,-110.49384],
+    [44.52782,-110.48377],[44.52826,-110.47460],[44.52620,-110.46731],[44.52716,-110.46173],
+    [44.52556,-110.45313],[44.52734,-110.44106],[44.52936,-110.43835],[44.53019,-110.43401]
+  ]
+},
+{
+  id:"ywbroadCreek", name:"Broad Creek", color:"#4f7f9f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Broad Creek inside Yellowstone: 33.9 km of it, nearest mapped water is the <b>Pelican Creek</b>, about 1 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.72963,-110.30262],[44.73047,-110.30108],[44.72893,-110.29876],[44.73037,-110.30343],
+      [44.73351,-110.30674],[44.73143,-110.31113],[44.73236,-110.31883],[44.73757,-110.32500],
+      [44.74121,-110.32038],[44.73943,-110.32085],[44.73857,-110.32500]
+    ],
+    [
+      [44.69656,-110.26273],[44.69953,-110.26280],[44.70100,-110.26514],[44.70526,-110.26711],
+      [44.70927,-110.26603],[44.71065,-110.26762],[44.69552,-110.26226],[44.69250,-110.26283]
+    ],
+    [
+      [44.71567,-110.28443],[44.71490,-110.28233],[44.71567,-110.28985],[44.71780,-110.29092],
+      [44.71898,-110.29371],[44.71924,-110.30097],[44.71897,-110.29629]
+    ],
+    [
+      [44.71924,-110.30097],[44.72272,-110.30235],[44.72669,-110.29900],[44.72893,-110.29876]
+    ],
+    [
+      [44.70979,-110.27805],[44.71065,-110.26762],[44.70980,-110.27903],[44.71490,-110.28233],
+      [44.71173,-110.28273],[44.71142,-110.28116]
+    ],
+    [
+      [44.67891,-110.26414],[44.67974,-110.26515],[44.67835,-110.26370],[44.67123,-110.26366],
+      [44.66819,-110.26215],[44.66432,-110.26618],[44.65544,-110.26106],[44.66017,-110.26453]
+    ],
+    [
+      [44.79064,-110.35425],[44.78773,-110.34875],[44.78540,-110.34695],[44.78522,-110.34424],
+      [44.78834,-110.33904],[44.78350,-110.32683],[44.78818,-110.33498]
+    ],
+    [
+      [44.78350,-110.32683],[44.78256,-110.32589],[44.77659,-110.32796],[44.77485,-110.32463],
+      [44.76794,-110.32349],[44.77101,-110.32247]
+    ],
+    [
+      [44.75360,-110.32113],[44.75035,-110.32040],[44.75473,-110.32134],[44.75580,-110.32341],
+      [44.75990,-110.32142],[44.76794,-110.32349],[44.76050,-110.32041]
+    ],
+    [
+      [44.67974,-110.26515],[44.68283,-110.26702],[44.68805,-110.26386]
+    ],
+    [
+      [44.68945,-110.26270],[44.68805,-110.26386],[44.69215,-110.26298],[44.69037,-110.26269]
+    ],
+    [
+      [44.64276,-110.26423],[44.65144,-110.26063],[44.64390,-110.26354]
+    ],
+    [
+      [44.65144,-110.26063],[44.65274,-110.25970],[44.65544,-110.26106]
+    ],
+    [
+      [44.74121,-110.32038],[44.74636,-110.32254],[44.75035,-110.32040]
+    ]
+  ]
+},
+{
+  id:"ywbuffaloCreek", name:"Buffalo Creek", color:"#5f6f9f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Buffalo Creek inside Yellowstone: 10.7 km of it, nearest mapped water is the <b>Slough Creek</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [45.02831,-110.30033],[45.02465,-110.30366],[45.01934,-110.29835],[45.01091,-110.30315],
+      [45.00600,-110.29962],[44.99510,-110.29691],[44.98983,-110.29986],[44.98743,-110.29702],
+      [44.97996,-110.29730],[44.98210,-110.29544],[44.98582,-110.29583]
+    ],
+    [
+      [44.97996,-110.29730],[44.97424,-110.30380],[44.97096,-110.31064],[44.96725,-110.30832],
+      [44.95647,-110.30945],[44.94930,-110.30714]
+    ]
+  ]
+},
+{
+  id:"ywbuffaloFork", name:"Buffalo Fork", color:"#2f7f8f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Buffalo Fork inside Yellowstone: 14.1 km of it, nearest mapped water is the <b>Lamar River</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.67570,-110.11724],[44.67154,-110.12667],[44.66227,-110.13768],[44.66135,-110.14246],
+      [44.67862,-110.11240],[44.70664,-110.10929],[44.69814,-110.11204],[44.69533,-110.11119],
+      [44.69074,-110.11252],[44.68689,-110.11191]
+    ],
+    [
+      [44.63766,-110.14277],[44.64351,-110.13905],[44.65004,-110.14585],[44.65580,-110.14556],
+      [44.66135,-110.14246]
+    ]
+  ]
+},
+{
+  id:"ywburntCreek", name:"Burnt Creek", color:"#3f8f7f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Burnt Creek inside Yellowstone: 14.3 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.78886,-110.28941],[44.78777,-110.28307],[44.77867,-110.27540],[44.78924,-110.29021],
+      [44.78747,-110.29863],[44.78838,-110.30205],[44.79065,-110.30242],[44.79559,-110.32192],
+      [44.79355,-110.31894],[44.79273,-110.30998],[44.79080,-110.30992],[44.78993,-110.30839],
+      [44.79049,-110.30428]
+    ],
+    [
+      [44.79559,-110.32192],[44.79723,-110.32674],[44.80266,-110.32957],[44.80480,-110.33277],
+      [44.80778,-110.33207],[44.80917,-110.33304],[44.81264,-110.33794],[44.81745,-110.33958],
+      [44.82047,-110.33815],[44.82514,-110.34121],[44.82624,-110.34645],[44.82881,-110.34436],
+      [44.83336,-110.34339]
+    ],
+    [
+      [44.77863,-110.26276],[44.77867,-110.27540]
+    ]
+  ]
+},
+{
+  id:"ywcabinCreek", name:"Cabin Creek", color:"#4f8f6f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Cabin Creek inside Yellowstone: 8.1 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 0 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.29621,-110.15590],[44.29892,-110.14411],[44.29603,-110.15650],[44.29806,-110.15671],
+      [44.30092,-110.15932],[44.30266,-110.16553],[44.30004,-110.16874],[44.30019,-110.17027],
+      [44.30221,-110.17177],[44.30114,-110.17052]
+    ],
+    [
+      [44.29892,-110.14411],[44.30256,-110.14023],[44.30434,-110.13397],[44.30778,-110.11190],
+      [44.30644,-110.11762],[44.30659,-110.12459]
+    ]
+  ]
+},
+{
+  id:"ywcalfCreek", name:"Calf Creek", color:"#5f8f5f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Calf Creek inside Yellowstone: 2.2 km of it, nearest mapped water is the <b>Fall River</b>, about 1 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.13859,-110.93052],[44.13858,-110.92646],[44.13650,-110.92521],[44.13272,-110.91593],
+    [44.13450,-110.91762],[44.13445,-110.92182],[44.13549,-110.92261]
+  ]
+},
+{
+  id:"ywcalfeeCreek", name:"Calfee Creek", color:"#6f8f4f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Calfee Creek inside Yellowstone: 18.1 km of it, nearest mapped water is the <b>Miller Creek</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.77623,-110.05580],[44.77596,-110.05176],[44.77879,-110.07939],[44.77667,-110.06346]
+    ],
+    [
+      [44.78105,-110.11542],[44.78247,-110.11426],[44.78276,-110.09868],[44.78105,-110.08405],
+      [44.78186,-110.09016]
+    ],
+    [
+      [44.77610,-110.00957],[44.77792,-110.00480],[44.77324,-110.01820],[44.77387,-110.03822],
+      [44.77305,-110.01906]
+    ],
+    [
+      [44.78734,-109.98588],[44.79094,-109.97889],[44.79326,-109.97029],[44.78412,-109.99136],
+      [44.78555,-109.98917]
+    ],
+    [
+      [44.77387,-110.03822],[44.77596,-110.05176]
+    ],
+    [
+      [44.78412,-109.99136],[44.77792,-110.00480]
+    ],
+    [
+      [44.77879,-110.07939],[44.78105,-110.08405]
+    ]
+  ]
+},
+{
+  id:"ywcampanulaCreek", name:"Campanula Creek", color:"#7f8f3f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Campanula Creek inside Yellowstone: 29.2 km of it, nearest mapped water is the <b>Duck Creek</b>, about 0 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.80661,-111.03179],[44.80516,-111.02549],[44.80646,-111.02276],[44.81139,-111.02172],
+      [44.81752,-111.01518],[44.82142,-111.01495],[44.82251,-111.01166],[44.82906,-111.00789],
+      [44.83007,-111.00597],[44.83328,-111.00648],[44.83870,-111.00350],[44.84045,-110.99969],
+      [44.84580,-110.99682],[44.84639,-110.99306],[44.80570,-111.03265],[44.80465,-111.03575],
+      [44.80145,-111.03890],[44.80151,-111.04872],[44.79192,-111.06951],[44.79484,-111.06672],
+      [44.80036,-111.05629],[44.80059,-111.05042]
+    ],
+    [
+      [44.77613,-111.07327],[44.77734,-111.07139],[44.77638,-111.06813],[44.77735,-111.06729],
+      [44.77812,-111.06865],[44.77860,-111.06414],[44.79192,-111.06951],[44.78813,-111.06955],
+      [44.78575,-111.06806],[44.78571,-111.06582],[44.78470,-111.06655],[44.78352,-111.06364],
+      [44.78012,-111.06307]
+    ],
+    [
+      [44.84639,-110.99306],[44.84292,-110.99303],[44.84199,-110.99158],[44.83730,-110.99008],
+      [44.82382,-110.96250],[44.82326,-110.96954],[44.82734,-110.98308],[44.83322,-110.98557],
+      [44.83602,-110.98825]
+    ]
+  ]
+},
+{
+  id:"ywcanyonCreek", name:"Canyon Creek", color:"#8f7f3f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Canyon Creek inside Yellowstone: 9.3 km of it, nearest mapped water is the <b>Gibbon River</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.66505,-110.69642],[44.66619,-110.70273],[44.66556,-110.71464],[44.66425,-110.71678],
+      [44.66045,-110.71451],[44.65880,-110.71536],[44.65912,-110.71886],[44.65577,-110.72571],
+      [44.64701,-110.73524],[44.64556,-110.74027],[44.64660,-110.74730]
+    ],
+    [
+      [44.64778,-110.77260],[44.64636,-110.76840],[44.64660,-110.74730],[44.64499,-110.74969],
+      [44.64419,-110.75515],[44.64530,-110.75707],[44.64560,-110.76595]
+    ]
+  ]
+},
+{
+  id:"ywcarnelianCreek", name:"Carnelian Creek", color:"#8f6f4f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Carnelian Creek inside Yellowstone: 15.1 km of it, nearest mapped water is the <b>Tower Creek</b>, about 1 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.79463,-110.47721],[44.79194,-110.48116],[44.80248,-110.46495],[44.80792,-110.46251],
+      [44.81694,-110.46311],[44.81745,-110.46413],[44.83023,-110.46403],[44.82382,-110.46247],
+      [44.81984,-110.46409],[44.81787,-110.46347]
+    ],
+    [
+      [44.85637,-110.45550],[44.85228,-110.45806],[44.83023,-110.46403],[44.83284,-110.46179],
+      [44.83686,-110.46077],[44.84167,-110.46186],[44.85037,-110.45934]
+    ],
+    [
+      [44.79194,-110.48116],[44.78994,-110.48441],[44.78755,-110.48571],[44.77567,-110.48849],
+      [44.77996,-110.48710],[44.78446,-110.48801]
+    ]
+  ]
+},
+{
+  id:"ywcascadeCreek", name:"Cascade Creek", color:"#7f6f5f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Cascade Creek inside Yellowstone: 22.7 km of it, nearest mapped water is the <b>Gibbon River</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.38857,-111.03134],[44.39403,-111.02761],[44.39838,-111.03032],[44.39955,-111.02822],
+      [44.40196,-111.02828],[44.40342,-111.02614],[44.40562,-111.02851],[44.41097,-111.02447],
+      [44.38781,-111.02968],[44.38189,-111.02584],[44.38327,-111.02733]
+    ],
+    [
+      [44.73617,-110.50086],[44.73820,-110.50145],[44.73968,-110.50022],[44.73131,-110.50125],
+      [44.72949,-110.50684],[44.72285,-110.51249],[44.72072,-110.51029],[44.71864,-110.50260],
+      [44.71641,-110.50128],[44.71638,-110.49934]
+    ],
+    [
+      [44.75448,-110.51996],[44.75359,-110.52078],[44.75567,-110.51675],[44.75554,-110.50309],
+      [44.74988,-110.49898],[44.74947,-110.50166],[44.74752,-110.50261],[44.74520,-110.50122],
+      [44.74194,-110.50207],[44.73968,-110.50022]
+    ],
+    [
+      [44.34532,-111.06363],[44.34740,-111.06282],[44.35049,-111.05814],[44.35137,-111.05355],
+      [44.35434,-111.04960],[44.35489,-111.04534],[44.35869,-111.04386],[44.36321,-111.03945],
+      [44.36543,-111.03909],[44.36953,-111.03430],[44.37063,-111.03047],[44.37623,-111.02423],
+      [44.37163,-111.02909]
+    ],
+    [
+      [44.14231,-110.85419],[44.13785,-110.85132],[44.13475,-110.85084],[44.13318,-110.84613]
+    ],
+    [
+      [44.37623,-111.02423],[44.38189,-111.02584],[44.37834,-111.02525]
+    ]
+  ]
+},
+{
+  id:"ywchalcedonyCreek", name:"Chalcedony Creek", color:"#6f7f7f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Chalcedony Creek inside Yellowstone: 9.6 km of it, nearest mapped water is the <b>Lamar River</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.86963,-110.20364],[44.86721,-110.20420],[44.86365,-110.19996],[44.85764,-110.19894],
+      [44.85343,-110.19535],[44.84511,-110.21359],[44.84706,-110.20481],[44.85014,-110.20123]
+    ],
+    [
+      [44.84511,-110.21359],[44.83782,-110.22103],[44.83879,-110.21966]
+    ],
+    [
+      [44.83569,-110.22475],[44.82952,-110.23369],[44.83782,-110.22103],[44.83656,-110.22298]
+    ],
+    [
+      [44.83031,-110.24408],[44.82952,-110.23369]
+    ]
+  ]
+},
+{
+  id:"ywchipmunkCreek", name:"Chipmunk Creek", color:"#4f7f9f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Chipmunk Creek inside Yellowstone: 21.8 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 8 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.25743,-110.27672],[44.26136,-110.27377],[44.26344,-110.27528],[44.26430,-110.27405],
+      [44.26528,-110.27539],[44.26694,-110.27354],[44.26787,-110.27575],[44.26835,-110.27420],
+      [44.26972,-110.27413],[44.27011,-110.27615],[44.27294,-110.27476],[44.27392,-110.27121],
+      [44.27579,-110.27082]
+    ],
+    [
+      [44.22333,-110.23759],[44.22142,-110.23648],[44.22100,-110.23446],[44.22389,-110.23991],
+      [44.22416,-110.24796],[44.22833,-110.25177],[44.23803,-110.27238],[44.24199,-110.27344],
+      [44.24526,-110.27641],[44.24303,-110.27416]
+    ],
+    [
+      [44.22100,-110.23446],[44.21932,-110.23086],[44.21771,-110.23033],[44.21745,-110.22790],
+      [44.20934,-110.21966],[44.20592,-110.21154],[44.20816,-110.21609]
+    ],
+    [
+      [44.25158,-110.27854],[44.25065,-110.27999],[44.24995,-110.27910],[44.25743,-110.27672],
+      [44.25412,-110.27813]
+    ],
+    [
+      [44.24995,-110.27910],[44.24526,-110.27641],[44.24995,-110.27989]
+    ],
+    [
+      [44.28708,-110.27318],[44.28651,-110.27556],[44.28806,-110.27711],[44.28722,-110.27928],
+      [44.28884,-110.28227],[44.28827,-110.28380]
+    ],
+    [
+      [44.20592,-110.21154],[44.20467,-110.20144],[44.19542,-110.19712],[44.20275,-110.19786]
+    ],
+    [
+      [44.28685,-110.27270],[44.28544,-110.27148],[44.28336,-110.27194],[44.28131,-110.26983],
+      [44.28337,-110.26992],[44.28328,-110.27084]
+    ],
+    [
+      [44.28809,-110.29169],[44.28692,-110.28830],[44.28847,-110.28457],[44.28746,-110.28816]
+    ],
+    [
+      [44.28131,-110.26983],[44.27965,-110.26825],[44.27579,-110.27082],[44.27806,-110.27046]
+    ]
+  ]
+},
+{
+  id:"ywclematisCreek", name:"Clematis Creek", color:"#5f6f9f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Clematis Creek inside Yellowstone: 7.4 km of it, nearest mapped water is the <b>Gardner River</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.98689,-110.76088],[44.98395,-110.75656],[44.98301,-110.75037],[44.97962,-110.74533],
+      [44.97435,-110.74683],[44.96739,-110.74095],[44.97173,-110.73144],[44.97149,-110.72811]
+    ],
+    [
+      [44.96898,-110.69731],[44.97463,-110.70064],[44.97517,-110.70233],[44.97327,-110.70504],
+      [44.97477,-110.72228],[44.97165,-110.72757]
+    ]
+  ]
+},
+{
+  id:"ywcliffCreek", name:"Cliff Creek", color:"#2f7f8f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Cliff Creek inside Yellowstone: 14.2 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 1 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.19328,-110.03483],[44.19382,-110.03164],[44.19226,-110.03941],[44.17983,-110.07132],
+      [44.18850,-110.05487],[44.19238,-110.04015]
+    ],
+    [
+      [44.16976,-110.11167],[44.17007,-110.10627],[44.16882,-110.10530],[44.17446,-110.08907],
+      [44.16892,-110.10155]
+    ],
+    [
+      [44.20050,-110.00853],[44.19511,-110.01980],[44.19382,-110.03164]
+    ],
+    [
+      [44.17577,-110.08003],[44.17731,-110.07719],[44.17518,-110.08884]
+    ],
+    [
+      [44.17731,-110.07719],[44.17983,-110.07132],[44.17899,-110.07260]
+    ]
+  ]
+},
+{
+  id:"ywcloverCreek", name:"Clover Creek", color:"#3f8f7f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Clover Creek inside Yellowstone: 6.2 km of it, nearest mapped water is the <b>Lamar River</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.74288,-110.10658],[44.73901,-110.12379],[44.73158,-110.13588],[44.74370,-110.10275],
+    [44.74686,-110.09690]
+  ]
+},
+{
+  id:"ywcoldCreek", name:"Cold Creek", color:"#4f8f6f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Cold Creek inside Yellowstone: 22.5 km of it, nearest mapped water is the <b>Pelican Creek</b>, about 7 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.61560,-110.08774],[44.61045,-110.09050],[44.61815,-110.08618],[44.63163,-110.08414],
+      [44.63896,-110.07366],[44.64285,-110.07129],[44.64579,-110.07184],[44.65390,-110.05623],
+      [44.65352,-110.05814],[44.65043,-110.06018]
+    ],
+    [
+      [44.67733,-110.05703],[44.67525,-110.05580],[44.67194,-110.05850],[44.65676,-110.05548],
+      [44.66203,-110.05523],[44.66760,-110.05682],[44.66922,-110.05574],[44.67142,-110.05822]
+    ],
+    [
+      [44.56976,-110.14158],[44.56763,-110.14557],[44.57079,-110.13897],[44.57610,-110.13616],
+      [44.57786,-110.13739],[44.58370,-110.13489],[44.58150,-110.13729]
+    ],
+    [
+      [44.61045,-110.09050],[44.60764,-110.09445],[44.60690,-110.09909],[44.59885,-110.11911],
+      [44.60474,-110.10870],[44.60651,-110.10077]
+    ],
+    [
+      [44.59533,-110.12335],[44.59147,-110.12692],[44.59885,-110.11911],[44.59844,-110.11983]
+    ],
+    [
+      [44.58370,-110.13489],[44.58847,-110.12883],[44.59147,-110.12692]
+    ],
+    [
+      [44.56342,-110.14742],[44.56763,-110.14557]
+    ],
+    [
+      [44.65390,-110.05623],[44.65460,-110.05462],[44.65676,-110.05548]
+    ]
+  ]
+},
+{
+  id:"ywcoldMountainCreek", name:"Cold Mountain Creek", color:"#5f8f5f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Cold Mountain Creek inside Yellowstone: 3.7 km of it, nearest mapped water is the <b>Firehole River</b>, about 6 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.33105,-110.82186],[44.32872,-110.81559],[44.33174,-110.80493],[44.33632,-110.79806],
+    [44.33758,-110.79386],[44.34241,-110.79166],[44.34554,-110.78778]
+  ]
+},
+{
+  id:"ywcolumbineCreek", name:"Columbine Creek", color:"#6f8f4f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Columbine Creek inside Yellowstone: 15.7 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 6 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.39600,-110.22915],[44.39943,-110.22761],[44.39986,-110.22407],[44.39570,-110.23023],
+      [44.39888,-110.23712],[44.39759,-110.24124],[44.39843,-110.24098],[44.40022,-110.25454],
+      [44.40118,-110.25160],[44.39915,-110.24624]
+    ],
+    [
+      [44.41107,-110.20324],[44.40706,-110.21006],[44.40735,-110.21156],[44.40039,-110.22027],
+      [44.39986,-110.22407]
+    ],
+    [
+      [44.41739,-110.18578],[44.41918,-110.18403],[44.41539,-110.18932],[44.41107,-110.20324],
+      [44.41085,-110.20118]
+    ],
+    [
+      [44.43292,-110.16211],[44.43492,-110.16083],[44.44032,-110.16302],[44.44706,-110.16191],
+      [44.45059,-110.15093],[44.45017,-110.15665],[44.44836,-110.15983]
+    ],
+    [
+      [44.41918,-110.18403],[44.42300,-110.18059],[44.42710,-110.17115],[44.42654,-110.17365]
+    ],
+    [
+      [44.43190,-110.16367],[44.43292,-110.16211],[44.42710,-110.17115],[44.42801,-110.16966]
+    ]
+  ]
+},
+{
+  id:"ywcottongrassCreek", name:"Cottongrass Creek", color:"#7f8f3f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Cottongrass Creek inside Yellowstone: 14.8 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.64648,-110.37726],[44.64542,-110.37633],[44.64294,-110.37727],[44.63684,-110.38209],
+      [44.64704,-110.37825],[44.65158,-110.38292],[44.65295,-110.38863],[44.65506,-110.39027],
+      [44.65590,-110.39425],[44.65926,-110.39984],[44.65899,-110.40246],[44.66092,-110.40542],
+      [44.66204,-110.41212],[44.66412,-110.41375],[44.66515,-110.42292],[44.66857,-110.42441],
+      [44.67090,-110.43229],[44.67363,-110.43462]
+    ],
+    [
+      [44.68038,-110.47853],[44.68216,-110.46853],[44.67363,-110.43462],[44.67639,-110.43653],
+      [44.67792,-110.44137],[44.67717,-110.44488],[44.67973,-110.44838],[44.68010,-110.45302],
+      [44.67828,-110.45709],[44.68192,-110.45749],[44.68201,-110.45949]
+    ]
+  ]
+},
+{
+  id:"ywcottonwoodCreek", name:"Cottonwood Creek", color:"#8f7f3f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Cottonwood Creek inside Yellowstone: 8.5 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 4 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [45.00226,-110.51092],[45.00579,-110.50838],[45.01471,-110.49225],[45.01831,-110.48927],
+    [45.02165,-110.48887],[45.02377,-110.49246],[45.02906,-110.49409],[44.99947,-110.51206],
+    [44.99654,-110.51128],[44.99484,-110.51211],[44.99328,-110.51766]
+  ]
+},
+{
+  id:"ywcowanCreek", name:"Cowan Creek", color:"#8f6f4f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Cowan Creek inside Yellowstone: 11.0 km of it, nearest mapped water is the <b>Nez Perce Creek</b>, about 4 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.62472,-110.63906],[44.62792,-110.63971],[44.63209,-110.64619],[44.63201,-110.66028],
+    [44.63611,-110.67151],[44.63568,-110.67483],[44.63809,-110.68228],[44.63918,-110.69418],
+    [44.63715,-110.69658],[44.63458,-110.69600],[44.63203,-110.69222],[44.62761,-110.69199],
+    [44.62769,-110.69466],[44.62533,-110.69685],[44.61933,-110.69654],[44.61788,-110.69317],
+    [44.61607,-110.69455],[44.61341,-110.69143],[44.61079,-110.69372],[44.60575,-110.69166],
+    [44.59505,-110.69423]
+  ]
+},
+{
+  id:"ywcoyoteCreek", name:"Coyote Creek", color:"#7f6f5f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Coyote Creek inside Yellowstone: 11.4 km of it, nearest mapped water is the <b>Hellroaring Creek</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.99477,-110.42870],[44.99712,-110.42612],[44.99911,-110.41923],[45.02932,-110.40999],
+      [45.02670,-110.40619],[45.02066,-110.40803],[45.01747,-110.40716],[45.01148,-110.40927],
+      [45.00909,-110.40878],[45.00691,-110.41269],[45.00493,-110.41313],[45.00001,-110.41831]
+    ],
+    [
+      [44.15169,-110.04431],[44.15049,-110.03272],[44.15455,-110.02210],[44.15650,-110.00964],
+      [44.15552,-110.00717]
+    ]
+  ]
+},
+{
+  id:"ywcrawfishCreek", name:"Crawfish Creek", color:"#6f7f7f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Crawfish Creek inside Yellowstone: 3.3 km of it, nearest mapped water is the <b>Lewis River</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.18518,-110.69827],[44.18253,-110.70081],[44.17968,-110.70037],[44.17784,-110.69773],
+    [44.17431,-110.69587],[44.17289,-110.69266],[44.17121,-110.69257],[44.16640,-110.68402],
+    [44.16197,-110.68038]
+  ]
+},
+{
+  id:"ywcreviceCreek", name:"Crevice Creek", color:"#4f7f9f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Crevice Creek inside Yellowstone: 3.1 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [45.01032,-110.58778],[45.01208,-110.58192],[45.01690,-110.57641],[45.02050,-110.56938],
+    [45.02371,-110.56672],[45.02538,-110.56231],[45.02858,-110.56012]
+  ]
+},
+{
+  id:"ywcrookedCreek", name:"Crooked Creek", color:"#5f6f9f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Crooked Creek inside Yellowstone: 17.6 km of it, nearest mapped water is the <b>Snake River</b>, about 4 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.15959,-110.33822],[44.16780,-110.33077],[44.17262,-110.33143],[44.17375,-110.33329],
+      [44.17995,-110.33390],[44.18050,-110.33522],[44.18240,-110.33487],[44.18305,-110.33627],
+      [44.18462,-110.33630],[44.19210,-110.30436],[44.19251,-110.30657],[44.19436,-110.30802],
+      [44.19266,-110.31442],[44.19325,-110.32746],[44.19181,-110.33073],[44.18697,-110.33349],
+      [44.18524,-110.33622]
+    ],
+    [
+      [44.19210,-110.30436],[44.18886,-110.29998],[44.19068,-110.29266],[44.18720,-110.28955],
+      [44.18146,-110.28090],[44.18550,-110.28759]
+    ],
+    [
+      [44.17784,-110.26064],[44.17917,-110.25691],[44.17623,-110.26547],[44.18146,-110.28090],
+      [44.18081,-110.27866],[44.18244,-110.27100],[44.17809,-110.26906],[44.17680,-110.26654]
+    ],
+    [
+      [44.18051,-110.24992],[44.17872,-110.25408],[44.17917,-110.25691]
+    ]
+  ]
+},
+{
+  id:"ywcrystalCreek", name:"Crystal Creek", color:"#2f7f8f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Crystal Creek inside Yellowstone: 7.1 km of it, nearest mapped water is the <b>Lamar River</b>, about 1 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.89884,-110.32282],[44.89344,-110.32142],[44.88630,-110.32229],[44.87787,-110.31706],
+    [44.89955,-110.32322],[44.90300,-110.32238],[44.90511,-110.32325],[44.90908,-110.32022],
+    [44.91447,-110.32343],[44.91101,-110.32213]
+  ]
+},
+{
+  id:"ywcutoffCreek", name:"Cutoff Creek", color:"#3f8f7f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Cutoff Creek inside Yellowstone: 5.9 km of it, nearest mapped water is the <b>Pebble Creek</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [45.02650,-110.18080],[45.02753,-110.16795],[45.02700,-110.14683],[45.02410,-110.14230],
+      [45.02213,-110.12684],[45.02320,-110.13533]
+    ],
+    [
+      [45.02576,-110.11909],[45.02213,-110.12684]
+    ]
+  ]
+},
+{
+  id:"ywdaileyCreek", name:"Dailey Creek", color:"#4f8f6f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Dailey Creek inside Yellowstone: 11.9 km of it, nearest mapped water is the <b>Gallatin River</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [45.06409,-111.12292],[45.06060,-111.12766],[45.05841,-111.12670],[45.05651,-111.12820],
+      [45.04740,-111.14221],[45.04864,-111.13710],[45.05589,-111.12881]
+    ],
+    [
+      [45.06462,-111.12278],[45.07951,-111.11810],[45.07322,-111.12230],[45.06890,-111.12174]
+    ],
+    [
+      [45.09215,-111.10836],[45.09667,-111.10693],[45.10135,-111.11362],[45.09038,-111.10863],
+      [45.08379,-111.11238],[45.08919,-111.10835]
+    ],
+    [
+      [45.08379,-111.11238],[45.07951,-111.11810]
+    ]
+  ]
+},
+{
+  id:"ywdeepCreek", name:"Deep Creek", color:"#5f8f5f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Deep Creek inside Yellowstone: 20.2 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 6 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.80153,-110.27604],[44.79527,-110.27803],[44.79339,-110.27584],[44.79159,-110.26881],
+      [44.78775,-110.26741],[44.78483,-110.26323],[44.77624,-110.23198],[44.77518,-110.23754],
+      [44.77553,-110.24860],[44.77829,-110.25190],[44.78102,-110.25187],[44.78438,-110.26228]
+    ],
+    [
+      [44.80640,-110.27667],[44.80153,-110.27604],[44.80707,-110.27740],[44.80940,-110.27663],
+      [44.81252,-110.27998],[44.81534,-110.28846],[44.81854,-110.29313],[44.81869,-110.30549],
+      [44.82466,-110.31305],[44.82146,-110.30888]
+    ],
+    [
+      [44.82466,-110.31305],[44.82595,-110.32524],[44.82824,-110.32866],[44.82913,-110.33543],
+      [44.83409,-110.34458],[44.83814,-110.34576],[44.84182,-110.35058],[44.84344,-110.35794]
+    ],
+    [
+      [44.78875,-110.21331],[44.78365,-110.21752],[44.77624,-110.23198]
+    ]
+  ]
+},
+{
+  id:"ywdogsheadCreek", name:"Dogshead Creek", color:"#6f8f4f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Dogshead Creek inside Yellowstone: 10.7 km of it, nearest mapped water is the <b>Lewis River</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.36621,-110.60911],[44.36855,-110.60867],[44.37005,-110.61064],[44.37760,-110.61326],
+      [44.37895,-110.61656],[44.38303,-110.61478],[44.36313,-110.60412],[44.36143,-110.60606],
+      [44.35879,-110.60489],[44.35370,-110.60808],[44.35303,-110.60728],[44.34979,-110.61085],
+      [44.34836,-110.61062],[44.34796,-110.60912],[44.34681,-110.61044],[44.34439,-110.60918],
+      [44.34529,-110.61002]
+    ],
+    [
+      [44.32186,-110.61438],[44.32791,-110.61315],[44.32978,-110.61440],[44.33410,-110.61409],
+      [44.34153,-110.60959],[44.33590,-110.61386]
+    ],
+    [
+      [44.34439,-110.60918],[44.34153,-110.60959]
+    ]
+  ]
+},
+{
+  id:"ywdryCreek", name:"Dry Creek", color:"#7f8f3f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Dry Creek inside Yellowstone: 12.3 km of it, nearest mapped water is the <b>De Lacy Creek</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.44834,-110.62110],[44.44786,-110.63184],[44.44895,-110.63553],[44.45141,-110.63576],
+      [44.45184,-110.63710],[44.44901,-110.64212],[44.44961,-110.64295],[44.45218,-110.64143],
+      [44.45237,-110.65682],[44.45447,-110.65849],[44.45452,-110.66775],[44.45741,-110.66875]
+    ],
+    [
+      [44.44494,-110.69231],[44.45897,-110.68004],[44.45918,-110.67787],[44.45727,-110.67430],
+      [44.45741,-110.66875],[44.43730,-110.69532],[44.44393,-110.69294]
+    ],
+    [
+      [44.43730,-110.69532],[44.43490,-110.69758]
+    ]
+  ]
+},
+{
+  id:"yweastForkFanCreek", name:"East Fork Fan Creek", color:"#8f7f3f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"East Fork Fan Creek inside Yellowstone: 10.6 km of it, nearest mapped water is the <b>Fan Creek</b>, about 1 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.97026,-110.91574],[44.97335,-110.90747],[44.96953,-110.93294],[44.97281,-110.94821],
+      [44.97181,-110.95154],[44.97381,-110.95803],[44.97594,-110.95765],[44.98068,-110.96193],
+      [44.98384,-110.96226],[44.98593,-110.96662],[44.98812,-110.96519],[44.98983,-110.96581],
+      [44.99215,-110.97057]
+    ],
+    [
+      [44.97335,-110.90747],[44.97326,-110.90064],[44.97529,-110.89189],[44.97503,-110.89723]
+    ],
+    [
+      [44.97426,-110.88151],[44.97292,-110.88609],[44.97529,-110.89189]
+    ]
+  ]
+},
+{
+  id:"yweastForkSpecimenCreek", name:"East Fork Specimen Creek", color:"#8f6f4f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"East Fork Specimen Creek inside Yellowstone: 15.8 km of it, nearest mapped water is the <b>Fan Creek</b>, about 8 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [45.02857,-111.04191],[45.02641,-111.03769],[45.02802,-111.03175],[45.02641,-111.02222],
+      [45.02855,-111.00731],[45.02507,-111.00003],[45.02639,-110.97842],[45.02357,-110.99463],
+      [45.02478,-110.99880]
+    ],
+    [
+      [45.05882,-110.94388],[45.05878,-110.94119],[45.05658,-110.93822],[45.03875,-110.95717],
+      [45.04271,-110.94931],[45.04610,-110.93853],[45.05115,-110.93495],[45.05542,-110.93833]
+    ],
+    [
+      [45.03875,-110.95717],[45.03060,-110.96345],[45.02784,-110.96314],[45.02591,-110.97069],
+      [45.02639,-110.97842]
+    ]
+  ]
+},
+{
+  id:"ywelectricCreek", name:"Electric Creek", color:"#7f6f5f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Electric Creek inside Yellowstone: 4.8 km of it, nearest mapped water is the <b>Gardner River</b>, about 5 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [45.01344,-110.84014],[45.01456,-110.83741],[45.02092,-110.83269],[45.02884,-110.82294],
+    [45.03145,-110.81021],[45.03118,-110.80571],[45.03825,-110.79456]
+  ]
+},
+{
+  id:"ywelkAntlerCreek", name:"Elk Antler Creek", color:"#6f7f7f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Elk Antler Creek inside Yellowstone: 10.0 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.62089,-110.46493],[44.61857,-110.46598],[44.61367,-110.47172],[44.59992,-110.47867],
+      [44.58543,-110.47138],[44.58756,-110.47134],[44.59179,-110.47446]
+    ],
+    [
+      [44.62256,-110.46376],[44.62089,-110.46493],[44.62806,-110.46000],[44.63238,-110.45874],
+      [44.63428,-110.45969],[44.64062,-110.45479],[44.63768,-110.45962],[44.63472,-110.46033]
+    ],
+    [
+      [44.57599,-110.46404],[44.57804,-110.46758],[44.58543,-110.47138]
+    ]
+  ]
+},
+{
+  id:"ywelkCreek", name:"Elk Creek", color:"#4f7f9f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Elk Creek inside Yellowstone: 8.4 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.95655,-110.44348],[44.95396,-110.44481],[44.94871,-110.44243],[44.94721,-110.43745],
+    [44.94569,-110.43668],[44.93314,-110.43475],[44.93291,-110.43829],[44.93124,-110.43878],
+    [44.92667,-110.44651],[44.92601,-110.46102],[44.92325,-110.46423],[44.91921,-110.47678],
+    [44.91747,-110.48000],[44.91410,-110.48099],[44.90882,-110.48730]
+  ]
+},
+{
+  id:"ywelkTongueCreek", name:"Elk Tongue Creek", color:"#5f6f9f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Elk Tongue Creek inside Yellowstone: 9.4 km of it, nearest mapped water is the <b>Slough Creek</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.99135,-110.20119],[44.98780,-110.20266],[44.98576,-110.20082],[44.98106,-110.19151],
+      [44.98061,-110.18635],[44.97731,-110.18395],[44.97560,-110.17835],[44.98256,-110.15154],
+      [44.97933,-110.15717],[44.97594,-110.17341]
+    ],
+    [
+      [44.98256,-110.15154],[44.98720,-110.14882],[44.99072,-110.14840],[44.99592,-110.14415],
+      [44.99411,-110.14596]
+    ],
+    [
+      [44.99592,-110.14415],[44.99757,-110.14186],[44.99619,-110.14373]
+    ]
+  ]
+},
+{
+  id:"ywescarpmentCreek", name:"Escarpment Creek", color:"#2f7f8f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Escarpment Creek inside Yellowstone: 15.8 km of it, nearest mapped water is the <b>Thorofare Creek</b>, about 1 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.16208,-110.06449],[44.16392,-110.06182],[44.16387,-110.05433],[44.16594,-110.05168],
+      [44.16902,-110.03404],[44.17198,-110.03130],[44.17467,-110.02361],[44.18157,-110.01342],
+      [44.18356,-110.00819],[44.18278,-110.00904]
+    ],
+    [
+      [44.16671,-110.11198],[44.16391,-110.11374],[44.16206,-110.11045],[44.15850,-110.10984],
+      [44.15483,-110.10490],[44.15140,-110.09509],[44.15101,-110.09780],[44.15445,-110.10375]
+    ],
+    [
+      [44.16976,-110.11167],[44.16697,-110.11277],[44.16671,-110.11198],[44.17082,-110.11127],
+      [44.17745,-110.11648],[44.17569,-110.11748]
+    ],
+    [
+      [44.15140,-110.09509],[44.15282,-110.09348],[44.15186,-110.08472],[44.16208,-110.06449],
+      [44.15849,-110.07371],[44.15504,-110.07585],[44.15230,-110.08313]
+    ]
+  ]
+},
+{
+  id:"ywfairyCreek", name:"Fairy Creek", color:"#3f8f7f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Fairy Creek inside Yellowstone: 13.0 km of it, nearest mapped water is the <b>Firehole River</b>, about 1 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.49587,-110.89448],[44.49617,-110.88978],[44.51083,-110.87640],[44.51242,-110.87585],
+      [44.51564,-110.87756],[44.51798,-110.88042],[44.52395,-110.86998],[44.52596,-110.86958],
+      [44.52789,-110.86549],[44.53119,-110.86294]
+    ],
+    [
+      [44.55820,-110.84386],[44.55735,-110.84346],[44.54409,-110.85444],[44.55660,-110.84391]
+    ],
+    [
+      [44.54151,-110.85755],[44.53344,-110.86313],[44.54226,-110.85715],[44.54409,-110.85444],
+      [44.54255,-110.85667]
+    ],
+    [
+      [44.55939,-110.84220],[44.55820,-110.84386],[44.56042,-110.84099],[44.56295,-110.84108],
+      [44.56136,-110.84077]
+    ],
+    [
+      [44.53344,-110.86313],[44.53119,-110.86294],[44.53266,-110.86301]
+    ]
+  ]
+},
+{
+  id:"ywfallCreek", name:"Fall Creek", color:"#4f8f6f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Fall Creek inside Yellowstone: 2.3 km of it, nearest mapped water is the <b>Firehole River</b>, about 5 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.34165,-110.82494],[44.34600,-110.81050],[44.35114,-110.80345],[44.35142,-110.80037]
+  ]
+},
+{
+  id:"ywfawnCreek", name:"Fawn Creek", color:"#5f8f5f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Fawn Creek inside Yellowstone: 15.1 km of it, nearest mapped water is the <b>Gardner River</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.93560,-110.83889],[44.93995,-110.82904],[44.95021,-110.81507],[44.95130,-110.81058],
+      [44.95716,-110.80350],[44.95816,-110.79644],[44.95777,-110.79221],[44.95301,-110.78886],
+      [44.95150,-110.78590],[44.94713,-110.78763],[44.94642,-110.78981],[44.94553,-110.78859],
+      [44.94349,-110.79138],[44.94084,-110.78692]
+    ],
+    [
+      [44.93102,-110.89392],[44.92944,-110.90081],[44.92951,-110.89042],[44.92714,-110.88243],
+      [44.92720,-110.87353],[44.93015,-110.86178],[44.93306,-110.85838],[44.93299,-110.84761],
+      [44.93560,-110.83889],[44.93429,-110.84379]
+    ],
+    [
+      [44.93460,-110.90703],[44.93053,-110.90491],[44.93052,-110.90171],[44.92944,-110.90081]
+    ]
+  ]
+},
+{
+  id:"ywferrisFork", name:"Ferris Fork", color:"#6f8f4f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Ferris Fork inside Yellowstone: 10.8 km of it, nearest mapped water is the <b>Bechler River</b>, about 5 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.28393,-110.87887],[44.28320,-110.88045],[44.28048,-110.88025],[44.27788,-110.87809],
+      [44.27351,-110.87736],[44.27130,-110.86981],[44.27280,-110.85949],[44.27800,-110.85077],
+      [44.27727,-110.84393],[44.28244,-110.83631],[44.28396,-110.83582],[44.28729,-110.82953],
+      [44.29161,-110.81046],[44.29200,-110.81694],[44.28888,-110.82475]
+    ],
+    [
+      [44.28891,-110.89304],[44.28763,-110.88610],[44.28876,-110.88417],[44.28393,-110.87887],
+      [44.28789,-110.87974]
+    ]
+  ]
+},
+{
+  id:"ywflintCreek", name:"Flint Creek", color:"#7f8f3f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Flint Creek inside Yellowstone: 5.6 km of it, nearest mapped water is the <b>Lamar River</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.78762,-110.11882],[44.78553,-110.12141],[44.78337,-110.13287],[44.78005,-110.13939],
+      [44.77662,-110.14307],[44.77368,-110.14919],[44.76472,-110.15733],[44.76650,-110.15659]
+    ],
+    [
+      [44.75539,-110.16528],[44.75915,-110.16336],[44.76472,-110.15733]
+    ]
+  ]
+},
+{
+  id:"ywforestCreek", name:"Forest Creek", color:"#8f7f3f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Forest Creek inside Yellowstone: 18.9 km of it, nearest mapped water is the <b>Lewis River</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.18476,-110.61921],[44.18704,-110.62762],[44.18918,-110.62784],[44.19001,-110.63029],
+      [44.19152,-110.63019],[44.19937,-110.62647],[44.20119,-110.62098],[44.20382,-110.62053],
+      [44.20718,-110.61723],[44.21079,-110.61644],[44.21263,-110.61330],[44.21488,-110.61222],
+      [44.22013,-110.61161],[44.22240,-110.61298],[44.23016,-110.61336],[44.23336,-110.61100],
+      [44.23498,-110.60572],[44.24007,-110.60169],[44.24072,-110.59505],[44.24565,-110.58110],
+      [44.26003,-110.56348],[44.25560,-110.56816],[44.25387,-110.57335],[44.24869,-110.57689],
+      [44.24720,-110.57675]
+    ],
+    [
+      [44.18321,-110.61061],[44.18476,-110.61921],[44.18029,-110.60635],[44.16842,-110.59917],
+      [44.16876,-110.59637],[44.18016,-110.60418]
+    ]
+  ]
+},
+{
+  id:"ywgeodeCreek", name:"Geode Creek", color:"#8f6f4f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Geode Creek inside Yellowstone: 5.3 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.95084,-110.48718],[44.95181,-110.48925],[44.95132,-110.49797],[44.95437,-110.50099],
+    [44.96018,-110.49719],[44.96204,-110.49875],[44.96860,-110.49758],[44.97017,-110.49910],
+    [44.97318,-110.49819],[44.97443,-110.49583],[44.97733,-110.49414],[44.98128,-110.49639],
+    [44.98696,-110.49485]
+  ]
+},
+{
+  id:"ywgeyserCreek", name:"Geyser Creek", color:"#7f6f5f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Geyser Creek inside Yellowstone: 8.6 km of it, nearest mapped water is the <b>Gibbon River</b>, about 0 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.68585,-110.69908],[44.68307,-110.70039],[44.67620,-110.71032],[44.67571,-110.71245],
+      [44.67683,-110.71450],[44.67533,-110.71869],[44.67630,-110.72013]
+    ],
+    [
+      [44.69738,-110.73873],[44.69190,-110.72976],[44.68246,-110.72714],[44.68198,-110.72434],
+      [44.67630,-110.72013],[44.69774,-110.74172],[44.69744,-110.74452]
+    ]
+  ]
+},
+{
+  id:"ywglenCreek", name:"Glen Creek", color:"#6f7f7f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Glen Creek inside Yellowstone: 17.5 km of it, nearest mapped water is the <b>Gardner River</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.93263,-110.72857],[44.93376,-110.73319],[44.93796,-110.73690],[44.93881,-110.73967],
+      [44.94227,-110.74070],[44.94428,-110.74245],[44.94396,-110.74466],[44.94770,-110.74599],
+      [44.93256,-110.72738],[44.93436,-110.72531],[44.93653,-110.71822],[44.94100,-110.71238],
+      [44.94141,-110.70929],[44.94461,-110.70556],[44.94595,-110.69913],[44.94908,-110.69809],
+      [44.94793,-110.69841]
+    ],
+    [
+      [44.95112,-110.74516],[44.95470,-110.74803],[44.96082,-110.74867],[44.96738,-110.75645],
+      [44.96827,-110.76755],[44.97179,-110.77605],[44.97099,-110.79508],[44.97405,-110.79279],
+      [44.97644,-110.79334],[44.97708,-110.78954],[44.97325,-110.77732]
+    ],
+    [
+      [44.94908,-110.69809],[44.95134,-110.69407],[44.95118,-110.68168]
+    ],
+    [
+      [44.94770,-110.74599],[44.95112,-110.74516],[44.95021,-110.74618],[44.94889,-110.74563]
+    ]
+  ]
+},
+{
+  id:"ywgreggFork", name:"Gregg Fork", color:"#4f7f9f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Gregg Fork inside Yellowstone: 10.8 km of it, nearest mapped water is the <b>Bechler River</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.28891,-110.89304],[44.28984,-110.88749],[44.29319,-110.88472],[44.29543,-110.87786],
+      [44.29962,-110.87207],[44.30744,-110.83852],[44.30601,-110.84034],[44.30443,-110.84844],
+      [44.30270,-110.85018],[44.30108,-110.84988],[44.29759,-110.85966],[44.29738,-110.86648],
+      [44.29991,-110.87076]
+    ],
+    [
+      [44.31821,-110.81946],[44.31780,-110.82347],[44.31392,-110.82755],[44.31354,-110.83208],
+      [44.31132,-110.83503],[44.31086,-110.83853]
+    ],
+    [
+      [44.30935,-110.83893],[44.31070,-110.83796],[44.30879,-110.83893],[44.30767,-110.83819]
+    ]
+  ]
+},
+{
+  id:"ywgrouseCreek", name:"Grouse Creek", color:"#5f6f9f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Grouse Creek inside Yellowstone: 13.5 km of it, nearest mapped water is the <b>Heart River</b>, about 7 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.25965,-110.35964],[44.26660,-110.36118],[44.26934,-110.35994],[44.27105,-110.34990],
+      [44.27433,-110.34646],[44.27631,-110.34610],[44.27695,-110.34413],[44.27905,-110.34361],
+      [44.27878,-110.34230]
+    ],
+    [
+      [44.23932,-110.36409],[44.24265,-110.36003],[44.25965,-110.35964],[44.25583,-110.35919],
+      [44.25364,-110.36093],[44.25174,-110.35998],[44.24945,-110.36174],[44.24407,-110.35973]
+    ],
+    [
+      [44.23885,-110.36428],[44.23578,-110.35771],[44.23403,-110.35680],[44.23123,-110.35947],
+      [44.22644,-110.36060],[44.22298,-110.36402],[44.22306,-110.36905],[44.22131,-110.37284],
+      [44.22234,-110.38543],[44.22321,-110.38554]
+    ],
+    [
+      [44.28336,-110.33649],[44.28133,-110.33730],[44.27878,-110.34230],[44.27950,-110.34136]
+    ]
+  ]
+},
+{
+  id:"ywharebellCreek", name:"Harebell Creek", color:"#2f7f8f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Harebell Creek inside Yellowstone: 6.8 km of it, nearest mapped water is the <b>Snake River</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.13313,-110.44235],[44.13294,-110.44766],[44.13503,-110.45135],[44.13582,-110.45736],
+    [44.13348,-110.46043],[44.13363,-110.46208],[44.14093,-110.47517],[44.14009,-110.48085],
+    [44.13833,-110.48439],[44.13523,-110.48658],[44.13344,-110.49091],[44.13371,-110.49896],
+    [44.13650,-110.50565],[44.13650,-110.50885],[44.13435,-110.51340]
+  ]
+},
+{
+  id:"ywherronCreek", name:"Herron Creek", color:"#3f8f7f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Herron Creek inside Yellowstone: 8.9 km of it, nearest mapped water is the <b>De Lacy Creek</b>, about 1 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.46343,-110.72393],[44.46393,-110.72193],[44.46619,-110.72130],[44.46309,-110.72562],
+      [44.45974,-110.72686],[44.44615,-110.70359],[44.44627,-110.70633],[44.44838,-110.70771],
+      [44.45054,-110.71262],[44.45112,-110.71784],[44.45525,-110.72555],[44.45881,-110.72749]
+    ],
+    [
+      [44.47539,-110.72793],[44.47414,-110.72898],[44.47601,-110.72633],[44.46684,-110.72102],
+      [44.47259,-110.72291],[44.47559,-110.72573]
+    ]
+  ]
+},
+{
+  id:"ywhornadayCreek", name:"Hornaday Creek", color:"#4f8f6f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Hornaday Creek inside Yellowstone: 10.8 km of it, nearest mapped water is the <b>Slough Creek</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.96040,-110.14756],[44.95614,-110.15603],[44.95517,-110.16395],[44.94877,-110.17290],
+      [44.94511,-110.17574],[44.94196,-110.18212],[44.94725,-110.19417],[44.94994,-110.20425]
+    ],
+    [
+      [44.95462,-110.21855],[44.95410,-110.21237],[44.95569,-110.22068],[44.95687,-110.21952],
+      [44.95914,-110.21984],[44.96543,-110.22764],[44.96325,-110.22640],[44.96050,-110.22138]
+    ],
+    [
+      [44.96543,-110.22764],[44.97271,-110.22989]
+    ],
+    [
+      [44.95179,-110.20645],[44.94994,-110.20425],[44.95410,-110.21237],[44.95383,-110.21119]
+    ]
+  ]
+},
+{
+  id:"ywhowellCreek", name:"Howell Creek", color:"#5f8f5f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Howell Creek inside Yellowstone: 12.3 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 9 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.24243,-110.04755],[44.25608,-110.03273],[44.25432,-110.03587],[44.24635,-110.04023],
+      [44.24558,-110.04368]
+    ],
+    [
+      [44.25921,-110.03064],[44.25608,-110.03273],[44.26209,-110.02918],[44.26437,-110.02557],
+      [44.26591,-110.02519]
+    ],
+    [
+      [44.26635,-110.02539],[44.27370,-110.02002],[44.28041,-110.01152],[44.27885,-110.01555],
+      [44.27702,-110.01664]
+    ],
+    [
+      [44.29630,-110.00227],[44.30309,-110.00226],[44.28775,-110.00468],[44.29558,-110.00228]
+    ],
+    [
+      [44.28775,-110.00468],[44.28041,-110.01152]
+    ]
+  ]
+},
+{
+  id:"ywironSpringCreek", name:"Iron Spring Creek", color:"#6f8f4f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Iron Spring Creek inside Yellowstone: 9.6 km of it, nearest mapped water is the <b>Firehole River</b>, about 1 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.44509,-110.84271],[44.44272,-110.84140],[44.44704,-110.84391],[44.45004,-110.84326],
+      [44.45231,-110.84648],[44.45589,-110.84482],[44.45795,-110.84805],[44.45935,-110.84805],
+      [44.46162,-110.85447],[44.48146,-110.85600],[44.48013,-110.85594],[44.47926,-110.85830],
+      [44.47748,-110.85749],[44.47517,-110.85827],[44.47435,-110.86009],[44.47186,-110.85891],
+      [44.47011,-110.86033],[44.46803,-110.85886],[44.46779,-110.85691],[44.46663,-110.85766],
+      [44.46510,-110.85617]
+    ],
+    [
+      [44.43032,-110.84830],[44.43759,-110.84030],[44.43966,-110.83974],[44.44272,-110.84140]
+    ]
+  ]
+},
+{
+  id:"ywjasperCreek", name:"Jasper Creek", color:"#7f8f3f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Jasper Creek inside Yellowstone: 6.4 km of it, nearest mapped water is the <b>Lamar River</b>, about 4 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.89552,-110.25496],[44.89439,-110.25781],[44.89647,-110.26435],[44.89255,-110.27748],
+      [44.89414,-110.28471],[44.88011,-110.29573],[44.88598,-110.29225],[44.89201,-110.28651]
+    ],
+    [
+      [44.87544,-110.29566],[44.88011,-110.29573]
+    ]
+  ]
+},
+{
+  id:"ywjuniperCreek", name:"Juniper Creek", color:"#8f7f3f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Juniper Creek inside Yellowstone: 12.1 km of it, nearest mapped water is the <b>Nez Perce Creek</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.55321,-110.68254],[44.54747,-110.67763],[44.54532,-110.67762],[44.54505,-110.67442],
+      [44.54151,-110.67594],[44.53902,-110.67352],[44.53565,-110.67357],[44.52784,-110.65093],
+      [44.53195,-110.65898],[44.53300,-110.66715]
+    ],
+    [
+      [44.57768,-110.68206],[44.57615,-110.68375],[44.57313,-110.68405],[44.56368,-110.67942],
+      [44.55577,-110.68294],[44.55321,-110.68254],[44.55447,-110.68313]
+    ],
+    [
+      [44.50759,-110.64001],[44.51058,-110.63602],[44.51718,-110.63511],[44.52365,-110.64365],
+      [44.52402,-110.64702],[44.52784,-110.65093]
+    ]
+  ]
+},
+{
+  id:"ywlandslideCreek", name:"Landslide Creek", color:"#8f6f4f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Landslide Creek inside Yellowstone: 5.6 km of it, nearest mapped water is the <b>Gardner River</b>, about 4 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [45.04525,-110.74666],[45.03922,-110.74551],[45.03294,-110.75236],[45.02774,-110.74296],
+      [45.02548,-110.74217],[45.02430,-110.74315],[45.02235,-110.74110],[45.02023,-110.74638],
+      [45.02008,-110.74339],[45.02176,-110.74153]
+    ],
+    [
+      [45.00977,-110.74070],[45.01442,-110.74493],[45.01766,-110.74553],[45.01853,-110.74692],
+      [45.02023,-110.74638]
+    ]
+  ]
+},
+{
+  id:"ywlemonadeCreek", name:"Lemonade Creek", color:"#7f6f5f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Lemonade Creek inside Yellowstone: 2.8 km of it, nearest mapped water is the <b>Obsidian Creek</b>, about 1 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.81013,-110.73607],[44.80958,-110.73458],[44.80431,-110.73195],[44.80201,-110.72882],
+    [44.79951,-110.72860],[44.78943,-110.72032]
+  ]
+},
+{
+  id:"ywlittleBuffaloCreek", name:"Little Buffalo Creek", color:"#6f7f7f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Little Buffalo Creek inside Yellowstone: 8.2 km of it, nearest mapped water is the <b>Hellroaring Creek</b>, about 4 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.96140,-110.43361],[44.96430,-110.42847],[44.96567,-110.42152],[44.96496,-110.40744],
+    [44.96991,-110.39258],[44.97448,-110.38691],[44.98096,-110.37474],[44.98334,-110.37302],
+    [44.98275,-110.36303],[44.98439,-110.35966],[44.98882,-110.35924],[44.99149,-110.35372],
+    [44.99488,-110.35303]
+  ]
+},
+{
+  id:"ywlittleCottonwoodCreek", name:"Little Cottonwood Creek", color:"#4f7f9f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Little Cottonwood Creek inside Yellowstone: 4.9 km of it, nearest mapped water is the <b>Hellroaring Creek</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.98849,-110.48776],[44.99453,-110.48813],[45.00045,-110.47975],[45.00447,-110.47868],
+    [45.00755,-110.48027],[45.01234,-110.47505],[45.01462,-110.47505],[45.01755,-110.47721],
+    [45.02016,-110.47606],[45.02436,-110.47728],[45.02652,-110.47664],[45.02702,-110.47496]
+  ]
+},
+{
+  id:"ywlittleRobinsonCreek", name:"Little Robinson Creek", color:"#5f6f9f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Little Robinson Creek inside Yellowstone: 13.2 km of it, nearest mapped water is the <b>Boundary Creek</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.29055,-111.05889],[44.28318,-111.05976],[44.27577,-111.05555],[44.27314,-111.05064],
+    [44.26614,-111.04984],[44.26529,-111.04881],[44.25729,-111.05114],[44.25470,-111.04746],
+    [44.25167,-111.04711],[44.24809,-111.05265],[44.24343,-111.05304],[44.23786,-111.06226],
+    [44.23413,-111.06019],[44.23137,-111.06429],[44.22540,-111.06644],[44.22028,-111.06449],
+    [44.21777,-111.06578],[44.21453,-111.06439],[44.21146,-111.06526],[44.20756,-111.07019],
+    [44.20346,-111.07037],[44.20144,-111.07266],[44.19903,-111.07176],[44.19507,-111.07247],
+    [44.19233,-111.07598],[44.19061,-111.08168]
+  ]
+},
+{
+  id:"ywlittleThumbCreek", name:"Little Thumb Creek", color:"#2f7f8f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Little Thumb Creek inside Yellowstone: 9.3 km of it, nearest mapped water is the <b>De Lacy Creek</b>, about 6 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.43461,-110.59413],[44.43317,-110.59827],[44.43388,-110.60273],[44.44175,-110.62859],
+      [44.43604,-110.62985],[44.43321,-110.62745],[44.43105,-110.62755],[44.42752,-110.62390],
+      [44.42191,-110.62366],[44.42186,-110.62127],[44.42416,-110.61719],[44.42262,-110.61477],
+      [44.42409,-110.61245],[44.42468,-110.60582],[44.43296,-110.60381]
+    ],
+    [
+      [44.43669,-110.57938],[44.43493,-110.59387]
+    ]
+  ]
+},
+{
+  id:"ywlittlesFork", name:"Littles Fork", color:"#3f8f7f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Littles Fork inside Yellowstone: 6.2 km of it, nearest mapped water is the <b>Bechler River</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.32016,-110.85168],[44.31899,-110.85292],[44.31749,-110.85100],[44.31711,-110.85240],
+      [44.31570,-110.85183],[44.31328,-110.85463],[44.31143,-110.85468],[44.30917,-110.85781],
+      [44.30560,-110.86848],[44.30271,-110.87018],[44.30099,-110.86903],[44.29991,-110.87076]
+    ],
+    [
+      [44.32840,-110.83437],[44.33005,-110.82827],[44.32586,-110.84118],[44.32013,-110.85119]
+    ]
+  ]
+},
+{
+  id:"ywlostCreek", name:"Lost Creek", color:"#4f8f6f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Lost Creek inside Yellowstone: 17.5 km of it, nearest mapped water is the <b>Tower Creek</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.88187,-110.43889],[44.88457,-110.43517],[44.88365,-110.43062],[44.88551,-110.42749],
+      [44.88932,-110.42653],[44.89229,-110.42405],[44.90314,-110.42492],[44.91164,-110.41821],
+      [44.91432,-110.42019],[44.92102,-110.41761],[44.92345,-110.42220]
+    ],
+    [
+      [44.88327,-110.49263],[44.88461,-110.49361],[44.87129,-110.47918],[44.86990,-110.47529],
+      [44.88187,-110.43889],[44.87847,-110.44721],[44.87679,-110.45747],[44.87072,-110.46586],
+      [44.86979,-110.47138]
+    ],
+    [
+      [44.93314,-110.43475],[44.93147,-110.43398],[44.92345,-110.42220],[44.92827,-110.42520],
+      [44.92974,-110.43098]
+    ],
+    [
+      [44.88461,-110.49361],[44.88785,-110.49374],[44.88718,-110.49316]
+    ]
+  ]
+},
+{
+  id:"ywlupineCreek", name:"Lupine Creek", color:"#5f8f5f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Lupine Creek inside Yellowstone: 12.3 km of it, nearest mapped water is the <b>Blacktail Deer Creek</b>, about 1 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.84880,-110.58593],[44.85184,-110.58731],[44.86236,-110.59802],[44.86736,-110.60150],
+    [44.87067,-110.60788],[44.87595,-110.61234],[44.88028,-110.61341],[44.88301,-110.61263],
+    [44.88809,-110.60971],[44.89298,-110.60475],[44.89774,-110.60478],[44.89973,-110.60296],
+    [44.90363,-110.60786],[44.90552,-110.60762],[44.90941,-110.61044],[44.91634,-110.61074],
+    [44.91972,-110.60898],[44.92396,-110.61219],[44.92599,-110.61064],[44.93192,-110.61180],
+    [44.93583,-110.62066],[44.93985,-110.62563],[44.94020,-110.62819]
+  ]
+},
+{
+  id:"ywlynxCreek", name:"Lynx Creek", color:"#6f8f4f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Lynx Creek inside Yellowstone: 11.5 km of it, nearest mapped water is the <b>Snake River</b>, about 4 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.17529,-110.17185],[44.17538,-110.17712],[44.16978,-110.19861],[44.16600,-110.20369],
+    [44.16154,-110.20507],[44.15296,-110.19949],[44.15314,-110.18663],[44.15687,-110.17725],
+    [44.15719,-110.16784],[44.16042,-110.15788],[44.16070,-110.14592],[44.16274,-110.13350],
+    [44.16478,-110.13151],[44.16854,-110.12071],[44.17095,-110.12006]
+  ]
+},
+{
+  id:"ywmagpieCreek", name:"Magpie Creek", color:"#7f8f3f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Magpie Creek inside Yellowstone: 34.1 km of it, nearest mapped water is the <b>Nez Perce Creek</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.66870,-110.61897],[44.66777,-110.61800],[44.66905,-110.61895],[44.66971,-110.61776],
+      [44.67033,-110.61869],[44.67199,-110.61770],[44.67284,-110.62300],[44.67531,-110.62395],
+      [44.67531,-110.62636],[44.67723,-110.62785],[44.67511,-110.63242],[44.67042,-110.65221],
+      [44.67230,-110.65349],[44.67391,-110.65276],[44.67347,-110.65976],[44.67141,-110.66394],
+      [44.67000,-110.66443],[44.66827,-110.67108],[44.66467,-110.67797],[44.66174,-110.68103],
+      [44.66041,-110.68693],[44.65810,-110.68652],[44.65655,-110.68819],[44.65576,-110.69293],
+      [44.65377,-110.69548],[44.65140,-110.69151],[44.59176,-110.73254],[44.60008,-110.73190],
+      [44.60095,-110.72909],[44.60422,-110.72738],[44.60596,-110.71718],[44.60749,-110.71454],
+      [44.60893,-110.71470],[44.61155,-110.71173],[44.61271,-110.70737],[44.61637,-110.70447],
+      [44.62260,-110.70715],[44.62695,-110.70611],[44.63224,-110.71000],[44.63436,-110.70844],
+      [44.63791,-110.71077],[44.64068,-110.70509],[44.64045,-110.70180],[44.64419,-110.70014],
+      [44.64670,-110.69430],[44.64831,-110.69361],[44.64826,-110.69172],[44.64998,-110.69164]
+    ],
+    [
+      [44.65804,-110.60736],[44.65586,-110.60276],[44.65308,-110.60710],[44.64915,-110.60710],
+      [44.64885,-110.60873],[44.63682,-110.60727],[44.65791,-110.60937],[44.65876,-110.61317],
+      [44.66182,-110.61405],[44.66302,-110.61818],[44.66427,-110.61693],[44.66497,-110.61783],
+      [44.66535,-110.61263],[44.66777,-110.61800],[44.66723,-110.61726]
+    ]
+  ]
+},
+{
+  id:"ywmallardCreek", name:"Mallard Creek", color:"#8f7f3f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Mallard Creek inside Yellowstone: 6.7 km of it, nearest mapped water is the <b>Firehole River</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.50686,-110.83504],[44.50734,-110.83026],[44.50089,-110.81674],[44.50005,-110.81019],
+    [44.49766,-110.81005],[44.49380,-110.80401],[44.49008,-110.80472],[44.48791,-110.79803],
+    [44.47657,-110.77878],[44.47787,-110.77367]
+  ]
+},
+{
+  id:"ywmapleCreek", name:"Maple Creek", color:"#8f6f4f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Maple Creek inside Yellowstone: 25.9 km of it, nearest mapped water is the <b>Grayling Creek</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.77175,-110.92069],[44.76909,-110.92696],[44.76353,-110.93439],[44.75900,-110.94695],
+      [44.75836,-110.96571],[44.75319,-110.97071],[44.75311,-110.97436],[44.74886,-110.97906],
+      [44.74694,-110.98410],[44.74900,-110.99335],[44.74759,-110.99840],[44.74917,-111.00285],
+      [44.74758,-111.00570],[44.74875,-111.00876],[44.74702,-111.01499],[44.74287,-111.01869],
+      [44.74200,-111.02307],[44.73833,-111.02652],[44.73783,-111.02967]
+    ],
+    [
+      [44.78833,-110.90428],[44.79438,-110.89522],[44.79595,-110.88822],[44.80019,-110.88263],
+      [44.80174,-110.88423],[44.80143,-110.88757],[44.80341,-110.89038],[44.80901,-110.89096],
+      [44.82217,-110.89607],[44.81462,-110.89728],[44.81149,-110.89547],[44.81006,-110.89174]
+    ],
+    [
+      [44.78432,-110.90107],[44.78599,-110.90359],[44.78833,-110.90428],[44.78235,-110.89871],
+      [44.77175,-110.92069],[44.76884,-110.91644],[44.76887,-110.91040],[44.77311,-110.90294],
+      [44.77954,-110.89658]
+    ],
+    [
+      [44.73737,-111.03441],[44.73783,-111.02967],[44.73732,-111.03305]
+    ],
+    [
+      [44.82217,-110.89607],[44.82625,-110.89879],[44.82716,-110.90162],[44.82672,-110.90003]
+    ]
+  ]
+},
+{
+  id:"ywmeadowCreek", name:"Meadow Creek", color:"#7f6f5f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Meadow Creek inside Yellowstone: 5.1 km of it, nearest mapped water is the <b>Clear Creek</b>, about 4 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.42717,-110.28570],[44.42917,-110.28528],[44.42966,-110.28269],[44.42582,-110.28625],
+      [44.42555,-110.28946],[44.42535,-110.28700]
+    ],
+    [
+      [44.42966,-110.28269],[44.42953,-110.28010],[44.43188,-110.27747],[44.43229,-110.26926],
+      [44.43453,-110.26633],[44.43372,-110.26671]
+    ],
+    [
+      [44.43453,-110.26633],[44.43785,-110.26548],[44.44258,-110.25711],[44.43849,-110.26118],
+      [44.43826,-110.26430]
+    ]
+  ]
+},
+{
+  id:"ywmiddleCreek", name:"Middle Creek", color:"#6f7f7f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Middle Creek inside Yellowstone: 15.9 km of it, nearest mapped water is the <b>Clear Creek</b>, about 12 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.46460,-110.06381],[44.46567,-110.07350],[44.46303,-110.09210],[44.46539,-110.06295],
+      [44.46840,-110.05932],[44.47417,-110.04503],[44.47813,-110.04134],[44.47828,-110.03236],
+      [44.48134,-110.02691],[44.48271,-110.01913],[44.48561,-110.01534],[44.48766,-110.00446],
+      [44.48787,-110.00588]
+    ],
+    [
+      [44.44916,-110.13882],[44.44327,-110.13177],[44.44971,-110.12668],[44.45288,-110.12243],
+      [44.45955,-110.10174],[44.46269,-110.09606],[44.46303,-110.09210]
+    ],
+    [
+      [44.48909,-110.00131],[44.48794,-110.00403]
+    ]
+  ]
+},
+{
+  id:"ywmirrorFork", name:"Mirror Fork", color:"#4f7f9f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Mirror Fork inside Yellowstone: 7.5 km of it, nearest mapped water is the <b>Pelican Creek</b>, about 4 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.70229,-110.12246],[44.70407,-110.12752],[44.70898,-110.13074],[44.71339,-110.14238],
+      [44.71596,-110.14445],[44.72115,-110.14526],[44.71840,-110.14367]
+    ],
+    [
+      [44.72983,-110.14750],[44.73049,-110.14871],[44.72536,-110.14336],[44.72115,-110.14526],
+      [44.72199,-110.14448]
+    ],
+    [
+      [44.73370,-110.15256],[44.73612,-110.15436],[44.73728,-110.15716],[44.73478,-110.16657],
+      [44.73569,-110.16204]
+    ],
+    [
+      [44.73049,-110.14871],[44.73370,-110.15256],[44.73067,-110.14918]
+    ]
+  ]
+},
+{
+  id:"ywmistCreek", name:"Mist Creek", color:"#5f6f9f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Mist Creek inside Yellowstone: 11.3 km of it, nearest mapped water is the <b>Pelican Creek</b>, about 7 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.63775,-110.09975],[44.63366,-110.10297],[44.63931,-110.09805],[44.63998,-110.09449],
+      [44.64149,-110.09318],[44.64383,-110.07556],[44.64543,-110.07224],[44.64526,-110.07393]
+    ],
+    [
+      [44.59427,-110.15481],[44.60297,-110.15479],[44.60500,-110.14829],[44.61043,-110.14396],
+      [44.61432,-110.13325]
+    ],
+    [
+      [44.61938,-110.12223],[44.61676,-110.12961],[44.62125,-110.12009],[44.62054,-110.12099]
+    ],
+    [
+      [44.62125,-110.12009],[44.62984,-110.10756]
+    ],
+    [
+      [44.61676,-110.12961],[44.61432,-110.13325],[44.61545,-110.13255]
+    ],
+    [
+      [44.63366,-110.10297],[44.62984,-110.10756],[44.63068,-110.10725]
+    ]
+  ]
+},
+{
+  id:"ywmooseCreek", name:"Moose Creek", color:"#2f7f8f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Moose Creek inside Yellowstone: 17.6 km of it, nearest mapped water is the <b>Lewis River</b>, about 8 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.32179,-110.74621],[44.32093,-110.75031],[44.31918,-110.75009],[44.31796,-110.75377],
+      [44.31519,-110.75381],[44.31186,-110.75870],[44.31009,-110.76748],[44.30701,-110.77062],
+      [44.30313,-110.78142],[44.28808,-110.79512],[44.28940,-110.79704],[44.29110,-110.79661],
+      [44.30260,-110.78432]
+    ],
+    [
+      [44.32763,-110.73776],[44.32532,-110.73965],[44.32445,-110.74513],[44.32297,-110.74526],
+      [44.32236,-110.74675],[44.33194,-110.73053],[44.33308,-110.72590],[44.33254,-110.71856],
+      [44.33586,-110.71099]
+    ],
+    [
+      [44.35926,-110.69720],[44.35768,-110.69645],[44.35546,-110.69862],[44.35240,-110.69923],
+      [44.35046,-110.70385],[44.34918,-110.70345],[44.34906,-110.70485],[44.34638,-110.70625],
+      [44.34148,-110.70326],[44.34342,-110.70331],[44.34565,-110.70597]
+    ],
+    [
+      [44.33627,-110.71062],[44.34148,-110.70326]
+    ]
+  ]
+},
+{
+  id:"ywmossCreek", name:"Moss Creek", color:"#3f8f7f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Moss Creek inside Yellowstone: 12.1 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 6 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.74439,-110.36150],[44.74262,-110.36190],[44.74114,-110.36023],[44.73873,-110.36010],
+      [44.73566,-110.36355],[44.72880,-110.36230],[44.72498,-110.36472],[44.72456,-110.35905],
+      [44.72173,-110.35805],[44.72098,-110.35916],[44.71199,-110.34576],[44.71264,-110.34894],
+      [44.71551,-110.35118],[44.71857,-110.35165],[44.71825,-110.35587],[44.72011,-110.35979]
+    ],
+    [
+      [44.74958,-110.37935],[44.74755,-110.37519],[44.74903,-110.36971],[44.74439,-110.36150],
+      [44.75155,-110.39160],[44.74995,-110.38471]
+    ],
+    [
+      [44.75714,-110.39642],[44.75155,-110.39160]
+    ]
+  ]
+},
+{
+  id:"ywmountainCreek", name:"Mountain Creek", color:"#4f8f6f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Mountain Creek inside Yellowstone: 14.9 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 6 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.24248,-110.04773],[44.24218,-110.04971],[44.24007,-110.04106],[44.24179,-110.03360],
+      [44.24068,-110.03245],[44.24144,-110.02723],[44.24092,-110.03005]
+    ],
+    [
+      [44.22663,-110.12388],[44.22574,-110.12027],[44.22695,-110.12488],[44.22474,-110.13139],
+      [44.22603,-110.12731]
+    ],
+    [
+      [44.23197,-110.10165],[44.23295,-110.09743],[44.23215,-110.09533],[44.23069,-110.10784],
+      [44.22772,-110.10804]
+    ],
+    [
+      [44.23658,-110.07701],[44.23782,-110.07730],[44.23777,-110.07590],[44.23617,-110.07769],
+      [44.23574,-110.08753],[44.23215,-110.09533],[44.23264,-110.09405]
+    ],
+    [
+      [44.24237,-110.05391],[44.24228,-110.05098],[44.24246,-110.05564],[44.24106,-110.05721],
+      [44.24189,-110.05686]
+    ],
+    [
+      [44.24144,-110.02723],[44.24244,-110.02143],[44.24119,-110.01837],[44.24141,-110.01341],
+      [44.24149,-110.01660]
+    ],
+    [
+      [44.22645,-110.11090],[44.22731,-110.11332],[44.22628,-110.11586],[44.22678,-110.11956],
+      [44.22574,-110.12027]
+    ],
+    [
+      [44.22690,-110.10889],[44.22645,-110.11090],[44.22744,-110.10771]
+    ],
+    [
+      [44.24130,-110.06243],[44.24113,-110.05903],[44.23890,-110.06748],[44.24096,-110.06495]
+    ],
+    [
+      [44.24236,-110.00112],[44.24141,-110.01341]
+    ],
+    [
+      [44.23890,-110.06748],[44.23777,-110.07557]
+    ]
+  ]
+},
+{
+  id:"ywmulherinCreek", name:"Mulherin Creek", color:"#5f8f5f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Mulherin Creek inside Yellowstone: 5.3 km of it, nearest mapped water is the <b>Gardner River</b>, about 6 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [45.02850,-110.88810],[45.02248,-110.88526],[45.01255,-110.89126],[45.01620,-110.88908]
+    ],
+    [
+      [45.01255,-110.89126],[45.00787,-110.89372],[44.99424,-110.88392],[44.99951,-110.88759]
+    ]
+  ]
+},
+{
+  id:"ywmyriadCreek", name:"Myriad Creek", color:"#6f8f4f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Myriad Creek inside Yellowstone: 2.5 km of it, nearest mapped water is the <b>Firehole River</b>, about 1 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.44642,-110.82521],[44.45089,-110.83009],[44.45454,-110.82961],[44.45695,-110.83395],
+    [44.45845,-110.83157],[44.46134,-110.83477],[44.46408,-110.83456]
+  ]
+},
+{
+  id:"ywnorthForkFanCreek", name:"North Fork Fan Creek", color:"#7f8f3f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"North Fork Fan Creek inside Yellowstone: 11.3 km of it, nearest mapped water is the <b>Fan Creek</b>, about 0 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [45.01638,-110.94530],[45.02180,-110.94460],[45.02619,-110.94566],[45.02984,-110.94298],
+      [45.03353,-110.93323],[45.03097,-110.94015]
+    ],
+    [
+      [44.99250,-110.96532],[44.99567,-110.96061],[44.99811,-110.95913],[45.00220,-110.96021],
+      [45.00436,-110.95626],[44.99219,-110.96999],[44.99267,-110.96915]
+    ],
+    [
+      [45.00436,-110.95626],[45.00532,-110.95593],[45.00677,-110.95804],[45.00968,-110.95616],
+      [45.01104,-110.95701],[45.01638,-110.94530],[45.01140,-110.95694]
+    ],
+    [
+      [45.04014,-110.91562],[45.03706,-110.92481],[45.03387,-110.92906],[45.03353,-110.93323]
+    ]
+  ]
+},
+{
+  id:"ywnorthForkSpecimenCreek", name:"North Fork Specimen Creek", color:"#8f7f3f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"North Fork Specimen Creek inside Yellowstone: 12.4 km of it, nearest mapped water is the <b>Specimen Creek</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [45.04270,-111.02995],[45.03388,-111.03483],[45.02857,-111.04191]
+    ],
+    [
+      [45.05865,-111.02470],[45.06478,-111.02221],[45.06769,-111.01933],[45.05589,-111.02513],
+      [45.05521,-111.02737],[45.04270,-111.02995],[45.04652,-111.02754],[45.05308,-111.02735]
+    ],
+    [
+      [45.08858,-110.98436],[45.08884,-110.99038],[45.08277,-111.00256],[45.08686,-110.99899],
+      [45.08797,-110.99502]
+    ],
+    [
+      [45.06769,-111.01933],[45.07291,-111.00791],[45.08277,-111.00256],[45.08135,-111.00360]
+    ]
+  ]
+},
+{
+  id:"ywnorthForkSplitCreek", name:"North Fork Split Creek", color:"#8f6f4f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"North Fork Split Creek inside Yellowstone: 2.0 km of it, nearest mapped water is the <b>Boundary Creek</b>, about 5 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.44246,-111.07383],[44.44124,-111.08038],[44.44662,-111.09670]
+  ]
+},
+{
+  id:"ywopalCreek", name:"Opal Creek", color:"#7f6f5f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Opal Creek inside Yellowstone: 7.3 km of it, nearest mapped water is the <b>Lamar River</b>, about 4 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.83621,-110.17177],[44.83238,-110.17426],[44.82719,-110.18202],[44.81811,-110.18387],
+      [44.81436,-110.18941],[44.81074,-110.19071],[44.81038,-110.19304],[44.80332,-110.19553],
+      [44.80108,-110.19809]
+    ],
+    [
+      [44.79500,-110.19783],[44.79325,-110.19827],[44.78783,-110.19536],[44.79562,-110.19799],
+      [44.80034,-110.19803]
+    ]
+  ]
+},
+{
+  id:"ywotterCreek", name:"Otter Creek", color:"#6f7f7f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Otter Creek inside Yellowstone: 8.8 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 5 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.70169,-110.50511],[44.70047,-110.51094],[44.70091,-110.51618],[44.69552,-110.52687],
+      [44.69356,-110.52838],[44.68888,-110.54349],[44.68902,-110.54844],[44.68488,-110.55598],
+      [44.68706,-110.56023],[44.68638,-110.56198],[44.68760,-110.56715],[44.68526,-110.58405],
+      [44.68517,-110.57636],[44.68693,-110.57107]
+    ],
+    [
+      [44.68944,-110.58863],[44.68526,-110.58405]
+    ]
+  ]
+},
+{
+  id:"ywoutletCreek", name:"Outlet Creek", color:"#4f7f9f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Outlet Creek inside Yellowstone: 7.6 km of it, nearest mapped water is the <b>Heart River</b>, about 1 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.26880,-110.39568],[44.26947,-110.39474],[44.26463,-110.39953],[44.25131,-110.42057],
+      [44.25236,-110.41455],[44.25775,-110.40958]
+    ],
+    [
+      [44.25207,-110.44021],[44.25008,-110.43546],[44.25131,-110.42057],[44.24986,-110.42350],
+      [44.24989,-110.43321]
+    ],
+    [
+      [44.27313,-110.39223],[44.26947,-110.39474]
+    ]
+  ]
+},
+{
+  id:"ywouzelCreek", name:"Ouzel Creek", color:"#5f6f9f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Ouzel Creek inside Yellowstone: 20.5 km of it, nearest mapped water is the <b>Bechler River</b>, about 4 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.22665,-110.97685],[44.23293,-110.97445],[44.23626,-110.97515],[44.23900,-110.97221],
+      [44.24117,-110.97245],[44.24967,-110.96698],[44.25690,-110.96450],[44.26537,-110.96501],
+      [44.27478,-110.96312],[44.27632,-110.96404],[44.28362,-110.96377],[44.28999,-110.95944],
+      [44.29352,-110.95125],[44.30067,-110.94643],[44.30516,-110.94061],[44.30715,-110.93503],
+      [44.31249,-110.93315],[44.31761,-110.92777],[44.31825,-110.92339],[44.32142,-110.91921],
+      [44.32149,-110.91716],[44.33922,-110.90043],[44.33490,-110.90620],[44.32961,-110.90979]
+    ],
+    [
+      [44.33922,-110.90043],[44.34417,-110.88355],[44.34273,-110.88524],[44.33944,-110.89983]
+    ],
+    [
+      [44.35173,-110.88913],[44.34712,-110.88436],[44.34417,-110.88355]
+    ]
+  ]
+},
+{
+  id:"ywoxbowCreek", name:"Oxbow Creek", color:"#2f7f8f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Oxbow Creek inside Yellowstone: 17.4 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.95581,-110.52714],[44.95578,-110.52242],[44.95391,-110.51816],[44.95490,-110.51403],
+      [44.95365,-110.50538],[44.94996,-110.50030],[44.94278,-110.49671],[44.93755,-110.49933],
+      [44.93634,-110.50337],[44.93380,-110.50555],[44.92947,-110.50462],[44.95549,-110.52755]
+    ],
+    [
+      [44.95572,-110.52788],[44.95596,-110.53145],[44.96135,-110.54124],[44.96794,-110.54210],
+      [44.97029,-110.54817],[44.97448,-110.54875],[44.97948,-110.55524],[44.98428,-110.55855],
+      [44.98733,-110.55896],[44.99033,-110.56200],[44.99124,-110.56140]
+    ],
+    [
+      [44.90395,-110.49958],[44.91145,-110.49956],[44.91460,-110.49661],[44.91470,-110.49389],
+      [44.91628,-110.49283],[44.92170,-110.49553],[44.92335,-110.49870],[44.92947,-110.50462]
+    ]
+  ]
+},
+{
+  id:"ywpassageCreek", name:"Passage Creek", color:"#3f8f7f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Passage Creek inside Yellowstone: 14.1 km of it, nearest mapped water is the <b>Snake River</b>, about 8 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.22035,-110.29149],[44.21617,-110.28630],[44.21347,-110.27838],[44.20722,-110.27023],
+      [44.20355,-110.26109],[44.22316,-110.29698],[44.22781,-110.29720],[44.24331,-110.27788],
+      [44.24195,-110.28095],[44.24264,-110.28331],[44.23952,-110.28850],[44.23168,-110.29581],
+      [44.22891,-110.29641]
+    ],
+    [
+      [44.20171,-110.25730],[44.20276,-110.25722],[44.20355,-110.26109]
+    ],
+    [
+      [44.19944,-110.25790],[44.19864,-110.25937],[44.19761,-110.25883],[44.20171,-110.25730],
+      [44.20050,-110.25744]
+    ],
+    [
+      [44.24526,-110.27641],[44.24331,-110.27788],[44.24456,-110.27727]
+    ]
+  ]
+},
+{
+  id:"ywphillipsFork", name:"Phillips Fork", color:"#4f8f6f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Phillips Fork inside Yellowstone: 7.0 km of it, nearest mapped water is the <b>Bechler River</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.28919,-110.89357],[44.29507,-110.88825],[44.29982,-110.88619],[44.31721,-110.88796],
+      [44.31263,-110.88365],[44.30621,-110.88134],[44.30340,-110.88155],[44.30105,-110.88480]
+    ],
+    [
+      [44.32961,-110.88054],[44.32720,-110.88070],[44.31972,-110.88844],[44.31721,-110.88796]
+    ]
+  ]
+},
+{
+  id:"ywphloxCreek", name:"Phlox Creek", color:"#5f8f5f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Phlox Creek inside Yellowstone: 5.9 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 4 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.18303,-110.16520],[44.19211,-110.17081],[44.19411,-110.17083],[44.20086,-110.16698],
+    [44.20408,-110.15860],[44.20430,-110.15374],[44.21173,-110.12372]
+  ]
+},
+{
+  id:"ywplateauCreek", name:"Plateau Creek", color:"#6f8f4f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Plateau Creek inside Yellowstone: 17.8 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 5 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.15992,-110.23661],[44.15729,-110.23503],[44.15849,-110.22558],[44.15935,-110.24513],
+      [44.15698,-110.25639],[44.15242,-110.26164],[44.15395,-110.25911]
+    ],
+    [
+      [44.15967,-110.22369],[44.16477,-110.21560],[44.17009,-110.21547],[44.17463,-110.21350],
+      [44.18035,-110.20612],[44.18200,-110.18221],[44.15849,-110.22558]
+    ],
+    [
+      [44.15242,-110.26164],[44.14449,-110.26721],[44.14177,-110.26769]
+    ],
+    [
+      [44.14114,-110.26875],[44.14177,-110.26769],[44.13668,-110.27700],[44.14084,-110.26921]
+    ],
+    [
+      [44.13312,-110.28344],[44.13668,-110.27700],[44.13631,-110.27869]
+    ]
+  ]
+},
+{
+  id:"ywpolecatCreek", name:"Polecat Creek", color:"#7f8f3f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Polecat Creek inside Yellowstone: 21.3 km of it, nearest mapped water is the <b>Lewis River</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.25512,-110.73502],[44.25699,-110.73247],[44.25713,-110.72793],[44.25520,-110.71768],
+    [44.25157,-110.71424],[44.25081,-110.70830],[44.24554,-110.70107],[44.24375,-110.69440],
+    [44.24105,-110.68981],[44.23882,-110.68977],[44.23743,-110.68739],[44.23203,-110.68454],
+    [44.22902,-110.68620],[44.22526,-110.68477],[44.22218,-110.68684],[44.21905,-110.68590],
+    [44.21487,-110.68654],[44.21446,-110.68950],[44.21246,-110.69017],[44.21047,-110.69344],
+    [44.21038,-110.69667],[44.20785,-110.69981],[44.20186,-110.70058],[44.20003,-110.69913],
+    [44.19421,-110.69910],[44.18725,-110.70704],[44.18388,-110.70847],[44.18352,-110.71097],
+    [44.17822,-110.71932],[44.17135,-110.71767],[44.16809,-110.71866],[44.16518,-110.71705],
+    [44.16068,-110.72010],[44.15961,-110.71864],[44.15780,-110.71907],[44.15248,-110.70794],
+    [44.15217,-110.70513],[44.15373,-110.70340],[44.15457,-110.69864],[44.15193,-110.69695],
+    [44.14865,-110.69740],[44.14440,-110.69573],[44.13795,-110.70214],[44.13665,-110.70700],
+    [44.13289,-110.70898]
+  ]
+},
+{
+  id:"ywprimroseCreek", name:"Primrose Creek", color:"#8f7f3f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Primrose Creek inside Yellowstone: 3.4 km of it, nearest mapped water is the <b>Gardner River</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.97862,-110.72974],[44.98132,-110.72880],[44.98316,-110.72585],[44.97744,-110.71705],
+    [44.97993,-110.71386],[44.97910,-110.70386],[44.97768,-110.70417],[44.97488,-110.70119]
+  ]
+},
+{
+  id:"ywpropositionCreek", name:"Proposition Creek", color:"#8f6f4f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Proposition Creek inside Yellowstone: 18.1 km of it, nearest mapped water is the <b>Fall River</b>, about 1 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.16464,-110.85435],[44.16867,-110.86580],[44.17219,-110.86963],[44.17346,-110.88304],
+      [44.16529,-110.89189],[44.16413,-110.89691],[44.16172,-110.89903],[44.15935,-110.90551],
+      [44.16206,-110.91009],[44.16252,-110.91508],[44.16556,-110.91812],[44.16546,-110.92729]
+    ],
+    [
+      [44.16391,-110.81503],[44.16835,-110.81565],[44.17363,-110.80799],[44.17755,-110.80935],
+      [44.15658,-110.82139],[44.15543,-110.81692],[44.15744,-110.81031],[44.16315,-110.81422]
+    ],
+    [
+      [44.16362,-110.84433],[44.16294,-110.83922],[44.16052,-110.83785],[44.15963,-110.83156],
+      [44.16400,-110.84527],[44.16302,-110.84780],[44.16464,-110.85435],[44.16402,-110.84976]
+    ],
+    [
+      [44.15658,-110.82139],[44.15963,-110.83156]
+    ]
+  ]
+},
+{
+  id:"ywquartzCreek", name:"Quartz Creek", color:"#7f6f5f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Quartz Creek inside Yellowstone: 3.3 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 1 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.88473,-110.33011],[44.88234,-110.33120],[44.87388,-110.34599],[44.87422,-110.35425],
+    [44.87191,-110.36447]
+  ]
+},
+{
+  id:"ywravenCreek", name:"Raven Creek", color:"#6f7f7f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Raven Creek inside Yellowstone: 18.4 km of it, nearest mapped water is the <b>Pelican Creek</b>, about 1 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.68981,-110.18119],[44.68828,-110.18183],[44.68609,-110.17813],[44.67773,-110.17332],
+      [44.67512,-110.16846],[44.67310,-110.16850],[44.66706,-110.16494],[44.66027,-110.16429],
+      [44.65752,-110.16046],[44.65476,-110.16098],[44.65333,-110.15908],[44.65031,-110.16112],
+      [44.64869,-110.16082],[44.64652,-110.15561],[44.64407,-110.15385],[44.64242,-110.15635],
+      [44.64068,-110.15592],[44.63891,-110.15212],[44.63515,-110.15378],[44.63109,-110.15924],
+      [44.62911,-110.15939],[44.61889,-110.17730]
+    ],
+    [
+      [44.60545,-110.20928],[44.60531,-110.20623],[44.60635,-110.20540],[44.60519,-110.20513],
+      [44.60530,-110.20345],[44.60621,-110.20377],[44.60611,-110.20218],[44.61017,-110.20340],
+      [44.60780,-110.20378]
+    ],
+    [
+      [44.61017,-110.20340],[44.61135,-110.19812],[44.61276,-110.19669],[44.61267,-110.19929]
+    ],
+    [
+      [44.61517,-110.18874],[44.61296,-110.19034],[44.61365,-110.19260],[44.61196,-110.19530],
+      [44.61276,-110.19669]
+    ],
+    [
+      [44.60057,-110.21141],[44.60545,-110.20928],[44.60309,-110.20944],[44.60305,-110.21083]
+    ],
+    [
+      [44.61657,-110.18038],[44.61517,-110.18874],[44.61635,-110.18819],[44.61724,-110.18129]
+    ],
+    [
+      [44.59760,-110.21907],[44.59816,-110.21374],[44.59934,-110.21408],[44.60057,-110.21141],
+      [44.59956,-110.21235]
+    ]
+  ]
+},
+{
+  id:"ywredCreek", name:"Red Creek", color:"#4f7f9f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Red Creek inside Yellowstone: 16.7 km of it, nearest mapped water is the <b>Snake River</b>, about 0 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.23378,-110.56316],[44.23840,-110.56320],[44.24189,-110.55903],[44.23347,-110.56317],
+      [44.23245,-110.56490],[44.23051,-110.56336],[44.22899,-110.56468],[44.22675,-110.56312],
+      [44.22359,-110.56453],[44.22254,-110.56704],[44.22053,-110.56710],[44.21190,-110.55443],
+      [44.21314,-110.55944],[44.21641,-110.55955],[44.21794,-110.56131]
+    ],
+    [
+      [44.17947,-110.55938],[44.18184,-110.55795],[44.18511,-110.55916],[44.18564,-110.55719],
+      [44.17919,-110.55970],[44.17691,-110.55881],[44.17282,-110.56176],[44.17332,-110.56367]
+    ],
+    [
+      [44.19554,-110.53812],[44.19758,-110.54014],[44.19805,-110.54519],[44.20112,-110.54484],
+      [44.20380,-110.54761],[44.20530,-110.54756],[44.20584,-110.54939],[44.19539,-110.53773],
+      [44.19361,-110.53731],[44.19151,-110.54018],[44.19265,-110.53748]
+    ],
+    [
+      [44.19151,-110.54018],[44.18991,-110.54160],[44.18909,-110.55222],[44.18564,-110.55719]
+    ],
+    [
+      [44.24189,-110.55903],[44.24745,-110.55789],[44.24448,-110.55687],[44.24316,-110.55777]
+    ],
+    [
+      [44.21190,-110.55443],[44.20584,-110.54939]
+    ]
+  ]
+},
+{
+  id:"ywreeseCreek", name:"Reese Creek", color:"#5f6f9f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Reese Creek inside Yellowstone: 14.6 km of it, nearest mapped water is the <b>Gardner River</b>, about 5 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.98658,-110.80347],[44.98807,-110.80560],[44.98652,-110.80313],[44.98479,-110.79249],
+      [44.98744,-110.79285],[44.99162,-110.79064],[44.99470,-110.79146],[44.99835,-110.79707],
+      [45.00296,-110.79838],[45.00667,-110.80275],[45.01100,-110.80288],[45.03258,-110.79542],
+      [45.02775,-110.79357],[45.02194,-110.79565],[45.01945,-110.79871],[45.01554,-110.79843],
+      [45.01204,-110.80228]
+    ],
+    [
+      [45.06516,-110.77457],[45.06147,-110.78313],[45.05563,-110.78844],[45.05041,-110.79034],
+      [45.04595,-110.79371],[45.04351,-110.79343],[45.04020,-110.79540],[45.03258,-110.79542],
+      [45.03825,-110.79456]
+    ]
+  ]
+},
+{
+  id:"ywrescueCreek", name:"Rescue Creek", color:"#2f7f8f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Rescue Creek inside Yellowstone: 5.3 km of it, nearest mapped water is the <b>Blacktail Deer Creek</b>, about 1 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.97170,-110.58900],[44.97125,-110.60196],[44.98078,-110.61748],[44.97814,-110.61240],
+      [44.97352,-110.60878]
+    ],
+    [
+      [44.98865,-110.63379],[44.98262,-110.62385],[44.98078,-110.61748]
+    ]
+  ]
+},
+{
+  id:"ywrichardsCreek", name:"Richards Creek", color:"#3f8f7f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Richards Creek inside Yellowstone: 7.3 km of it, nearest mapped water is the <b>Gneiss Creek</b>, about 1 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.76321,-111.00280],[44.76335,-111.01081],[44.76572,-111.01704],[44.76403,-111.02724],
+      [44.76404,-111.04444],[44.76593,-111.05126],[44.76712,-111.05112],[44.76860,-111.05396],
+      [44.76957,-111.06018],[44.77157,-111.06172],[44.77010,-111.06366],[44.77003,-111.06984]
+    ],
+    [
+      [44.76987,-111.07036],[44.76935,-111.07219],[44.77218,-111.07377],[44.76973,-111.07354]
+    ],
+    [
+      [44.77218,-111.07377],[44.77510,-111.07239],[44.77613,-111.07327]
+    ]
+  ]
+},
+{
+  id:"ywrobinsonCreek", name:"Robinson Creek", color:"#4f8f6f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Robinson Creek inside Yellowstone: 16.3 km of it, nearest mapped water is the <b>Boundary Creek</b>, about 5 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.28663,-111.08767],[44.28461,-111.09084],[44.28083,-111.09307],[44.27520,-111.08809],
+      [44.27302,-111.09340],[44.26934,-111.09257],[44.26698,-111.08767],[44.26536,-111.08711],
+      [44.25855,-111.08699],[44.24792,-111.08948],[44.24582,-111.08877],[44.24278,-111.09028],
+      [44.24018,-111.09672]
+    ],
+    [
+      [44.22182,-111.07984],[44.22401,-111.08150],[44.21694,-111.08105],[44.21515,-111.08443],
+      [44.21255,-111.08423],[44.21124,-111.08687],[44.20681,-111.08462],[44.20474,-111.08541],
+      [44.20530,-111.08152],[44.20431,-111.08029],[44.19951,-111.07996],[44.19595,-111.08221],
+      [44.19340,-111.07847],[44.19112,-111.08176]
+    ],
+    [
+      [44.23471,-111.09339],[44.23587,-111.09594],[44.23421,-111.09353],[44.22517,-111.08942],
+      [44.22514,-111.08467],[44.22511,-111.08878]
+    ],
+    [
+      [44.19061,-111.08168],[44.18710,-111.08207],[44.18506,-111.08722],[44.18290,-111.08834],
+      [44.18114,-111.09215],[44.17930,-111.09269],[44.17668,-111.09621]
+    ],
+    [
+      [44.22514,-111.08467],[44.22508,-111.08208],[44.22401,-111.08150]
+    ]
+  ]
+},
+{
+  id:"ywrockCreek", name:"Rock Creek", color:"#5f8f5f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Rock Creek inside Yellowstone: 6.2 km of it, nearest mapped water is the <b>Bechler River</b>, about 6 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.15325,-111.08620],[44.15660,-111.08481],[44.15858,-111.08121],[44.14815,-111.09073],
+      [44.14419,-111.09197],[44.14087,-111.09039],[44.13504,-111.09801],[44.14008,-111.09043]
+    ],
+    [
+      [44.16825,-111.07048],[44.16694,-111.07513],[44.15858,-111.08121]
+    ]
+  ]
+},
+{
+  id:"ywrockyCreek", name:"Rocky Creek", color:"#6f8f4f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Rocky Creek inside Yellowstone: 13.3 km of it, nearest mapped water is the <b>Beaverdam Creek</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.33425,-110.16686],[44.33891,-110.16443],[44.34267,-110.16565],[44.35364,-110.16207],
+      [44.35016,-110.16216]
+    ],
+    [
+      [44.36522,-110.16004],[44.36546,-110.16112],[44.36489,-110.15957],[44.36357,-110.15972],
+      [44.36289,-110.16150],[44.35971,-110.16113],[44.35843,-110.16279],[44.35364,-110.16207],
+      [44.35758,-110.16219]
+    ],
+    [
+      [44.40665,-110.13438],[44.40787,-110.13224],[44.40057,-110.13847],[44.40099,-110.13767]
+    ],
+    [
+      [44.36546,-110.16112],[44.37032,-110.15761],[44.37501,-110.15610],[44.37120,-110.15742]
+    ],
+    [
+      [44.40787,-110.13224],[44.41366,-110.12487],[44.41063,-110.12691]
+    ],
+    [
+      [44.38435,-110.15478],[44.39127,-110.14731],[44.38979,-110.14792]
+    ],
+    [
+      [44.40057,-110.13847],[44.39361,-110.14691],[44.39127,-110.14731]
+    ],
+    [
+      [44.38181,-110.15579],[44.38435,-110.15478],[44.37501,-110.15610],[44.37916,-110.15544]
+    ]
+  ]
+},
+{
+  id:"ywroseCreek", name:"Rose Creek", color:"#7f8f3f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Rose Creek inside Yellowstone: 14.3 km of it, nearest mapped water is the <b>Soda Butte Creek</b>, about 4 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.89393,-110.23362],[44.89693,-110.22959],[44.89314,-110.23849],[44.89416,-110.24688]
+    ],
+    [
+      [44.92229,-110.16325],[44.92336,-110.16092],[44.92715,-110.15949],[44.91202,-110.17972],
+      [44.90908,-110.17035],[44.92014,-110.16597]
+    ],
+    [
+      [44.90126,-110.22622],[44.90204,-110.22057],[44.91044,-110.20563],[44.90045,-110.22796],
+      [44.89738,-110.22956]
+    ],
+    [
+      [44.91219,-110.18336],[44.91202,-110.17972],[44.91044,-110.20563],[44.91002,-110.20171]
+    ]
+  ]
+},
+{
+  id:"ywsecretValleyCreek", name:"Secret Valley Creek", color:"#8f7f3f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Secret Valley Creek inside Yellowstone: 9.2 km of it, nearest mapped water is the <b>Gibbon River</b>, about 1 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.66768,-110.82221],[44.66886,-110.80699],[44.66748,-110.80468],[44.66751,-110.79797]
+    ],
+    [
+      [44.66671,-110.83413],[44.67038,-110.83981],[44.66992,-110.84803],[44.67285,-110.84390],
+      [44.67155,-110.84158]
+    ],
+    [
+      [44.65824,-110.76985],[44.66183,-110.77529],[44.66545,-110.78586],[44.66353,-110.78106]
+    ],
+    [
+      [44.66624,-110.82836],[44.66671,-110.83413],[44.66768,-110.82221],[44.66649,-110.82669]
+    ],
+    [
+      [44.66545,-110.78586],[44.66751,-110.79797],[44.66676,-110.79242]
+    ]
+  ]
+},
+{
+  id:"ywsedgeCreek", name:"Sedge Creek", color:"#8f6f4f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Sedge Creek inside Yellowstone: 18.6 km of it, nearest mapped water is the <b>Pelican Creek</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.52404,-110.28300],[44.52410,-110.28077],[44.52270,-110.27966],[44.52357,-110.27839],
+      [44.53082,-110.27805],[44.53231,-110.28031],[44.53559,-110.27470],[44.53697,-110.27579],
+      [44.54009,-110.27413],[44.54172,-110.27533],[44.54401,-110.27323],[44.54419,-110.27141],
+      [44.54558,-110.27249],[44.54691,-110.27005],[44.54802,-110.27131],[44.54960,-110.26933],
+      [44.54796,-110.26638],[44.54968,-110.25866],[44.55723,-110.25566],[44.56471,-110.24825],
+      [44.56355,-110.23903],[44.55639,-110.22140],[44.56261,-110.23140],[44.56332,-110.23772]
+    ],
+    [
+      [44.54517,-110.20399],[44.54331,-110.20038],[44.54345,-110.19557],[44.55660,-110.21992],
+      [44.55602,-110.21461],[44.55246,-110.20656],[44.54978,-110.20735],[44.54648,-110.20592]
+    ],
+    [
+      [44.54207,-110.17406],[44.54222,-110.17958],[44.54507,-110.19002],[44.54345,-110.19557]
+    ]
+  ]
+},
+{
+  id:"ywsentinelCreek", name:"Sentinel Creek", color:"#7f6f5f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Sentinel Creek inside Yellowstone: 16.4 km of it, nearest mapped water is the <b>Little Firehole River</b>, about 4 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.56823,-110.88570],[44.57022,-110.88763],[44.57080,-110.89067],[44.56770,-110.89518],
+      [44.56651,-110.90271],[44.56270,-110.91032],[44.55861,-110.91191],[44.55599,-110.91100],
+      [44.55193,-110.91401],[44.54830,-110.91420],[44.54042,-110.91883],[44.53513,-110.91743],
+      [44.52404,-110.91870],[44.52022,-110.91567],[44.50835,-110.91866],[44.50870,-110.91505],
+      [44.51064,-110.91446],[44.51442,-110.90980],[44.51692,-110.91015],[44.51821,-110.91281]
+    ],
+    [
+      [44.56708,-110.88035],[44.56823,-110.88570],[44.56674,-110.87854],[44.56774,-110.87578],
+      [44.56549,-110.86854],[44.56655,-110.86377],[44.56579,-110.85426],[44.56733,-110.85807],
+      [44.56666,-110.86340]
+    ],
+    [
+      [44.56730,-110.84602],[44.56637,-110.84552],[44.56451,-110.84747],[44.56779,-110.84608],
+      [44.56679,-110.84314]
+    ],
+    [
+      [44.56451,-110.84747],[44.56377,-110.85006],[44.56579,-110.85426],[44.56494,-110.85276]
+    ]
+  ]
+},
+{
+  id:"ywshallowCreek", name:"Shallow Creek", color:"#6f7f7f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Shallow Creek inside Yellowstone: 16.0 km of it, nearest mapped water is the <b>Pelican Creek</b>, about 4 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.76820,-110.28066],[44.76659,-110.27753],[44.76403,-110.27736],[44.76214,-110.27416],
+      [44.75965,-110.27599],[44.75748,-110.27218],[44.75456,-110.27296],[44.75067,-110.26970],
+      [44.75231,-110.26422],[44.75098,-110.25409],[44.74848,-110.26081],[44.74448,-110.26215],
+      [44.74263,-110.26679],[44.74107,-110.26367],[44.73769,-110.26250],[44.73558,-110.26371],
+      [44.72932,-110.25013],[44.73467,-110.26041]
+    ],
+    [
+      [44.78256,-110.32589],[44.77803,-110.31751],[44.77912,-110.31092],[44.77820,-110.30271],
+      [44.77441,-110.29742],[44.77799,-110.30207]
+    ],
+    [
+      [44.77441,-110.29742],[44.77429,-110.29443],[44.76820,-110.28066],[44.77121,-110.28873]
+    ],
+    [
+      [44.71676,-110.25975],[44.72599,-110.25046],[44.72932,-110.25013]
+    ]
+  ]
+},
+{
+  id:"ywshoshoneCreek", name:"Shoshone Creek", color:"#4f7f9f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Shoshone Creek inside Yellowstone: 12.0 km of it, nearest mapped water is the <b>Firehole River</b>, about 4 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.36664,-110.81039],[44.37169,-110.81290],[44.36581,-110.80893],[44.36498,-110.80540],
+      [44.36634,-110.80279],[44.36442,-110.79878],[44.36084,-110.79910],[44.35903,-110.79802],
+      [44.35788,-110.79900],[44.35557,-110.79789],[44.35212,-110.80088],[44.34847,-110.79518],
+      [44.34997,-110.79751],[44.34926,-110.79866],[44.35142,-110.80037]
+    ],
+    [
+      [44.40052,-110.76005],[44.40075,-110.76250],[44.39865,-110.76505],[44.39437,-110.76246],
+      [44.39309,-110.76354],[44.39218,-110.76657],[44.38800,-110.76833],[44.38017,-110.77871],
+      [44.38087,-110.78318],[44.37745,-110.79258],[44.37706,-110.79798]
+    ],
+    [
+      [44.37169,-110.81290],[44.37447,-110.80646],[44.37572,-110.80631],[44.37565,-110.80408],
+      [44.37576,-110.80537]
+    ],
+    [
+      [44.37655,-110.80102],[44.37706,-110.79798],[44.37569,-110.80360]
+    ]
+  ]
+},
+{
+  id:"ywsickleCreek", name:"Sickle Creek", color:"#5f6f9f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Sickle Creek inside Yellowstone: 12.9 km of it, nearest mapped water is the <b>Snake River</b>, about 6 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.20125,-110.35979],[44.20238,-110.35854],[44.20033,-110.36169],[44.19957,-110.36130],
+      [44.19346,-110.37635],[44.19741,-110.36647]
+    ],
+    [
+      [44.20238,-110.35854],[44.20407,-110.35688],[44.20580,-110.35755],[44.20767,-110.35538],
+      [44.21629,-110.33144],[44.21199,-110.33581],[44.21211,-110.34356],[44.20837,-110.35528]
+    ],
+    [
+      [44.22474,-110.32961],[44.22255,-110.32931],[44.22144,-110.32716],[44.21853,-110.32721],
+      [44.21629,-110.33144]
+    ],
+    [
+      [44.18508,-110.40732],[44.18763,-110.40325],[44.19105,-110.38493],[44.18918,-110.39453]
+    ],
+    [
+      [44.19115,-110.38477],[44.19346,-110.37635]
+    ]
+  ]
+},
+{
+  id:"ywsolutionCreek", name:"Solution Creek", color:"#2f7f8f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Solution Creek inside Yellowstone: 12.6 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 14 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.34812,-110.53422],[44.34805,-110.53613],[44.35220,-110.53952],[44.35406,-110.54293],
+      [44.34849,-110.53336],[44.34971,-110.53325],[44.35065,-110.53084],[44.35371,-110.53028],
+      [44.35607,-110.52549],[44.35828,-110.52464],[44.35735,-110.52216],[44.35481,-110.52284],
+      [44.35438,-110.51920],[44.35233,-110.51639],[44.35255,-110.51452],[44.35515,-110.51419],
+      [44.35595,-110.51114],[44.35891,-110.51094],[44.35718,-110.51044]
+    ],
+    [
+      [44.40674,-110.50090],[44.40119,-110.49939],[44.40013,-110.50093],[44.39886,-110.49975],
+      [44.39667,-110.50157],[44.39557,-110.49989],[44.39465,-110.50117],[44.39148,-110.50165],
+      [44.38917,-110.49900],[44.38801,-110.49863],[44.38606,-110.50054],[44.38388,-110.49844],
+      [44.38240,-110.50045],[44.38011,-110.50058],[44.38124,-110.50088]
+    ],
+    [
+      [44.35891,-110.51094],[44.36745,-110.50572],[44.37224,-110.50610],[44.37785,-110.50113],
+      [44.38011,-110.50058]
+    ]
+  ]
+},
+{
+  id:"ywsourCreek", name:"Sour Creek", color:"#3f8f7f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Sour Creek inside Yellowstone: 27.9 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 1 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.67210,-110.30966],[44.67401,-110.30745],[44.67144,-110.31134],[44.67445,-110.32227],
+      [44.67283,-110.32870],[44.67406,-110.33041],[44.67362,-110.33525],[44.67183,-110.34041],
+      [44.67310,-110.35493],[44.66939,-110.36089],[44.66721,-110.37075],[44.67522,-110.38602],
+      [44.67944,-110.39902],[44.68111,-110.39993],[44.68040,-110.40127],[44.68489,-110.40870],
+      [44.68612,-110.41218],[44.68540,-110.41351],[44.68715,-110.41671],[44.68730,-110.42239],
+      [44.68944,-110.42517],[44.68964,-110.42878],[44.69310,-110.43225],[44.69620,-110.44864],
+      [44.69547,-110.44803],[44.69506,-110.44909],[44.69376,-110.44616],[44.69639,-110.44095],
+      [44.69411,-110.43305]
+    ],
+    [
+      [44.68096,-110.47978],[44.68278,-110.47243],[44.68621,-110.46867],[44.68636,-110.46631],
+      [44.68662,-110.46854],[44.69125,-110.46653],[44.69217,-110.46760],[44.69022,-110.46873],
+      [44.68992,-110.46706],[44.68916,-110.46824],[44.68732,-110.46808],[44.68767,-110.46906],
+      [44.68707,-110.46845]
+    ],
+    [
+      [44.64667,-110.30891],[44.65012,-110.30716],[44.65646,-110.30825],[44.65892,-110.30091],
+      [44.66224,-110.29993],[44.66438,-110.29581],[44.66916,-110.29199],[44.66944,-110.29372],
+      [44.67141,-110.29354],[44.67269,-110.29593],[44.67262,-110.30054]
+    ],
+    [
+      [44.69531,-110.45179],[44.69125,-110.46653],[44.69399,-110.46081],[44.69351,-110.45636]
+    ],
+    [
+      [44.67280,-110.30123],[44.67334,-110.30269],[44.67282,-110.30164]
+    ],
+    [
+      [44.67401,-110.30745],[44.67334,-110.30269],[44.67405,-110.30581]
+    ]
+  ]
+},
+{
+  id:"ywsouthCacheCreek", name:"South Cache Creek", color:"#4f8f6f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"South Cache Creek inside Yellowstone: 16.8 km of it, nearest mapped water is the <b>Cache Creek</b>, about 6 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.83977,-110.00729],[44.83682,-110.01930],[44.83175,-110.03108],[44.83059,-110.04414],
+      [44.83197,-110.05382],[44.83566,-110.06583],[44.83601,-110.07228],[44.83858,-110.07820]
+    ],
+    [
+      [44.84054,-109.98267],[44.83953,-109.97623],[44.84159,-109.98603],[44.83977,-110.00729],
+      [44.84188,-109.99802],[44.84142,-109.98700]
+    ],
+    [
+      [44.83880,-109.94130],[44.83744,-109.93766],[44.83825,-109.93413],[44.83945,-109.94403],
+      [44.83502,-109.95037],[44.83703,-109.96133],[44.83695,-109.95836],[44.83473,-109.95447],
+      [44.83515,-109.95161]
+    ],
+    [
+      [44.83703,-109.96271],[44.83703,-109.96133],[44.83953,-109.97623],[44.83798,-109.96719]
+    ]
+  ]
+},
+{
+  id:"ywsouthForkPartridgeCreek", name:"South Fork Partridge Creek", color:"#5f8f5f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"South Fork Partridge Creek inside Yellowstone: 3.3 km of it, nearest mapped water is the <b>Boundary Creek</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.33529,-111.08796],[44.33147,-111.08951],[44.32842,-111.08775],[44.32508,-111.08908],
+      [44.32450,-111.08744],[44.32150,-111.08798]
+    ],
+    [
+      [44.31751,-111.09702],[44.32150,-111.08798],[44.32035,-111.08854],[44.31885,-111.09517]
+    ]
+  ]
+},
+{
+  id:"ywspireaCreek", name:"Spirea Creek", color:"#6f8f4f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Spirea Creek inside Yellowstone: 9.9 km of it, nearest mapped water is the <b>Lewis River</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.23377,-110.67034],[44.22799,-110.67268],[44.22138,-110.67933],[44.21022,-110.68117],
+      [44.20603,-110.68657],[44.20405,-110.68547],[44.20113,-110.68651],[44.19945,-110.68421],
+      [44.19501,-110.68385],[44.19282,-110.68219],[44.18920,-110.68396],[44.18435,-110.68135],
+      [44.18237,-110.68159]
+    ],
+    [
+      [44.15308,-110.67913],[44.15857,-110.68072],[44.16701,-110.67994],[44.16603,-110.67962]
+    ],
+    [
+      [44.16701,-110.67994],[44.16911,-110.68129],[44.18176,-110.68114]
+    ]
+  ]
+},
+{
+  id:"ywspringCreek", name:"Spring Creek", color:"#7f8f3f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Spring Creek inside Yellowstone: 10.7 km of it, nearest mapped water is the <b>De Lacy Creek</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.43288,-110.74290],[44.42897,-110.74903],[44.42923,-110.75688],[44.43104,-110.76060],
+      [44.42941,-110.76201],[44.42745,-110.77025],[44.42835,-110.77479],[44.42661,-110.78272],
+      [44.42489,-110.78243],[44.42208,-110.78732],[44.42629,-110.79124],[44.42511,-110.79653]
+    ],
+    [
+      [44.43779,-110.73125],[44.44225,-110.73150],[44.44466,-110.73465],[44.44631,-110.73249],
+      [44.44832,-110.73214],[44.45014,-110.73408],[44.43436,-110.73361],[44.43288,-110.74290],
+      [44.43360,-110.73441]
+    ],
+    [
+      [44.45284,-110.73704],[44.45221,-110.73508],[44.45014,-110.73408]
+    ]
+  ]
+},
+{
+  id:"ywspruceCreek", name:"Spruce Creek", color:"#8f7f3f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Spruce Creek inside Yellowstone: 15.5 km of it, nearest mapped water is the <b>Nez Perce Creek</b>, about 4 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.59294,-110.70747],[44.58829,-110.70228],[44.58710,-110.69357],[44.58510,-110.69200],
+      [44.58481,-110.68983],[44.58327,-110.68992],[44.58078,-110.68416],[44.57737,-110.68111],
+      [44.56860,-110.67780],[44.56563,-110.66333],[44.56280,-110.66109],[44.55799,-110.66200],
+      [44.55419,-110.66012],[44.55125,-110.65382],[44.54948,-110.63764],[44.55159,-110.63594],
+      [44.55025,-110.63313],[44.55132,-110.63143],[44.55061,-110.62666],[44.55465,-110.60873],
+      [44.55345,-110.59934],[44.55578,-110.59866],[44.56537,-110.58329],[44.56426,-110.58393]
+    ],
+    [
+      [44.57220,-110.58453],[44.57016,-110.57892],[44.56537,-110.58329]
+    ]
+  ]
+},
+{
+  id:"ywstellariaCreek", name:"Stellaria Creek", color:"#8f6f4f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Stellaria Creek inside Yellowstone: 4.8 km of it, nearest mapped water is the <b>Gardner River</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.93698,-110.91441],[44.94853,-110.91873],[44.95448,-110.91781],[44.96111,-110.92066],
+    [44.96585,-110.92827],[44.96900,-110.93015],[44.97024,-110.93855]
+  ]
+},
+{
+  id:"ywstephensCreek", name:"Stephens Creek", color:"#7f6f5f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Stephens Creek inside Yellowstone: 6.3 km of it, nearest mapped water is the <b>Gardner River</b>, about 5 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [45.00142,-110.76861],[45.00207,-110.76390],[45.00494,-110.75899],[45.00604,-110.75867],
+    [45.01276,-110.76403],[45.01613,-110.76430],[45.01858,-110.76633],[45.02470,-110.76218],
+    [45.03340,-110.76224],[45.03993,-110.76011],[45.04496,-110.75463],[45.04773,-110.75385],
+    [45.04889,-110.75100]
+  ]
+},
+{
+  id:"ywstraightCreek", name:"Straight Creek", color:"#6f7f7f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Straight Creek inside Yellowstone: 16.2 km of it, nearest mapped water is the <b>Obsidian Creek</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.81796,-110.76899],[44.80914,-110.77498],[44.80346,-110.77610],[44.79872,-110.78086],
+      [44.79595,-110.78170],[44.79247,-110.78725],[44.78871,-110.78585],[44.77249,-110.79468],
+      [44.77592,-110.79461],[44.78631,-110.78783]
+    ],
+    [
+      [44.82065,-110.76717],[44.81796,-110.76899],[44.82231,-110.76742],[44.82512,-110.76952],
+      [44.83122,-110.76616],[44.82971,-110.76636]
+    ],
+    [
+      [44.76403,-110.79470],[44.75949,-110.79094],[44.75357,-110.79158],[44.76996,-110.79367],
+      [44.76469,-110.79487]
+    ],
+    [
+      [44.83761,-110.76322],[44.83122,-110.76616],[44.83339,-110.76612],[44.83628,-110.76363]
+    ],
+    [
+      [44.75276,-110.77503],[44.75069,-110.78407],[44.75174,-110.79102],[44.75357,-110.79158]
+    ]
+  ]
+},
+{
+  id:"ywsulphurCreek", name:"Sulphur Creek", color:"#4f7f9f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Sulphur Creek inside Yellowstone: 8.5 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.75406,-110.40324],[44.75684,-110.40559],[44.75707,-110.41203],[44.75932,-110.42058],
+      [44.77270,-110.44974],[44.76922,-110.44819],[44.76425,-110.44144],[44.76527,-110.43794],
+      [44.76404,-110.43220],[44.75938,-110.42182]
+    ],
+    [
+      [44.78267,-110.45332],[44.77737,-110.45269],[44.77270,-110.44974]
+    ]
+  ]
+},
+{
+  id:"ywsummitCreek", name:"Summit Creek", color:"#5f6f9f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Summit Creek inside Yellowstone: 6.5 km of it, nearest mapped water is the <b>Lewis River</b>, about 1 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.36354,-110.64625],[44.36528,-110.64562],[44.36605,-110.64357],[44.36640,-110.63656],
+      [44.37072,-110.63537],[44.37790,-110.62905],[44.37415,-110.63064],[44.37285,-110.63378]
+    ],
+    [
+      [44.36030,-110.64777],[44.36159,-110.64897],[44.36354,-110.64625],[44.35986,-110.64977],
+      [44.35995,-110.65719],[44.35496,-110.66139]
+    ],
+    [
+      [44.37790,-110.62905],[44.38056,-110.62154],[44.38017,-110.62674]
+    ]
+  ]
+},
+{
+  id:"ywsurfaceCreek", name:"Surface Creek", color:"#2f7f8f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Surface Creek inside Yellowstone: 3.1 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 1 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.72364,-110.43708],[44.72166,-110.43383],[44.71955,-110.43751],[44.71931,-110.44573],
+    [44.72108,-110.44638],[44.72281,-110.45127],[44.72427,-110.45098],[44.72440,-110.44797],
+    [44.72600,-110.45047],[44.72955,-110.45128]
+  ]
+},
+{
+  id:"ywsurpriseCreek", name:"Surprise Creek", color:"#3f8f7f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Surprise Creek inside Yellowstone: 17.7 km of it, nearest mapped water is the <b>Heart River</b>, about 6 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.25207,-110.44021],[44.25698,-110.43544],[44.25721,-110.43316],[44.26119,-110.42828],
+      [44.26521,-110.42795],[44.27145,-110.42366],[44.27719,-110.41651],[44.28019,-110.41039],
+      [44.28518,-110.40686],[44.28524,-110.40544],[44.28860,-110.40420],[44.29014,-110.40515],
+      [44.29252,-110.40149],[44.30611,-110.39877],[44.30345,-110.39649],[44.30134,-110.39780],
+      [44.29944,-110.39683],[44.29530,-110.40090],[44.29310,-110.40079]
+    ],
+    [
+      [44.33977,-110.41033],[44.34333,-110.41031],[44.33791,-110.41055],[44.33328,-110.40727],
+      [44.32989,-110.40837],[44.32795,-110.39989],[44.32419,-110.39662],[44.30611,-110.39877],
+      [44.31225,-110.39967],[44.31320,-110.39838],[44.31643,-110.39862]
+    ],
+    [
+      [44.24743,-110.44541],[44.25207,-110.44021],[44.24913,-110.44418]
+    ],
+    [
+      [44.34610,-110.42008],[44.34432,-110.41517],[44.34467,-110.41149],[44.34333,-110.41031]
+    ]
+  ]
+},
+{
+  id:"ywtangledCreek", name:"Tangled Creek", color:"#4f8f6f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Tangled Creek inside Yellowstone: 8.7 km of it, nearest mapped water is the <b>Firehole River</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.55514,-110.83165],[44.55701,-110.82775],[44.55683,-110.82399],[44.55212,-110.81712],
+      [44.55505,-110.82219]
+    ],
+    [
+      [44.55095,-110.75986],[44.54873,-110.75998],[44.54647,-110.76330],[44.54381,-110.77988]
+    ],
+    [
+      [44.54866,-110.81478],[44.54762,-110.81478],[44.54768,-110.81335],[44.55150,-110.81697]
+    ],
+    [
+      [44.54549,-110.81111],[44.54467,-110.80997],[44.54608,-110.81276],[44.54768,-110.81335]
+    ],
+    [
+      [44.54144,-110.80557],[44.54453,-110.80923]
+    ],
+    [
+      [44.54239,-110.79558],[44.54288,-110.79491],[44.54094,-110.79674],[44.54171,-110.79644]
+    ],
+    [
+      [44.54399,-110.78518],[44.54403,-110.79057],[44.54420,-110.78959]
+    ],
+    [
+      [44.54058,-110.80257],[44.53989,-110.79967],[44.54000,-110.80175]
+    ],
+    [
+      [44.54288,-110.79491],[44.54268,-110.79137],[44.54236,-110.79335]
+    ],
+    [
+      [44.54426,-110.78480],[44.54381,-110.77988],[44.54427,-110.78414]
+    ]
+  ]
+},
+{
+  id:"ywtantalusCreek", name:"Tantalus Creek", color:"#5f8f5f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Tantalus Creek inside Yellowstone: 4.1 km of it, nearest mapped water is the <b>Gibbon River</b>, about 1 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.73153,-110.70921],[44.72841,-110.70779],[44.72546,-110.70849],[44.72262,-110.70584],
+    [44.72171,-110.70194],[44.73399,-110.71734],[44.73209,-110.70902]
+  ]
+},
+{
+  id:"ywterminalMonumentCreek", name:"Terminal Monument Creek", color:"#6f8f4f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Terminal Monument Creek inside Yellowstone: 3.5 km of it, nearest mapped water is the <b>Gallatin River</b>, about 0 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.98674,-111.07894],[44.98900,-111.07883],[44.99109,-111.07591],[44.99414,-111.05133],
+    [44.99298,-111.06290]
+  ]
+},
+{
+  id:"ywthistleCreek", name:"Thistle Creek", color:"#7f8f3f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Thistle Creek inside Yellowstone: 10.1 km of it, nearest mapped water is the <b>Pelican Creek</b>, about 3 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.60829,-110.38575],[44.61050,-110.38489],[44.60888,-110.37505],[44.61002,-110.35519],
+      [44.60858,-110.36077],[44.60859,-110.37279]
+    ],
+    [
+      [44.61002,-110.35519],[44.61013,-110.32486],[44.60865,-110.33155],[44.61025,-110.33355],
+      [44.61016,-110.35463]
+    ],
+    [
+      [44.61007,-110.31324],[44.60849,-110.31745],[44.61013,-110.32486]
+    ]
+  ]
+},
+{
+  id:"ywtimothyCreek", name:"Timothy Creek", color:"#8f7f3f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Timothy Creek inside Yellowstone: 18.3 km of it, nearest mapped water is the <b>Pelican Creek</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.70268,-110.13484],[44.70361,-110.14297],[44.70588,-110.14501],[44.70787,-110.15124],
+      [44.70210,-110.13241],[44.70196,-110.12316],[44.70340,-110.11631],[44.70678,-110.11112],
+      [44.71929,-110.09992],[44.71708,-110.09489],[44.71416,-110.09889],[44.71035,-110.10039],
+      [44.70932,-110.10499],[44.70664,-110.10929]
+    ],
+    [
+      [44.71477,-110.18752],[44.72302,-110.19526],[44.71281,-110.18560],[44.71522,-110.17927],
+      [44.71534,-110.16743],[44.71090,-110.16260],[44.71147,-110.16426],[44.71350,-110.16330],
+      [44.71493,-110.16526]
+    ],
+    [
+      [44.73698,-110.09025],[44.73499,-110.09607],[44.73052,-110.09545],[44.72951,-110.09740],
+      [44.72631,-110.09526],[44.72587,-110.09799],[44.71929,-110.09992],[44.72160,-110.09991]
+    ],
+    [
+      [44.71090,-110.16260],[44.71043,-110.15560],[44.70787,-110.15124]
+    ]
+  ]
+},
+{
+  id:"ywtrailCreek", name:"Trail Creek", color:"#8f6f4f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Trail Creek inside Yellowstone: 10.8 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.28527,-110.18557],[44.28490,-110.18439],[44.28691,-110.18639],[44.29057,-110.20735],
+      [44.29138,-110.20153],[44.28970,-110.19265],[44.29165,-110.19009],[44.29183,-110.18705],
+      [44.29034,-110.18607],[44.28912,-110.18790],[44.28707,-110.18662]
+    ],
+    [
+      [44.28490,-110.18439],[44.28035,-110.18157],[44.28078,-110.17689],[44.27747,-110.17719],
+      [44.28047,-110.17689]
+    ],
+    [
+      [44.26392,-110.16996],[44.26782,-110.17251],[44.27339,-110.18201],[44.27094,-110.17857]
+    ],
+    [
+      [44.26334,-110.16971],[44.26078,-110.16863],[44.25228,-110.17511],[44.25055,-110.17441]
+    ],
+    [
+      [44.27339,-110.18201],[44.27593,-110.18070],[44.27585,-110.17852],[44.27747,-110.17719]
+    ]
+  ]
+},
+{
+  id:"ywtrappersCreek", name:"Trappers Creek", color:"#7f6f5f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Trappers Creek inside Yellowstone: 16.5 km of it, nearest mapped water is the <b>Beaverdam Creek</b>, about 5 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.26158,-110.13236],[44.26059,-110.12882],[44.26129,-110.12587],[44.26753,-110.11554],
+      [44.27052,-110.11324],[44.27390,-110.10600]
+    ],
+    [
+      [44.26175,-110.13477],[44.26158,-110.13236],[44.26133,-110.13659],[44.26403,-110.13698],
+      [44.26569,-110.13940],[44.26786,-110.14628],[44.26536,-110.14095],[44.26594,-110.13959]
+    ],
+    [
+      [44.29471,-110.08346],[44.29807,-110.08215],[44.28856,-110.08688],[44.29132,-110.08625]
+    ],
+    [
+      [44.31422,-110.07993],[44.31044,-110.07767],[44.30574,-110.07865],[44.31938,-110.08112],
+      [44.31835,-110.08131]
+    ],
+    [
+      [44.28214,-110.09263],[44.28459,-110.08769],[44.28833,-110.08665]
+    ],
+    [
+      [44.30327,-110.08035],[44.30527,-110.07968],[44.29807,-110.08215],[44.29979,-110.08120]
+    ],
+    [
+      [44.33157,-110.07283],[44.33101,-110.07676],[44.32821,-110.08027],[44.32344,-110.07987],
+      [44.31938,-110.08112]
+    ],
+    [
+      [44.27407,-110.10529],[44.27760,-110.09975],[44.27481,-110.10310]
+    ],
+    [
+      [44.27760,-110.09975],[44.28200,-110.09271],[44.27923,-110.09715]
+    ],
+    [
+      [44.26786,-110.14628],[44.27011,-110.15042]
+    ]
+  ]
+},
+{
+  id:"ywtroutCreek", name:"Trout Creek", color:"#6f7f7f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Trout Creek inside Yellowstone: 27.3 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 1 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.59064,-110.51984],[44.58521,-110.52707],[44.59163,-110.51882],[44.59455,-110.51612],
+      [44.59872,-110.51458],[44.60064,-110.51206],[44.60128,-110.51355],[44.60326,-110.51378],
+      [44.60564,-110.51254],[44.62296,-110.51257],[44.62076,-110.51493],[44.61998,-110.51404],
+      [44.61628,-110.51506],[44.61083,-110.51298],[44.60994,-110.51133],[44.60776,-110.51259]
+    ],
+    [
+      [44.62791,-110.48725],[44.62585,-110.48753],[44.62632,-110.48986],[44.62343,-110.49421],
+      [44.62356,-110.49748],[44.62245,-110.49872],[44.62895,-110.48364],[44.63276,-110.48073],
+      [44.63393,-110.48199],[44.63957,-110.47463],[44.63673,-110.48022],[44.63414,-110.48192]
+    ],
+    [
+      [44.64676,-110.45718],[44.63957,-110.47463],[44.64141,-110.47024],[44.64046,-110.46911],
+      [44.64169,-110.46983],[44.64328,-110.46731],[44.64237,-110.46622],[44.64343,-110.46380],
+      [44.64130,-110.46219],[44.64174,-110.45761],[44.64397,-110.45815],[44.64404,-110.45969],
+      [44.64602,-110.45846]
+    ],
+    [
+      [44.56688,-110.53312],[44.56448,-110.53341],[44.56288,-110.53031],[44.56007,-110.53115],
+      [44.55962,-110.52886],[44.55783,-110.52961],[44.55526,-110.52816],[44.55341,-110.52859],
+      [44.55091,-110.53278],[44.56823,-110.53604],[44.56992,-110.54210],[44.57355,-110.54779],
+      [44.57531,-110.54677],[44.57933,-110.53536],[44.58253,-110.53232],[44.58121,-110.53178],
+      [44.58022,-110.53489]
+    ],
+    [
+      [44.62296,-110.51257],[44.62447,-110.50877],[44.62433,-110.50174],[44.62245,-110.49872]
+    ],
+    [
+      [44.54604,-110.53172],[44.54916,-110.53330],[44.55091,-110.53278]
+    ],
+    [
+      [44.58253,-110.53232],[44.58390,-110.52787],[44.58521,-110.52707]
+    ]
+  ]
+},
+{
+  id:"ywturkeyPenCreek", name:"Turkey Pen Creek", color:"#4f7f9f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Turkey Pen Creek inside Yellowstone: 3.5 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 1 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [45.00581,-110.63930],[45.00864,-110.64249],[45.01592,-110.64478],[45.02495,-110.67021]
+  ]
+},
+{
+  id:"ywunnamedCreek", name:"Unnamed Creek", color:"#5f6f9f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Unnamed Creek inside Yellowstone: 6.4 km of it, nearest mapped water is the <b>Lamar River</b>, about 4 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.80346,-110.22476],[44.80806,-110.21199],[44.80971,-110.21086],[44.81263,-110.21127],
+    [44.81562,-110.20940],[44.81885,-110.21241],[44.82249,-110.21343],[44.82979,-110.20688],
+    [44.83615,-110.19469],[44.84199,-110.18938],[44.84414,-110.18373]
+  ]
+},
+{
+  id:"ywvioletCreek", name:"Violet Creek", color:"#2f7f8f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Violet Creek inside Yellowstone: 3.5 km of it, nearest mapped water is the <b>Gibbon River</b>, about 7 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.65133,-110.56440],[44.65180,-110.55838],[44.65010,-110.55621],[44.64913,-110.54907]
+    ],
+    [
+      [44.65181,-110.56873],[44.65461,-110.57492],[44.65133,-110.56440],[44.65073,-110.56679]
+    ],
+    [
+      [44.65470,-110.57943],[44.65461,-110.57492]
+    ]
+  ]
+},
+{
+  id:"ywweaselCreek", name:"Weasel Creek", color:"#3f8f7f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Weasel Creek inside Yellowstone: 6.8 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 8 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.48652,-110.48756],[44.48458,-110.47885],[44.49005,-110.46370],[44.48978,-110.45972],
+    [44.49800,-110.45124],[44.50546,-110.43417],[44.51052,-110.42664],[44.51353,-110.41699]
+  ]
+},
+{
+  id:"ywwestForkIronSpringCreek", name:"West Fork Iron Spring Creek", color:"#4f8f6f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"West Fork Iron Spring Creek inside Yellowstone: 12.9 km of it, nearest mapped water is the <b>Firehole River</b>, about 4 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.44071,-110.86993],[44.43512,-110.87001],[44.43056,-110.87225],[44.44184,-110.86889],
+      [44.44413,-110.86006],[44.44655,-110.85793],[44.44935,-110.85842],[44.45001,-110.85989],
+      [44.46103,-110.85345],[44.45593,-110.85367],[44.45071,-110.85993]
+    ],
+    [
+      [44.41076,-110.88549],[44.40896,-110.88913],[44.40958,-110.89423],[44.40638,-110.89729],
+      [44.40853,-110.89943],[44.41121,-110.88401],[44.41444,-110.87578],[44.41792,-110.87093],
+      [44.42127,-110.86995],[44.43056,-110.87225],[44.42510,-110.87013]
+    ]
+  ]
+},
+{
+  id:"ywwhiteCreek", name:"White Creek", color:"#5f8f5f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"White Creek inside Yellowstone: 15.5 km of it, nearest mapped water is the <b>Firehole River</b>, about 1 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.52085,-110.75330],[44.51553,-110.74507],[44.51425,-110.73562],[44.51175,-110.72660],
+      [44.51081,-110.72674],[44.50729,-110.72859],[44.52120,-110.75782],[44.52085,-110.77090],
+      [44.52990,-110.78268],[44.52974,-110.79009],[44.53086,-110.78655]
+    ],
+    [
+      [44.54369,-110.83001],[44.54009,-110.82688],[44.53567,-110.81838],[44.53537,-110.81578],
+      [44.53800,-110.81096],[44.53716,-110.80439],[44.52974,-110.79009]
+    ],
+    [
+      [44.48767,-110.72130],[44.48969,-110.71952],[44.49832,-110.72497],[44.50181,-110.72510],
+      [44.50729,-110.72859]
+    ]
+  ]
+},
+{
+  id:"ywwickiupCreek", name:"Wickiup Creek", color:"#6f8f4f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Wickiup Creek inside Yellowstone: 3.6 km of it, nearest mapped water is the <b>Specimen Creek</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [45.01988,-111.09460],[45.01969,-111.08591],[45.02536,-111.07930],[45.02824,-111.07694],
+    [45.03380,-111.07545],[45.03594,-111.07804],[45.03950,-111.07724],[45.04057,-111.07354]
+  ]
+},
+{
+  id:"ywwillowCreek", name:"Willow Creek", color:"#7f8f3f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Willow Creek inside Yellowstone: 11.4 km of it, nearest mapped water is the <b>Lamar River</b>, about 1 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.65839,-110.12452],[44.65407,-110.12576],[44.66071,-110.12313],[44.66265,-110.11936],
+      [44.67519,-110.10753],[44.67146,-110.11197],[44.66916,-110.11254],[44.66761,-110.11607],
+      [44.66415,-110.11781]
+    ],
+    [
+      [44.70917,-110.08149],[44.70709,-110.08733],[44.70311,-110.09093],[44.69926,-110.09317],
+      [44.69375,-110.09250],[44.68828,-110.09816],[44.67792,-110.10413],[44.68681,-110.09879]
+    ],
+    [
+      [44.64950,-110.13313],[44.65407,-110.12576]
+    ],
+    [
+      [44.67519,-110.10753],[44.67792,-110.10413]
+    ]
+  ]
+},
+{
+  id:"ywwinterCreek", name:"Winter Creek", color:"#8f7f3f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Winter Creek inside Yellowstone: 16.9 km of it, nearest mapped water is the <b>Obsidian Creek</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.80772,-110.85849],[44.80298,-110.85415],[44.79988,-110.85418],[44.79751,-110.84836],
+      [44.80045,-110.83524],[44.79943,-110.82470],[44.80402,-110.81026],[44.80778,-110.80433],
+      [44.80937,-110.80422],[44.81060,-110.80189],[44.81006,-110.79893],[44.81157,-110.79671]
+    ],
+    [
+      [44.83419,-110.77584],[44.83804,-110.76947],[44.83680,-110.76680],[44.83761,-110.76322],
+      [44.84176,-110.76180],[44.84642,-110.75782],[44.84833,-110.75215],[44.84784,-110.75000]
+    ],
+    [
+      [44.81534,-110.78785],[44.81125,-110.79456],[44.81157,-110.79671],[44.81604,-110.78579],
+      [44.81958,-110.78080],[44.82355,-110.77785],[44.83419,-110.77584],[44.82504,-110.77727]
+    ],
+    [
+      [44.85127,-110.73665],[44.84784,-110.75000],[44.84852,-110.74178],[44.85126,-110.73743]
+    ]
+  ]
+},
+{
+  id:"ywwitchCreek", name:"Witch Creek", color:"#8f6f4f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Witch Creek inside Yellowstone: 5.9 km of it, nearest mapped water is the <b>Heart River</b>, about 8 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.29465,-110.54020],[44.29926,-110.54252],[44.30139,-110.53846],[44.30605,-110.53508],
+    [44.30636,-110.53013],[44.30470,-110.52213],[44.30186,-110.51670],[44.29769,-110.51666],
+    [44.29069,-110.51039],[44.28997,-110.50618],[44.28697,-110.50078],[44.28478,-110.50117]
+  ]
+},
+{
+  id:"ywwrongCreek", name:"Wrong Creek", color:"#7f6f5f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Wrong Creek inside Yellowstone: 13.1 km of it, nearest mapped water is the <b>Pelican Creek</b>, about 4 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [
+      [44.76820,-110.28066],[44.77055,-110.27700],[44.76731,-110.26789],[44.76668,-110.26051],
+      [44.76753,-110.25873],[44.76645,-110.25527],[44.76577,-110.25387],[44.76234,-110.25313],
+      [44.76020,-110.24949],[44.75848,-110.24081],[44.75505,-110.24025],[44.75328,-110.23872],
+      [44.75124,-110.23283],[44.74796,-110.23173],[44.74708,-110.22355],[44.74142,-110.21603],
+      [44.74573,-110.22013]
+    ],
+    [
+      [44.74162,-110.18837],[44.74179,-110.18454],[44.73994,-110.20264],[44.74028,-110.20153]
+    ],
+    [
+      [44.74131,-110.18370],[44.74179,-110.18454],[44.74025,-110.18091],[44.74023,-110.17602],
+      [44.74652,-110.16471]
+    ],
+    [
+      [44.73994,-110.20264],[44.73878,-110.20838],[44.74142,-110.21603]
+    ]
+  ]
+},
+{
+  id:"ywwyomingCreek", name:"Wyoming Creek", color:"#6f7f7f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Wyoming Creek inside Yellowstone: 5.2 km of it, nearest mapped water is the <b>Bechler River</b>, about 2 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.16888,-111.03290],[44.16558,-111.03715],[44.16000,-111.03793],[44.15922,-111.04154],
+    [44.15627,-111.04609],[44.15407,-111.04733],[44.15115,-111.04625],[44.14891,-111.04211],
+    [44.14463,-111.04015],[44.14120,-111.04166],[44.14044,-111.03688],[44.13742,-111.03968],
+    [44.13359,-111.03829],[44.13281,-111.03927]
+  ]
+},
+{
+  id:"ywyancyCreek", name:"Yancy Creek", color:"#4f7f9f",
+  state:"WY", region:"yellowstone", gauges:[], primaryGauge:null,
+  geom:"nhd", minor:true,   // clipped to the park; labelled only up close
+  parkRegs:"Yellowstone runs its own fishery: a <b>park permit</b> at 16 and over (a state licence is not valid), <b>lead-free artificial lures or flies only, barbless</b>, and <b>all native fish released unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. Regional rules differ by drainage and several reaches are closed outright or open late, so check the park's current regulations for this water before you fish it.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Yancy Creek inside Yellowstone: 6.1 km of it, nearest mapped water is the <b>Yellowstone River</b>, about 5 km away. One of the park's named but unwritten-about creeks — the line and the rules are here, the character is yours to find out.",
+  fish:"No published account of this water to repeat, so none is invented here. Yellowstone's native fish are cutthroat, mountain whitefish and Arctic grayling and all of them go back unharmed; what else is in it depends on the drainage.",
+  coords:[
+    [44.93147,-110.43398],[44.92790,-110.43613],[44.92339,-110.43645],[44.90856,-110.46601],
+    [44.91207,-110.46206],[44.91474,-110.45372],[44.91806,-110.45046],[44.91935,-110.44416]
+  ]
+},
 ];
 
 /* ---------- Access points ---------- */
@@ -12516,6 +16415,173 @@ const SECTIONS = [
 
 /* rivers with no float sections — floating note shown instead */
 const WADE_ONLY = {
+  // ---- Yellowstone, the rest of the named water ----
+  ywagateCreek:"Wade only — no floating on park rivers.",
+  ywalluviumCreek:"Wade only — no floating on park rivers.",
+  ywalumCreek:"Wade only — no floating on park rivers.",
+  ywamethystCreek:"Wade only — no floating on park rivers.",
+  ywamphitheaterCreek:"Wade only — no floating on park rivers.",
+  ywantelopeCreek:"Wade only — no floating on park rivers.",
+  ywarnicaCreek:"Wade only — no floating on park rivers.",
+  ywarrowCanyonCreek:"Wade only — no floating on park rivers.",
+  ywasterCreek:"Wade only — no floating on park rivers.",
+  ywastringentCreek:"Wade only — no floating on park rivers.",
+  ywbaconRindCreek:"Wade only — no floating on park rivers.",
+  ywbadgerCreek:"Wade only — no floating on park rivers.",
+  ywbartlettSlough:"Wade only — no floating on park rivers.",
+  ywbasinCreek:"Wade only — no floating on park rivers.",
+  ywbearCreek:"Wade only — no floating on park rivers.",
+  ywbeaverCreek:"Wade only — no floating on park rivers.",
+  ywbigThumbCreek:"Wade only — no floating on park rivers.",
+  ywblackButteCreek:"Wade only — no floating on park rivers.",
+  ywbluffCreek:"Wade only — no floating on park rivers.",
+  ywbogCreek:"Wade only — no floating on park rivers.",
+  ywbridgeCreek:"Wade only — no floating on park rivers.",
+  ywbroadCreek:"Wade only — no floating on park rivers.",
+  ywbuffaloCreek:"Wade only — no floating on park rivers.",
+  ywbuffaloFork:"Wade only — no floating on park rivers.",
+  ywburntCreek:"Wade only — no floating on park rivers.",
+  ywcabinCreek:"Wade only — no floating on park rivers.",
+  ywcalfCreek:"Wade only — no floating on park rivers.",
+  ywcalfeeCreek:"Wade only — no floating on park rivers.",
+  ywcampanulaCreek:"Wade only — no floating on park rivers.",
+  ywcanyonCreek:"Wade only — no floating on park rivers.",
+  ywcarnelianCreek:"Wade only — no floating on park rivers.",
+  ywcascadeCreek:"Wade only — no floating on park rivers.",
+  ywchalcedonyCreek:"Wade only — no floating on park rivers.",
+  ywchipmunkCreek:"Wade only — no floating on park rivers.",
+  ywclematisCreek:"Wade only — no floating on park rivers.",
+  ywcliffCreek:"Wade only — no floating on park rivers.",
+  ywcloverCreek:"Wade only — no floating on park rivers.",
+  ywcoldCreek:"Wade only — no floating on park rivers.",
+  ywcoldMountainCreek:"Wade only — no floating on park rivers.",
+  ywcolumbineCreek:"Wade only — no floating on park rivers.",
+  ywcottongrassCreek:"Wade only — no floating on park rivers.",
+  ywcottonwoodCreek:"Wade only — no floating on park rivers.",
+  ywcowanCreek:"Wade only — no floating on park rivers.",
+  ywcoyoteCreek:"Wade only — no floating on park rivers.",
+  ywcrawfishCreek:"Wade only — no floating on park rivers.",
+  ywcreviceCreek:"Wade only — no floating on park rivers.",
+  ywcrookedCreek:"Wade only — no floating on park rivers.",
+  ywcrystalCreek:"Wade only — no floating on park rivers.",
+  ywcutoffCreek:"Wade only — no floating on park rivers.",
+  ywdaileyCreek:"Wade only — no floating on park rivers.",
+  ywdeepCreek:"Wade only — no floating on park rivers.",
+  ywdogsheadCreek:"Wade only — no floating on park rivers.",
+  ywdryCreek:"Wade only — no floating on park rivers.",
+  yweastForkFanCreek:"Wade only — no floating on park rivers.",
+  yweastForkSpecimenCreek:"Wade only — no floating on park rivers.",
+  ywelectricCreek:"Wade only — no floating on park rivers.",
+  ywelkAntlerCreek:"Wade only — no floating on park rivers.",
+  ywelkCreek:"Wade only — no floating on park rivers.",
+  ywelkTongueCreek:"Wade only — no floating on park rivers.",
+  ywescarpmentCreek:"Wade only — no floating on park rivers.",
+  ywfairyCreek:"Wade only — no floating on park rivers.",
+  ywfallCreek:"Wade only — no floating on park rivers.",
+  ywfawnCreek:"Wade only — no floating on park rivers.",
+  ywferrisFork:"Wade only — no floating on park rivers.",
+  ywflintCreek:"Wade only — no floating on park rivers.",
+  ywforestCreek:"Wade only — no floating on park rivers.",
+  ywgeodeCreek:"Wade only — no floating on park rivers.",
+  ywgeyserCreek:"Wade only — no floating on park rivers.",
+  ywglenCreek:"Wade only — no floating on park rivers.",
+  ywgreggFork:"Wade only — no floating on park rivers.",
+  ywgrouseCreek:"Wade only — no floating on park rivers.",
+  ywharebellCreek:"Wade only — no floating on park rivers.",
+  ywherronCreek:"Wade only — no floating on park rivers.",
+  ywhornadayCreek:"Wade only — no floating on park rivers.",
+  ywhowellCreek:"Wade only — no floating on park rivers.",
+  ywironSpringCreek:"Wade only — no floating on park rivers.",
+  ywjasperCreek:"Wade only — no floating on park rivers.",
+  ywjuniperCreek:"Wade only — no floating on park rivers.",
+  ywlandslideCreek:"Wade only — no floating on park rivers.",
+  ywlemonadeCreek:"Wade only — no floating on park rivers.",
+  ywlittleBuffaloCreek:"Wade only — no floating on park rivers.",
+  ywlittleCottonwoodCreek:"Wade only — no floating on park rivers.",
+  ywlittleRobinsonCreek:"Wade only — no floating on park rivers.",
+  ywlittleThumbCreek:"Wade only — no floating on park rivers.",
+  ywlittlesFork:"Wade only — no floating on park rivers.",
+  ywlostCreek:"Wade only — no floating on park rivers.",
+  ywlupineCreek:"Wade only — no floating on park rivers.",
+  ywlynxCreek:"Wade only — no floating on park rivers.",
+  ywmagpieCreek:"Wade only — no floating on park rivers.",
+  ywmallardCreek:"Wade only — no floating on park rivers.",
+  ywmapleCreek:"Wade only — no floating on park rivers.",
+  ywmeadowCreek:"Wade only — no floating on park rivers.",
+  ywmiddleCreek:"Wade only — no floating on park rivers.",
+  ywmirrorFork:"Wade only — no floating on park rivers.",
+  ywmistCreek:"Wade only — no floating on park rivers.",
+  ywmooseCreek:"Wade only — no floating on park rivers.",
+  ywmossCreek:"Wade only — no floating on park rivers.",
+  ywmountainCreek:"Wade only — no floating on park rivers.",
+  ywmulherinCreek:"Wade only — no floating on park rivers.",
+  ywmyriadCreek:"Wade only — no floating on park rivers.",
+  ywnorthForkFanCreek:"Wade only — no floating on park rivers.",
+  ywnorthForkSpecimenCreek:"Wade only — no floating on park rivers.",
+  ywnorthForkSplitCreek:"Wade only — no floating on park rivers.",
+  ywopalCreek:"Wade only — no floating on park rivers.",
+  ywotterCreek:"Wade only — no floating on park rivers.",
+  ywoutletCreek:"Wade only — no floating on park rivers.",
+  ywouzelCreek:"Wade only — no floating on park rivers.",
+  ywoxbowCreek:"Wade only — no floating on park rivers.",
+  ywpassageCreek:"Wade only — no floating on park rivers.",
+  ywphillipsFork:"Wade only — no floating on park rivers.",
+  ywphloxCreek:"Wade only — no floating on park rivers.",
+  ywplateauCreek:"Wade only — no floating on park rivers.",
+  ywpolecatCreek:"Wade only — no floating on park rivers.",
+  ywprimroseCreek:"Wade only — no floating on park rivers.",
+  ywpropositionCreek:"Wade only — no floating on park rivers.",
+  ywquartzCreek:"Wade only — no floating on park rivers.",
+  ywravenCreek:"Wade only — no floating on park rivers.",
+  ywredCreek:"Wade only — no floating on park rivers.",
+  ywreeseCreek:"Wade only — no floating on park rivers.",
+  ywrescueCreek:"Wade only — no floating on park rivers.",
+  ywrichardsCreek:"Wade only — no floating on park rivers.",
+  ywrobinsonCreek:"Wade only — no floating on park rivers.",
+  ywrockCreek:"Wade only — no floating on park rivers.",
+  ywrockyCreek:"Wade only — no floating on park rivers.",
+  ywroseCreek:"Wade only — no floating on park rivers.",
+  ywsecretValleyCreek:"Wade only — no floating on park rivers.",
+  ywsedgeCreek:"Wade only — no floating on park rivers.",
+  ywsentinelCreek:"Wade only — no floating on park rivers.",
+  ywshallowCreek:"Wade only — no floating on park rivers.",
+  ywshoshoneCreek:"Wade only — no floating on park rivers.",
+  ywsickleCreek:"Wade only — no floating on park rivers.",
+  ywsolutionCreek:"Wade only — no floating on park rivers.",
+  ywsourCreek:"Wade only — no floating on park rivers.",
+  ywsouthCacheCreek:"Wade only — no floating on park rivers.",
+  ywsouthForkPartridgeCreek:"Wade only — no floating on park rivers.",
+  ywspireaCreek:"Wade only — no floating on park rivers.",
+  ywspringCreek:"Wade only — no floating on park rivers.",
+  ywspruceCreek:"Wade only — no floating on park rivers.",
+  ywstellariaCreek:"Wade only — no floating on park rivers.",
+  ywstephensCreek:"Wade only — no floating on park rivers.",
+  ywstraightCreek:"Wade only — no floating on park rivers.",
+  ywsulphurCreek:"Wade only — no floating on park rivers.",
+  ywsummitCreek:"Wade only — no floating on park rivers.",
+  ywsurfaceCreek:"Wade only — no floating on park rivers.",
+  ywsurpriseCreek:"Wade only — no floating on park rivers.",
+  ywtangledCreek:"Wade only — no floating on park rivers.",
+  ywtantalusCreek:"Wade only — no floating on park rivers.",
+  ywterminalMonumentCreek:"Wade only — no floating on park rivers.",
+  ywthistleCreek:"Wade only — no floating on park rivers.",
+  ywtimothyCreek:"Wade only — no floating on park rivers.",
+  ywtrailCreek:"Wade only — no floating on park rivers.",
+  ywtrappersCreek:"Wade only — no floating on park rivers.",
+  ywtroutCreek:"Wade only — no floating on park rivers.",
+  ywturkeyPenCreek:"Wade only — no floating on park rivers.",
+  ywunnamedCreek:"Wade only — no floating on park rivers.",
+  ywvioletCreek:"Wade only — no floating on park rivers.",
+  ywweaselCreek:"Wade only — no floating on park rivers.",
+  ywwestForkIronSpringCreek:"Wade only — no floating on park rivers.",
+  ywwhiteCreek:"Wade only — no floating on park rivers.",
+  ywwickiupCreek:"Wade only — no floating on park rivers.",
+  ywwillowCreek:"Wade only — no floating on park rivers.",
+  ywwinterCreek:"Wade only — no floating on park rivers.",
+  ywwitchCreek:"Wade only — no floating on park rivers.",
+  ywwrongCreek:"Wade only — no floating on park rivers.",
+  ywwyomingCreek:"Wade only — no floating on park rivers.",
+  ywyancyCreek:"Wade only — no floating on park rivers.",
   // ---- Teton Valley & Swan Valley (Idaho) ----
   tv_tetoncreek:"Wade only, off the Teton Canyon and Stateline roads east of Driggs.",
   tv_darbycreek:"Wade only.",
@@ -12806,346 +16872,6 @@ const WADE_ONLY = {
   prairiewi:"Wade only for the trout water above Merrill; the dells-and-ledges stretch is scenic but not a float.",
 };
 
-/* ---------- Flow direction ----------
-   One character per run of a river's `coords`, in order:
-     "0"  the run is already drawn downstream
-     "1"  the run is drawn upstream and the flow overlay reverses it
-     "?"  direction unknown — that run doesn't animate rather than guess.
-   Derived offline from sampled terrain elevation, then made consistent
-   along each river by propagating direction across runs whose endpoints
-   meet (see flowdir.py in the scratchpad). Every river is listed, including
-   the all-"0" ones: a river missing from this table reads as unknown, and
-   omitting them once silently switched the animation off on 194 rivers.
-   Drives the flow animation only — never the drawn line. */
-const FLOW_REV = {
-  ahnapee:"1",
-  appleriver:"0?",
-  appleriverwi:"0",
-  arizonacreek:"0",
-  badaxe:"0",
-  baptismriver:"0",
-  bear:"00??",
-  bearriverwi:"11",
-  beavercreek:"0",
-  beavercreekmn:"0",
-  beaverdamcreek:"0100001",
-  beaverriverns:"0",
-  bechlerriver:"?0?001",
-  berrycreek:"0",
-  biggreen:"0",
-  bighorn:"0",
-  biglost:"0",
-  bigwood:"0",
-  blackearth:"0",
-  blackfootid:"0",
-  blackriverwi:"0",
-  blacktaildeer:"000000",
-  bloodyrun:"0000001",
-  blueriver:"0",
-  bohemianvalley:"?",
-  boisbrulewi:"0",
-  boise:"0",
-  boundarycreek:"00000101",
-  brulerivermn:"0?",
-  bruneau:"0?",
-  buffalofork:"0",
-  buffalowi:"0",
-  cachecreek:"011011",
-  campcreekmn:"01",
-  canfield:"0",
-  cannonriver:"0",
-  canoecreek:"00?",
-  cascadecreekgt:"0",
-  cascaderiver:"1",
-  castlerock:"0",
-  cda:"0",
-  chippewawi:"0",
-  christiancreek:"??",
-  clarksfork:"0",
-  clearcreekia:"0??",
-  clearcreekyell:"00100",
-  clearwater:"0",
-  coldwaterIA:"00",
-  cooncreek:"0",
-  cottonwoodcreekgt:"1010",
-  cougarcreek:"00000000",
-  crookedcreekmn:"0",
-  crossriver:"0",
-  crowriver:"0",
-  crowwing:"0",
-  cubcreek:"11",
-  delacycreek:"000",
-  desmoines:"0",
-  deviltrackriver:"0",
-  ditchcreek:"00",
-  duckcreek:"?010",
-  duschee:"0",
-  eaugalle:"0",
-  ebpecatonica:"00000",
-  elkcreekwi:"0",
-  elkriverMN:"0",
-  encampmentwy:"0",
-  ephraimcr:"0",
-  fallriver:"0?",
-  fallsriveryell:"00010100",
-  fancreek:"110",
-  fireholeriver:"000000?00?001",
-  flambeau:"0",
-  flatcreek:"0",
-  flutereedriver:"0",
-  frenchcreek:"011",
-  frenchriverns:"0",
-  gallatinyell:"000000",
-  gardnerriver:"00011",
-  garvinbrook:"0?",
-  gibbonriver:"100?000100",
-  gneisscreek:"1001",
-  gooseberryriver:"0",
-  grandportageriver:"0",
-  granitecreekgt:"0100",
-  grannis:"00",
-  grantriver:"?",
-  graylingcreek:"01000",
-  green:"0",
-  greys:"0",
-  grosventre:"0",
-  haycreek:"0",
-  heartriver:"1",
-  heinscr:"?",
-  hellroaringcreek:"001",
-  hellscanyon:"000??",
-  henrysfork:"0",
-  hibbardscr:"0",
-  hiddenspringscr:"0",
-  hoback:"0",
-  iaBaileySFord:"?",
-  iaBankstonCreek:"0",
-  iaBearCreek:"?",
-  iaBearCreekAllamakee:"1",
-  iaBearCreekClayton:"0",
-  iaBearCreekFayette:"0",
-  iaBigalkCreek:"0",
-  iaBohemianCreek:"0",
-  iaBrushCreekFayette:"0",
-  iaBuckCreek:"00??",
-  iaCaseySprings:"?",
-  iaChihakCreek:"11",
-  iaClearCreekNewAlbin:"00",
-  iaCoonCreek:"0",
-  iaDunningSSpring:"00",
-  iaDuttonSpringCreek:"1",
-  iaEnsignHollowCreek:"0",
-  iaFalconSpringBranch:"1",
-  iaFountainSprings:"0",
-  iaGloversCreek:"0",
-  iaHickoryCreek:"1",
-  iaJoySprings:"?",
-  iaLansingWildlifeAreaCreek:"1",
-  iaLittlePaintCreek:"11",
-  iaLittleTurkeyRiver:"0",
-  iaMaquoketaRiver:"11",
-  iaMiddleBearCreek:"0",
-  iaMinkCreek:"0",
-  iaMossyGlenCreek:"0",
-  iaNorthCanoeCreek:"?",
-  iaNorthCedarCreek:"0",
-  iaPattersonCreek:"0",
-  iaPineCreek:"00",
-  iaPineSpringCreek:"0",
-  iaSouthCedarCreek:"01",
-  iaSouthPineCreek:"0",
-  iaTenMileCreek:"0",
-  iaTroutRiver:"1?",
-  iaTwinBridgesCreek:"0",
-  iaTwinSprings:"0",
-  iaWestCanoeCreek:"000",
-  iaWestFrenchCreek:"0",
-  iaWexfordCreek:"0",
-  iaWhitePineHollowCreek:"0",
-  iaYellowRiverForestMillsRdEasement:"1111",
-  indiancreek:"0101",
-  jumpriver:"0",
-  kadunceriver:"0",
-  kettleriver:"0",
-  keyescr:"1",
-  kickapoo:"0",
-  kinnickinnic:"0",
-  knappcreek:"0",
-  kniferiverns:"0",
-  kootenai:"?",
-  lacrosseriver:"0",
-  lakecreekgt:"100",
-  lamarriver:"000100100110000110001",
-  laramiewy:"1?",
-  lavacreek:"001100100",
-  leighcreek:"000",
-  lemhi:"0",
-  lesterriver:"0",
-  lewisriver:"000?0",
-  lillybaycr:"0",
-  littlefirehole:"11",
-  littlelamar:"0101",
-  littlesalmon:"000",
-  lizardcreek:"11",
-  lochsa:"000001001?001?100?1",
-  logancr:"?",
-  longprairie:"0?",
-  madisonriver:"0000100",
-  mbranchroot:"0",
-  mfsalmon:"0",
-  mfwhitewater:"0",
-  millercreek:"001",
-  minkriver:"1",
-  minnehahacreek:"0?",
-  minnesotariver:"0",
-  mississippiTC:"0",
-  mississippihdw:"0",
-  moosecreekgt:"00000000",
-  morancreek:"10100",
-  mountainashcreek:"000",
-  mountvernon:"0",
-  mraccoon:"0",
-  namekagonriver:"0",
-  nbranchroot:"0",
-  nemadji:"0",
-  newfork:"0",
-  nezpercecreek:"1",
-  nfclearwater:"0",
-  nfpayette:"00",
-  nfshoshone:"00",
-  nfwhitewater:"0",
-  northbear:"011",
-  nplattereef:"0",
-  nplatteupper:"0",
-  nraccoon:"0",
-  obsidiancreek:"1?11?",
-  ottercreekia:"001?00",
-  owlcreekgt:"01000",
-  pacificcreek:"00",
-  paintcreek:"0001?111",
-  panthercreek:"11",
-  payette:"0",
-  pebblecreek:"0000000",
-  pelicancreek:"100000????0001",
-  pigeonriver:"0",
-  pilgrimcreek:"000",
-  pinecreekmn:"0",
-  pineriverwi:"0",
-  platteriver:"0",
-  poplarriver:"0",
-  portneuf:"01",
-  prairiermn:"0",
-  prairiewi:"0",
-  priest:"000",
-  raccoon:"0",
-  redcedar:"0",
-  richmondsprings:"?",
-  rootriver:"0",
-  rullandscoulee:"0",
-  rumriver:"0",
-  rushcreekmn:"0",
-  rushcreekwi:"0",
-  rushriverwi:"0",
-  salmon:"0",
-  salt:"0",
-  saukriverMN:"0",
-  sbranchroot:"0",
-  selway:"0010",
-  sfboise:"1",
-  sfclearwater:"00",
-  sfflambeau:"0",
-  sfroot:"0",
-  sfwhitewater:"00",
-  shoshone:"0",
-  silvercreek:"0",
-  silvercreekns:"0",
-  silvercreekwi:"0",
-  sloughcreek:"000?000?00",
-  snake:"0",
-  snakeflagg:"???00?1",
-  snakeid:"0",
-  snakeriverMN:"0?",
-  snakeyell:"00?0100?1?11100110",
-  snymagill:"0",
-  sodabuttecreek:"00000?",
-  solfataracreek:"10000",
-  southbear:"0",
-  southfork:"0",
-  specimencreek:"111",
-  splitrockriver:"00",
-  spreadcreek:"00",
-  springbranchia:"0",
-  springcoulee:"0",
-  sraccoon:"0",
-  sskunk:"0",
-  stcroix:"0",
-  stewartriver:"0",
-  stillwell:"0",
-  stjoe:"0",
-  stlouisriver:"0",
-  straightmn:"0",
-  suckerriver:"0",
-  sv_bearcreek:"00100100?10?",
-  sv_bigelkcreek:"01",
-  sv_fallcreek:"1010101110100?0",
-  sv_gardencreek:"000000",
-  sv_indiancreek:"000110010",
-  sv_mccoycreek:"1001100",
-  sv_northforkpinecreek:"000000?",
-  sv_palisadescreek:"0000000?0010",
-  sv_pinecreek:"001000000",
-  sv_pritchardcreek:"0000?00",
-  sv_raineycreek:"1001?1????1",
-  taggartcreek:"01?0",
-  tainter:"0",
-  talmadgeriver:"0",
-  temperanceriver:"00",
-  teton:"0",
-  thorofarecreek:"01",
-  timbercoulee:"0",
-  tomahawkriver:"0",
-  tonguewy:"0",
-  towercreek:"00?0010",
-  trempealeau:"00",
-  trimbelle:"0",
-  troutrunia:"0",
-  troutrunmn:"1",
-  turkeyriver:"?",
-  tv_badgercreek:"110100",
-  tv_bitchcreek:"1100?1000",
-  tv_bullelkcreek:"10000",
-  tv_canyoncreek:"00?00110",
-  tv_darbycreek:"111001",
-  tv_foxcreek:"1",
-  tv_gamecreek:"10",
-  tv_horseshoecreek:"001",
-  tv_mahoganycreek:"?00?",
-  tv_milkcreek:"110?00000",
-  tv_moosecreek:"0",
-  tv_northbadgercreek:"0",
-  tv_northleighcreek:"00",
-  tv_packsaddlecreek:"00000",
-  tv_southbadgercreek:"00010",
-  tv_southleighcreek:"010?0",
-  tv_springcreek:"000?1001010",
-  tv_tetoncreek:"?0?001000",
-  tv_trailcreek:"?1?0",
-  tv_warmcreek:"1",
-  upperiowa:"0",
-  vermillionmn:"0",
-  villagecreek:"0",
-  volgariver:"0",
-  waterloocreek:"0000",
-  wforkkickapoo:"0",
-  whitefishbaycr:"?",
-  whitewater:"01",
-  wind:"0",
-  winnebagocr:"00",
-  wisconsinriver:"0",
-  wolfriverwi:"0",
-  yellowriver:"10?1",
-  yellowstoneriver:"000011000100?0100?0?1?1???1?",
-};
 
 /* ---------- Lakes ----------
    Still water, marked differently from rivers because it fishes differently
@@ -13512,3 +17238,510 @@ const LAKES = [
   ]
 },
 ];
+
+/* ---------- Flow direction ----------
+   One character per run of a river's `coords`, in order:
+     "0"  the run is already drawn downstream
+     "1"  the run is drawn upstream and the flow overlay reverses it
+     "?"  direction unknown — that run doesn't animate rather than guess.
+   Derived offline from sampled terrain elevation, then made consistent
+   along each river by propagating direction across runs whose endpoints
+   meet (see flowdir.py in the scratchpad). Every river is listed, including
+   the all-"0" ones: a river missing from this table reads as unknown, and
+   omitting them once silently switched the animation off on 194 rivers.
+   Drives the flow animation only — never the drawn line. */
+const FLOW_REV = {
+  ahnapee:"1",
+  appleriver:"0?",
+  appleriverwi:"0",
+  arizonacreek:"0",
+  badaxe:"0",
+  baptismriver:"0",
+  bear:"00??",
+  bearriverwi:"11",
+  beavercreek:"0",
+  beavercreekmn:"0",
+  beaverdamcreek:"0100001",
+  beaverriverns:"0",
+  bechlerriver:"?0?001",
+  berrycreek:"0",
+  biggreen:"0",
+  bighorn:"0",
+  biglost:"0",
+  bigwood:"0",
+  blackearth:"0",
+  blackfootid:"0",
+  blackriverwi:"0",
+  blacktaildeer:"000000",
+  bloodyrun:"0000001",
+  blueriver:"0",
+  bohemianvalley:"?",
+  boisbrulewi:"0",
+  boise:"0",
+  boundarycreek:"00000101",
+  brulerivermn:"0?",
+  bruneau:"0?",
+  buffalofork:"0",
+  buffalowi:"0",
+  cachecreek:"011011",
+  campcreekmn:"01",
+  canfield:"0",
+  cannonriver:"0",
+  canoecreek:"00?",
+  cascadecreekgt:"0",
+  cascaderiver:"1",
+  castlerock:"0",
+  cda:"0",
+  chippewawi:"0",
+  christiancreek:"??",
+  clarksfork:"0",
+  clearcreekia:"0??",
+  clearcreekyell:"00100",
+  clearwater:"0",
+  coldwaterIA:"00",
+  cooncreek:"0",
+  cottonwoodcreekgt:"1010",
+  cougarcreek:"00000000",
+  crookedcreekmn:"0",
+  crossriver:"0",
+  crowriver:"0",
+  crowwing:"0",
+  cubcreek:"11",
+  delacycreek:"000",
+  desmoines:"0",
+  deviltrackriver:"0",
+  ditchcreek:"00",
+  duckcreek:"?010",
+  duschee:"0",
+  eaugalle:"0",
+  ebpecatonica:"00000",
+  elkcreekwi:"0",
+  elkriverMN:"0",
+  encampmentwy:"0",
+  ephraimcr:"0",
+  fallriver:"0?",
+  fallsriveryell:"00010100",
+  fancreek:"110",
+  fireholeriver:"000000?00?001",
+  flambeau:"0",
+  flatcreek:"0",
+  flutereedriver:"0",
+  frenchcreek:"011",
+  frenchriverns:"0",
+  gallatinyell:"000000",
+  gardnerriver:"00011",
+  garvinbrook:"0?",
+  gibbonriver:"100?000100",
+  gneisscreek:"1001",
+  gooseberryriver:"0",
+  grandportageriver:"0",
+  granitecreekgt:"0100",
+  grannis:"00",
+  grantriver:"?",
+  graylingcreek:"01000",
+  green:"0",
+  greys:"0",
+  grosventre:"0",
+  haycreek:"0",
+  heartriver:"1",
+  heinscr:"?",
+  hellroaringcreek:"001",
+  hellscanyon:"000??",
+  henrysfork:"0",
+  hibbardscr:"0",
+  hiddenspringscr:"0",
+  hoback:"0",
+  iaBaileySFord:"?",
+  iaBankstonCreek:"0",
+  iaBearCreek:"?",
+  iaBearCreekAllamakee:"1",
+  iaBearCreekClayton:"0",
+  iaBearCreekFayette:"0",
+  iaBigalkCreek:"0",
+  iaBohemianCreek:"0",
+  iaBrushCreekFayette:"0",
+  iaBuckCreek:"00??",
+  iaCaseySprings:"?",
+  iaChihakCreek:"11",
+  iaClearCreekNewAlbin:"00",
+  iaCoonCreek:"0",
+  iaDunningSSpring:"00",
+  iaDuttonSpringCreek:"1",
+  iaEnsignHollowCreek:"0",
+  iaFalconSpringBranch:"1",
+  iaFountainSprings:"0",
+  iaGloversCreek:"0",
+  iaHickoryCreek:"1",
+  iaJoySprings:"?",
+  iaLansingWildlifeAreaCreek:"1",
+  iaLittlePaintCreek:"11",
+  iaLittleTurkeyRiver:"0",
+  iaMaquoketaRiver:"11",
+  iaMiddleBearCreek:"0",
+  iaMinkCreek:"0",
+  iaMossyGlenCreek:"0",
+  iaNorthCanoeCreek:"?",
+  iaNorthCedarCreek:"0",
+  iaPattersonCreek:"0",
+  iaPineCreek:"00",
+  iaPineSpringCreek:"0",
+  iaSouthCedarCreek:"01",
+  iaSouthPineCreek:"0",
+  iaTenMileCreek:"0",
+  iaTroutRiver:"1?",
+  iaTwinBridgesCreek:"0",
+  iaTwinSprings:"0",
+  iaWestCanoeCreek:"000",
+  iaWestFrenchCreek:"0",
+  iaWexfordCreek:"0",
+  iaWhitePineHollowCreek:"0",
+  iaYellowRiverForestMillsRdEasement:"1111",
+  indiancreek:"0101",
+  jumpriver:"0",
+  kadunceriver:"0",
+  kettleriver:"0",
+  keyescr:"1",
+  kickapoo:"0",
+  kinnickinnic:"0",
+  knappcreek:"0",
+  kniferiverns:"0",
+  kootenai:"?",
+  lacrosseriver:"0",
+  lakecreekgt:"100",
+  lamarriver:"000100100110000110001",
+  laramiewy:"1?",
+  lavacreek:"001100100",
+  leighcreek:"000",
+  lemhi:"0",
+  lesterriver:"0",
+  lewisriver:"000?0",
+  lillybaycr:"0",
+  littlefirehole:"11",
+  littlelamar:"0101",
+  littlesalmon:"000",
+  lizardcreek:"11",
+  lochsa:"000001001?001?100?1",
+  logancr:"?",
+  longprairie:"0?",
+  madisonriver:"0000100",
+  mbranchroot:"0",
+  mfsalmon:"0",
+  mfwhitewater:"0",
+  millercreek:"001",
+  minkriver:"1",
+  minnehahacreek:"0?",
+  minnesotariver:"0",
+  mississippiTC:"0",
+  mississippihdw:"0",
+  moosecreekgt:"00000000",
+  morancreek:"10100",
+  mountainashcreek:"000",
+  mountvernon:"0",
+  mraccoon:"0",
+  namekagonriver:"0",
+  nbranchroot:"0",
+  nemadji:"0",
+  newfork:"0",
+  nezpercecreek:"1",
+  nfclearwater:"0",
+  nfpayette:"00",
+  nfshoshone:"00",
+  nfwhitewater:"0",
+  northbear:"011",
+  nplattereef:"0",
+  nplatteupper:"0",
+  nraccoon:"0",
+  obsidiancreek:"1?11?",
+  ottercreekia:"001?00",
+  owlcreekgt:"01000",
+  pacificcreek:"00",
+  paintcreek:"0001?111",
+  panthercreek:"11",
+  payette:"0",
+  pebblecreek:"0000000",
+  pelicancreek:"100000????0001",
+  pigeonriver:"0",
+  pilgrimcreek:"000",
+  pinecreekmn:"0",
+  pineriverwi:"0",
+  platteriver:"0",
+  poplarriver:"0",
+  portneuf:"01",
+  prairiermn:"0",
+  prairiewi:"0",
+  priest:"000",
+  raccoon:"0",
+  redcedar:"0",
+  richmondsprings:"?",
+  rootriver:"0",
+  rullandscoulee:"0",
+  rumriver:"0",
+  rushcreekmn:"0",
+  rushcreekwi:"0",
+  rushriverwi:"0",
+  salmon:"0",
+  salt:"0",
+  saukriverMN:"0",
+  sbranchroot:"0",
+  selway:"0010",
+  sfboise:"1",
+  sfclearwater:"00",
+  sfflambeau:"0",
+  sfroot:"0",
+  sfwhitewater:"00",
+  shoshone:"0",
+  silvercreek:"0",
+  silvercreekns:"0",
+  silvercreekwi:"0",
+  sloughcreek:"000?000?00",
+  snake:"0",
+  snakeflagg:"???00?1",
+  snakeid:"0",
+  snakeriverMN:"0?",
+  snakeyell:"00?0100?1?11100110",
+  snymagill:"0",
+  sodabuttecreek:"00000?",
+  solfataracreek:"10000",
+  southbear:"0",
+  southfork:"0",
+  specimencreek:"111",
+  splitrockriver:"00",
+  spreadcreek:"00",
+  springbranchia:"0",
+  springcoulee:"0",
+  sraccoon:"0",
+  sskunk:"0",
+  stcroix:"0",
+  stewartriver:"0",
+  stillwell:"0",
+  stjoe:"0",
+  stlouisriver:"0",
+  straightmn:"0",
+  suckerriver:"0",
+  sv_bearcreek:"00100100?10?",
+  sv_bigelkcreek:"01",
+  sv_fallcreek:"1010101110100?0",
+  sv_gardencreek:"000000",
+  sv_indiancreek:"000110010",
+  sv_mccoycreek:"1001100",
+  sv_northforkpinecreek:"000000?",
+  sv_palisadescreek:"0000000?0010",
+  sv_pinecreek:"001000000",
+  sv_pritchardcreek:"0000?00",
+  sv_raineycreek:"1001?1????1",
+  taggartcreek:"01?0",
+  tainter:"0",
+  talmadgeriver:"0",
+  temperanceriver:"00",
+  teton:"0",
+  thorofarecreek:"01",
+  timbercoulee:"0",
+  tomahawkriver:"0",
+  tonguewy:"0",
+  towercreek:"00?0010",
+  trempealeau:"00",
+  trimbelle:"0",
+  troutrunia:"0",
+  troutrunmn:"1",
+  turkeyriver:"?",
+  tv_badgercreek:"110100",
+  tv_bitchcreek:"1100?1000",
+  tv_bullelkcreek:"10000",
+  tv_canyoncreek:"00?00110",
+  tv_darbycreek:"111001",
+  tv_foxcreek:"1",
+  tv_gamecreek:"10",
+  tv_horseshoecreek:"001",
+  tv_mahoganycreek:"?00?",
+  tv_milkcreek:"110?00000",
+  tv_moosecreek:"0",
+  tv_northbadgercreek:"0",
+  tv_northleighcreek:"00",
+  tv_packsaddlecreek:"00000",
+  tv_southbadgercreek:"00010",
+  tv_southleighcreek:"010?0",
+  tv_springcreek:"000?1001010",
+  tv_tetoncreek:"?0?001000",
+  tv_trailcreek:"?1?0",
+  tv_warmcreek:"1",
+  upperiowa:"0",
+  vermillionmn:"0",
+  villagecreek:"0",
+  volgariver:"0",
+  waterloocreek:"0000",
+  wforkkickapoo:"0",
+  whitefishbaycr:"?",
+  whitewater:"01",
+  wind:"0",
+  winnebagocr:"00",
+  wisconsinriver:"0",
+  wolfriverwi:"0",
+  yellowriver:"10?1",
+  yellowstoneriver:"000011000100?0100?0?1?1???1?",
+  ywagateCreek:"00",
+  ywalluviumCreek:"11",
+  ywalumCreek:"000110",
+  ywamethystCreek:"101?0",
+  ywamphitheaterCreek:"0010",
+  ywantelopeCreek:"1",
+  ywarnicaCreek:"00",
+  ywarrowCanyonCreek:"01",
+  ywasterCreek:"000",
+  ywastringentCreek:"01",
+  ywbaconRindCreek:"01",
+  ywbadgerCreek:"1000",
+  ywbartlettSlough:"0",
+  ywbasinCreek:"1110",
+  ywbearCreek:"?1?10",
+  ywbeaverCreek:"000",
+  ywbigThumbCreek:"000",
+  ywblackButteCreek:"101",
+  ywbluffCreek:"11",
+  ywbogCreek:"0001",
+  ywbridgeCreek:"0",
+  ywbroadCreek:"01000111000000",
+  ywbuffaloCreek:"00",
+  ywbuffaloFork:"00",
+  ywburntCreek:"000",
+  ywcabinCreek:"?1",
+  ywcalfCreek:"1",
+  ywcalfeeCreek:"0100000",
+  ywcampanulaCreek:"0?1",
+  ywcanyonCreek:"0?",
+  ywcarnelianCreek:"011",
+  ywcascadeCreek:"000111",
+  ywchalcedonyCreek:"1100",
+  ywchipmunkCreek:"0010101111",
+  ywclematisCreek:"01",
+  ywcliffCreek:"01001",
+  ywcloverCreek:"0",
+  ywcoldCreek:"01010000",
+  ywcoldMountainCreek:"0",
+  ywcolumbineCreek:"000110",
+  ywcottongrassCreek:"01",
+  ywcottonwoodCreek:"0",
+  ywcowanCreek:"0",
+  ywcoyoteCreek:"10",
+  ywcrawfishCreek:"0",
+  ywcreviceCreek:"1",
+  ywcrookedCreek:"1100",
+  ywcrystalCreek:"0",
+  ywcutoffCreek:"10",
+  ywdaileyCreek:"0100",
+  ywdeepCreek:"1000",
+  ywdogsheadCreek:"010",
+  ywdryCreek:"0?0",
+  yweastForkFanCreek:"010",
+  yweastForkSpecimenCreek:"100",
+  ywelectricCreek:"0",
+  ywelkAntlerCreek:"100",
+  ywelkCreek:"1",
+  ywelkTongueCreek:"111",
+  ywescarpmentCreek:"1101",
+  ywfairyCreek:"01?01",
+  ywfallCreek:"0",
+  ywfawnCreek:"000",
+  ywferrisFork:"11",
+  ywflintCreek:"10",
+  ywforestCreek:"10",
+  ywgeodeCreek:"0",
+  ywgeyserCreek:"0?",
+  ywglenCreek:"0101",
+  ywgreggFork:"100",
+  ywgrouseCreek:"0011",
+  ywharebellCreek:"0",
+  ywherronCreek:"0?",
+  ywhornadayCreek:"0000",
+  ywhowellCreek:"11100",
+  ywironSpringCreek:"00",
+  ywjasperCreek:"10",
+  ywjuniperCreek:"110",
+  ywlandslideCreek:"10",
+  ywlemonadeCreek:"1",
+  ywlittleBuffaloCreek:"1",
+  ywlittleCottonwoodCreek:"1",
+  ywlittleRobinsonCreek:"0",
+  ywlittleThumbCreek:"11",
+  ywlittlesFork:"00",
+  ywlostCreek:"00?1",
+  ywlupineCreek:"0",
+  ywlynxCreek:"0",
+  ywmagpieCreek:"00",
+  ywmallardCreek:"1",
+  ywmapleCreek:"01011",
+  ywmeadowCreek:"011",
+  ywmiddleCreek:"001",
+  ywmirrorFork:"1011",
+  ywmistCreek:"000011",
+  ywmooseCreek:"1010",
+  ywmossCreek:"101",
+  ywmountainCreek:"10000101000",
+  ywmulherinCreek:"11",
+  ywmyriadCreek:"0",
+  ywnorthForkFanCreek:"1010",
+  ywnorthForkSpecimenCreek:"0001",
+  ywnorthForkSplitCreek:"0",
+  ywopalCreek:"10",
+  ywotterCreek:"10",
+  ywoutletCreek:"011",
+  ywouzelCreek:"100",
+  ywoxbowCreek:"000",
+  ywpassageCreek:"011?",
+  ywphillipsFork:"10",
+  ywphloxCreek:"0",
+  ywplateauCreek:"00001",
+  ywpolecatCreek:"0",
+  ywprimroseCreek:"0",
+  ywpropositionCreek:"0000",
+  ywquartzCreek:"0",
+  ywravenCreek:"0110101",
+  ywredCreek:"000010",
+  ywreeseCreek:"01",
+  ywrescueCreek:"10",
+  ywrichardsCreek:"000",
+  ywrobinsonCreek:"00000",
+  ywrockCreek:"00",
+  ywrockyCreek:"10011100",
+  ywroseCreek:"0?00",
+  ywsecretValleyCreek:"01101",
+  ywsedgeCreek:"100",
+  ywsentinelCreek:"1001",
+  ywshallowCreek:"1110",
+  ywshoshoneCreek:"0010",
+  ywsickleCreek:"??011",
+  ywsolutionCreek:"010",
+  ywsourCreek:"0?0?01",
+  ywsouthCacheCreek:"0000",
+  ywsouthForkPartridgeCreek:"0?",
+  ywspireaCreek:"011",
+  ywspringCreek:"000",
+  ywspruceCreek:"10",
+  ywstellariaCreek:"0",
+  ywstephensCreek:"0",
+  ywstraightCreek:"10?10",
+  ywsulphurCreek:"10",
+  ywsummitCreek:"101",
+  ywsurfaceCreek:"0",
+  ywsurpriseCreek:"1010",
+  ywtangledCreek:"1000000111",
+  ywtantalusCreek:"?",
+  ywterminalMonumentCreek:"1",
+  ywthistleCreek:"100",
+  ywtimothyCreek:"0010",
+  ywtrailCreek:"01010",
+  ywtrappersCreek:"1001100110",
+  ywtroutCreek:"00?0000",
+  ywturkeyPenCreek:"0",
+  ywunnamedCreek:"0",
+  ywvioletCreek:"000",
+  ywweaselCreek:"0",
+  ywwestForkIronSpringCreek:"00",
+  ywwhiteCreek:"010",
+  ywwickiupCreek:"1",
+  ywwillowCreek:"0100",
+  ywwinterCreek:"000?",
+  ywwitchCreek:"0",
+  ywwrongCreek:"1010",
+  ywwyomingCreek:"0",
+  ywyancyCreek:"1",
+};

@@ -86,7 +86,7 @@ like an app, not a browser tab.
 
 ## Rivers covered
 
-327 rivers. Full list and gauge IDs live in `js/rivers-data.js`; this file
+493 rivers and 9 lakes. Full list and gauge IDs live in `js/rivers-data.js`; this file
 doesn't duplicate it since the code is the source of truth. Rivers carry a
 `region` field — `"driftless"` and `"northshore"` on the two small-stream
 sub-regions, absent on the original western rivers *and* on the two
@@ -383,12 +383,30 @@ Hellroaring, Blacktail Deer, Lava, Indian, Obsidian, Panther, Nez Perce,
 Solfatara, Grayling, Duck, Cougar, Gneiss, Fan, Specimen, Pelican, Clear,
 Cub, Beaverdam, Thorofare, Boundary, Mountain Ash and De Lacy.
 
-That is a curated cut, not everything NHD names: **217 named waters have
-linework inside the boundary**, and most of the tail is thermal drainage and
-headwater trickle. The rule applied was *named rivers, plus creeks with a
-fishery worth driving to*. If you want one of the other 175, it is a
-one-line addition — the fetch script takes a name and returns clipped,
-welded coords.
+**Plus the other 166.** Every named stream with at least 2 km inside the
+boundary is now on the map — 208 in total. The park's own rule is that water
+not listed by name in the regulations is open under general regulations, so
+"fishable" here means *named, inside the boundary, and not closed*.
+
+The 166 are deliberately a different kind of entry from the 42:
+
+- They carry **only what can be stated as fact** — where the water is, how
+  much of it is inside the park, what it is nearest to, and the park-wide
+  rules. Their `fish` note says plainly that there is no published account
+  of the water to repeat and none is invented. A creek nobody has written
+  about does not get prose pretending otherwise.
+- `minor:true` holds their labels back until **zoom 12**. Two hundred labels
+  over the park is not a map; at zoom 9 you still see only the 42.
+- Their geometry is **baked coarse (80 m)** on purpose. The zoom refinement
+  sharpens whatever you actually look at, and 166 creeks at full resolution
+  is a quarter of a megabyte of JavaScript for detail you only ever see one
+  creek at a time.
+
+Fetching them taught one thing worth keeping: **page the sweep to disk, not
+to memory.** The first attempt held 3,000 features, failed on the fourth
+page and wrote nothing — against a service that was taking 20+ seconds a
+request, that is an hour thrown away. It now saves each page as it lands and
+resumes from what is already there.
 
 ### The park boundary is the data model
 

@@ -686,7 +686,11 @@ function syncLabels(){
     const reg = l.river && l.river.region;
     // Yellowstone sits between the two: the park fills the screen around
     // zoom 9, and 40 labels at 8 is soup while 10 hides the whole region.
-    const min = (reg === "driftless" || reg === "northshore" || reg === "doorcounty"
+    /* `minor` water — the 166 named Yellowstone creeks nobody has written
+       about — stays unlabelled until you are close enough to be choosing
+       between them. Two hundred labels over the park is not a map. */
+    const min = (l.river && l.river.minor) ? 12
+              : (reg === "driftless" || reg === "northshore" || reg === "doorcounty"
                  || reg === "tetonvalley" || reg === "swanvalley") ? 10
               : (reg === "yellowstone" || reg === "grandteton") ? 9 : 8;
     l.lbl.setOpacity(z >= min ? 1 : 0);
