@@ -34,59 +34,50 @@ like an app, not a browser tab.
   polyline itself must go through `flatCoords()` / `midCoord()` in
   `js/app.js`; don't index `r.coords[0]` directly. Segments are kept apart
   on purpose: welding them draws a channel across a gap that isn't there.
-- `js/zones.js` — the opening zone chooser. The map opens fitted to the
-  area actually covered, with the zones drawn over it; tap one and it zooms
-  there.
+- `js/zones.js` — the opening zone chooser, plus the region labels.
 
-  **Regions tile, the way states do.** Regions that sit near each other
-  share one starting polygon — the convex hull of every river in the
-  cluster — and a Voronoi clip divides it between them, so every division
-  line is a genuinely shared edge: no gaps, no overlaps, and a neighbour on
-  the other side of every border. Ten shared borders across eleven zones.
-  It did not work to grow each region's own hull instead: **a bisector is
-  only a shared edge if both cells reach it**, and Idaho's bisector with
-  Teton Valley sits 100 km west of anything Teton Valley's own hull could
-  reach.
+  **Zones are states.** Fishing regulations are written by states, and the
+  state line is the one border that actually changes what you may do, so it
+  is the border the chooser draws. Six states carry rivers (ID, WY, IA, MN,
+  WI, IL); Montana is skipped because its only river, Specimen Creek,
+  belongs to Yellowstone.
 
-  Two knobs keep that honest, and both were tuned by measurement rather
-  than taste:
+  **National parks keep their own NPS boundary** and are drawn *on top of*
+  the state they sit in — states first, parks last, so the park takes the
+  tap. They overlap on purpose: a park is inside a state, and Yellowstone
+  spans three of them while answering to none. That is a deliberate change
+  from the old strict partition. A park also wins the rivers inside it, so
+  Wyoming reads 18 rather than 79.
 
-  - `REACH_KM` (240) caps how far a cell may claim from its own water.
-    Without it the tiling handed a 40-mile valley three hundred miles of
-    Idaho — Teton Valley's cell ran to the Montana line. Measured at
-    170/200/240/280 km, 240 is where the Teton Valley–Wyoming border reaches
-    its full length without any cell running off to Canada.
-  - `STATE_SIDE` puts the **Idaho/Wyoming line** in as the *first* division,
-    before Voronoi, because fishing regulations change there. Clipping to a
-    side *after* a free-for-all Voronoi is not the same thing and leaves the
-    ground the Idaho cells gave up on the Wyoming side belonging to nobody —
-    which is exactly where Grand Teton sits, so the park had no cell to be
-    carved out of.
+  **This replaced a Voronoi tiling of river clusters** (kept in the
+  scratchpad as `zones2_voronoi.py.bak`). The tiling gave every region a
+  neighbour and shared borders, but the borders were *invented*: a bisector
+  halfway between two river clusters means nothing to an angler, while a
+  state line means the licence in your pocket. Everything that made the
+  tiling work — cluster hulls, `REACH_KM`, the Voronoi clip, the
+  state-line-first ordering, the park carve-out — went with it.
 
-  **Parks are carved out of the tiling, exactly.** A park is clipped to each
-  cell it touches (Sutherland-Hodgman against the convex cell) and punched
-  as a hole, so the regions fill everything except the parks and each park
-  keeps its true NPS boundary. Clipping the ring to the cell *first* is what
-  makes that safe: `fill-rule: evenodd` only subtracts a hole lying inside
-  its outer ring, and Yellowstone straddles the Idaho/Wyoming line, so it
-  always lands in two cells. Parks are deliberately **not** Voronoi seeds —
-  seeding them made every region recede and left a no-man's-land ring.
+  **`REGION_LABELS` are the named places that cross state lines.** The
+  Driftless is one landscape over four states and four rulebooks, so it
+  cannot be a zone when the zones are the rulebooks — but it is a real place
+  and worth naming. It and the North Shore, Door Peninsula, Teton Valley,
+  Swan Valley and the Central Iowa water trails render as quiet map labels
+  between zoom 6 and 11 (`REGION_LABEL_ZOOM` in `app.js`): no box, no
+  shadow, `interactive:false`, nothing to tap. They are hidden while the
+  chooser is up and again by zoom 12, where the name of a region tells you
+  nothing you don't already know.
 
-  `bounds` comes from the zone's **rivers**, not its cell: a cell now reaches
-  far beyond the water in it, and tapping "Teton Valley" should fly to Teton
-  Valley rather than to its share of the Rockies. `rings[0]` is the outer
-  boundary and any further rings are holes. `short` is the name used when
-  the zone is too small at the current zoom to carry the full one. `count`
-  is rivers mapped there, and 0 renders as "not mapped yet". Eleven zones.
-  Rebuild with `zones2.py` in the scratchpad — it rewrites `js/zones.js`
-  itself and prints the overlap check and the per-zone river totals.
+  State outlines are simplified to **0.6 km**, chosen against how they are
+  actually seen: the chooser lives at zoom 4–5 where a pixel is 2.4–4.9 km,
+  and it is hidden the moment you enter a zone. At 0.12 km the state rings
+  alone were 160 KB of JavaScript for detail nobody can see on a phone.
 
-  **A zone that clips away to nothing now fails the build.** An inverted
-  sign in the state-line clip deleted the entire Idaho cell, and nothing
-  caught it: the overlap check passes trivially because an empty zone
-  overlaps nothing, and the zone simply stopped being drawn. There is an
-  assert for it now, and the clip takes `"west"`/`"east"` rather than
-  `-1`/`+1`.
+  `bounds` comes from the zone's **rivers**, not its outline, so tapping
+  Idaho flies to the water rather than to the whole state. `rings[0]` is the
+  outer boundary and any further rings are holes. `short` is the name used
+  when a zone is too small at the current zoom to carry the full one.
+  `count` is rivers mapped there, and 0 renders as "not mapped yet".
+  Regenerate with `zones2.py` in the scratchpad.
 
 - `js/app.js` — fetch/render/status logic. Talks directly to the USGS OGC API
   (`api.waterdata.usgs.gov`) client-side — no backend, no API key.
@@ -822,12 +813,12 @@ are worth calibrating first.
   `passFilter()`, `riverVisible()` and `applyFilters()` are untouched and
   sitting at defaults (everything visible). Restoring the markup and the
   one listener brings the filters back — don't delete the rest.
-- **Zone labels sit over the zone's water, not the middle of its cell.**
-  Now that cells tile, the pole of inaccessibility can land 80 km from the
-  valley a zone is named after. `layoutZoneCards()` prefers the centre of
-  the zone's *rivers* when that point is comfortably inside the visible
-  cell, and falls back to the pole when it isn't — zoomed into a corner, or
-  the water off screen.
+- **Zone labels sit over the zone's water, not the middle of its outline.**
+  A state's pole of inaccessibility is its geographic middle, which for
+  Idaho is a hundred miles from any river on this map. `layoutZoneCards()`
+  prefers the centre of the zone's *rivers* when that point is comfortably
+  inside the visible outline, and falls back to the pole when it isn't —
+  zoomed into a corner, or the water off screen.
 - **Park outlines are simplified by tolerance, not by point count.** A park
   boundary is long survey-line straights meeting at sharp corners, and
   even-interval decimation spends its budget on the straights and rounds the
@@ -966,6 +957,8 @@ are worth calibrating first.
   streams aren't gauged — the default text talks about Driftless spring
   creeks and is wrong everywhere else; the zoom gate in `syncLabels()` if
   the streams sit close together; the `REGIONS` quick-jump list; and the
-  legend copy in `index.html`. If the region is geographically distinct it
-  also needs a predicate in `zones2.py`, or the nearest existing zone's hull
-  stretches across the state to swallow it.
+  legend copy in `index.html`. A new region does **not** need
+  a zone any more — zones are states. If the region is a named place worth
+  showing on the map, add it to `REGION_LABELS` in `zones2.py` instead; if
+  it brings a new *state* onto the map, add that state's FIPS code to the
+  boundary fetch and a line to `STATE_SUB`.

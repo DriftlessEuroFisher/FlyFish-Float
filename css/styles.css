@@ -314,6 +314,21 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .zone-card.mini .zc-short{ display:block; font:700 10px "Barlow Condensed",sans-serif;
                            letter-spacing:.04em; text-transform:uppercase; white-space:nowrap; }
 .zone-card.mini .zc-count{ display:none; }
+/* A named region that crosses state lines. Deliberately quiet — it is a
+   place name on a map, not a control: no box, no shadow, nothing to tap. */
+.region-label{
+  transform:translate(-50%,-50%); text-align:center; white-space:nowrap;
+  color:#1d3b4a; text-shadow:0 0 3px #fff, 0 0 6px #fff, 0 0 9px rgba(255,255,255,.9);
+  pointer-events:none; user-select:none;
+}
+.region-label span{
+  display:block; font:600 13px "Barlow Condensed",sans-serif;
+  letter-spacing:.22em; text-transform:uppercase;
+}
+.region-label small{
+  display:block; margin-top:1px; font:500 9px "IBM Plex Mono",monospace;
+  letter-spacing:.14em; color:#4a6675;
+}
 .zone-tip{ font-family:"Public Sans",sans-serif; }
 
 /* while the chooser is up, the river furniture would just be noise */

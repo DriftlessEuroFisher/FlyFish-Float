@@ -1334,6 +1334,7 @@ const zoneLayer = L.layerGroup();
 let zonesShown = false;
 
 const ZONE_STYLE = {
+  state: {color:"#12566b", fillColor:"#2f8fa8", fillOpacity:.22, weight:2.2},
   region:{color:"#12566b", fillColor:"#2f8fa8", fillOpacity:.26, weight:2.5},
   park:  {color:"#8a5a12", fillColor:"#e0ac48", fillOpacity:.34, weight:2.8, dashArray:"6 4"},
 };
@@ -1387,7 +1388,12 @@ function enterZone(z){
   goTo(L.latLngBounds(z.bounds).pad(0.08));
 }
 function buildZones(){
-  ZONES.forEach(z=>{
+  /* States first, parks last, because a park is inside a state and both are
+     drawn: Leaflet paints in insertion order within a pane, so the park ends
+     up on top and takes the tap. They overlap on purpose now — that is what
+     a national park inside a state looks like — where the old region zones
+     were a strict partition. */
+  ZONES.slice().sort((a,b)=> (a.kind==="park") - (b.kind==="park")).forEach(z=>{
     // rings[0] is the outer boundary, any further rings are holes; Leaflet
     // paints with fill-rule evenodd, so a hole is genuinely not part of the
     // shape — it doesn't take clicks either
@@ -1596,11 +1602,42 @@ function layoutZoneCards(){
 }
 map.on("zoomend moveend", layoutZoneCards);
 
+/* ---- named places that cross state lines ----
+   The Driftless is one landscape over four states and four rulebooks, so it
+   can't be a zone any more — the zones are the rulebooks. It is still a real
+   place and worth naming, so it and its siblings fade in as map labels once
+   you're zoomed past the chooser and out again once you're on a single
+   creek, where the name of the region tells you nothing you don't know. */
+const REGION_LABEL_ZOOM = {min:6, max:11};
+const regionLabelPane = map.createPane("regionLabelPane");
+regionLabelPane.style.zIndex = 425;                 // over the rivers, under the zones
+regionLabelPane.style.pointerEvents = "none";
+const regionLabelLayer = L.layerGroup().addTo(map);
+const regionLabels = (typeof REGION_LABELS === "undefined" ? [] : REGION_LABELS).map(r => ({
+  def: r,
+  marker: L.marker(r.at, {pane:"regionLabelPane", interactive:false,
+    icon:L.divIcon({className:"", iconSize:null, html:
+      `<div class="region-label"><span>${r.text}</span><small>${r.states}</small></div>`})})
+}));
+function syncRegionLabels(){
+  const z = map.getZoom();
+  const on = !zonesShown && z >= REGION_LABEL_ZOOM.min && z <= REGION_LABEL_ZOOM.max;
+  const view = map.getBounds();
+  regionLabels.forEach(rl => {
+    const show = on && view.intersects(L.latLngBounds(rl.def.bounds));
+    const has = regionLabelLayer.hasLayer(rl.marker);
+    if(show && !has) regionLabelLayer.addLayer(rl.marker);
+    else if(!show && has) regionLabelLayer.removeLayer(rl.marker);
+  });
+}
+map.on("zoomend moveend", syncRegionLabels);
+
 function showZones(){
   if(zonesShown) return;
   zonesShown = true;
   zoneLayer.addTo(map);
   document.body.classList.add("zones-open");
+  syncRegionLabels();
   // Fit the covered area rather than a fixed zoom: z4 fills a laptop but
   // shows a fraction of the country on a phone, which is the screen this
   // actually gets opened on.
@@ -1614,10 +1651,12 @@ function hideZones(){
   zonesShown = false;
   map.removeLayer(zoneLayer);
   document.body.classList.remove("zones-open");
+  syncRegionLabels();
 }
 
 buildZones();
 showZones();
+syncRegionLabels();
 
 /* Regions button — always available, so you can get back to the chooser
    without hunting for the right zoom level. Top *left*, under the zoom
