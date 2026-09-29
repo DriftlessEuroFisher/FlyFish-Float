@@ -93,6 +93,34 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
    behind the title */
 .leaflet-top.leaflet-right{margin-top:96px}
 
+/* ---------- flow animation ----------
+   A dashed overlay stroke crawling downstream. The dash period is 31
+   (5 on, 26 off) and every keyframe walks exactly one period, so the
+   pattern is seamless and only the duration differs between speeds.
+   Subtle on purpose: it should read as current, not as a barber pole. */
+.flow-line{
+  stroke-dasharray: 5 26;
+  animation-name: flowdrift;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: stroke-dashoffset;
+}
+@keyframes flowdrift{ from{ stroke-dashoffset:0; } to{ stroke-dashoffset:-31; } }
+
+/* Speed carries the reading. Ungauged water gets `calm` — one neutral pace
+   shared by all of it, never a stand-in for a number the app doesn't have. */
+.flow-vlow  { animation-duration: 9.5s; opacity:.55; }
+.flow-low   { animation-duration: 7.0s; opacity:.65; }
+.flow-avg   { animation-duration: 5.0s; opacity:.75; }
+.flow-high  { animation-duration: 3.4s; opacity:.85; }
+.flow-vhigh { animation-duration: 2.2s; opacity:.95; }
+.flow-calm  { animation-duration: 6.0s; opacity:.55; }
+
+/* Someone who asks for less motion gets none: the layer is never built. */
+@media (prefers-reduced-motion: reduce){
+  .flow-line{ animation: none; display:none; }
+}
+
 /* river labels */
 /* River lines sit on a USGS topo sheet that is already full of thin blue
    hydrography, brown contours and black section lines. A soft white halo

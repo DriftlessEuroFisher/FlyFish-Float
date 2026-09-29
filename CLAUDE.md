@@ -870,6 +870,37 @@ are worth calibrating first.
 - **The Regions button is top-left, under the zoom control.** The safety
   panel opens over the top-right corner the moment you enter a zone, and
   it was burying the one control that gets you back out.
+- **The flow animation has to be right before it is pretty.** River lines
+  carry a dashed overlay whose `stroke-dashoffset` animates, so the dashes
+  crawl along the path. Three constraints shaped it:
+
+  - **It runs downstream, or not at all.** NHD linework arrives in whatever
+    order the fetch and the welding left it, so direction had to be derived:
+    seven elevation samples along every run (Open-Meteo's batch endpoint,
+    100 points a call — a build-time step, nothing in the app talks to it),
+    least-squares fit of elevation against distance, cross-checked against
+    the plain first-to-last drop. Both must agree and the fall must clear
+    3 m, or the run is marked `"?"` in `FLOW_REV` and does not animate.
+    158 of 875 runs are drawn upstream and get reversed; 159 are unknown,
+    which is 3% of mapped river length and almost all short braids and flat
+    spring creeks.
+
+    **Every river is in `FLOW_REV`, including the all-"0" ones.** Omitting
+    those saved 4 KB and silently switched the animation off on 194 rivers,
+    because the reader treats a missing river as unknown. Don't re-optimise
+    it.
+  - **It is budgeted in paths, not rivers.** `FLOW_MAX_PATHS` (80) counts
+    the SVG paths actually being repainted each frame. Capping *rivers*
+    looked fine until Yellowstone, where 43 rivers are 224 separate runs.
+    Runs shorter than `FLOW_MIN_PX` (22 px at the current zoom) are skipped
+    — a dash crawling along 15 px of line is noise, not information — and
+    nothing animates below `FLOW_MIN_ZOOM` (9), while the chooser is up, or
+    under `prefers-reduced-motion`.
+  - **Speed only means something where there is a gauge.** The duration
+    comes from `statusOf()`'s bucket, so high water visibly runs faster.
+    Ungauged water gets `flow-calm`, one neutral pace shared by all of it,
+    because a speed that tracked nothing would be a fabricated reading in a
+    different costume — the same rule as the "Ungauged" card.
 - **Vector stacking is explicit, via panes.** Everything used to share
   Leaflet's default overlayPane, where paint order is DOM order — and since
   the public land layer is cleared and re-added on every map move, its

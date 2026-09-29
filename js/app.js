@@ -464,6 +464,118 @@ regionCtl.onAdd = function(){
 };
 regionCtl.addTo(map);
 
+/* ============================================================
+   FLOW ANIMATION — a slow travelling highlight down each river.
+
+   It is a dashed overlay stroke whose dash offset animates, which makes the
+   dashes crawl along the path. Three things had to be true for it to be
+   worth having:
+
+   1. It has to run DOWNSTREAM. A flow animation pointing the wrong way is
+      worse than none, and NHD linework arrives in whatever order the fetch
+      and the welding left it. `FLOW_REV` (baked in rivers-data.js) says,
+      per run, whether to reverse it. A run marked "?" is one whose fall was
+      inside the noise of the elevation model — it gets no animation rather
+      than a guessed direction.
+   2. It has to be cheap. 327 rivers animating at once is a phone-melting
+      repaint; the overlay is built only for the rivers on screen, only past
+      FLOW_MIN_ZOOM, and capped at FLOW_MAX_LINES.
+   3. It has to mean something. Speed comes from the river's live status
+      bucket, so high water visibly runs faster. Water with no gauge gets
+      one neutral speed shared by all of it — the motion is never a stand-in
+      for a reading the app doesn't have.
+   ============================================================ */
+const FLOW_MIN_ZOOM  = 9;
+/* The budget is PATHS, not rivers. Capping rivers looked fine until
+   Yellowstone: 43 rivers there are 224 separate runs, and it is the path
+   count that the browser repaints every frame. */
+const FLOW_MAX_PATHS = 80;
+const FLOW_MIN_PX    = 22;     // a run too short to see isn't worth a path
+const FLOW_CALM = "flow-calm";
+const FLOW_SPEED = {vlow:"flow-vlow", low:"flow-low", avg:"flow-avg",
+                    high:"flow-high", vhigh:"flow-vhigh"};
+const flowPane = map.createPane("flowPane");
+flowPane.style.zIndex = 415;            // over the river lines, under the markers
+flowPane.style.pointerEvents = "none";
+const flowLayer = L.layerGroup().addTo(map);
+const flowLines = {};                   // riverId -> [polyline]
+const reducedMotion = window.matchMedia
+  && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function flowRunsFor(r){
+  /* the river's geometry, every run turned downstream. Every river is in
+     FLOW_REV; a river missing from it means the table wasn't rebuilt after
+     new water was added, and the honest answer then is no animation. */
+  const runs = isMulti(r.coords) ? r.coords : [r.coords];
+  const marks = (typeof FLOW_REV === "undefined") ? null : FLOW_REV[r.id];
+  if(!marks) return runs.map(() => null);
+  return runs.map((run, i) => {
+    const mark = marks.charAt(i) || "?";
+    if(mark === "?") return null;                 // direction unknown — don't fake it
+    return mark === "1" ? run.slice().reverse() : run;
+  });
+}
+function flowClassFor(r){
+  if(!r.primaryGauge) return FLOW_CALM;
+  const st = statusOf(r.primaryGauge);
+  return FLOW_SPEED[st.cls] || FLOW_CALM;
+}
+function clearFlow(id){
+  (flowLines[id] || []).forEach(l => flowLayer.removeLayer(l));
+  delete flowLines[id];
+}
+function syncFlow(){
+  const z = map.getZoom();
+  const on = !reducedMotion && !zonesShown && z >= FLOW_MIN_ZOOM;
+  if(!on){ Object.keys(flowLines).forEach(clearFlow); return; }
+  const view = map.getBounds();
+  const pxLen = run => {
+    const b = L.latLngBounds(run);
+    const a = map.latLngToLayerPoint(b.getNorthWest());
+    const c = map.latLngToLayerPoint(b.getSouthEast());
+    return Math.hypot(c.x-a.x, c.y-a.y);
+  };
+  const want = [];
+  let budget = FLOW_MAX_PATHS;
+  for(const r of RIVERS){
+    const l = riverLayers[r.id];
+    if(!l || !riverVisible(r)) continue;
+    if(!view.intersects(l.line.getBounds())) continue;
+    const runs = flowRunsFor(r).filter(run =>
+      run && run.length >= 2 && view.intersects(L.latLngBounds(run)) && pxLen(run) >= FLOW_MIN_PX);
+    if(!runs.length) continue;
+    if(runs.length > budget) break;
+    want.push({river:r, runs});
+    budget -= runs.length;
+    if(budget <= 0) break;
+  }
+  const keep = new Set(want.map(w => w.river.id));
+  Object.keys(flowLines).forEach(id => { if(!keep.has(id)) clearFlow(id); });
+  for(const {river:r, runs} of want){
+    const cls = flowClassFor(r);
+    if(flowLines[r.id]){
+      // already drawn — only the speed can have changed under it
+      flowLines[r.id].forEach(l => {
+        const el = l.getElement();
+        if(el && !el.classList.contains(cls)){
+          el.classList.remove(FLOW_CALM, ...Object.values(FLOW_SPEED));
+          el.classList.add(cls);
+        }
+      });
+      continue;
+    }
+    const lines = [];
+    runs.forEach(run => {
+      const l = L.polyline(run, {pane:"flowPane", interactive:false,
+        color:"#ffffff", opacity:.85, weight:2.2, lineCap:"butt",
+        dashArray:"5 26", className:"flow-line " + cls}).addTo(flowLayer);
+      lines.push(l);
+    });
+    if(lines.length) flowLines[r.id] = lines;
+  }
+}
+map.on("zoomend moveend", syncFlow);
+
 /* river labels only at regional zoom — 100+ labels at statewide zoom is
    soup. The Driftless streams sit almost on top of each other, so they
    need a tighter zoom than the big western rivers before labels help. */
@@ -1287,6 +1399,7 @@ function paintFlows(){
   $("#updwhen").textContent = anyLive ? new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})
     : (anyData ? "cached" : "unavailable");
   repaintGauges();
+  if(typeof syncFlow === "function") syncFlow();   // speeds follow the new readings
   if(curRiver) renderSheet(RIVERS.find(r=>r.id===curRiver));
 }
 async function refreshAll(manual){
@@ -1638,6 +1751,7 @@ function showZones(){
   zoneLayer.addTo(map);
   document.body.classList.add("zones-open");
   syncRegionLabels();
+  if(typeof syncFlow === "function") syncFlow();
   // Fit the covered area rather than a fixed zoom: z4 fills a laptop but
   // shows a fraction of the country on a phone, which is the screen this
   // actually gets opened on.
@@ -1652,11 +1766,13 @@ function hideZones(){
   map.removeLayer(zoneLayer);
   document.body.classList.remove("zones-open");
   syncRegionLabels();
+  if(typeof syncFlow === "function") syncFlow();
 }
 
 buildZones();
 showZones();
 syncRegionLabels();
+syncFlow();
 
 /* Regions button — always available, so you can get back to the chooser
    without hunting for the right zoom level. Top *left*, under the zoom
