@@ -6,9 +6,9 @@ trail system, the trout streams of the Driftless Area, the steelhead/
 trout tributaries of Minnesota's North Shore of Lake Superior, the
 big warmwater float rivers of east-central Minnesota and the St. Croix
 valley, the north-central Minnesota lakes country and Wisconsin
-Northwoods, and the trout creeks of the Door Peninsula, with live USGS flow
-conditions, built for checking "is it
-worth driving out today?" from a phone.
+Northwoods, the trout creeks of the Door Peninsula, and every fishable river
+in Yellowstone National Park, with live USGS flow conditions, built for
+checking "is it worth driving out today?" from a phone.
 
 ## How I use this
 
@@ -49,7 +49,7 @@ like an app, not a browser tab.
   `short` is the name used when the zone is too small at the current zoom
   to carry the full one. `count` is rivers mapped there, and 0 renders as
   "not mapped yet" rather than pretending the zone is populated
-  (Yellowstone is 0 today). Nine zones as of the Door Peninsula pass.
+  (no zone is 0 today). Nine zones.
   Rebuild with `zones2.py` in the scratchpad — it rewrites `js/zones.js`
   itself and prints the overlap check and the per-zone river totals.
 
@@ -60,7 +60,7 @@ like an app, not a browser tab.
 
 ## Rivers covered
 
-236 rivers. Full list and gauge IDs live in `js/rivers-data.js`; this file
+278 rivers. Full list and gauge IDs live in `js/rivers-data.js`; this file
 doesn't duplicate it since the code is the source of truth. Rivers carry a
 `region` field — `"driftless"` and `"northshore"` on the two small-stream
 sub-regions, absent on the original western rivers *and* on the two
@@ -347,15 +347,110 @@ Stony, Bear, Fish and Shivering Sands Creeks are in Door County but carry no
 trout classification and no designated fishery, so they'd be lines on a map
 with nothing to say.
 
+## Yellowstone National Park
+
+**Yellowstone (42).** Every named river inside the park — Yellowstone,
+Madison, Firehole, Gibbon, Lamar, Gardner, Lewis, Snake, Bechler, Falls,
+Heart, Gallatin, Little Firehole, Little Lamar — plus the creeks that carry
+a recognised fishery: Slough, Soda Butte, Pebble, Cache, Miller, Tower,
+Hellroaring, Blacktail Deer, Lava, Indian, Obsidian, Panther, Nez Perce,
+Solfatara, Grayling, Duck, Cougar, Gneiss, Fan, Specimen, Pelican, Clear,
+Cub, Beaverdam, Thorofare, Boundary, Mountain Ash and De Lacy.
+
+That is a curated cut, not everything NHD names: **217 named waters have
+linework inside the boundary**, and most of the tail is thermal drainage and
+headwater trickle. The rule applied was *named rivers, plus creeks with a
+fishery worth driving to*. If you want one of the other 175, it is a
+one-line addition — the fetch script takes a name and returns clipped,
+welded coords.
+
+### The park boundary is the data model
+
+Geometry is NHD linework **clipped to the real NPS boundary** (7,236 points,
+not a thinned stand-in), because the boundary is the entire reason this is
+its own region: the regulations start and stop at that line. Reaches inside
+the big lakes are cut out too — a river's course across Yellowstone Lake or
+Lewis Lake is real, but it is not river fishing and is under different
+rules, so **a gap in a park river is a lake**.
+
+Every entry carries `geom:"nhd"` so the runtime snap can't overwrite the
+clip with the unclipped river.
+
+Three traps, all of which cost real time here:
+
+- **Don't page a spatial query without an ORDER BY.** A paged whole-park
+  fetch (2,000 at a time, spatial filter, no ordering) silently dropped the
+  Yellowstone and Madison Rivers *entirely* and returned a 4 km Slough
+  Creek. Fetch per name instead; it is slower and it is right.
+- **Don't filter NHD flowlines to `FTYPE=460`.** The Yellowstone and the
+  Madison are wide enough to be mapped as river *areas*, so every flowline
+  on them is an ArtificialPath (558) and a 460 filter returns literally
+  zero features for the park's two most important rivers. Query without the
+  filter and remove the lakes instead.
+- **Don't chain runs across big gaps here.** The Ahnapee needed that (its
+  gaps are millponds); in Yellowstone the gaps are the boundary and the
+  lakes, and chaining stitched separate braids of the same-named creek into
+  a line that zigzagged between them. The gap tolerance is 350 m.
+
+### Regulations are the point, and they are sourced
+
+`parkRegs` on each river comes from the **National Park Service's 2026
+Yellowstone fishing regulations** — the park's own PDF, read directly — not
+from recollection. That is where the regional boundaries, the permanently
+closed reaches, the May 1 / July 1 / July 15 openers, the fly-fishing-only
+water and the mandatory-kill rules come from. Some of it is genuinely
+surprising and none of it is guessable:
+
+- The **Firehole, Madison and lower Gibbon** are fly-fishing-only, open
+  May 1, and are a *Nonnative Trout Tolerance Area* — keep five brook trout,
+  release all rainbows and browns, and whitefish are native here.
+- The **Yellowstone below the lake opens July 1**, and Fishing Bridge,
+  LeHardys Rapids, Hayden Valley above Alum Creek and the Grand Canyon reach
+  are permanently closed.
+- **Yellowstone Lake tributaries open July 15**, and Pelican Creek is closed
+  for its first two miles.
+- In the **Lamar drainage** every rainbow, brook trout and cutthroat ×
+  rainbow hybrid **must be killed** — releasing one alive is illegal. The
+  same rule reaches the Yellowstone's north-side tributaries between the
+  Lower Falls and Knowles Falls, which is why Tower, Hellroaring and
+  Blacktail Deer Creek carry it and Lava Creek does not.
+- The **Gardner below Osprey Falls** and the **Madison below the state
+  line** are the only two reaches open year-round.
+
+`renderSheet` credits **the National Park Service** rather than a state
+agency for this region, because a Wyoming or Montana licence is not valid in
+the park and pointing a reader at Game & Fish would be actively wrong.
+
+### Gauges
+
+Nine live-discharge stations cover the park, verified against
+latest-continuous on 2026-09-28: the Yellowstone at the lake outlet and at
+Corwin Springs, the Madison and Firehole near West Yellowstone, the Firehole
+at Old Faithful, the Gibbon at Madison Junction, the Lamar near Tower, Soda
+Butte at the park boundary, and the Gardner near Mammoth. Everything else is
+ungauged backcountry.
+
+**Don't add the rest of the park's USGS site numbers.** There are ~185
+stream sites inside the boundary and almost all of them are research and
+water-quality sampling points from the park's thermal and nutrient work —
+Tantalus Creek, supply springs, hot-spring outflows. Several look like
+gauges and report nothing since the 1990s (Gibbon nr West Yellowstone last
+reported in 1996, Blacktail Deer in 1993, Boundary Creek in 2004).
+
+`nearestGaugedRiver()` works well here for once: it stays inside the region,
+and on this plateau a neighbouring drainage genuinely tracks an ungauged
+creek — Slough Creek gets Soda Butte, which is the right answer.
+
 ## Status
 
 **Finished / working:**
 - Core app: Leaflet map, bottom sheet, live USGS flow fetch/render, the
   `statusOf()` relative-to-median status bucketing, home-screen install
   (`manifest.json` + icons).
-- All 236 rivers in place (49 West, 7 Central Iowa, 117 Driftless incl. 65
+- All 278 rivers in place (49 West, 7 Central Iowa, 117 Driftless incl. 65
   NE-Iowa trout streams from the DNR, 24 North Shore, 13 East-Central
-  MN/St. Croix, 16 Lakes Country/Northwoods, 10 Door Peninsula), with
+  MN/St. Croix, 16 Lakes Country/Northwoods, 10 Door Peninsula, 42
+  Yellowstone), with
   gauges, ramps/access points, blurbs, and region-aware copy in the sheet.
 - Ungauged-river handling: the "Ungauged" card, `nearestGaugedRiver()`
   regional-wetness fallback with the cross-state-line distance penalty —
@@ -488,6 +583,14 @@ Two things to preserve if you touch this:
 - **Don't write `stats[k] = null` when the breaker tripped.** `null` means
   "asked, genuinely no history" and is sticky for the session; leaving it
   `undefined` is what lets a later call retry after the cooldown.
+- **`monitoring-locations` names its id parameter `id`.** The other two
+  collections take `monitoring_location_id`; this one answers a 400
+  `InvalidQuery` — "At least one requested property wasn't found" — to that
+  name. Because a failed verify falls through to the unverified default, the
+  only symptom was **every gauge on the map reading "(unverified)"**, which
+  is exactly the silent failure the verify step exists to prevent. It still
+  accepts a comma-separated list, so batching is unaffected. The response
+  demultiplexes on the feature's `id`, not on a property.
 - **An API key is optional but supported.** Get a free one at
   https://api.waterdata.usgs.gov/signup/ and set it with
   `localStorage.setItem("usgsApiKey", "<key>")`. It's appended as `api_key`
@@ -687,8 +790,10 @@ are worth calibrating first.
 - Labels are zoom-gated in `syncLabels()`: zoom ≥ 8 for the western rivers,
   ≥ 10 for Driftless and North Shore ones, because those creeks sit almost
   on top of each other and dozens of labels at regional zoom is soup.
-- Adding a new region means touching seven things, as the Door Peninsula
-  pass confirmed: the `region` field on the rivers; the `subRegion` map in
+- Adding a new region means touching seven things, as the Door Peninsula and
+  Yellowstone passes both confirmed (Yellowstone needed an eighth: the
+  `regBody` line, because inside a national park the state agency is the
+  wrong authority to name): the `region` field on the rivers; the `subRegion` map in
   `openRiver` (the sheet subtitle); the per-region footer note in
   `renderSheet`; the ungauged-card copy in `noGaugeHTML()` if the region's
   streams aren't gauged — the default text talks about Driftless spring

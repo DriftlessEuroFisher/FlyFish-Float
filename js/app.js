@@ -261,15 +261,23 @@ async function verifyGaugesBatch(keys){
   if(!need.length) return;
   for(const group of chunk(need, batchSupported ? MAX_SITES_LATEST : 1)){
     if(apiPaused()) break;
+    /* The monitoring-locations collection names this parameter `id`, not
+       `monitoring_location_id` the way latest-continuous and daily do.
+       Asking for the wrong one is a 400 InvalidQuery — "At least one
+       requested property wasn't found" — and since a failed verify falls
+       through to the unverified default, the only symptom was every gauge
+       on the map quietly reading "(unverified)". It still takes a
+       comma-separated list, so the batching is unchanged. */
     const url = apiURL("monitoring-locations/items", {
-      monitoring_location_id: group.map(siteOf).join(","),
+      id: group.map(siteOf).join(","),
       limit: String(group.length + 5)
     });
     try{
       const j = await fetchJSON(url, 20000);
       (j.features||[]).forEach(f=>{
         const p = f.properties || {};
-        const k = KEY_BY_SITE[p.monitoring_location_id];
+        const k = KEY_BY_SITE[f.id || p.id ||
+                  (p.monitoring_location_number ? "USGS-"+p.monitoring_location_number : "")];
         if(!k) return;
         meta[k] = {name: p.monitoring_location_name || GAUGES[k].label, verified:true};
         store.set("meta:"+GAUGES[k].site, meta[k]);
@@ -368,6 +376,15 @@ const REGIONS = [
   ["Central Idaho (Salmon country)", [44.90,-114.60,7]],
   ["North Idaho (Clearwater / Panhandle)", [46.90,-116.00,7]],
   ["Boise / Payette", [43.90,-116.00,9]],
+  ["── Yellowstone National Park ──", null],
+  ["Yellowstone — whole park", [44.60,-110.50,9]],
+  ["Madison / Firehole / Gibbon", [44.64,-110.86,11]],
+  ["Lamar Valley & Slough Creek", [44.89,-110.25,10]],
+  ["Soda Butte / Pebble / Cache", [44.92,-110.10,11]],
+  ["Gardner River / Mammoth", [44.95,-110.70,11]],
+  ["Yellowstone Lake & upper river", [44.45,-110.30,10]],
+  ["Lewis / Snake (south entrance)", [44.20,-110.65,10]],
+  ["Bechler / Cascade Corner", [44.20,-110.98,11]],
   ["Green River Valley / Pinedale", [42.75,-110.05,9]],
   ["Cody / Bighorn Basin", [44.30,-108.70,8]],
   ["Wind River / Thermopolis", [43.40,-108.50,9]],
@@ -435,9 +452,11 @@ regionCtl.addTo(map);
 function syncLabels(){
   const z = map.getZoom();
   Object.values(riverLayers).forEach(l => {
-    const tight = l.river && (l.river.region === "driftless" || l.river.region === "northshore"
-                              || l.river.region === "doorcounty");
-    const min = tight ? 10 : 8;
+    const reg = l.river && l.river.region;
+    // Yellowstone sits between the two: the park fills the screen around
+    // zoom 9, and 40 labels at 8 is soup while 10 hides the whole region.
+    const min = (reg === "driftless" || reg === "northshore" || reg === "doorcounty") ? 10
+              : reg === "yellowstone" ? 9 : 8;
     l.lbl.setOpacity(z >= min ? 1 : 0);
   });
 }
@@ -908,7 +927,8 @@ async function openRiver(id, focusGauge){
   $("#sh-title").textContent = r.name;
   const stateName = {ID:"Idaho", WY:"Wyoming", IA:"Iowa", MN:"Minnesota", WI:"Wisconsin", IL:"Illinois"}[r.state] || r.state;
   const subRegion = {driftless:" · Driftless Area", northshore:" · North Shore",
-                     doorcounty:" · Door Peninsula"}[r.region] || "";
+                     doorcounty:" · Door Peninsula",
+                     yellowstone:" · Yellowstone National Park"}[r.region] || "";
   $("#sh-sub").textContent = stateName + subRegion;
   sheet.classList.add("open");
   loadRealRiver(r);                    // snap this river to exact USGS linework
@@ -947,6 +967,19 @@ function renderSheet(r){
       `</div>`;
   }
 
+  /* Yellowstone's rules are the reason the park is its own region, and they
+     are specific enough per river that a single park-wide note wouldn't do:
+     one reach opens May 1 and another July 15, one is fly-fishing-only, and
+     in the Lamar drainage releasing a rainbow alive is illegal. Wording is
+     taken from the Park Service's own regulations rather than paraphrased. */
+  if(r.parkRegs){
+    h += `<div class="secthead">Park regulations</div><div class="fishnote">`+
+      `<span class="badge" style="background:#4a6f8a">National Park Service</span> `+
+      `<span style="font-size:11.5px">${r.parkRegs}</span>`+
+      `<div style="font-size:10.5px;color:var(--txt-dim);margin-top:8px">From the park's <b>2026</b> fishing regulations. Seasons, closures and possession limits are re-issued every year and streams close on short notice in low water — read the current edition before you fish, and carry your park permit.</div>`+
+      `</div>`;
+  }
+
   const secs = SECTIONS.filter(s=>s.river===r.id && passFilter(s));
   const allSecs = SECTIONS.filter(s=>s.river===r.id);
   if(allSecs.length){
@@ -956,14 +989,22 @@ function renderSheet(r){
   } else if(WADE_ONLY[r.id]) {
     h += `<div class="secthead">Floating</div><div class="fishnote">🛶 ${WADE_ONLY[r.id]}</div>`;
   }
-  const regBody = {IA:"the Iowa DNR", MN:"the Minnesota DNR", WI:"the Wisconsin DNR", IL:"the Illinois DNR"}[r.state]
-    || "WY Game &amp; Fish / Idaho Fish &amp; Game";
+  /* Inside a national park the state agency has nothing to do with it — a
+     Wyoming or Montana licence is not valid in Yellowstone, and pointing a
+     reader at Game & Fish for these rivers would be actively wrong. */
+  const regBody = r.region==="yellowstone"
+    ? "the National Park Service (a state fishing licence is <b>not</b> valid in the park)"
+    : {IA:"the Iowa DNR", MN:"the Minnesota DNR", WI:"the Wisconsin DNR", IL:"the Illinois DNR"}[r.state]
+      || "WY Game &amp; Fish / Idaho Fish &amp; Game";
   h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Flow data: USGS Water Data OGC API. River lines simplified — not for navigation. Verify regulations with ${regBody}.</p>`;
   if(r.region==="driftless"){
     h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🚶 Driftless access is mostly <b>walk-and-wade</b>, and a lot of the best water runs through <b>private land under a public angling easement</b> — you may fish and walk the stream corridor, but not leave it. Park only in the marked pull-offs, and check the state's current easement map and trout regulations (including any catch-and-release or artificial-only stretches) before you go. Iowa also requires a <b>trout fee</b> on top of a fishing license.</p>`;
   }
   if(r.region==="northshore"){
     h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🌊 North Shore streams drop fast and cold straight off the ridge — spring steelhead runs are driven by snowmelt timing more than the calendar, so check current run reports before making the drive. Most access is <b>state park or DNR wayside</b> parking (many require a vehicle permit); a Minnesota <b>trout stamp</b> is required in addition to a fishing license. The Pigeon River and Grand Portage River cross into tribal or international jurisdiction — check current Grand Portage Band and Ontario licensing before fishing those reaches.</p>`;
+  }
+  if(r.region==="yellowstone"){
+    h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🏞 <b>Yellowstone runs its own fishery.</b> A <b>park fishing permit</b> is required at 16 and over and a state licence is not valid — $40 for three days, $55 for seven, $75 for the season, through Recreation.gov. The standard season is the <b>Saturday of Memorial Day weekend through October 31</b>; the Firehole, the Gibbon below the bridge and the Madison above the state line open <b>May 1</b>, and the Madison below the state line and the Gardner from Osprey Falls down are <b>open year-round</b>. Tackle is <b>lead-free artificial lures or flies only, barbless or barbs pinched</b> — no bait — and up to two flies on a leader; the Firehole, Madison and lower Gibbon are <b>fly fishing only</b>. <b>All native fish go back unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. In the <b>Lamar drainage</b> every rainbow, brook trout and cutthroat/rainbow hybrid <b>must be killed</b>, as must every lake trout from Yellowstone Lake. Closures and opening dates move year to year — check the park's current fishing regulations before you go.</p>`;
   }
   if(r.region==="doorcounty"){
     h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🌊 Door County has <b>no USGS gauge anywhere in the county</b> — every stream here is ungauged on purpose, and the nearest gauged water is a long way off. These creeks are small and rain-driven: judge them on the water. Almost all of them are <b>Great Lakes tributary</b> water, which carries its own season, a 10" minimum, a hook-gap limit and a <b>night-fishing closure</b> from September 15 — read the current Wisconsin regs before you go. Access is county park, state park and land-trust ground rather than DNR easement; there are no angling easements on the peninsula.</p>`;
@@ -1063,7 +1104,9 @@ function noGaugeHTML(r){
      the county — and nearestGaugedRiver() stays inside a region, so there is
      deliberately no proxy reading offered here. The note says so rather than
      leaving an empty card that looks like a loading failure. */
-  const ungaugedNote = r.region==="doorcounty"
+  const ungaugedNote = r.region==="yellowstone"
+    ? "Nine gauges cover the park's main rivers and none of them is on this one — most Yellowstone water is backcountry and ungauged, and the app won't put a number on it that isn't measured. The nearest gauged river below is the useful read: on this plateau the whole park rises and falls together with snowmelt, so a neighbouring drainage tracks this one far more closely than it would in farm country. Runoff usually has the park high and off-colour into late June, and the backcountry streams come into shape as it drops."
+    : r.region==="doorcounty"
     ? "There is <b>no USGS discharge gauge anywhere in Door County</b> — not on this creek and not on a neighbouring one — so there is no number to show and nothing close enough to borrow as a regional read. Nearly all of this water is short and rain-driven: <b>clarity and recent rain</b> are the whole story. On the Great Lakes tributaries the other half of the question is whether fish have run yet, which is driven by lake temperature and a rise in the creek, not by the calendar — a soaking rain in spring or from mid-September on is what turns them on."
     : r.region==="northshore"
     ? "Most North Shore streams are too small to gauge — there's no live number for this one, and the app doesn't invent one. Judge it on arrival: <b>clarity</b> is the thing that matters most. These are rain- and snowmelt-driven freestone streams, not spring creeks — they blow out fast after a heavy rain or a warm melt day and can take several days to clear and drop back into shape, longer than a Driftless spring creek would."
