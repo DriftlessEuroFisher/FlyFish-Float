@@ -376,6 +376,14 @@ const REGIONS = [
   ["Central Idaho (Salmon country)", [44.90,-114.60,7]],
   ["North Idaho (Clearwater / Panhandle)", [46.90,-116.00,7]],
   ["Boise / Payette", [43.90,-116.00,9]],
+  ["── Grand Teton National Park ──", null],
+  ["Grand Teton — whole park", [43.81,-110.68,10]],
+  ["Moose / Jenny Lake creeks", [43.71,-110.72,12]],
+  ["Moran / Pacific & Spread Creek", [43.85,-110.52,11]],
+  ["Colter Bay / Christian & Pilgrim", [43.89,-110.60,12]],
+  ["Phelps Lake / Granite Canyon", [43.61,-110.80,12]],
+  ["North park backcountry (Berry/Owl/Moose)", [43.99,-110.80,11]],
+  ["Flagg Ranch / Rockefeller Parkway", [44.10,-110.67,12]],
   ["── Yellowstone National Park ──", null],
   ["Yellowstone — whole park", [44.60,-110.50,9]],
   ["Madison / Firehole / Gibbon", [44.64,-110.86,11]],
@@ -456,7 +464,7 @@ function syncLabels(){
     // Yellowstone sits between the two: the park fills the screen around
     // zoom 9, and 40 labels at 8 is soup while 10 hides the whole region.
     const min = (reg === "driftless" || reg === "northshore" || reg === "doorcounty") ? 10
-              : reg === "yellowstone" ? 9 : 8;
+              : (reg === "yellowstone" || reg === "grandteton") ? 9 : 8;
     l.lbl.setOpacity(z >= min ? 1 : 0);
   });
 }
@@ -928,7 +936,8 @@ async function openRiver(id, focusGauge){
   const stateName = {ID:"Idaho", WY:"Wyoming", IA:"Iowa", MN:"Minnesota", WI:"Wisconsin", IL:"Illinois"}[r.state] || r.state;
   const subRegion = {driftless:" · Driftless Area", northshore:" · North Shore",
                      doorcounty:" · Door Peninsula",
-                     yellowstone:" · Yellowstone National Park"}[r.region] || "";
+                     yellowstone:" · Yellowstone National Park",
+                     grandteton:" · Grand Teton National Park"}[r.region] || "";
   $("#sh-sub").textContent = stateName + subRegion;
   sheet.classList.add("open");
   loadRealRiver(r);                    // snap this river to exact USGS linework
@@ -973,10 +982,21 @@ function renderSheet(r){
      in the Lamar drainage releasing a rainbow alive is illegal. Wording is
      taken from the Park Service's own regulations rather than paraphrased. */
   if(r.parkRegs){
+    /* Two parks, two authorities, and the difference is the single most
+       useful thing on this card: Yellowstone issues its own permit and a
+       state licence is void there, while Grand Teton is Wyoming water with
+       a Wyoming licence. Crediting the wrong one would send someone to the
+       wrong counter. The Snake, Buffalo Fork and Gros Ventre carry a Grand
+       Teton note without being in that region, so the source is a field. */
+    const src = r.parkRegsSrc || (r.region==="yellowstone" ? "yell" : "grte");
+    const badge = src==="grte" ? "Grand Teton · Wyoming regs" : "National Park Service";
+    const note  = src==="grte"
+      ? `From the National Park Service's Grand Teton fishing information, which follows <b>Wyoming Game &amp; Fish</b> regulations. Seasons and closures are re-issued every year — check the current Wyoming regulations, and carry a Wyoming licence.`
+      : `From the park's <b>2026</b> fishing regulations. Seasons, closures and possession limits are re-issued every year and streams close on short notice in low water — read the current edition before you fish, and carry your park permit.`;
     h += `<div class="secthead">Park regulations</div><div class="fishnote">`+
-      `<span class="badge" style="background:#4a6f8a">National Park Service</span> `+
+      `<span class="badge" style="background:#4a6f8a">${badge}</span> `+
       `<span style="font-size:11.5px">${r.parkRegs}</span>`+
-      `<div style="font-size:10.5px;color:var(--txt-dim);margin-top:8px">From the park's <b>2026</b> fishing regulations. Seasons, closures and possession limits are re-issued every year and streams close on short notice in low water — read the current edition before you fish, and carry your park permit.</div>`+
+      `<div style="font-size:10.5px;color:var(--txt-dim);margin-top:8px">${note}</div>`+
       `</div>`;
   }
 
@@ -994,6 +1014,8 @@ function renderSheet(r){
      reader at Game & Fish for these rivers would be actively wrong. */
   const regBody = r.region==="yellowstone"
     ? "the National Park Service (a state fishing licence is <b>not</b> valid in the park)"
+    : r.region==="grandteton"
+    ? "WY Game &amp; Fish and the park — Grand Teton takes a <b>Wyoming licence</b>, unlike Yellowstone"
     : {IA:"the Iowa DNR", MN:"the Minnesota DNR", WI:"the Wisconsin DNR", IL:"the Illinois DNR"}[r.state]
       || "WY Game &amp; Fish / Idaho Fish &amp; Game";
   h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Flow data: USGS Water Data OGC API. River lines simplified — not for navigation. Verify regulations with ${regBody}.</p>`;
@@ -1002,6 +1024,9 @@ function renderSheet(r){
   }
   if(r.region==="northshore"){
     h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🌊 North Shore streams drop fast and cold straight off the ridge — spring steelhead runs are driven by snowmelt timing more than the calendar, so check current run reports before making the drive. Most access is <b>state park or DNR wayside</b> parking (many require a vehicle permit); a Minnesota <b>trout stamp</b> is required in addition to a fishing license. The Pigeon River and Grand Portage River cross into tribal or international jurisdiction — check current Grand Portage Band and Ontario licensing before fishing those reaches.</p>`;
+  }
+  if(r.region==="grandteton"){
+    h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🏔 <b>Grand Teton is not Yellowstone.</b> It takes a <b>Wyoming fishing licence</b> and is fished under <b>Wyoming regulations</b>, not a park permit of its own. The rule that shapes a season here: <b>park streams are closed December 1 – July 31</b>, so most of this water opens <b>August 1</b> — the exceptions the park names are the <b>Snake, Buffalo Fork, Pacific Creek, Gros Ventre and Polecat Creek</b>. Streams are <b>artificial flies or lures only</b> apart from those same five, the stream creel is three trout with no more than one over sixteen inches, and the lakes are six trout of which at most three may be cutthroat. Lakes are open year-round except Jackson Lake, which closes October 1–31. Check the current Wyoming Game &amp; Fish regulations before you go.</p>`;
   }
   if(r.region==="yellowstone"){
     h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🏞 <b>Yellowstone runs its own fishery.</b> A <b>park fishing permit</b> is required at 16 and over and a state licence is not valid — $40 for three days, $55 for seven, $75 for the season, through Recreation.gov. The standard season is the <b>Saturday of Memorial Day weekend through October 31</b>; the Firehole, the Gibbon below the bridge and the Madison above the state line open <b>May 1</b>, and the Madison below the state line and the Gardner from Osprey Falls down are <b>open year-round</b>. Tackle is <b>lead-free artificial lures or flies only, barbless or barbs pinched</b> — no bait — and up to two flies on a leader; the Firehole, Madison and lower Gibbon are <b>fly fishing only</b>. <b>All native fish go back unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. In the <b>Lamar drainage</b> every rainbow, brook trout and cutthroat/rainbow hybrid <b>must be killed</b>, as must every lake trout from Yellowstone Lake. Closures and opening dates move year to year — check the park's current fishing regulations before you go.</p>`;
@@ -1104,7 +1129,9 @@ function noGaugeHTML(r){
      the county — and nearestGaugedRiver() stays inside a region, so there is
      deliberately no proxy reading offered here. The note says so rather than
      leaving an empty card that looks like a loading failure. */
-  const ungaugedNote = r.region==="yellowstone"
+  const ungaugedNote = r.region==="grandteton"
+    ? "Only three gauges bear on Grand Teton's own water and none of them is on this one. Several of these creeks <i>have</i> USGS site numbers — Spread, Cottonwood, Ditch, Taggart, Pilgrim, Lake Creek — and not one has reported discharge since the 1990s or 2010, so there is nothing live to show. The nearest gauged water below is the useful read: these streams share one snowpack off the same range and rise and fall together. Remember the season here as well as the level — most park streams are shut until <b>August 1</b>."
+    : r.region==="yellowstone"
     ? "Nine gauges cover the park's main rivers and none of them is on this one — most Yellowstone water is backcountry and ungauged, and the app won't put a number on it that isn't measured. The nearest gauged river below is the useful read: on this plateau the whole park rises and falls together with snowmelt, so a neighbouring drainage tracks this one far more closely than it would in farm country. Runoff usually has the park high and off-colour into late June, and the backcountry streams come into shape as it drops."
     : r.region==="doorcounty"
     ? "There is <b>no USGS discharge gauge anywhere in Door County</b> — not on this creek and not on a neighbouring one — so there is no number to show and nothing close enough to borrow as a regional read. Nearly all of this water is short and rain-driven: <b>clarity and recent rain</b> are the whole story. On the Great Lakes tributaries the other half of the question is whether fish have run yet, which is driven by lake temperature and a rise in the creek, not by the calendar — a soaking rain in spring or from mid-September on is what turns them on."

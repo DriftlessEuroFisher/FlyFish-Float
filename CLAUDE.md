@@ -6,9 +6,9 @@ trail system, the trout streams of the Driftless Area, the steelhead/
 trout tributaries of Minnesota's North Shore of Lake Superior, the
 big warmwater float rivers of east-central Minnesota and the St. Croix
 valley, the north-central Minnesota lakes country and Wisconsin
-Northwoods, the trout creeks of the Door Peninsula, and every fishable river
-in Yellowstone National Park, with live USGS flow conditions, built for
-checking "is it worth driving out today?" from a phone.
+Northwoods, the trout creeks of the Door Peninsula, and the waters of
+Yellowstone and Grand Teton National Parks, with live USGS flow conditions,
+built for checking "is it worth driving out today?" from a phone.
 
 ## How I use this
 
@@ -49,7 +49,9 @@ like an app, not a browser tab.
   `short` is the name used when the zone is too small at the current zoom
   to carry the full one. `count` is rivers mapped there, and 0 renders as
   "not mapped yet" rather than pretending the zone is populated
-  (no zone is 0 today). Nine zones.
+  (no zone is 0 today). Nine zones. **Park outlines are simplified to a
+  tolerance, not to a point count** — see the boundary note under
+  Conventions.
   Rebuild with `zones2.py` in the scratchpad — it rewrites `js/zones.js`
   itself and prints the overlap check and the per-zone river totals.
 
@@ -60,7 +62,7 @@ like an app, not a browser tab.
 
 ## Rivers covered
 
-278 rivers. Full list and gauge IDs live in `js/rivers-data.js`; this file
+296 rivers. Full list and gauge IDs live in `js/rivers-data.js`; this file
 doesn't duplicate it since the code is the source of truth. Rivers carry a
 `region` field — `"driftless"` and `"northshore"` on the two small-stream
 sub-regions, absent on the original western rivers *and* on the two
@@ -441,6 +443,60 @@ reported in 1996, Blacktail Deer in 1993, Boundary Creek in 2004).
 and on this plateau a neighbouring drainage genuinely tracks an ungauged
 creek — Slough Creek gets Soda Butte, which is the right answer.
 
+## Grand Teton National Park
+
+**Grand Teton (17, plus three it shares with Jackson Hole).** Pacific,
+Cottonwood, Ditch, Spread, Lake, Christian, Cascade, Taggart, Granite,
+Leigh, Pilgrim, Arizona, Lizard, Moran, Berry, Owl and Moose Creeks, clipped
+to the NPS boundary the same way Yellowstone's are.
+
+**The Snake, the Buffalo Fork and the Gros Ventre are not duplicated.** Each
+was already mapped as a Jackson Hole river and each runs far beyond the
+park, so they carry a `parkRegs` note about the park reach instead of a
+second entry. They are also the three that the zone builder already assigned
+to the park, which is why the Grand Teton zone reads 20 rivers and not 17.
+
+### Grand Teton is the opposite of Yellowstone, and that is the point
+
+- **A Wyoming licence, not a park permit.** Grand Teton is fished under
+  Wyoming state regulations. Yellowstone issues its own permit and a state
+  licence is void there. `renderSheet` credits a different authority for
+  each, and the `parkRegs` block carries a different badge and footer per
+  source — `parkRegsSrc` (`"grte"` / `"yell"`), because the three Jackson
+  Hole rivers carry a Grand Teton note without being in that region.
+  Crediting the wrong agency would send someone to the wrong counter.
+- **Most park streams are closed December 1 – July 31**, so the season on
+  this water opens **August 1**. The park names five exceptions — the Snake,
+  Buffalo Fork, Pacific Creek, Gros Ventre and Polecat Creek — which are
+  also the only streams exempt from the **artificial flies or lures only**
+  rule. Stream creel is three trout, no more than one over sixteen inches.
+  All of that comes from the NPS Grand Teton fishing page, not recollection.
+
+### The park is much smaller than it looks east of the Snake
+
+Measured against the real boundary: **only ~9 km of Pacific Creek, ~8 km of
+Spread Creek and ~6 km of the Gros Ventre are inside the park** — the rest of
+each is Bridger-Teton forest. Worth knowing before assuming a Teton-country
+creek is under park rules.
+
+### Gauges, and the gap between the parks
+
+Three live-discharge stations bear on this water: **Pacific Creek at Moran**,
+**Granite Creek near Moose**, and **the Snake above Jackson Lake at Flagg
+Ranch**. Spread, Cottonwood, Ditch, Taggart, Pilgrim and Lake Creek all have
+USGS site numbers and **none has reported since the 1990s or 2010** — don't
+add them.
+
+The Flagg Ranch gauge turned up a genuine hole in the map: the Snake between
+Yellowstone's south boundary and Jackson Lake, through the **John D.
+Rockefeller, Jr. Memorial Parkway**, sat between this map's Yellowstone
+headwaters reach and its Jackson Hole one and was covered by neither. It is
+now `snakeflagg`. The Parkway is a separate NPS unit and is deliberately
+**not** in the park zone: zone `rings[1..]` are holes, not separate polygons,
+so a disjoint second ring would render as a hole punched in the park. It
+falls in the Wyoming zone, which is correct — it is outside both parks.
+Polecat Creek is in the Parkway for the same reason and is left off.
+
 ## Status
 
 **Finished / working:**
@@ -450,7 +506,7 @@ creek — Slough Creek gets Soda Butte, which is the right answer.
 - All 278 rivers in place (49 West, 7 Central Iowa, 117 Driftless incl. 65
   NE-Iowa trout streams from the DNR, 24 North Shore, 13 East-Central
   MN/St. Croix, 16 Lakes Country/Northwoods, 10 Door Peninsula, 42
-  Yellowstone), with
+  Yellowstone, 17 Grand Teton + the Flagg Ranch reach), with
   gauges, ramps/access points, blurbs, and region-aware copy in the sheet.
 - Ungauged-river handling: the "Ungauged" card, `nearestGaugedRiver()`
   regional-wetness fallback with the cross-state-line distance penalty —
@@ -674,6 +730,19 @@ are worth calibrating first.
   `passFilter()`, `riverVisible()` and `applyFilters()` are untouched and
   sitting at defaults (everything visible). Restoring the markup and the
   one listener brings the filters back — don't delete the rest.
+- **Park outlines are simplified by tolerance, not by point count.** A park
+  boundary is long survey-line straights meeting at sharp corners, and
+  even-interval decimation spends its budget on the straights and rounds the
+  corners off. 900 evenly-spaced points sat 14 m from the Yellowstone
+  boundary on average and **cut its corners by up to 2 km**. Douglas-Peucker
+  at 50 m gives **486 points and a 52 m worst case** — better fidelity from
+  fewer points, and it halved `zones.js`. `simplify()` in `zones2.py`; it
+  splits the closed ring in two so DP can't shortcut across it.
+
+  The same distinction bit the river assignment earlier: the ring used to
+  decide *which rivers are in a park* is simplified to 20 m, because a
+  coarse ring cut corners hard enough to push a creek that runs along the
+  park line out of the park.
 - **A zone's name stays inside that zone.** `layoutZoneCards()` puts each
   card at the pole of inaccessibility — the interior point furthest from
   any edge — of the part of the zone currently on screen, recomputed on

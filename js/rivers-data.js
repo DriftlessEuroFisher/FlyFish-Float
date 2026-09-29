@@ -85,6 +85,13 @@ const GAUGES = {
   newFork:      { site:"USGS-09205000", label:"New Fork River nr Big Piney, WY" },
   encampment:   { site:"USGS-06623800", label:"Encampment River above Hog Park Creek" },
   laramie:      { site:"USGS-06659500", label:"Laramie River nr Woods Landing, WY" },
+  // --- Grand Teton / Rockefeller Parkway ---
+  // Only three live-discharge stations bear on the park's own water. Spread
+  // Creek, Cottonwood, Ditch, Taggart, Pilgrim and Lake Creek all have site
+  // numbers and none of them has reported since the 1990s or 2010.
+  pacificCr:    { site:"USGS-13011500", label:"Pacific Creek at Moran, WY" },
+  graniteCrGT:  { site:"USGS-13016305", label:"Granite Creek nr Moose, WY (Granite Canyon)" },
+  snakeFlagg:   { site:"USGS-13010065", label:"Snake River above Jackson Lake at Flagg Ranch" },
   // --- Yellowstone National Park ---
   // Nine live-discharge stations for the whole park. Most of the park's
   // water is backcountry and ungauged; these are the ones actually
@@ -246,6 +253,7 @@ const GAUGE_POS = {
   hfIslandPark:[44.4150,-111.3950], hfAshton:[44.0700,-111.4500], hfStAnthony:[43.9660,-111.6840],
   fallRiver:[44.0680,-111.2200], snakeBlackfoot:[43.3100,-112.2700], blackfootId:[42.9300,-111.6300],
   portneuf:[42.8710,-112.4660], bearBorder:[42.2100,-111.0500],
+  pacificCr:[43.8511,-110.5164], graniteCrGT:[43.6032,-110.8058], snakeFlagg:[44.0989,-110.6675],
   yellLakeOut:[44.5671,-110.3804], yellCorwin:[45.1121,-110.7937], madisonWestY:[44.6571,-111.0680],
   fireholeWestY:[44.6202,-110.8635], fireholeOF:[44.4593,-110.8223], gibbonMadJct:[44.6408,-110.8611],
   lamarTower:[44.9282,-110.3943], sodaButtePark:[45.0028,-110.0019], gardnerMam:[44.9923,-110.6910],
@@ -331,6 +339,8 @@ const RIVERS = [
 {
   id:"snake", name:"Snake River — Jackson Hole", color:"#1f6f8b",
   state:"WY", gauges:["damSnake","mooseSnake","townSnake","alpineSnake"], primaryGauge:"mooseSnake",
+  parkRegsSrc:"grte",
+  parkRegs:"<b>Through Grand Teton and Jackson Hole:</b> artificial flies or lures only from the gauging station 1,000 feet below Jackson Lake Dam down to the Wyoming 22 bridge. All cutthroat must be <b>released November 1 – March 31</b>, and the river is <b>closed December 15 – March 31</b> from the Buffalo Fork confluence at Moran down to Menors Ferry at Moose. A <b>Wyoming fishing licence</b> is required — Grand Teton is fished under <b>Wyoming state regulations</b>, not a park permit of its own, which is the opposite of Yellowstone.",
   goodFlow:{min:1000,max:3000}, // starting point from public guide reports (best wading window July-Sept, Jackson Hole float shops) — adjust to your own experience
   blurb:"The main artery of the valley: a big, braided freestone full of native Snake River fine-spotted cutthroat. Character changes hugely by reach — flat dam water up top, fast braids through the park, and genuine Class III whitewater in the canyon below Hoback Junction.",
   fish:"Dry-dropper from a drift boat is the classic program. Fishes best once runoff drops out (typically July) through October. Watch water temps mid-summer.",
@@ -355,6 +365,8 @@ const RIVERS = [
 {
   id:"grosventre", name:"Gros Ventre River", color:"#8c6a1d",
   state:"WY", gauges:["grosVentre"], primaryGauge:"grosVentre",
+  parkRegsSrc:"grte",
+  parkRegs:"<b>In Grand Teton:</b> named by the park as an exception to the December 1 – July 31 stream closure and to the artificial-flies-or-lures rule. Only about six kilometres of the river are inside the park, from the boundary above Kelly down to the Snake. Stream creel is three trout, no more than one over sixteen inches. A <b>Wyoming fishing licence</b> is required — Grand Teton is fished under <b>Wyoming state regulations</b>, not a park permit of its own, which is the opposite of Yellowstone.",
   goodFlow:{min:150,max:600}, // starting point from public guide reports (safe/productive wading range, Kelly gauge) — adjust to your own experience
   blurb:"A rowdy little freestone tumbling out of the Gros Ventre Range past the 1925 landslide and Slide Lake, then along the airport bench to the Snake. Mostly a wade fishery — pocket water cutthroat fishing once it clears.",
   fish:"Blows out hard in runoff and clears late (July). Hopper water in August. Flows drop fast late season as irrigation pulls water — check the Kelly gauge before driving out.",
@@ -379,6 +391,8 @@ const RIVERS = [
 {
   id:"buffalofork", name:"Buffalo Fork", color:"#a8552a",
   state:"WY", gauges:["buffaloFork"], primaryGauge:"buffaloFork",
+  parkRegsSrc:"grte",
+  parkRegs:"<b>In Grand Teton:</b> named by the park as an exception to the December 1 – July 31 stream closure and to the artificial-flies-or-lures rule — but <b>closed December 15 – March 31</b> from the east park boundary down to the Snake. Stream creel is three trout, no more than one over sixteen inches. A <b>Wyoming fishing licence</b> is required — Grand Teton is fished under <b>Wyoming state regulations</b>, not a park permit of its own, which is the opposite of Yellowstone.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"A meadow-and-willow freestone draining the Teton Wilderness into the Snake at Moran. Classic cutthroat water with serious grizzly density — fish with a partner and bear spray.",
   fish:"Clears after the Snake's other tributaries; late July–September is prime. Mostly wade fishing from Turpin Meadow downstream; deadfall makes floating unpleasant.",
@@ -9963,6 +9977,575 @@ const RIVERS = [
     ]
   ]
 },
+
+/* ---- Grand Teton National Park & the Rockefeller Parkway ----
+   NHD linework clipped to the real NPS boundary, same as Yellowstone. Grand
+   Teton is a much smaller park east of the Snake than people assume: only
+   ~9 km of Pacific Creek, ~8 km of Spread Creek and ~6 km of the Gros Ventre
+   are actually inside it, and the rest of each is Bridger-Teton forest.
+
+   The regulations are the opposite of Yellowstone's: a Wyoming licence, not
+   a park permit, and Wyoming rules. `parkRegs` here is grounded in the NPS
+   Grand Teton fishing page — most notably that park streams are closed
+   December 1 – July 31 (opening August 1), with the Snake, Buffalo Fork,
+   Pacific Creek, Gros Ventre and Polecat Creek named as the exceptions.
+
+   The Snake itself, the Buffalo Fork and the Gros Ventre are already mapped
+   as Jackson Hole rivers; they carry a parkRegs note instead of a duplicate
+   entry, since each runs far beyond the park. */
+{
+  id:"pacificcreek", name:"Pacific Creek", color:"#3f7f9f",
+  state:"WY", region:"grandteton", gauges:["pacificCr"], primaryGauge:"pacificCr",
+  geom:"nhd",   // NHD clipped to the NPS boundary — don't re-snap
+  parkRegs:"One of the five waters the park names as exceptions to the December 1 – July 31 stream closure and to the artificial-flies-or-lures rule — the others are the Snake, the Buffalo Fork, the Gros Ventre and Polecat Creek. Stream creel is three trout, no more than one over sixteen inches. A <b>Wyoming fishing licence</b> is required — Grand Teton is fished under <b>Wyoming state regulations</b>, not a park permit of its own, which is the opposite of Yellowstone.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"In from the Teton Wilderness to the Snake at Moran, with a gauge at the confluence. Only about nine kilometres of it are inside the park — the rest is Bridger-Teton forest upstream, which surprises people who assume the park reaches further east than it does.",
+  fish:"Snake River fine-spotted cutthroat, and one of the few park streams you can legally fish before August. It carries colour longer than the Snake after a storm on the burn scars upstream.",
+  coords:[
+    [
+      [43.86669,-110.48090],[43.86669,-110.47759],[43.86860,-110.48478],[43.86722,-110.48264],
+      [43.86860,-110.48478],[43.87021,-110.49242],[43.87218,-110.49479],[43.87190,-110.49436],
+      [43.87222,-110.49570],[43.87218,-110.49479],[43.87160,-110.49722],[43.86894,-110.50058],
+      [43.86753,-110.50125],[43.86560,-110.50397],[43.86715,-110.50270],[43.86753,-110.50125],
+      [43.86545,-110.50402],[43.86418,-110.50334],[43.86345,-110.50355],[43.86283,-110.50573],
+      [43.86302,-110.50442],[43.86223,-110.50590],[43.86283,-110.50573],[43.85676,-110.50690],
+      [43.85505,-110.50829],[43.85313,-110.51228],[43.85319,-110.51343],[43.85139,-110.51566],
+      [43.84965,-110.52118],[43.84781,-110.51942],[43.84641,-110.51937]
+    ],
+    [
+      [43.86978,-110.46895],[43.86939,-110.46807],[43.86978,-110.46895],[43.86852,-110.47215],
+      [43.86912,-110.47127],[43.86727,-110.47467],[43.86773,-110.47674],[43.86669,-110.47759],
+      [43.86773,-110.47674],[43.86753,-110.47559]
+    ]
+  ]
+},
+{
+  id:"cottonwoodcreekgt", name:"Cottonwood Creek", color:"#2f8f7f",
+  state:"WY", region:"grandteton", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to the NPS boundary — don't re-snap
+  parkRegs:"Closed to fishing <b>December 1 – July 31</b>, so the season here opens <b>August 1</b>. <b>Artificial flies or lures only.</b> Stream creel is three trout, no more than one over sixteen inches. A <b>Wyoming fishing licence</b> is required — Grand Teton is fished under <b>Wyoming state regulations</b>, not a park permit of its own, which is the opposite of Yellowstone.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The outlet of Jenny Lake, running south past Taggart Creek and the Moose junction to the Snake — the most accessible small stream in the park and the one most visitors walk past without a rod.",
+  fish:"Fine-spotted cutthroat in clear, cold lake-outlet water. Snake River fine-spotted cutthroat are the native fish here and the reason for most of the rules.",
+  coords:[
+    [
+      [43.68623,-110.72745],[43.68748,-110.72829],[43.68799,-110.72939],[43.68986,-110.72927],
+      [43.69076,-110.73006],[43.71204,-110.73171],[43.70958,-110.73122],[43.70647,-110.72905],
+      [43.70521,-110.72927],[43.70409,-110.73020],[43.70314,-110.72908],[43.69968,-110.72945],
+      [43.69904,-110.72823],[43.69855,-110.72927],[43.69691,-110.72894],[43.69613,-110.73041],
+      [43.69197,-110.73057]
+    ],
+    [
+      [43.73771,-110.72988],[43.74067,-110.73006],[43.74183,-110.72757],[43.74321,-110.72775],
+      [43.74386,-110.72883],[43.74462,-110.72750],[43.74851,-110.72418],[43.74994,-110.72479],
+      [43.73699,-110.73034],[43.73513,-110.73039],[43.73328,-110.73201],[43.73383,-110.73200],
+      [43.73530,-110.73036],[43.73055,-110.73385],[43.72966,-110.73711]
+    ],
+    [
+      [43.71204,-110.73171],[43.71534,-110.73149],[43.71644,-110.73058],[43.71746,-110.73100],
+      [43.71796,-110.73252],[43.71975,-110.73253],[43.72134,-110.73161],[43.72306,-110.73343],
+      [43.72498,-110.73363],[43.72966,-110.73711],[43.72794,-110.73525],[43.72628,-110.73486]
+    ],
+    [
+      [43.67808,-110.71274],[43.68131,-110.71514],[43.68163,-110.71673],[43.68299,-110.71743],
+      [43.68400,-110.71937],[43.68457,-110.72300],[43.68623,-110.72745],[43.67717,-110.70891],
+      [43.67628,-110.70573],[43.66954,-110.70699],[43.66753,-110.70464]
+    ]
+  ]
+},
+{
+  id:"ditchcreek", name:"Ditch Creek", color:"#6f8f3f",
+  state:"WY", region:"grandteton", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to the NPS boundary — don't re-snap
+  parkRegs:"Closed to fishing <b>December 1 – July 31</b>, so the season here opens <b>August 1</b>. <b>Artificial flies or lures only.</b> Stream creel is three trout, no more than one over sixteen inches. A <b>Wyoming fishing licence</b> is required — Grand Teton is fished under <b>Wyoming state regulations</b>, not a park permit of its own, which is the opposite of Yellowstone.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"East-side water, down off the Gros Ventre slopes past the Teton Science School and the Kelly road to the Snake near Moose. Despite the name it is a real creek, not an irrigation cut.",
+  fish:"Fine-spotted cutthroat in a small, willow-lined stream through sage and aspen. Quiet water in a park where quiet is hard to find.",
+  coords:[
+    [
+      [43.66715,-110.61116],[43.66819,-110.60732],[43.67085,-110.60356],[43.67067,-110.60288],
+      [43.67194,-110.59974],[43.67130,-110.59906],[43.67228,-110.59862],[43.67281,-110.59651],
+      [43.67233,-110.59360],[43.67271,-110.59222],[43.67327,-110.59185],[43.67436,-110.58855],
+      [43.67602,-110.58749],[43.66761,-110.61238],[43.66604,-110.62121],[43.66649,-110.61783],
+      [43.66464,-110.62427],[43.66382,-110.62520],[43.66365,-110.62741],[43.66247,-110.62979],
+      [43.66339,-110.63201],[43.66336,-110.63456],[43.66150,-110.64329],[43.66193,-110.64408],
+      [43.66066,-110.64701],[43.66142,-110.65313],[43.66092,-110.65473],[43.66156,-110.65724],
+      [43.66145,-110.66134],[43.66071,-110.66439],[43.66216,-110.66591],[43.66282,-110.66758],
+      [43.66176,-110.66910],[43.66128,-110.67171],[43.66218,-110.67704],[43.66177,-110.68139],
+      [43.66209,-110.68654],[43.66258,-110.68290],[43.66209,-110.68654],[43.66115,-110.68798],
+      [43.66034,-110.68805],[43.66051,-110.68914]
+    ],
+    [
+      [43.66564,-110.70419],[43.66051,-110.68914],[43.66075,-110.69007],[43.66133,-110.69026],
+      [43.66128,-110.69169],[43.66200,-110.69134],[43.66195,-110.69327],[43.66404,-110.69417],
+      [43.66466,-110.69749],[43.66631,-110.69916],[43.66639,-110.70215],[43.66551,-110.70375]
+    ]
+  ]
+},
+{
+  id:"spreadcreek", name:"Spread Creek", color:"#8f7f3f",
+  state:"WY", region:"grandteton", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to the NPS boundary — don't re-snap
+  parkRegs:"Closed to fishing <b>December 1 – July 31</b>, so the season here opens <b>August 1</b>. <b>Artificial flies or lures only.</b> Stream creel is three trout, no more than one over sixteen inches. A <b>Wyoming fishing licence</b> is required — Grand Teton is fished under <b>Wyoming state regulations</b>, not a park permit of its own, which is the opposite of Yellowstone.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"In from the Mount Leidy highlands to the Snake north of Moose, braiding across a wide gravel fan that gives it its name. The park holds about eight kilometres of it; the rest is national forest.",
+  fish:"Fine-spotted cutthroat. The braided lower end shifts channels from year to year, so what was a good run last August may be dry gravel this one.",
+  coords:[
+    [
+      [43.78982,-110.53695],[43.78815,-110.53366],[43.78748,-110.53002],[43.79205,-110.54138],
+      [43.79340,-110.54210],[43.79726,-110.54613],[43.79873,-110.54534],[43.79984,-110.54551],
+      [43.80203,-110.54719],[43.80386,-110.54782],[43.80203,-110.54719],[43.80582,-110.54756],
+      [43.80735,-110.54873],[43.80669,-110.54815],[43.80735,-110.54873],[43.80844,-110.54853],
+      [43.81030,-110.55038],[43.81070,-110.55155]
+    ],
+    [
+      [43.77945,-110.50158],[43.77682,-110.49821],[43.78223,-110.50970],[43.78446,-110.51725],
+      [43.78532,-110.52260],[43.78764,-110.52666],[43.78748,-110.52603],[43.78671,-110.52540],
+      [43.78764,-110.52666],[43.78721,-110.52726],[43.78786,-110.52941],[43.78748,-110.53002]
+    ]
+  ]
+},
+{
+  id:"lakecreekgt", name:"Lake Creek", color:"#4f7f8f",
+  state:"WY", region:"grandteton", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to the NPS boundary — don't re-snap
+  parkRegs:"Closed to fishing <b>December 1 – July 31</b>, so the season here opens <b>August 1</b>. <b>Artificial flies or lures only.</b> Stream creel is three trout, no more than one over sixteen inches. A <b>Wyoming fishing licence</b> is required — Grand Teton is fished under <b>Wyoming state regulations</b>, not a park permit of its own, which is the opposite of Yellowstone.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The outlet of Phelps Lake at the park's southwest corner, dropping through the Laurance S. Rockefeller Preserve toward the valley floor.",
+  fish:"Fine-spotted cutthroat in a short, steep outlet stream. The Preserve limits parking deliberately, which keeps the pressure down.",
+  coords:[
+    [
+      [43.59731,-110.78963],[43.59852,-110.78821],[43.60328,-110.78492],[43.60383,-110.78479],
+      [43.60513,-110.78605],[43.61379,-110.78004],[43.61314,-110.77972],[43.61184,-110.78031],
+      [43.61096,-110.78250],[43.61018,-110.78303],[43.60850,-110.78298],[43.60642,-110.78708],
+      [43.60535,-110.78699]
+    ],
+    [
+      [43.62407,-110.77899],[43.62427,-110.77811],[43.62563,-110.77690],[43.62707,-110.77760],
+      [43.61546,-110.78252],[43.61596,-110.78265],[43.61546,-110.78252],[43.61517,-110.78094],
+      [43.61397,-110.78020]
+    ],
+    [
+      [43.63410,-110.78927],[43.63186,-110.78916],[43.62852,-110.78701],[43.62757,-110.78719],
+      [43.62635,-110.78584],[43.62605,-110.78333],[43.62736,-110.78064],[43.62707,-110.77760]
+    ]
+  ]
+},
+{
+  id:"christiancreek", name:"Christian Creek", color:"#5f9f6f",
+  state:"WY", region:"grandteton", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to the NPS boundary — don't re-snap
+  parkRegs:"Closed to fishing <b>December 1 – July 31</b>, so the season here opens <b>August 1</b>. <b>Artificial flies or lures only.</b> Stream creel is three trout, no more than one over sixteen inches. A <b>Wyoming fishing licence</b> is required — Grand Teton is fished under <b>Wyoming state regulations</b>, not a park permit of its own, which is the opposite of Yellowstone.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A slow spring creek in the flats between Jackson Lake Dam and Colter Bay, winding through willow and beaver country in the shadow of the range.",
+  fish:"Fine-spotted cutthroat in flat, clear, spring-fed water — sight fishing when the light is right, and a beaver-pond character that rewards a careful approach. Moose in the willows all through it.",
+  coords:[
+    [
+      [43.87947,-110.56698],[43.88104,-110.56970],[43.88492,-110.56930],[43.88611,-110.56829],
+      [43.88755,-110.56859],[43.88908,-110.56585],[43.89092,-110.56700],[43.89189,-110.56592],
+      [43.89239,-110.56422],[43.89415,-110.56381],[43.89598,-110.56199],[43.89921,-110.56050],
+      [43.90317,-110.55968],[43.90485,-110.56005],[43.90670,-110.55883],[43.87859,-110.56669],
+      [43.87341,-110.57483],[43.87520,-110.57362],[43.87581,-110.57235],[43.87705,-110.57213],
+      [43.87826,-110.56832]
+    ],
+    [
+      [43.86144,-110.57481],[43.87318,-110.57506],[43.86955,-110.57631],[43.86868,-110.57580],
+      [43.86760,-110.57632],[43.86633,-110.57602],[43.86567,-110.57664],[43.86173,-110.57528]
+    ]
+  ]
+},
+{
+  id:"cascadecreekgt", name:"Cascade Creek", color:"#3f8f9f",
+  state:"WY", region:"grandteton", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to the NPS boundary — don't re-snap
+  parkRegs:"Closed to fishing <b>December 1 – July 31</b>, so the season here opens <b>August 1</b>. <b>Artificial flies or lures only.</b> Stream creel is three trout, no more than one over sixteen inches. A <b>Wyoming fishing licence</b> is required — Grand Teton is fished under <b>Wyoming state regulations</b>, not a park permit of its own, which is the opposite of Yellowstone.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Down Cascade Canyon from the high country between the Grand and Mount Saint John into Jenny Lake, past Hidden Falls — the most walked trail in the park runs beside it.",
+  fish:"Small fine-spotted cutthroat in steep pocket water. This is a fish-it-because-you-are-there creek rather than a destination.",
+  coords:[
+    [43.79398,-110.84576],[43.79278,-110.84435],[43.79174,-110.84404],[43.79077,-110.84256],
+    [43.79031,-110.83664],[43.78939,-110.83474],[43.78779,-110.83394],[43.78519,-110.82937],
+    [43.78208,-110.82738],[43.78096,-110.82734],[43.77831,-110.82518],[43.77443,-110.82407],
+    [43.77424,-110.82353],[43.77348,-110.82357],[43.76977,-110.82113],[43.76882,-110.82101],
+    [43.76733,-110.81878],[43.76637,-110.81826],[43.76604,-110.81579],[43.76504,-110.81359],
+    [43.76416,-110.81300],[43.76436,-110.80856],[43.76380,-110.80467],[43.76426,-110.80001],
+    [43.76338,-110.79818],[43.76420,-110.79466],[43.76396,-110.78960],[43.76297,-110.78592],
+    [43.76334,-110.78246],[43.76236,-110.77722],[43.76285,-110.77424],[43.76221,-110.77026],
+    [43.76261,-110.76522],[43.76319,-110.76471],[43.76273,-110.76261],[43.76316,-110.76046],
+    [43.76417,-110.75718],[43.76687,-110.75244],[43.76684,-110.75145],[43.76531,-110.75037],
+    [43.76582,-110.74666],[43.76507,-110.74398],[43.76527,-110.74124]
+  ]
+},
+{
+  id:"taggartcreek", name:"Taggart Creek", color:"#6f7f9f",
+  state:"WY", region:"grandteton", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to the NPS boundary — don't re-snap
+  parkRegs:"Closed to fishing <b>December 1 – July 31</b>, so the season here opens <b>August 1</b>. <b>Artificial flies or lures only.</b> Stream creel is three trout, no more than one over sixteen inches. A <b>Wyoming fishing licence</b> is required — Grand Teton is fished under <b>Wyoming state regulations</b>, not a park permit of its own, which is the opposite of Yellowstone.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Out of Taggart Lake and across the flats to Cottonwood Creek, with the Taggart Lake trailhead on it — small, cold and short.",
+  fish:"Small fine-spotted cutthroat. Half an hour of fishing on the way back from the lake.",
+  coords:[
+    [
+      [43.70732,-110.77995],[43.70633,-110.78154],[43.70494,-110.78773],[43.70516,-110.78880],
+      [43.70748,-110.77783],[43.70646,-110.77480],[43.70721,-110.77128],[43.70704,-110.76715],
+      [43.70528,-110.75968],[43.69918,-110.75078],[43.69944,-110.75230],[43.70292,-110.75524],
+      [43.70449,-110.75867]
+    ],
+    [
+      [43.69197,-110.73057],[43.69387,-110.73282],[43.69566,-110.73347],[43.69930,-110.74831],
+      [43.70151,-110.74527],[43.70085,-110.74278],[43.69997,-110.74259],[43.69938,-110.74031],
+      [43.69814,-110.73924],[43.69784,-110.73736],[43.69700,-110.73621]
+    ],
+    [
+      [43.70516,-110.78880],[43.70521,-110.79093],[43.70822,-110.80340],[43.70759,-110.79842],
+      [43.70501,-110.79156]
+    ],
+    [
+      [43.70745,-110.80893],[43.70752,-110.80526],[43.70822,-110.80340]
+    ]
+  ]
+},
+{
+  id:"granitecreekgt", name:"Granite Creek (Teton Village)", color:"#6f6f9f",
+  state:"WY", region:"grandteton", gauges:["graniteCrGT"], primaryGauge:"graniteCrGT",
+  geom:"nhd",   // NHD clipped to the NPS boundary — don't re-snap
+  parkRegs:"Closed to fishing <b>December 1 – July 31</b>, so the season here opens <b>August 1</b>. <b>Artificial flies or lures only.</b> Stream creel is three trout, no more than one over sixteen inches. A <b>Wyoming fishing licence</b> is required — Grand Teton is fished under <b>Wyoming state regulations</b>, not a park permit of its own, which is the opposite of Yellowstone.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Down Granite Canyon at the park's southwest corner to Lake Creek near Teton Village, with a live gauge on it — one of only two streams inside Grand Teton that report discharge. Not the Granite Creek of the Gros Ventre range with the hot springs, which is a different creek forty miles east.",
+  fish:"Fine-spotted cutthroat in a steep canyon creek. Small water, and the gauge makes it the one park creek where you can see the level before you drive.",
+  coords:[
+    [
+      [43.61765,-110.81626],[43.61644,-110.81858],[43.61532,-110.82275],[43.61575,-110.82431],
+      [43.61788,-110.81484],[43.61513,-110.81053],[43.61428,-110.81053],[43.61345,-110.80898],
+      [43.60714,-110.80473],[43.60870,-110.80516],[43.60911,-110.80627],[43.61042,-110.80623],
+      [43.61215,-110.80804]
+    ],
+    [
+      [43.61575,-110.82431],[43.61583,-110.82635],[43.61474,-110.82865],[43.61494,-110.83287],
+      [43.61444,-110.83527],[43.61587,-110.83808],[43.61560,-110.83989],[43.61650,-110.84309],
+      [43.61544,-110.85259],[43.61684,-110.87361],[43.61688,-110.87147],[43.61573,-110.86673]
+    ],
+    [
+      [43.60714,-110.80473],[43.60628,-110.80527],[43.60371,-110.80540],[43.60251,-110.80691],
+      [43.60119,-110.80550],[43.60042,-110.80547],[43.59997,-110.80449],[43.59956,-110.80520],
+      [43.59872,-110.80455],[43.59827,-110.80560],[43.59713,-110.80517],[43.59686,-110.80680]
+    ],
+    [
+      [43.61326,-110.88763],[43.61392,-110.88704],[43.61376,-110.88590],[43.61576,-110.87925],
+      [43.61543,-110.87751],[43.61684,-110.87361]
+    ]
+  ]
+},
+{
+  id:"leighcreek", name:"Leigh Creek", color:"#4f6f8f",
+  state:"WY", region:"grandteton", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to the NPS boundary — don't re-snap
+  parkRegs:"Closed to fishing <b>December 1 – July 31</b>, so the season here opens <b>August 1</b>. <b>Artificial flies or lures only.</b> Stream creel is three trout, no more than one over sixteen inches. A <b>Wyoming fishing licence</b> is required — Grand Teton is fished under <b>Wyoming state regulations</b>, not a park permit of its own, which is the opposite of Yellowstone.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Off the crest above Leigh Lake, down the north side of the Leigh Lake basin — a walk-in creek at the foot of Mount Moran.",
+  fish:"Small fine-spotted cutthroat in cold canyon water.",
+  coords:[
+    [
+      [43.80922,-110.86355],[43.80817,-110.86366],[43.81028,-110.86308],[43.81068,-110.86374],
+      [43.81156,-110.86279],[43.81315,-110.86263],[43.81552,-110.85901],[43.81555,-110.85626],
+      [43.81293,-110.84765],[43.81163,-110.84620],[43.81211,-110.84625],[43.81293,-110.84765],
+      [43.81061,-110.84524],[43.81135,-110.84383],[43.81057,-110.83740],[43.81151,-110.83533],
+      [43.81098,-110.83442],[43.81099,-110.82966],[43.81154,-110.83162],[43.81116,-110.83307],
+      [43.81086,-110.82692],[43.81160,-110.82367],[43.81084,-110.82109],[43.81258,-110.80832],
+      [43.81193,-110.80918],[43.81242,-110.81123],[43.81110,-110.81429],[43.81116,-110.81670]
+    ],
+    [
+      [43.81452,-110.79711],[43.81477,-110.79941],[43.81302,-110.80317],[43.81465,-110.79480],
+      [43.81516,-110.79424],[43.81504,-110.78971],[43.81725,-110.78750],[43.81603,-110.78833],
+      [43.81601,-110.78913],[43.81740,-110.78479],[43.81745,-110.78566],[43.81897,-110.77472],
+      [43.81810,-110.76664],[43.81863,-110.76705],[43.81866,-110.76771],[43.81776,-110.76579],
+      [43.81823,-110.76293],[43.81699,-110.75829],[43.81556,-110.75717],[43.81453,-110.75380]
+    ],
+    [
+      [43.81258,-110.80832],[43.81302,-110.80317]
+    ]
+  ]
+},
+{
+  id:"pilgrimcreek", name:"Pilgrim Creek", color:"#8f6f4f",
+  state:"WY", region:"grandteton", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to the NPS boundary — don't re-snap
+  parkRegs:"Closed to fishing <b>December 1 – July 31</b>, so the season here opens <b>August 1</b>. <b>Artificial flies or lures only.</b> Stream creel is three trout, no more than one over sixteen inches. A <b>Wyoming fishing licence</b> is required — Grand Teton is fished under <b>Wyoming state regulations</b>, not a park permit of its own, which is the opposite of Yellowstone.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"In from the Pilgrim Creek drainage northeast of Jackson Lake, crossing under Highway 89 just north of the dam — a braided gravel creek with a road bridge on it and a reputation as a bear corridor.",
+  fish:"Fine-spotted cutthroat. The lower reach braids across gravel and changes channel between seasons.",
+  coords:[
+    [
+      [43.93083,-110.56037],[43.92861,-110.56096],[43.92839,-110.56254],[43.92682,-110.56239],
+      [43.92345,-110.56324],[43.92175,-110.56225],[43.91915,-110.56511],[43.91766,-110.57059],
+      [43.91714,-110.57053],[43.91447,-110.57384],[43.91278,-110.57852],[43.90805,-110.58128],
+      [43.90730,-110.58205],[43.90666,-110.58456],[43.90291,-110.58780],[43.89675,-110.58936],
+      [43.89485,-110.59141],[43.89205,-110.59259],[43.89288,-110.59174],[43.89135,-110.59268],
+      [43.89205,-110.59259],[43.89106,-110.59242],[43.88631,-110.59381],[43.88810,-110.59340],
+      [43.88967,-110.59220],[43.89036,-110.59258]
+    ],
+    [
+      [43.87992,-110.59639],[43.88249,-110.59495],[43.88347,-110.59578],[43.87752,-110.59631],
+      [43.87651,-110.59797],[43.87586,-110.59713],[43.87589,-110.59605],[43.87437,-110.59711],
+      [43.87299,-110.59603],[43.87224,-110.59778],[43.87009,-110.59709],[43.87066,-110.59738],
+      [43.87009,-110.59709],[43.87029,-110.59514],[43.86876,-110.59562],[43.86798,-110.59453]
+    ],
+    [
+      [43.88621,-110.59434],[43.88631,-110.59381],[43.88347,-110.59578],[43.88533,-110.59487]
+    ]
+  ]
+},
+{
+  id:"arizonacreek", name:"Arizona Creek", color:"#9f7f5f",
+  state:"WY", region:"grandteton", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to the NPS boundary — don't re-snap
+  parkRegs:"Closed to fishing <b>December 1 – July 31</b>, so the season here opens <b>August 1</b>. <b>Artificial flies or lures only.</b> Stream creel is three trout, no more than one over sixteen inches. A <b>Wyoming fishing licence</b> is required — Grand Teton is fished under <b>Wyoming state regulations</b>, not a park permit of its own, which is the opposite of Yellowstone.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A short creek off Arizona Island country into the northeast shore of Jackson Lake, crossed by the highway between Colter Bay and Lizard Creek.",
+  fish:"Small fine-spotted cutthroat, with lake fish in the lowest reach when they are in.",
+  coords:[
+    [44.00143,-110.63633],[44.00111,-110.63611],[44.00099,-110.63720],[44.00044,-110.63685],
+    [43.99970,-110.63777],[43.99839,-110.63668],[43.99841,-110.63877],[43.99761,-110.63840],
+    [43.99760,-110.63909],[43.99658,-110.63922],[43.99613,-110.64001],[43.99518,-110.63933],
+    [43.99494,-110.64104],[43.99429,-110.63972],[43.99282,-110.64262],[43.99262,-110.64120],
+    [43.99227,-110.64168],[43.99189,-110.64099],[43.99120,-110.64155],[43.99234,-110.64219],
+    [43.99189,-110.64274],[43.99036,-110.64146],[43.98983,-110.64202],[43.98905,-110.64099],
+    [43.98858,-110.64144],[43.98889,-110.64223],[43.98826,-110.64193],[43.98811,-110.64252],
+    [43.98758,-110.64181],[43.98761,-110.64248],[43.98695,-110.64223],[43.98674,-110.64297],
+    [43.98609,-110.64180],[43.98550,-110.64252],[43.98523,-110.64188],[43.98396,-110.64281],
+    [43.98374,-110.64207],[43.98340,-110.64303],[43.98333,-110.64186],[43.98180,-110.64312],
+    [43.98136,-110.64213],[43.97853,-110.64178],[43.97677,-110.64357],[43.97623,-110.64250],
+    [43.97528,-110.64366],[43.97453,-110.64268],[43.97341,-110.64559],[43.97212,-110.64560],
+    [43.97240,-110.64657],[43.97120,-110.64680],[43.97194,-110.64701],[43.97257,-110.64811],
+    [43.97234,-110.64892],[43.97182,-110.64866],[43.97229,-110.64972],[43.97129,-110.64984]
+  ]
+},
+{
+  id:"lizardcreek", name:"Lizard Creek", color:"#7f8f5f",
+  state:"WY", region:"grandteton", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to the NPS boundary — don't re-snap
+  parkRegs:"Closed to fishing <b>December 1 – July 31</b>, so the season here opens <b>August 1</b>. <b>Artificial flies or lures only.</b> Stream creel is three trout, no more than one over sixteen inches. A <b>Wyoming fishing licence</b> is required — Grand Teton is fished under <b>Wyoming state regulations</b>, not a park permit of its own, which is the opposite of Yellowstone.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"In to the north end of Jackson Lake beside the Lizard Creek campground, at the top of the park.",
+  fish:"Small fine-spotted cutthroat, and the easiest of the northern creeks to reach — you can camp on it.",
+  coords:[
+    [
+      [44.01765,-110.67409],[44.01832,-110.67370],[44.01903,-110.67138],[44.02032,-110.66983],
+      [44.02292,-110.66968],[44.04513,-110.66337],[44.04202,-110.66371],[44.04151,-110.66584],
+      [44.04022,-110.66770],[44.03726,-110.66931],[44.03445,-110.66956],[44.03265,-110.67107],
+      [44.03119,-110.67116],[44.02343,-110.66919]
+    ],
+    [
+      [44.00144,-110.68751],[44.00318,-110.68586],[44.00540,-110.68101],[44.00558,-110.68140],
+      [44.00815,-110.68057],[44.00943,-110.67747],[44.01103,-110.67641],[44.01765,-110.67409],
+      [44.01511,-110.67347],[44.01204,-110.67492]
+    ]
+  ]
+},
+{
+  id:"morancreek", name:"Moran Creek", color:"#5f5f8f",
+  state:"WY", region:"grandteton", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to the NPS boundary — don't re-snap
+  parkRegs:"Closed to fishing <b>December 1 – July 31</b>, so the season here opens <b>August 1</b>. <b>Artificial flies or lures only.</b> Stream creel is three trout, no more than one over sixteen inches. A <b>Wyoming fishing licence</b> is required — Grand Teton is fished under <b>Wyoming state regulations</b>, not a park permit of its own, which is the opposite of Yellowstone.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Off Mount Moran's north flank into the west arm of Jackson Lake, in the roadless country between Leigh Lake and Moose Creek.",
+  fish:"Small fine-spotted cutthroat, backcountry. Boat or a long walk.",
+  coords:[
+    [
+      [43.86174,-110.75395],[43.86258,-110.75678],[43.86209,-110.75835],[43.86326,-110.75971],
+      [43.86169,-110.76215],[43.86157,-110.76637],[43.86054,-110.76777],[43.86048,-110.77076],
+      [43.85963,-110.77152],[43.85834,-110.77639],[43.85931,-110.77505],[43.85903,-110.77353],
+      [43.85953,-110.77197]
+    ],
+    [
+      [43.85621,-110.81799],[43.85713,-110.81929],[43.85587,-110.81480],[43.85581,-110.81113],
+      [43.85654,-110.80985],[43.85575,-110.80444],[43.85556,-110.80581],[43.85511,-110.80578],
+      [43.85524,-110.80644],[43.85569,-110.80341],[43.85619,-110.80297]
+    ],
+    [
+      [43.85821,-110.77814],[43.85834,-110.77639],[43.85790,-110.77974],[43.85839,-110.78186],
+      [43.85727,-110.78357],[43.85517,-110.79300],[43.85617,-110.79233],[43.85819,-110.78808],
+      [43.85731,-110.78525]
+    ],
+    [
+      [43.85525,-110.79845],[43.85488,-110.79975],[43.85619,-110.80297],[43.85511,-110.79785],
+      [43.85642,-110.79571],[43.85564,-110.79504],[43.85517,-110.79300]
+    ],
+    [
+      [43.85691,-110.82922],[43.85651,-110.82538],[43.85713,-110.81929],[43.85630,-110.82343]
+    ]
+  ]
+},
+{
+  id:"berrycreek", name:"Berry Creek", color:"#4f8f4f",
+  state:"WY", region:"grandteton", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to the NPS boundary — don't re-snap
+  parkRegs:"Closed to fishing <b>December 1 – July 31</b>, so the season here opens <b>August 1</b>. <b>Artificial flies or lures only.</b> Stream creel is three trout, no more than one over sixteen inches. A <b>Wyoming fishing licence</b> is required — Grand Teton is fished under <b>Wyoming state regulations</b>, not a park permit of its own, which is the opposite of Yellowstone.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The park's remote northwest: down from the Teton crest through Berry Creek to the north arm of Jackson Lake, reached by boat across the lake or a long walk in from Flagg Ranch.",
+  fish:"Fine-spotted cutthroat in backcountry meadow and pocket water that sees very few anglers. Grizzly country, and a long way from help.",
+  coords:[
+    [43.97915,-110.86725],[43.98205,-110.86562],[43.98303,-110.86381],[43.98635,-110.86274],
+    [43.98870,-110.86311],[43.99067,-110.86093],[43.99177,-110.86051],[43.99694,-110.85951],
+    [43.99863,-110.86003],[43.99980,-110.86137],[44.00284,-110.86106],[44.00625,-110.86234],
+    [44.01024,-110.86059],[44.01269,-110.85820],[44.01402,-110.85484],[44.01567,-110.85390],
+    [44.01847,-110.84771],[44.02013,-110.84657],[44.02243,-110.84600],[44.02387,-110.84428],
+    [44.02528,-110.84391],[44.02621,-110.84283],[44.02759,-110.84288],[44.02958,-110.84064],
+    [44.03018,-110.83615],[44.03111,-110.83433],[44.03068,-110.83346],[44.03226,-110.83087],
+    [44.03199,-110.82715],[44.03277,-110.82355],[44.03227,-110.82292],[44.03257,-110.81815],
+    [44.03213,-110.81814],[44.03213,-110.81517],[44.03150,-110.81407],[44.03229,-110.81165],
+    [44.03315,-110.81131],[44.03213,-110.80668],[44.03325,-110.80513],[44.03351,-110.80298],
+    [44.03433,-110.80154],[44.03366,-110.79976],[44.03427,-110.79610],[44.03355,-110.79461],
+    [44.03418,-110.79478],[44.03434,-110.78961],[44.03504,-110.78854],[44.03263,-110.78430],
+    [44.03318,-110.78404],[44.03336,-110.78094],[44.03266,-110.78119],[44.03198,-110.77979],
+    [44.03152,-110.78035],[44.03134,-110.77909],[44.03011,-110.77792],[44.02938,-110.77798],
+    [44.02942,-110.77681],[44.02813,-110.77490],[44.02875,-110.77359],[44.02802,-110.77128],
+    [44.02606,-110.76855],[44.02498,-110.76970],[44.02331,-110.76918],[44.02181,-110.76954],
+    [44.02128,-110.76884],[44.01982,-110.76918],[44.01845,-110.76854],[44.01690,-110.76887],
+    [44.01604,-110.76849],[44.01415,-110.76913],[44.01013,-110.76672],[44.00938,-110.76394],
+    [44.00992,-110.76314],[44.00894,-110.76227],[44.00786,-110.75858],[44.00710,-110.75893],
+    [44.00612,-110.75669],[44.00395,-110.75482],[44.00313,-110.75220],[44.00163,-110.75163],
+    [44.00111,-110.75078],[44.00090,-110.74830],[43.99962,-110.74681],[43.99981,-110.74549],
+    [43.99856,-110.74386],[43.99822,-110.74033],[43.99894,-110.73763],[43.99973,-110.73692],
+    [43.99947,-110.73393],[44.00117,-110.73106],[44.00044,-110.72950],[43.99914,-110.72900],
+    [43.99795,-110.72405],[43.99738,-110.72343],[43.99740,-110.71996],[43.99841,-110.71902],
+    [43.99763,-110.71658],[43.99887,-110.71419],[43.99686,-110.70994],[43.99468,-110.70922]
+  ]
+},
+{
+  id:"owlcreekgt", name:"Owl Creek", color:"#5f7f4f",
+  state:"WY", region:"grandteton", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to the NPS boundary — don't re-snap
+  parkRegs:"Closed to fishing <b>December 1 – July 31</b>, so the season here opens <b>August 1</b>. <b>Artificial flies or lures only.</b> Stream creel is three trout, no more than one over sixteen inches. A <b>Wyoming fishing licence</b> is required — Grand Teton is fished under <b>Wyoming state regulations</b>, not a park permit of its own, which is the opposite of Yellowstone.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Berry Creek's neighbour in the northwest corner, joining it above the lake — the same walk-in or boat-in country under Owl Peak.",
+  fish:"Small fine-spotted cutthroat, rarely fished. Plan the trip around the bears rather than the fish.",
+  coords:[
+    [
+      [44.00786,-110.79443],[44.00739,-110.79712],[44.00633,-110.79785],[44.00625,-110.79880],
+      [44.00541,-110.79878],[44.00845,-110.79262],[44.00783,-110.79067],[44.00829,-110.78855],
+      [44.00739,-110.78636],[44.00926,-110.78295],[44.00868,-110.78603],[44.00779,-110.78557],
+      [44.00739,-110.78636],[44.00998,-110.78263],[44.00991,-110.78143],[44.01057,-110.78191],
+      [44.01206,-110.77686],[44.01152,-110.77668],[44.01161,-110.77495],[44.01145,-110.77632],
+      [44.01231,-110.77370],[44.01213,-110.77264],[44.01013,-110.76672]
+    ],
+    [
+      [43.99755,-110.81708],[43.99655,-110.82185],[43.99566,-110.82203],[43.98408,-110.83747],
+      [43.98618,-110.83631],[43.98812,-110.83404],[43.98854,-110.83275],[43.98953,-110.83226],
+      [43.99034,-110.82970],[43.99439,-110.82346]
+    ],
+    [
+      [43.96666,-110.84655],[43.96573,-110.84647],[43.96550,-110.84692],[43.96793,-110.84646],
+      [43.97389,-110.84224],[43.97177,-110.84401],[43.97571,-110.84126],[43.97946,-110.83998],
+      [43.98408,-110.83747]
+    ],
+    [
+      [44.00017,-110.81164],[43.99839,-110.81442],[43.99755,-110.81708],[44.00098,-110.81049],
+      [44.00078,-110.80937],[44.00372,-110.80408]
+    ],
+    [
+      [44.00490,-110.79979],[44.00511,-110.80077],[44.00372,-110.80408],[44.00541,-110.79878]
+    ]
+  ]
+},
+{
+  id:"moosecreekgt", name:"Moose Creek", color:"#3f7f5f",
+  state:"WY", region:"grandteton", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to the NPS boundary — don't re-snap
+  parkRegs:"Closed to fishing <b>December 1 – July 31</b>, so the season here opens <b>August 1</b>. <b>Artificial flies or lures only.</b> Stream creel is three trout, no more than one over sixteen inches. A <b>Wyoming fishing licence</b> is required — Grand Teton is fished under <b>Wyoming state regulations</b>, not a park permit of its own, which is the opposite of Yellowstone.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Down Webb Canyon from the Teton crest into the north end of Jackson Lake — the longest stream in the park's roadless northwest, and one of the least visited corners of Grand Teton. Not the Moose Creek of Idaho or of Moose, WY.",
+  fish:"Fine-spotted cutthroat in canyon pocket water. A serious backcountry trip.",
+  coords:[
+    [
+      [43.91812,-110.81341],[43.92070,-110.81189],[43.92233,-110.80946],[43.92531,-110.80866],
+      [43.92380,-110.80963],[43.92254,-110.80947],[43.92577,-110.80805],[43.92724,-110.80846],
+      [43.92869,-110.80789],[43.93044,-110.80898],[43.93163,-110.80924],[43.93197,-110.80871],
+      [43.93326,-110.80943],[43.93575,-110.80850],[43.93844,-110.80911],[43.93741,-110.80922],
+      [43.93620,-110.80841],[43.93575,-110.80850],[43.93945,-110.80962],[43.94092,-110.80910],
+      [43.94184,-110.80938],[43.94267,-110.80875],[43.94435,-110.80964],[43.94705,-110.80867],
+      [43.94864,-110.80920],[43.94928,-110.80816],[43.95042,-110.80807],[43.95063,-110.80710],
+      [43.95358,-110.80609],[43.95259,-110.80567],[43.95180,-110.80610],[43.95442,-110.80496],
+      [43.95358,-110.80609],[43.95683,-110.80183],[43.95518,-110.80362]
+    ],
+    [
+      [43.98212,-110.74087],[43.98115,-110.74322],[43.98024,-110.74327],[43.97802,-110.74561],
+      [43.97626,-110.75172],[43.98339,-110.73664],[43.98277,-110.73506],[43.98345,-110.73322],
+      [43.98311,-110.73032],[43.98374,-110.72981],[43.98425,-110.72740],[43.98558,-110.72589],
+      [43.98632,-110.72399],[43.98813,-110.72363],[43.99108,-110.71699],[43.98964,-110.72251],
+      [43.98864,-110.72297]
+    ],
+    [
+      [43.96713,-110.77219],[43.96711,-110.77337],[43.96684,-110.77152],[43.96725,-110.77107],
+      [43.96765,-110.76467],[43.96754,-110.76648],[43.96765,-110.76467],[43.96896,-110.76313],
+      [43.97141,-110.75731],[43.97490,-110.75413],[43.97626,-110.75172]
+    ],
+    [
+      [43.95767,-110.79964],[43.95683,-110.80183],[43.95785,-110.79858],[43.95936,-110.79804],
+      [43.96179,-110.79370],[43.96131,-110.79508],[43.96025,-110.79546],[43.96028,-110.79657],
+      [43.95967,-110.79710]
+    ],
+    [
+      [43.90980,-110.81450],[43.90807,-110.81520],[43.90281,-110.82382],[43.90032,-110.82588],
+      [43.91812,-110.81341],[43.91702,-110.81313],[43.91617,-110.81195],[43.91315,-110.81403]
+    ],
+    [
+      [43.96483,-110.78457],[43.96579,-110.78195],[43.96516,-110.78313],[43.96711,-110.77337],
+      [43.96710,-110.77567],[43.96611,-110.77858]
+    ],
+    [
+      [43.96212,-110.79223],[43.96179,-110.79370],[43.96483,-110.78457],[43.96323,-110.78627],
+      [43.96229,-110.78881],[43.96227,-110.79047]
+    ],
+    [
+      [43.99108,-110.71699],[43.99143,-110.71549],[43.99307,-110.71428],[43.99355,-110.71244],
+      [43.99292,-110.71249],[43.99292,-110.71196]
+    ]
+  ]
+},
+{
+  id:"snakeflagg", name:"Snake River — Flagg Ranch", color:"#2f6f9f",
+  state:"WY", gauges:["snakeFlagg"], primaryGauge:"snakeFlagg",
+  geom:"nhd",   // NHD clipped to the NPS boundary — don't re-snap
+  parkRegsSrc:"grte",
+  parkRegs:"The Parkway is administered by Grand Teton and fished under <b>Wyoming regulations with a Wyoming licence</b>. The Snake <b>above Jackson Lake</b> is named by the park as an exception to the artificial-flies-or-lures rule that covers park streams. Stream creel is three trout, no more than one over sixteen inches.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The eight miles of Snake between Yellowstone's south boundary and the head of Jackson Lake, through the John D. Rockefeller, Jr. Memorial Parkway at Flagg Ranch — the gap between this map's Yellowstone headwaters reach and its Jackson Hole one. Administered by Grand Teton, and gauged.",
+  fish:"Snake River fine-spotted cutthroat in a quiet, meadowy reach that most people drive over on the way between the two parks without looking at it.",
+  coords:[
+    [
+      [44.07050,-110.70821],[44.06990,-110.70962],[44.06831,-110.71071],[44.06673,-110.71397],
+      [44.06546,-110.71401],[44.06488,-110.71192],[44.06331,-110.71230],[44.06250,-110.71312],
+      [44.06067,-110.71818],[44.05945,-110.71844],[44.05652,-110.71514],[44.05297,-110.71667],
+      [44.05090,-110.71576],[44.04995,-110.71599],[44.04707,-110.71800]
+    ],
+    [
+      [44.12494,-110.65870],[44.12254,-110.65971],[44.11998,-110.66003],[44.11651,-110.65930],
+      [44.11127,-110.66149],[44.12734,-110.65783],[44.12796,-110.65664],[44.13189,-110.66106],
+      [44.12973,-110.65932],[44.12855,-110.65626]
+    ],
+    [
+      [44.07482,-110.70588],[44.08059,-110.70194],[44.08378,-110.69799],[44.07344,-110.70552],
+      [44.07341,-110.70417],[44.07050,-110.70821],[44.07179,-110.70349]
+    ],
+    [
+      [44.10023,-110.66371],[44.10423,-110.66119],[44.10819,-110.66298],[44.10999,-110.66259],
+      [44.11127,-110.66149],[44.10403,-110.67885],[44.09899,-110.66606]
+    ],
+    [
+      [44.09486,-110.68865],[44.09553,-110.68898],[44.09355,-110.68862],[44.08861,-110.69475],
+      [44.09136,-110.69038]
+    ],
+    [
+      [44.08378,-110.69799],[44.08515,-110.69827],[44.08659,-110.69764],[44.08861,-110.69475],
+      [44.08731,-110.69645]
+    ],
+    [
+      [44.09553,-110.68898],[44.09912,-110.68714],[44.10084,-110.68539],[44.10403,-110.67885],
+      [44.10376,-110.68355]
+    ]
+  ]
+},
 ];
 
 /* ---------- Access points ---------- */
@@ -10493,6 +11076,25 @@ const SECTIONS = [
 
 /* rivers with no float sections — floating note shown instead */
 const WADE_ONLY = {
+  // ---- Grand Teton (no floating in the park except the Snake) ----
+  pacificcreek:"Wade and bank water off the Pacific Creek Road. No floating inside the park except on the Snake.",
+  cottonwoodcreekgt:"Wade only. Pull-offs along the Teton Park Road the length of it.",
+  ditchcreek:"Wade only, off the Kelly and Antelope Flats roads.",
+  spreadcreek:"Wade only. The Spread Creek road off Highway 89 reaches the fan.",
+  lakecreekgt:"Wade only, on foot from the Rockefeller Preserve — the car park fills early and is capped.",
+  christiancreek:"Wade only. Soft banks; wade rather than walk the edge.",
+  cascadecreekgt:"Wade only, up the Cascade Canyon trail from the Jenny Lake boat shuttle.",
+  taggartcreek:"Wade only, from the Taggart Lake trailhead.",
+  granitecreekgt:"Wade only, up the Granite Canyon trail from the Moose–Wilson Road.",
+  leighcreek:"Wade only, from the String Lake trailhead.",
+  pilgrimcreek:"Wade only. It is an active grizzly corridor — this is a carry-spray, make-noise creek.",
+  arizonacreek:"Wade only, off Highway 89.",
+  lizardcreek:"Wade only, from the Lizard Creek campground.",
+  morancreek:"Wade only, backcountry.",
+  berrycreek:"Wade only, deep backcountry — boat across Jackson Lake or walk in from the north.",
+  owlcreekgt:"Wade only, deep backcountry.",
+  moosecreekgt:"Wade only, deep backcountry — boat across Jackson Lake or a long walk.",
+  snakeflagg:"Wade and bank water from the Flagg Ranch road.",
   // ---- Yellowstone National Park (no floating on park rivers) ----
   yellowstoneriver:"Wade and bank water through the park. Floating is not permitted on park rivers.",
   madisonriver:"Wade only, and easy wading — but the banks are fragile and the river is slower than it looks. No floating on park rivers.",
