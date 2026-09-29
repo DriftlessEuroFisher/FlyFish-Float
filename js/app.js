@@ -502,17 +502,57 @@ const flowLines = {};                   // riverId -> [polyline]
 const reducedMotion = window.matchMedia
   && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-function flowRunsFor(r){
-  /* the river's geometry, every run turned downstream. Every river is in
-     FLOW_REV; a river missing from it means the table wasn't rebuilt after
-     new water was added, and the honest answer then is no animation. */
+/* FLOW_REV indexes the *baked* runs, but the drawn line is not always the
+   baked one — it gets snapped to NHD after first paint and refined again as
+   you zoom in. So the baked table is turned into oriented reference
+   segments once, and whatever geometry is currently drawn is oriented by
+   comparing against them. Indexing the drawn runs positionally would break
+   the moment a refresh changed how many pieces the river comes in. */
+function bakedFlowRefs(r){
+  if(r._flowRefs) return r._flowRefs;
   const runs = isMulti(r.coords) ? r.coords : [r.coords];
   const marks = (typeof FLOW_REV === "undefined") ? null : FLOW_REV[r.id];
-  if(!marks) return runs.map(() => null);
-  return runs.map((run, i) => {
-    const mark = marks.charAt(i) || "?";
-    if(mark === "?") return null;                 // direction unknown — don't fake it
-    return mark === "1" ? run.slice().reverse() : run;
+  const refs = [];
+  if(marks){
+    runs.forEach((run, i) => {
+      const mark = marks.charAt(i) || "?";
+      if(mark === "?" || run.length < 2) return;    // unknown — don't fake it
+      const a = mark === "1" ? run[run.length-1] : run[0];
+      const b = mark === "1" ? run[0] : run[run.length-1];
+      refs.push({head:a, tail:b, mid:run[Math.floor(run.length/2)]});
+    });
+  }
+  r._flowRefs = refs;
+  return refs;
+}
+function ll(p){ return Array.isArray(p) ? {lat:p[0], lng:p[1]} : p; }
+function distKm(a, b){
+  a = ll(a); b = ll(b);
+  return Math.hypot((b.lat-a.lat)*111.0,
+                    (b.lng-a.lng)*111.0*Math.cos(a.lat*Math.PI/180));
+}
+function flowRunsFor(r){
+  /* whatever is drawn right now, every run turned downstream */
+  const layer = riverLayers[r.id];
+  if(!layer) return [];
+  let runs = layer.line.getLatLngs();
+  if(!runs.length) return [];
+  if(!Array.isArray(runs[0])) runs = [runs];       // single-segment river
+  const refs = bakedFlowRefs(r);
+  if(!refs.length) return runs.map(() => null);
+  return runs.map(run => {
+    if(run.length < 2) return null;
+    const mid = run[Math.floor(run.length/2)];
+    let best = null, bestD = Infinity;
+    for(const ref of refs){
+      const d = distKm(ref.mid, mid);
+      if(d < bestD){ bestD = d; best = ref; }
+    }
+    if(!best || bestD > 12) return null;           // nothing to orient against
+    const a = run[0], b = run[run.length-1];
+    const byHead = distKm(a, best.head) - distKm(b, best.head);
+    if(Math.abs(byHead) < 0.02) return null;       // a loop — can't tell
+    return byHead < 0 ? run : run.slice().reverse();
   });
 }
 function flowClassFor(r){
@@ -566,9 +606,12 @@ function syncFlow(){
     }
     const lines = [];
     runs.forEach(run => {
+      /* round caps and joins so each mark is a capsule that follows the
+         bend of the channel instead of a flat tick cutting across it */
       const l = L.polyline(run, {pane:"flowPane", interactive:false,
-        color:"#ffffff", opacity:.85, weight:2.2, lineCap:"butt",
-        dashArray:"5 26", className:"flow-line " + cls}).addTo(flowLayer);
+        color:"#ffffff", opacity:.95, weight:3, lineCap:"round",
+        lineJoin:"round", smoothFactor:0,
+        dashArray:"6 24", className:"flow-line " + cls}).addTo(flowLayer);
       lines.push(l);
     });
     if(lines.length) flowLines[r.id] = lines;
@@ -923,11 +966,11 @@ function bboxOf(coords, pad){
   coords.forEach(p=>{a=Math.min(a,p[0]);b=Math.max(b,p[0]);c=Math.min(c,p[1]);d=Math.max(d,p[1]);});
   return [c-pad, a-pad, d+pad, b+pad];   // xmin,ymin,xmax,ymax (lng/lat)
 }
-function nhdURL(where, bb){
+function nhdURL(where, bb, offset){
   return `${NHD_URL}?where=${encodeURIComponent(where)}&geometry=${bb.join(",")}`+
     `&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects`+
     `&outFields=GNIS_NAME&returnGeometry=true&outSR=4326`+
-    `&maxAllowableOffset=0.0006&geometryPrecision=5&resultRecordCount=4000&f=geojson`;
+    `&maxAllowableOffset=${offset || 0.0006}&geometryPrecision=5&resultRecordCount=4000&f=geojson`;
 }
 function nhdSegments(j){
   const segs = [];
@@ -1011,6 +1054,109 @@ function visibleFirst(list){
    than leaving a third of the map straight until you happen to pan. */
 const GEOM_SWEEPS = 6, GEOM_SWEEP_GAP = 5000;
 let geomSweeps = 0;
+/* ============================================================
+   ZOOM REFINEMENT — a closer look deserves a truer line.
+
+   The baked geometry is simplified for load time: the first NHD snap asks
+   for 0.0006 degrees of tolerance, about 66 m, which is a pixel at zoom 8
+   and twenty-seven of them at zoom 15. So once you are actually looking at
+   a single river, it is re-fetched at 0.00005 (~5 m) and redrawn.
+
+   Two guards on what may be refined:
+
+   * `iadnr` / `widnr` rivers are never touched. Those lines are the state
+     fisheries agency's own drawing of the reach that is *designated trout
+     water*, which is a different claim from "where the channel runs", and
+     NHD would happily replace it with the whole creek or the wrong Bear
+     Creek entirely. Agency geometry stays exactly as the agency drew it.
+   * `nhd` rivers were clipped to a park or a state boundary when they were
+     baked. A fresh fetch does not know about that clip, so the refined
+     geometry is filtered to what lies within REFINE_BUFFER_KM of the line
+     already drawn. Detail is added; reach is never extended.
+   ============================================================ */
+const REFINE_ZOOM = 13;
+/* 0.0002 deg is ~22 m: three times finer than the 0.0006 the first snap
+   asks for, and a fraction of the payload of a truly fine 5 m fetch, which
+   the service will not answer for a river the size of the Snake. */
+const NHD_FINE = 0.0002;
+/* A refinement is worth waiting longer for than the background snap: you
+   asked for it by zooming in, and a slow answer still improves the map. */
+const REFINE_TIMEOUT = 20000;
+const REFINE_BUFFER_KM = 0.15;
+const REFINE_AT_ONCE = 2;
+let refineRunning = 0;
+
+function nearPolyline(p, run, tolKm){
+  for(let i = 0; i < run.length; i++){
+    if(distKm(p, run[i]) <= tolKm) return true;     // vertex proximity is
+  }                                                  // enough at these scales
+  return false;
+}
+function clipToDrawn(segs, drawnRuns){
+  /* keep only the parts of a fresh fetch that retrace what is already
+     drawn, so a park or state clip survives the refresh */
+  const out = [];
+  segs.forEach(seg => {
+    let cur = [];
+    seg.forEach(p => {
+      const near = drawnRuns.some(run => nearPolyline(p, run, REFINE_BUFFER_KM));
+      if(near) cur.push(p);
+      else { if(cur.length > 1) out.push(cur); cur = []; }
+    });
+    if(cur.length > 1) out.push(cur);
+  });
+  return out;
+}
+async function refineRiver(r){
+  const layer = riverLayers[r.id];
+  if(!layer || layer.refined || layer.refining) return;
+  if(r.geom === "iadnr" || r.geom === "widnr"){ layer.refined = true; return; }
+  layer.refining = true;
+  const ck = "nhdfine:" + r.id;
+  const cached = store.get(ck);
+  if(cached && cached.g && (Date.now() - (cached.t || 0) < 1000*60*60*24*30)){
+    layer.line.setLatLngs(cached.g);
+    layer.refined = true; layer.refining = false;
+    syncFlow();
+    return;
+  }
+  try{
+    const drawn0 = layer.line.getLatLngs();
+    const drawnRuns = (Array.isArray(drawn0[0]) ? drawn0 : [drawn0]);
+    const bb = bboxOf(flatCoords(r.coords));
+    const kw = riverKeyword(r).replace(/%/g,"").replace(/'/g,"''");
+    let segs = nhdSegments(await fetchJSON(nhdURL(`UPPER(GNIS_NAME) = '${kw}'`, bb, NHD_FINE), REFINE_TIMEOUT));
+    if(segs.length){
+      if(r.geom) segs = clipToDrawn(segs, drawnRuns);
+      // a refinement that loses most of the river is a bad match, not a better line
+      const len = rs => rs.reduce((t, run) =>
+        t + run.reduce((u, p, i) => i ? u + distKm(run[i-1], p) : 0, 0), 0);
+      if(segs.length && len(segs) > len(drawnRuns) * 0.6){
+        layer.line.setLatLngs(segs);
+        layer.refined = true;
+        store.set(ck, {g:segs, t:Date.now()});
+        syncFlow();
+      } else {
+        layer.refined = true;       // nothing better on offer; stop asking
+      }
+    }
+  }catch(e){ /* leave it; a later pass can try again */ }
+  layer.refining = false;
+}
+function refineVisible(){
+  if(map.getZoom() < REFINE_ZOOM || zonesShown) return;
+  const view = map.getBounds();
+  for(const r of RIVERS){
+    if(refineRunning >= REFINE_AT_ONCE) break;
+    const layer = riverLayers[r.id];
+    if(!layer || layer.refined || layer.refining || !riverVisible(r)) continue;
+    if(!view.intersects(layer.line.getBounds())) continue;
+    refineRunning++;
+    refineRiver(r).finally(() => { refineRunning--; });
+  }
+}
+map.on("zoomend moveend", refineVisible);
+
 function trickleGeometry(){
   if(geomQueue) return;
   geomQueue = visibleFirst(RIVERS);

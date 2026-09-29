@@ -874,6 +874,12 @@ are worth calibrating first.
   carry a dashed overlay whose `stroke-dashoffset` animates, so the dashes
   crawl along the path. Three constraints shaped it:
 
+  - **The overlay follows whatever is drawn, not the baked coords.** The
+    drawn line changes under it — snapped to NHD after first paint, refined
+    again as you zoom — so orienting by baked run *index* breaks the moment
+    a refresh changes how many pieces the river comes in. The baked table
+    becomes oriented reference segments once, and the drawn runs are
+    oriented by comparing against them.
   - **It runs downstream, or not at all.** NHD linework arrives in whatever
     order the fetch and the welding left it, so direction had to be derived:
     seven elevation samples along every run (Open-Meteo's batch endpoint,
@@ -881,8 +887,14 @@ are worth calibrating first.
     least-squares fit of elevation against distance, cross-checked against
     the plain first-to-last drop. Both must agree and the fall must clear
     3 m, or the run is marked `"?"` in `FLOW_REV` and does not animate.
-    158 of 875 runs are drawn upstream and get reversed; 159 are unknown,
-    which is 3% of mapped river length and almost all short braids and flat
+    Then a second pass makes each river internally consistent: a river's
+    runs are pieces of one channel, so where one run's end meets another's
+    start they must point the same way, and direction is propagated from the
+    runs terrain was sure about into the ones it wasn't. That resolved 64
+    unknowns and overruled 10 runs terrain had called against their
+    neighbours — a river animating in two directions at once is worse than
+    one not animating at all. 180 of 875 runs are reversed and 95 stay
+    unknown, 2.3% of mapped river length, almost all short braids and flat
     spring creeks.
 
     **Every river is in `FLOW_REV`, including the all-"0" ones.** Omitting
@@ -901,6 +913,27 @@ are worth calibrating first.
     Ungauged water gets `flow-calm`, one neutral pace shared by all of it,
     because a speed that tracked nothing would be a fabricated reading in a
     different costume — the same rule as the "Ungauged" card.
+- **A closer look gets a truer line.** The baked geometry is simplified for
+  load time — the first NHD snap asks for 0.0006 deg, about 66 m, which is a
+  pixel at zoom 8 and twenty-seven of them at zoom 15. From `REFINE_ZOOM`
+  (13) the rivers in view are re-fetched at 0.0002 (~22 m) and redrawn, two
+  at a time, cached for a month. Not finer: the service will not answer a
+  5 m request for a river the size of the Snake, and when it is having one
+  of its slow spells it will not answer at all — the refinement just fails
+  and leaves the baked line, which is the point of it being an enhancement.
+
+  Two guards on what may be refined, and both matter:
+
+  - **`iadnr` / `widnr` rivers are never refined.** Those lines are a state
+    fisheries agency's drawing of the reach that is *designated trout
+    water*, which is a different claim from "where the channel runs". NHD
+    would replace it with the whole creek, or the wrong Bear Creek.
+  - **`nhd` rivers were clipped to a park or state boundary** when baked, and
+    a fresh fetch knows nothing about that clip. The refined geometry is
+    filtered to what lies within 150 m of the line already drawn, so detail
+    is added and reach is never extended. Verified with a stub that returned
+    geometry 100 km outside Yellowstone: it was dropped, and the refined
+    Lamar still stops at the park boundary.
 - **Vector stacking is explicit, via panes.** Everything used to share
   Leaflet's default overlayPane, where paint order is DOM order — and since
   the public land layer is cleared and re-added on every map move, its
