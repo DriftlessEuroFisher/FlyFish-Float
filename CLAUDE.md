@@ -7,8 +7,9 @@ trout tributaries of Minnesota's North Shore of Lake Superior, the
 big warmwater float rivers of east-central Minnesota and the St. Croix
 valley, the north-central Minnesota lakes country and Wisconsin
 Northwoods, the trout creeks of the Door Peninsula, and the waters of
-Yellowstone and Grand Teton National Parks, with live USGS flow conditions,
-built for checking "is it worth driving out today?" from a phone.
+Yellowstone and Grand Teton National Parks, and the Teton Valley and Swan
+Valley drainages in eastern Idaho, with live USGS flow conditions, built for
+checking "is it worth driving out today?" from a phone.
 
 ## How I use this
 
@@ -35,25 +36,57 @@ like an app, not a browser tab.
   on purpose: welding them draws a channel across a gap that isn't there.
 - `js/zones.js` — the opening zone chooser. The map opens fitted to the
   area actually covered, with the zones drawn over it; tap one and it zooms
-  there. It is a **true partition**: no two zones overlap and every river
-  belongs to exactly one of them, so a tap is never ambiguous about which
-  zone you meant. Region shapes start as the convex hull of their own
-  rivers and are then clipped into a Voronoi partition; national parks keep
-  their real NPS boundary instead of a Voronoi cell, because the reason a
-  park is its own zone is that its regulations start and stop at that line,
-  and the surrounding region recedes from it. A park also wins the rivers
-  inside it — the Snake through Grand Teton counts toward the park, not
-  toward Wyoming — since the park's rules are the more specific fact.
-  `rings[0]` is the outer boundary and any further rings are holes (Leaflet
-  paints with `fill-rule: evenodd`, so a hole takes no clicks either).
-  `short` is the name used when the zone is too small at the current zoom
-  to carry the full one. `count` is rivers mapped there, and 0 renders as
-  "not mapped yet" rather than pretending the zone is populated
-  (no zone is 0 today). Nine zones. **Park outlines are simplified to a
-  tolerance, not to a point count** — see the boundary note under
-  Conventions.
+  there.
+
+  **Regions tile, the way states do.** Regions that sit near each other
+  share one starting polygon — the convex hull of every river in the
+  cluster — and a Voronoi clip divides it between them, so every division
+  line is a genuinely shared edge: no gaps, no overlaps, and a neighbour on
+  the other side of every border. Ten shared borders across eleven zones.
+  It did not work to grow each region's own hull instead: **a bisector is
+  only a shared edge if both cells reach it**, and Idaho's bisector with
+  Teton Valley sits 100 km west of anything Teton Valley's own hull could
+  reach.
+
+  Two knobs keep that honest, and both were tuned by measurement rather
+  than taste:
+
+  - `REACH_KM` (240) caps how far a cell may claim from its own water.
+    Without it the tiling handed a 40-mile valley three hundred miles of
+    Idaho — Teton Valley's cell ran to the Montana line. Measured at
+    170/200/240/280 km, 240 is where the Teton Valley–Wyoming border reaches
+    its full length without any cell running off to Canada.
+  - `STATE_SIDE` puts the **Idaho/Wyoming line** in as the *first* division,
+    before Voronoi, because fishing regulations change there. Clipping to a
+    side *after* a free-for-all Voronoi is not the same thing and leaves the
+    ground the Idaho cells gave up on the Wyoming side belonging to nobody —
+    which is exactly where Grand Teton sits, so the park had no cell to be
+    carved out of.
+
+  **Parks are carved out of the tiling, exactly.** A park is clipped to each
+  cell it touches (Sutherland-Hodgman against the convex cell) and punched
+  as a hole, so the regions fill everything except the parks and each park
+  keeps its true NPS boundary. Clipping the ring to the cell *first* is what
+  makes that safe: `fill-rule: evenodd` only subtracts a hole lying inside
+  its outer ring, and Yellowstone straddles the Idaho/Wyoming line, so it
+  always lands in two cells. Parks are deliberately **not** Voronoi seeds —
+  seeding them made every region recede and left a no-man's-land ring.
+
+  `bounds` comes from the zone's **rivers**, not its cell: a cell now reaches
+  far beyond the water in it, and tapping "Teton Valley" should fly to Teton
+  Valley rather than to its share of the Rockies. `rings[0]` is the outer
+  boundary and any further rings are holes. `short` is the name used when
+  the zone is too small at the current zoom to carry the full one. `count`
+  is rivers mapped there, and 0 renders as "not mapped yet". Eleven zones.
   Rebuild with `zones2.py` in the scratchpad — it rewrites `js/zones.js`
   itself and prints the overlap check and the per-zone river totals.
+
+  **A zone that clips away to nothing now fails the build.** An inverted
+  sign in the state-line clip deleted the entire Idaho cell, and nothing
+  caught it: the overlap check passes trivially because an empty zone
+  overlaps nothing, and the zone simply stopped being drawn. There is an
+  assert for it now, and the clip takes `"west"`/`"east"` rather than
+  `-1`/`+1`.
 
 - `js/app.js` — fetch/render/status logic. Talks directly to the USGS OGC API
   (`api.waterdata.usgs.gov`) client-side — no backend, no API key.
@@ -62,7 +95,7 @@ like an app, not a browser tab.
 
 ## Rivers covered
 
-296 rivers. Full list and gauge IDs live in `js/rivers-data.js`; this file
+327 rivers. Full list and gauge IDs live in `js/rivers-data.js`; this file
 doesn't duplicate it since the code is the source of truth. Rivers carry a
 `region` field — `"driftless"` and `"northshore"` on the two small-stream
 sub-regions, absent on the original western rivers *and* on the two
@@ -497,6 +530,64 @@ so a disjoint second ring would render as a hole punched in the park. It
 falls in the Wyoming zone, which is correct — it is outside both parks.
 Polecat Creek is in the Parkway for the same reason and is left off.
 
+## Teton Valley & Swan Valley, Idaho
+
+**Teton Valley (21).** The Teton River and its tributaries above the canyon —
+Teton, Darby, Fox, Trail, Game, Moose, South and North Leigh, Badger and its
+two forks, Bitch, Milk, Spring, Warm, Packsaddle, Horseshoe, Canyon, Bull Elk
+and Mahogany Creeks.
+
+**Swan Valley (12).** The South Fork of the Snake between Palisades and
+Heise, plus Palisades, Rainey, Pine and its North Fork, Fall, Big Elk, McCoy,
+Bear, Indian, Pritchard and Garden Creeks.
+
+The Teton River and the South Fork were already on the map as western rivers;
+they keep their entries and gained the region tag, so each valley's zone
+includes its mainstem.
+
+### The lines stop at the state line, and so does the zone
+
+The Teton Range creeks run east out of the valley and **cross into Wyoming
+part-way up their canyons** — Teton Canyon's trailhead is in Wyoming, not
+Idaho. Fishing regulations change at that line, so the drawn lines stop
+there and the Teton Valley zone borders Wyoming *on the state line* rather
+than on a bisector drawn halfway between two river clusters. The border
+itself is the real Census boundary, not the nominal 111°03' meridian: it
+wanders about 225 m, and both sides are clipped with the same function so
+they share one edge instead of two nearly-identical ones.
+
+### Which creeks, decided by the state and by connectivity
+
+The river list was checked against **Idaho Fish & Game's own lists** of the
+tributaries its special rules name — "Bitch, Badger, Canyon, Fox, Trail,
+Teton, and S Leigh creeks" for the Teton, "Burns, Palisades, Pine, and
+Rainey creeks" for the South Fork. `parkRegs` on every entry comes from
+IDFG's 2025–2027 Seasons & Rules, Upper Snake Region, with `parkRegsSrc:
+"idfg"` so the sheet says *Regulations* rather than *Park regulations* and
+credits Idaho Fish & Game.
+
+The rule worth knowing: **no harvest of cutthroat trout and no limit at all
+on rainbow trout or hybrids**, on both rivers and their tributaries, because
+non-native rainbows displace and hybridise with the native Yellowstone
+cutthroat. The **tributaries close June 1–30** while the mainstems stay
+open.
+
+Same-name creeks are thick here — Warm, Bear, Canyon, Trail, Fox, Darby and
+Spring Creek all match more than one stream inside these envelopes. They
+were sorted out by **growing a connected component from the real NHD
+mainstem**, not by distance, which correctly split the two Warm Creeks and
+threw out a Bear Creek and a Bulls Fork that drain somewhere else entirely.
+
+Two traps from that pass:
+
+- **A fetch box that clips a creek's mouth breaks the connectivity test.**
+  Canyon Creek was rejected wholesale because its confluence with the Teton
+  sat 1.6 km outside the box; re-fetched wider it joins the river at 0.00 km.
+  Check rejects against the mainstem before believing them.
+- **Burns Creek has no NHD flowline under that name**, despite IDFG naming
+  it a South Fork tributary. It is left off rather than guessed at, the same
+  call as Coldwater Creek in the Driftless.
+
 ## Status
 
 **Finished / working:**
@@ -506,7 +597,8 @@ Polecat Creek is in the Parkway for the same reason and is left off.
 - All 278 rivers in place (49 West, 7 Central Iowa, 117 Driftless incl. 65
   NE-Iowa trout streams from the DNR, 24 North Shore, 13 East-Central
   MN/St. Croix, 16 Lakes Country/Northwoods, 10 Door Peninsula, 42
-  Yellowstone, 17 Grand Teton + the Flagg Ranch reach), with
+  Yellowstone, 17 Grand Teton + the Flagg Ranch reach, 20 Teton Valley and
+  11 Swan Valley), with
   gauges, ramps/access points, blurbs, and region-aware copy in the sheet.
 - Ungauged-river handling: the "Ungauged" card, `nearestGaugedRiver()`
   regional-wetness fallback with the cross-state-line distance penalty —
@@ -730,6 +822,12 @@ are worth calibrating first.
   `passFilter()`, `riverVisible()` and `applyFilters()` are untouched and
   sitting at defaults (everything visible). Restoring the markup and the
   one listener brings the filters back — don't delete the rest.
+- **Zone labels sit over the zone's water, not the middle of its cell.**
+  Now that cells tile, the pole of inaccessibility can land 80 km from the
+  valley a zone is named after. `layoutZoneCards()` prefers the centre of
+  the zone's *rivers* when that point is comfortably inside the visible
+  cell, and falls back to the pole when it isn't — zoomed into a corner, or
+  the water off screen.
 - **Park outlines are simplified by tolerance, not by point count.** A park
   boundary is long survey-line straights meeting at sharp corners, and
   even-interval decimation spends its budget on the straights and rounds the

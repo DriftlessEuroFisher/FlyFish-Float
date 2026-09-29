@@ -376,6 +376,16 @@ const REGIONS = [
   ["Central Idaho (Salmon country)", [44.90,-114.60,7]],
   ["North Idaho (Clearwater / Panhandle)", [46.90,-116.00,7]],
   ["Boise / Payette", [43.90,-116.00,9]],
+  ["── Teton Valley & Swan Valley (ID) ──", null],
+  ["Teton Valley — whole valley", [43.78,-111.18,10]],
+  ["Driggs / Teton & Darby Creek", [43.72,-111.12,12]],
+  ["Victor / Trail & Fox Creek", [43.62,-111.12,12]],
+  ["Tetonia / Badger & Bitch Creek", [43.90,-111.20,11]],
+  ["Teton canyon (Canyon Creek)", [43.88,-111.42,11]],
+  ["Swan Valley — whole valley", [43.42,-111.30,10]],
+  ["Irwin / Rainey & Palisades Creek", [43.42,-111.23,12]],
+  ["Palisades Reservoir (Big Elk, McCoy)", [43.25,-111.15,11]],
+  ["South Fork canyon (Heise–Swan Valley)", [43.55,-111.50,11]],
   ["── Grand Teton National Park ──", null],
   ["Grand Teton — whole park", [43.81,-110.68,10]],
   ["Moose / Jenny Lake creeks", [43.71,-110.72,12]],
@@ -463,7 +473,8 @@ function syncLabels(){
     const reg = l.river && l.river.region;
     // Yellowstone sits between the two: the park fills the screen around
     // zoom 9, and 40 labels at 8 is soup while 10 hides the whole region.
-    const min = (reg === "driftless" || reg === "northshore" || reg === "doorcounty") ? 10
+    const min = (reg === "driftless" || reg === "northshore" || reg === "doorcounty"
+                 || reg === "tetonvalley" || reg === "swanvalley") ? 10
               : (reg === "yellowstone" || reg === "grandteton") ? 9 : 8;
     l.lbl.setOpacity(z >= min ? 1 : 0);
   });
@@ -937,7 +948,8 @@ async function openRiver(id, focusGauge){
   const subRegion = {driftless:" · Driftless Area", northshore:" · North Shore",
                      doorcounty:" · Door Peninsula",
                      yellowstone:" · Yellowstone National Park",
-                     grandteton:" · Grand Teton National Park"}[r.region] || "";
+                     grandteton:" · Grand Teton National Park",
+                     tetonvalley:" · Teton Valley", swanvalley:" · Swan Valley"}[r.region] || "";
   $("#sh-sub").textContent = stateName + subRegion;
   sheet.classList.add("open");
   loadRealRiver(r);                    // snap this river to exact USGS linework
@@ -989,11 +1001,14 @@ function renderSheet(r){
        wrong counter. The Snake, Buffalo Fork and Gros Ventre carry a Grand
        Teton note without being in that region, so the source is a field. */
     const src = r.parkRegsSrc || (r.region==="yellowstone" ? "yell" : "grte");
-    const badge = src==="grte" ? "Grand Teton · Wyoming regs" : "National Park Service";
-    const note  = src==="grte"
+    const badge = src==="idfg" ? "Idaho Fish &amp; Game"
+                : src==="grte" ? "Grand Teton · Wyoming regs" : "National Park Service";
+    const note  = src==="idfg"
+      ? `From Idaho Fish &amp; Game's <b>2025–2027 Seasons &amp; Rules</b>, Upper Snake Region. Idaho re-issues the book every two years and the special-rule list changes with it — check the current one before you fish.`
+      : src==="grte"
       ? `From the National Park Service's Grand Teton fishing information, which follows <b>Wyoming Game &amp; Fish</b> regulations. Seasons and closures are re-issued every year — check the current Wyoming regulations, and carry a Wyoming licence.`
       : `From the park's <b>2026</b> fishing regulations. Seasons, closures and possession limits are re-issued every year and streams close on short notice in low water — read the current edition before you fish, and carry your park permit.`;
-    h += `<div class="secthead">Park regulations</div><div class="fishnote">`+
+    h += `<div class="secthead">${src==="idfg" ? "Regulations" : "Park regulations"}</div><div class="fishnote">`+
       `<span class="badge" style="background:#4a6f8a">${badge}</span> `+
       `<span style="font-size:11.5px">${r.parkRegs}</span>`+
       `<div style="font-size:10.5px;color:var(--txt-dim);margin-top:8px">${note}</div>`+
@@ -1016,6 +1031,8 @@ function renderSheet(r){
     ? "the National Park Service (a state fishing licence is <b>not</b> valid in the park)"
     : r.region==="grandteton"
     ? "WY Game &amp; Fish and the park — Grand Teton takes a <b>Wyoming licence</b>, unlike Yellowstone"
+    : (r.region==="tetonvalley" || r.region==="swanvalley")
+    ? "Idaho Fish &amp; Game (Upper Snake Region)"
     : {IA:"the Iowa DNR", MN:"the Minnesota DNR", WI:"the Wisconsin DNR", IL:"the Illinois DNR"}[r.state]
       || "WY Game &amp; Fish / Idaho Fish &amp; Game";
   h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Flow data: USGS Water Data OGC API. River lines simplified — not for navigation. Verify regulations with ${regBody}.</p>`;
@@ -1024,6 +1041,9 @@ function renderSheet(r){
   }
   if(r.region==="northshore"){
     h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🌊 North Shore streams drop fast and cold straight off the ridge — spring steelhead runs are driven by snowmelt timing more than the calendar, so check current run reports before making the drive. Most access is <b>state park or DNR wayside</b> parking (many require a vehicle permit); a Minnesota <b>trout stamp</b> is required in addition to a fishing license. The Pigeon River and Grand Portage River cross into tribal or international jurisdiction — check current Grand Portage Band and Ontario licensing before fishing those reaches.</p>`;
+  }
+  if(r.region==="tetonvalley" || r.region==="swanvalley"){
+    h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🐟 <b>Idaho's cutthroat programme runs both these valleys.</b> On the Teton and the South Fork and their tributaries there is <b>no harvest of cutthroat trout</b> and <b>no limit at all on rainbow trout or hybrids</b> — non-native rainbows displace and interbreed with the native Yellowstone cutthroat, so the state protects one and turns the other loose. The <b>tributaries close June 1–30</b> for the spawning run while the mainstems stay open; Upper Snake water is otherwise open all year. Brook trout are limited to 25 and bull trout are catch-and-release region-wide. ${r.region==="tetonvalley" ? "The Teton Range canyons cross into <b>Wyoming</b> part-way up and a Wyoming licence is needed above the line — which is where this zone ends." : "Palisades Reservoir and its tributaries sit at the top of the valley; Big Elk Creek's drainage reaches into Wyoming."}</p>`;
   }
   if(r.region==="grandteton"){
     h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🏔 <b>Grand Teton is not Yellowstone.</b> It takes a <b>Wyoming fishing licence</b> and is fished under <b>Wyoming regulations</b>, not a park permit of its own. The rule that shapes a season here: <b>park streams are closed December 1 – July 31</b>, so most of this water opens <b>August 1</b> — the exceptions the park names are the <b>Snake, Buffalo Fork, Pacific Creek, Gros Ventre and Polecat Creek</b>. Streams are <b>artificial flies or lures only</b> apart from those same five, the stream creel is three trout with no more than one over sixteen inches, and the lakes are six trout of which at most three may be cutthroat. Lakes are open year-round except Jackson Lake, which closes October 1–31. Check the current Wyoming Game &amp; Fish regulations before you go.</p>`;
@@ -1129,7 +1149,9 @@ function noGaugeHTML(r){
      the county — and nearestGaugedRiver() stays inside a region, so there is
      deliberately no proxy reading offered here. The note says so rather than
      leaving an empty card that looks like a loading failure. */
-  const ungaugedNote = r.region==="grandteton"
+  const ungaugedNote = (r.region==="tetonvalley" || r.region==="swanvalley")
+    ? "No gauge on this creek — in these two valleys the gauges are on the mainstems, and that is the right place to look anyway. Both rivers run through irrigated valleys, so late summer flow here is as much about diversions as about snowpack, and the tributaries drop and warm well before the river does. The nearest gauged water below is the useful read; remember the <b>June 1–30 closure</b> on the tributaries as well as the level."
+    : r.region==="grandteton"
     ? "Only three gauges bear on Grand Teton's own water and none of them is on this one. Several of these creeks <i>have</i> USGS site numbers — Spread, Cottonwood, Ditch, Taggart, Pilgrim, Lake Creek — and not one has reported discharge since the 1990s or 2010, so there is nothing live to show. The nearest gauged water below is the useful read: these streams share one snowpack off the same range and rise and fall together. Remember the season here as well as the level — most park streams are shut until <b>August 1</b>."
     : r.region==="yellowstone"
     ? "Nine gauges cover the park's main rivers and none of them is on this one — most Yellowstone water is backcountry and ungauged, and the app won't put a number on it that isn't measured. The nearest gauged river below is the useful read: on this plateau the whole park rises and falls together with snowmelt, so a neighbouring drainage tracks this one far more closely than it would in farm country. Runoff usually has the park high and off-colour into late June, and the backcountry streams come into shape as it drops."
@@ -1502,8 +1524,20 @@ function layoutZoneCards(){
       return {x:p.x, y:p.y};
     });
     const vis = clipToRect(ring, rect);
-    const s = labelSpots(vis.length >= 3 ? vis : ring);
-    if(s.best) plans.push({c, best:s.best, spots:s.spots, room:s.best.d});
+    const poly = vis.length >= 3 ? vis : ring;
+    const s = labelSpots(poly);
+    if(s.best){
+      /* Zones tile now, so a cell reaches well beyond the water in it and
+         the pole of inaccessibility can land 80 km from the valley the zone
+         is named after. Prefer the middle of the zone's *rivers* when that
+         point is inside the visible cell; fall back to the pole when it
+         isn't (zoomed into a corner, or the rivers are off screen). */
+      const b = map.latLngToContainerPoint(L.latLngBounds(c.zone.bounds).getCenter());
+      const home = {x:b.x, y:b.y};
+      const useHome = pointInPoly(home, poly) && distToEdges(home, poly) > 14;
+      plans.push({c, best:s.best, anchor: useHome ? home : s.best,
+                  spots:(useHome ? [home] : []).concat(s.spots), room:s.best.d});
+    }
     else { const el=c.marker.getElement(); if(el) el.style.display="none"; }
   });
 
@@ -1534,7 +1568,7 @@ function layoutZoneCards(){
     // the pole itself, so the card would have nowhere to go to dodge a
     // neighbour. Every interior sample with reasonable clearance is fair
     // game; there are at most a couple of hundred and the maths is cheap.
-    const cand = [p.best].concat(p.spots.filter(s => s.d >= p.room * 0.45));
+    const cand = [p.anchor, p.best].concat(p.spots.filter(s => s.d >= p.room * 0.45));
     let pick = p.best, bestScore = Infinity, bestOver = 0;
     for(const s of cand){
       const r = rectAt(s, w, h);
@@ -1546,8 +1580,8 @@ function layoutZoneCards(){
       // ideal: a narrow zone's best point may only be 20px from an edge,
       // and penalising every candidate against an unreachable 30 would
       // pin the card to that one point and let it sit on a neighbour.
-      score += Math.max(0, Math.min(34, p.room) - s.d) * 12;     // stay well inside
-      score += Math.hypot(s.x-p.best.x, s.y-p.best.y) * 4;       // stay near centre
+      score += Math.max(0, Math.min(34, p.room) - (s.d === undefined ? p.room : s.d)) * 12;
+      score += Math.hypot(s.x-p.anchor.x, s.y-p.anchor.y) * 4;   // stay near the water
       if(score < bestScore){ bestScore = score; pick = s; bestOver = over; }
     }
     // Names never leave their own zone to dodge a neighbour — that was the

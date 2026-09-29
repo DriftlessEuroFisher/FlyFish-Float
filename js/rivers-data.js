@@ -348,7 +348,8 @@ const RIVERS = [
 },
 {
   id:"southfork", name:"South Fork of the Snake", color:"#0e7a6a",
-  state:"ID", gauges:["southFork","heise"], primaryGauge:"southFork",
+  state:"ID", region:"swanvalley", gauges:["southFork","heise"], primaryGauge:"southFork",
+  parkRegs:"<b>Idaho Fish &amp; Game, Upper Snake Region.</b> On the South Fork itself: <b>no harvest of cutthroat trout</b>, a <b>brown trout limit of 2</b>, and <b>no limit on rainbow trout or hybrids</b>. The asymmetry is deliberate: non-native rainbows displace and hybridise with the native Yellowstone cutthroat, so the state protects one and turns the other loose. Upper Snake Region water is open all year unless a special rule says otherwise.", parkRegsSrc:"idfg",
   goodFlow:{min:6000,max:9000}, // starting point from public guide reports (fall dry-fly/wade window per SF Snake guide reports) — adjust to your own experience
   blurb:"A blue-ribbon tailwater below Palisades Dam — flows are reservoir-controlled, so it stays fishable when the freestones blow out. Huge cottonwood corridor, big cutthroat, browns, and rainbows, famous salmonfly hatch in early July.",
   fish:"Because the Bureau of Reclamation sets releases, check the gauge the morning you float — releases can change quickly. Banks fish well at most flows; riffles open up as water drops.",
@@ -356,7 +357,8 @@ const RIVERS = [
 },
 {
   id:"teton", name:"Teton River (Teton Valley)", color:"#5b8c2a",
-  state:"ID", gauges:["teton","tetonStA"], primaryGauge:"teton",
+  state:"ID", region:"tetonvalley", gauges:["teton","tetonStA"], primaryGauge:"teton",
+  parkRegs:"<b>Idaho Fish &amp; Game, Upper Snake Region.</b> On the Teton River itself: <b>no harvest of cutthroat trout</b> and <b>no limit on rainbow trout or hybrids</b>. The asymmetry is deliberate: non-native rainbows displace and hybridise with the native Yellowstone cutthroat, so the state protects one and turns the other loose. Upper Snake Region water is open all year unless a special rule says otherwise. Region-wide, brook trout are limited to 25 and bull trout are catch-and-release.", parkRegsSrc:"idfg",
   goodFlow:{min:150,max:400}, // starting point from public guide reports (ideal wade flows per Teton Valley guide reports) — adjust to your own experience
   blurb:"A slow, clear spring-creek-style river meandering through the hay meadows of Teton Valley near Driggs and Victor, then dropping into a remote canyon. Glassy water, sighted fish, technical dry-fly fishing with the Tetons behind you.",
   fish:"PMDs, gray drakes, and terrestrials on long leaders. Valley floats are flat Class I — ideal for a first rowing day. The canyon below Harrops is committing; don't drift past your take-out.",
@@ -10546,6 +10548,1444 @@ const RIVERS = [
     ]
   ]
 },
+
+/* ---- Teton Valley & Swan Valley, Idaho ----
+   The Teton River's tributaries above the canyon, and the South Fork Snake's
+   between Palisades and Heise. Both sets were checked against Idaho Fish &
+   Game's own lists of the tributaries its special rules name.
+
+   Lines stop at the Idaho/Wyoming state line. The Teton Range creeks run up
+   into Wyoming part-way and the regulations change there, which is also why
+   the two zones meet on the state line rather than on a Voronoi bisector.
+
+   Same-name creeks were sorted out by growing a connected component from
+   the real NHD mainstem rather than by distance: 'Warm Creek', 'Bear Creek'
+   and 'Canyon Creek' each match more than one stream inside these
+   envelopes. Canyon Creek needed a second pass — its mouth on the Teton sat
+   just outside the first fetch box, so the connectivity test rejected the
+   whole creek. */
+{
+  id:"tv_tetoncreek", name:"Teton Creek", color:"#2f7f8f",
+  state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>. This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The big one off the Teton Range's west slope, down Teton Canyon past the Driggs bench to the Teton River. The canyon road and trailhead are over the line in Wyoming; the fishing water below is Idaho's.",
+  fish:"Yellowstone cutthroat, with rainbows and hybrids the state wants removed. It carries snowmelt colour late and fishes best from midsummer once the valley irrigation season settles the flow.",
+  coords:[
+    [
+      [43.69532,-111.15663],[43.69584,-111.15596],[43.69504,-111.15518],[43.69567,-111.15511],
+      [43.69612,-111.15380],[43.69545,-111.15339],[43.69625,-111.15275],[43.69498,-111.15228],
+      [43.69487,-111.15169],[43.69564,-111.15177],[43.69572,-111.15132],[43.69507,-111.15043],
+      [43.69608,-111.15073],[43.69566,-111.14967],[43.69673,-111.14907],[43.69696,-111.14970],
+      [43.69991,-111.13763],[43.70008,-111.13846],[43.69931,-111.13788],[43.69854,-111.13968],
+      [43.69929,-111.14090],[43.69844,-111.14049],[43.69795,-111.14192],[43.69713,-111.14177],
+      [43.69742,-111.14314],[43.69823,-111.14324],[43.69812,-111.14420],[43.69906,-111.14419],
+      [43.69964,-111.14511],[43.69761,-111.14545],[43.69824,-111.14599],[43.69811,-111.14689],
+      [43.69899,-111.14744],[43.69818,-111.14861],[43.69733,-111.14751],[43.69770,-111.14871],
+      [43.69712,-111.14911],[43.69734,-111.14960]
+    ],
+    [
+      [43.73743,-111.06756],[43.73927,-111.06554],[43.73953,-111.06368],[43.74052,-111.06288],
+      [43.73727,-111.06822],[43.72332,-111.08711],[43.72458,-111.08648],[43.72512,-111.08430],
+      [43.72570,-111.08481],[43.72617,-111.08450],[43.72644,-111.08369],[43.72820,-111.08266],
+      [43.72956,-111.08105],[43.73015,-111.07971],[43.73174,-111.07897],[43.73264,-111.07697],
+      [43.73341,-111.07690],[43.73454,-111.07380],[43.73399,-111.07249],[43.73455,-111.07234],
+      [43.73463,-111.07063],[43.73551,-111.06991],[43.73584,-111.06834],[43.73681,-111.06788]
+    ],
+    [
+      [43.69555,-111.16476],[43.69472,-111.16250],[43.69592,-111.16258],[43.69608,-111.16207],
+      [43.69512,-111.16050],[43.69625,-111.15999],[43.69671,-111.16098],[43.69772,-111.16102],
+      [43.69747,-111.15981],[43.69532,-111.15663],[43.69581,-111.15883],[43.69707,-111.15862],
+      [43.69728,-111.15916],[43.69780,-111.15871],[43.69796,-111.15952]
+    ],
+    [
+      [43.71646,-111.09628],[43.71496,-111.10034],[43.71142,-111.10103],[43.71129,-111.10208],
+      [43.71022,-111.10288],[43.71038,-111.10354],[43.70946,-111.10394],[43.71009,-111.10484],
+      [43.70906,-111.10600],[43.70941,-111.10818],[43.70861,-111.10886],[43.70754,-111.11145]
+    ],
+    [
+      [43.70050,-111.12937],[43.70093,-111.12920],[43.69954,-111.13127],[43.69956,-111.13494],
+      [43.69885,-111.13534],[43.69848,-111.13656],[43.69891,-111.13700],[43.69942,-111.13666],
+      [43.69991,-111.13763],[43.69948,-111.13732]
+    ],
+    [
+      [43.70093,-111.12920],[43.69998,-111.12771],[43.70215,-111.12661],[43.70257,-111.12547],
+      [43.70321,-111.12555],[43.70487,-111.12325],[43.70512,-111.11646],[43.70676,-111.11558],
+      [43.70754,-111.11145],[43.70686,-111.11257]
+    ],
+    [
+      [43.72115,-111.08835],[43.72176,-111.08808],[43.72053,-111.08879],[43.72059,-111.08970],
+      [43.71976,-111.09035],[43.71838,-111.09417],[43.71646,-111.09628],[43.71634,-111.09505],
+      [43.71696,-111.09537]
+    ],
+    [
+      [43.74927,-111.04775],[43.74701,-111.05055],[43.74621,-111.05012],[43.74599,-111.05084],
+      [43.74517,-111.05077],[43.74327,-111.05426],[43.74337,-111.05286],[43.74430,-111.05208]
+    ],
+    [
+      [43.74327,-111.05426],[43.74305,-111.05591],[43.74192,-111.05633],[43.74169,-111.05897],
+      [43.74043,-111.06152],[43.74052,-111.06288]
+    ]
+  ]
+},
+{
+  id:"tv_darbycreek", name:"Darby Creek", color:"#3f8f7f",
+  state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>. This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Out of Darby Canyon south of Driggs — the creek below the wind caves, running across the bench to the Teton River.",
+  fish:"Small-stream cutthroat fishing in a canyon mouth that most people drive to for the hike rather than the water.",
+  coords:[
+    [
+      [43.67919,-111.16353],[43.67883,-111.16084],[43.67974,-111.16015],[43.67893,-111.15948],
+      [43.67884,-111.15864],[43.67799,-111.15830],[43.67801,-111.15636],[43.67898,-111.15451],
+      [43.67940,-111.15557],[43.68055,-111.15420],[43.68104,-111.15273],[43.68043,-111.15182],
+      [43.68111,-111.15113],[43.68027,-111.15052],[43.68043,-111.14934],[43.68106,-111.14865],
+      [43.68071,-111.14827],[43.68147,-111.14601],[43.68191,-111.14655],[43.68244,-111.14540],
+      [43.68175,-111.14386],[43.68202,-111.14308],[43.68115,-111.14222],[43.68152,-111.14156],
+      [43.68229,-111.14150],[43.68250,-111.13973],[43.68240,-111.13930],[43.68105,-111.13913],
+      [43.68154,-111.13679],[43.68017,-111.13320],[43.68041,-111.13211],[43.67906,-111.12579],
+      [43.67977,-111.12743],[43.67970,-111.12942]
+    ],
+    [
+      [43.67906,-111.12579],[43.67835,-111.12511],[43.67880,-111.12233],[43.67790,-111.12091],
+      [43.67859,-111.11929],[43.67783,-111.11400],[43.67657,-111.11003],[43.67682,-111.10608],
+      [43.67467,-111.09503],[43.67464,-111.09913],[43.67591,-111.10311]
+    ],
+    [
+      [43.67467,-111.09503],[43.67542,-111.09357],[43.67459,-111.09138],[43.67525,-111.08932],
+      [43.67371,-111.08460],[43.67456,-111.08589],[43.67464,-111.08763]
+    ],
+    [
+      [43.67473,-111.07487],[43.67484,-111.07387],[43.67383,-111.07301],[43.67498,-111.08090],
+      [43.67371,-111.08460],[43.67419,-111.08274]
+    ],
+    [
+      [43.67518,-111.05399],[43.67674,-111.05132],[43.67664,-111.04779],[43.67433,-111.05705],
+      [43.67395,-111.06284],[43.67450,-111.06080]
+    ],
+    [
+      [43.67383,-111.07301],[43.67342,-111.07249],[43.67395,-111.06284],[43.67328,-111.06806],
+      [43.67363,-111.07021]
+    ]
+  ]
+},
+{
+  id:"tv_foxcreek", name:"Fox Creek", color:"#4f8f6f",
+  state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>. This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Between Victor and Driggs, out of Fox Creek Canyon and across the valley floor to the Teton — a classic Teton Valley spring-and-snowmelt creek.",
+  fish:"Cutthroat in small, brushy water. Named in the state's special-rule list, which is the tell that it matters to the cutthroat programme.",
+  coords:[
+    [43.65185,-111.16967],[43.65206,-111.17062],[43.65091,-111.17113],[43.65086,-111.17163],
+    [43.65170,-111.16952],[43.64957,-111.16906],[43.64881,-111.16732],[43.64924,-111.16594],
+    [43.64829,-111.16516],[43.64839,-111.16303],[43.64741,-111.16261],[43.64656,-111.16313],
+    [43.64662,-111.16413],[43.64594,-111.16503],[43.64517,-111.16392],[43.64465,-111.16538],
+    [43.64448,-111.16406],[43.64373,-111.16526],[43.64332,-111.16495],[43.64246,-111.16560],
+    [43.64273,-111.16451],[43.64194,-111.16447],[43.64201,-111.16349],[43.64109,-111.16419],
+    [43.64094,-111.16368],[43.64032,-111.16375],[43.63950,-111.16113],[43.63802,-111.16058],
+    [43.63862,-111.15946],[43.63787,-111.15799],[43.63856,-111.15804],[43.63819,-111.15699],
+    [43.63873,-111.15735],[43.63886,-111.15660],[43.63974,-111.15631],[43.63932,-111.15494],
+    [43.63893,-111.15580],[43.63838,-111.15502],[43.63867,-111.15404],[43.63769,-111.15074],
+    [43.63804,-111.15099],[43.63850,-111.15032],[43.63772,-111.15037],[43.63779,-111.14955],
+    [43.63694,-111.14940],[43.63675,-111.14852],[43.63640,-111.14877],[43.63648,-111.14576],
+    [43.63581,-111.14519],[43.63560,-111.13998],[43.63504,-111.13940],[43.63589,-111.13775],
+    [43.63536,-111.13598],[43.63613,-111.13541],[43.63616,-111.13390],[43.63790,-111.13102],
+    [43.63726,-111.12915],[43.63751,-111.12243],[43.63833,-111.12142],[43.63850,-111.12002],
+    [43.63762,-111.11451],[43.63801,-111.11402],[43.63762,-111.11181],[43.63808,-111.10759],
+    [43.63906,-111.10640],[43.63911,-111.10422],[43.63977,-111.10394],[43.64033,-111.10060],
+    [43.64165,-111.09930],[43.64163,-111.09737],[43.64266,-111.09529],[43.64296,-111.09289],
+    [43.64405,-111.09162],[43.64438,-111.08417],[43.64583,-111.08150],[43.64537,-111.07803],
+    [43.64690,-111.07413],[43.64723,-111.07119],[43.64977,-111.06519],[43.64980,-111.06232],
+    [43.64831,-111.05771],[43.64236,-111.04729],[43.64286,-111.04888],[43.64422,-111.05042]
+  ]
+},
+{
+  id:"tv_trailcreek", name:"Trail Creek", color:"#5f8f5f",
+  state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>. This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"In from Pine Creek Pass and the Wyoming line above Victor, joining the Teton at the south end of the valley — the creek the highway follows over the pass.",
+  fish:"Cutthroat, and one of the more accessible of the valley's small streams.",
+  coords:[
+    [
+      [43.63414,-111.17275],[43.63375,-111.17260],[43.63400,-111.17173],[43.63317,-111.17218],
+      [43.63334,-111.17092],[43.63283,-111.17097],[43.63239,-111.16993],[43.63198,-111.17055],
+      [43.63141,-111.17015],[43.63139,-111.16827],[43.63095,-111.16889],[43.61462,-111.15107],
+      [43.61518,-111.15248],[43.61573,-111.15178],[43.61667,-111.15197],[43.61745,-111.15413],
+      [43.61794,-111.15391],[43.61822,-111.15475],[43.61875,-111.15481],[43.61875,-111.15636],
+      [43.61930,-111.15597],[43.61940,-111.15688],[43.62005,-111.15715],[43.61957,-111.15917],
+      [43.62022,-111.15892],[43.62008,-111.15956],[43.62050,-111.15941],[43.62143,-111.16054],
+      [43.62177,-111.15945],[43.62368,-111.16046],[43.62341,-111.16165],[43.62434,-111.16190],
+      [43.62410,-111.16251],[43.62502,-111.16303],[43.62452,-111.16375],[43.62493,-111.16559],
+      [43.62548,-111.16566],[43.62563,-111.16515],[43.62634,-111.16593],[43.62679,-111.16563],
+      [43.62688,-111.16641],[43.62758,-111.16610],[43.62750,-111.16750],[43.62836,-111.16722],
+      [43.62926,-111.16834],[43.62973,-111.16781],[43.62958,-111.16893],[43.63037,-111.16885],
+      [43.63070,-111.16821]
+    ],
+    [
+      [43.59447,-111.10976],[43.59411,-111.10837],[43.59340,-111.10835],[43.59253,-111.10546],
+      [43.58882,-111.10201],[43.58735,-111.09792],[43.58616,-111.09674],[43.58635,-111.09486],
+      [43.58418,-111.09230],[43.58399,-111.08928],[43.58312,-111.08851],[43.58276,-111.08657],
+      [43.58161,-111.08709],[43.58056,-111.08503],[43.58123,-111.08366],[43.58111,-111.08238],
+      [43.57971,-111.08096],[43.57839,-111.08084],[43.57818,-111.07771],[43.57750,-111.07771],
+      [43.57511,-111.07475],[43.57408,-111.07537],[43.57212,-111.07379],[43.57239,-111.07306],
+      [43.57074,-111.07132],[43.56876,-111.07137],[43.56531,-111.06926],[43.56404,-111.06976],
+      [43.56280,-111.06896],[43.55939,-111.06836],[43.55245,-111.06148],[43.55283,-111.06298],
+      [43.55367,-111.06308],[43.55443,-111.06415],[43.55435,-111.06494],[43.55491,-111.06477],
+      [43.55825,-111.06803]
+    ],
+    [
+      [43.60034,-111.11468],[43.59861,-111.11331],[43.59795,-111.11161],[43.59723,-111.11162],
+      [43.59649,-111.11066],[43.59564,-111.11072],[43.59516,-111.10961],[43.59447,-111.10976],
+      [43.60452,-111.12579],[43.60433,-111.12349],[43.60294,-111.11986],[43.60175,-111.11940],
+      [43.60156,-111.11790],[43.60094,-111.11822],[43.60016,-111.11730],[43.60062,-111.11602]
+    ],
+    [
+      [43.60452,-111.12579],[43.60520,-111.12628],[43.60485,-111.12724],[43.60563,-111.12782],
+      [43.60577,-111.12924],[43.60687,-111.13054],[43.60640,-111.13375],[43.61063,-111.14032],
+      [43.61078,-111.14707],[43.61140,-111.14967],[43.61250,-111.14932],[43.61406,-111.15111],
+      [43.61462,-111.15107]
+    ]
+  ]
+},
+{
+  id:"tv_gamecreek", name:"Game Creek", color:"#6f8f4f",
+  state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>. This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A short creek at the very south end of the valley above Victor, in to Trail Creek.",
+  fish:"Small cutthroat water — a stop rather than a day.",
+  coords:[
+    [
+      [43.57511,-111.07475],[43.57493,-111.07355],[43.58009,-111.05821],[43.57985,-111.05938],
+      [43.57884,-111.05998],[43.57671,-111.06663],[43.57584,-111.06748],[43.57567,-111.07101]
+    ],
+    [
+      [43.58273,-111.04764],[43.58305,-111.05022],[43.58009,-111.05821]
+    ]
+  ]
+},
+{
+  id:"tv_moosecreek", name:"Moose Creek", color:"#7f8f3f",
+  state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>. This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A short Idaho reach at the head of the valley near Victor before the drainage crosses into Wyoming. Not the Moose Creek of Grand Teton or of Idaho's Selway.",
+  fish:"Small cutthroat water, and most of the creek is over the line.",
+  coords:[
+    [43.56272,-111.04642],[43.56344,-111.04722],[43.56270,-111.04957],[43.56317,-111.05246],
+    [43.56271,-111.05458],[43.56334,-111.05670],[43.56321,-111.06148],[43.56386,-111.06399],
+    [43.56372,-111.06652],[43.56280,-111.06896]
+  ]
+},
+{
+  id:"tv_southleighcreek", name:"South Leigh Creek", color:"#2f8f5f",
+  state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>. This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"North of Driggs, out of South Leigh Canyon and across the bench to the Teton — the larger of the two Leigh creeks on the Idaho side.",
+  fish:"Cutthroat in a freestone creek that drops fast out of the canyon and then meanders. Named in the state's special-rule list.",
+  coords:[
+    [
+      [43.80224,-111.05942],[43.80269,-111.05715],[43.80481,-111.05394],[43.80527,-111.05093],
+      [43.80686,-111.04767],[43.80205,-111.06233],[43.80242,-111.06591],[43.80155,-111.06758],
+      [43.80323,-111.07873],[43.80262,-111.08707],[43.80310,-111.09003],[43.80447,-111.09228],
+      [43.80368,-111.09384],[43.80374,-111.09583],[43.80534,-111.09885],[43.80553,-111.10194],
+      [43.80490,-111.10205],[43.80389,-111.10611],[43.80461,-111.10886],[43.80308,-111.11052],
+      [43.80324,-111.11603],[43.80407,-111.11599],[43.80434,-111.11672],[43.80422,-111.11807],
+      [43.80335,-111.11905],[43.80448,-111.12197],[43.80393,-111.12186],[43.80390,-111.12253],
+      [43.80457,-111.12298],[43.80286,-111.12363],[43.80378,-111.12465],[43.80349,-111.12579],
+      [43.80411,-111.12684],[43.80285,-111.12823],[43.80340,-111.12907],[43.80295,-111.13013],
+      [43.80415,-111.13309],[43.80320,-111.13332],[43.80371,-111.13451],[43.80239,-111.13524],
+      [43.80362,-111.13601],[43.80354,-111.13913],[43.80271,-111.13890],[43.80109,-111.13962],
+      [43.80120,-111.14053],[43.79912,-111.14295],[43.79966,-111.14307],[43.79969,-111.14443],
+      [43.79911,-111.14498],[43.79928,-111.15059],[43.79902,-111.14961]
+    ],
+    [
+      [43.79044,-111.18832],[43.79185,-111.18610],[43.79227,-111.18105],[43.79328,-111.18077],
+      [43.79344,-111.17911],[43.79427,-111.17843],[43.79428,-111.17752],[43.79510,-111.17720],
+      [43.79545,-111.17523],[43.79677,-111.17434],[43.79638,-111.17330],[43.79759,-111.17225],
+      [43.79691,-111.16935],[43.79811,-111.16954],[43.79828,-111.16913],[43.79677,-111.16639],
+      [43.79711,-111.16504],[43.79804,-111.16490],[43.79845,-111.16338],[43.79940,-111.16256],
+      [43.79886,-111.15928],[43.79958,-111.15749],[43.79906,-111.15597],[43.79928,-111.15059],
+      [43.80032,-111.15221],[43.79975,-111.15364]
+    ],
+    [
+      [43.78990,-111.18880],[43.79050,-111.18884],[43.79044,-111.18832],[43.78901,-111.19222],
+      [43.78974,-111.19396],[43.78969,-111.19547],[43.78911,-111.19547],[43.78861,-111.19840],
+      [43.78912,-111.19939],[43.78827,-111.20038],[43.78863,-111.20257],[43.79024,-111.20538],
+      [43.78944,-111.20409]
+    ],
+    [
+      [43.79804,-111.22364],[43.79873,-111.22290],[43.79835,-111.22191],[43.79351,-111.21350],
+      [43.79443,-111.21306],[43.79507,-111.21339],[43.79537,-111.21491],[43.79620,-111.21568],
+      [43.79614,-111.21667],[43.79731,-111.21709],[43.79768,-111.21833],[43.79910,-111.21906],
+      [43.79915,-111.22047]
+    ],
+    [
+      [43.79024,-111.20538],[43.78995,-111.20644],[43.79079,-111.20677],[43.79020,-111.20811],
+      [43.79165,-111.20850],[43.79090,-111.20957],[43.79193,-111.21067],[43.79174,-111.21220],
+      [43.79351,-111.21350]
+    ]
+  ]
+},
+{
+  id:"tv_northleighcreek", name:"North Leigh Creek", color:"#3f9f5f",
+  state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>. This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"South Leigh's neighbour a few miles north, same canyon-to-bench shape.",
+  fish:"Small cutthroat water, quieter than its bigger twin.",
+  coords:[
+    [
+      [43.82001,-111.08160],[43.81932,-111.08486],[43.82054,-111.08667],[43.82020,-111.08861],
+      [43.82101,-111.08926],[43.82088,-111.09084],[43.82162,-111.09206],[43.82186,-111.09590],
+      [43.82116,-111.09703],[43.82199,-111.09848],[43.82104,-111.09948],[43.82204,-111.10231],
+      [43.82219,-111.10723],[43.82138,-111.10909],[43.82222,-111.11231],[43.82209,-111.11375],
+      [43.82160,-111.11409],[43.82243,-111.11527],[43.82199,-111.11580],[43.82246,-111.11682],
+      [43.82076,-111.11964],[43.82058,-111.12099],[43.81938,-111.12220],[43.81980,-111.12350],
+      [43.81874,-111.12358],[43.81793,-111.12512],[43.81811,-111.13324]
+    ],
+    [
+      [43.81856,-111.06179],[43.81948,-111.06067],[43.81921,-111.05936],[43.82077,-111.05436],
+      [43.82036,-111.05145],[43.82139,-111.04698],[43.81836,-111.06394],[43.81864,-111.06458],
+      [43.81815,-111.06512],[43.81843,-111.06675],[43.81718,-111.06757],[43.81802,-111.07213],
+      [43.81741,-111.07345],[43.82001,-111.08160],[43.81970,-111.08019],[43.81864,-111.07948],
+      [43.81788,-111.07788],[43.81765,-111.07607]
+    ]
+  ]
+},
+{
+  id:"tv_badgercreek", name:"Badger Creek", color:"#8f7f3f",
+  state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>. This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Off the Tetons north of Tetonia, joining the Teton River where the valley starts to narrow toward the canyon. Its North and South forks are mapped separately.",
+  fish:"Cutthroat, and one of the creeks the state names by name in the tributary rule.",
+  coords:[
+    [
+      [43.88416,-111.21640],[43.88356,-111.21623],[43.88275,-111.21131],[43.88099,-111.20999],
+      [43.88106,-111.20848],[43.87920,-111.20709],[43.87794,-111.20379],[43.87608,-111.20215],
+      [43.87552,-111.20067],[43.87436,-111.20026],[43.87345,-111.19804],[43.87200,-111.19801],
+      [43.87067,-111.19668],[43.87037,-111.19523],[43.86887,-111.19446],[43.86946,-111.19357],
+      [43.86931,-111.19217],[43.86862,-111.19206],[43.86785,-111.18908],[43.86700,-111.18874],
+      [43.86495,-111.18406],[43.86525,-111.18188],[43.86445,-111.17863],[43.86485,-111.17823],
+      [43.86368,-111.17401],[43.86481,-111.17106],[43.86447,-111.16939],[43.86376,-111.16938],
+      [43.86307,-111.16626],[43.86368,-111.16292],[43.86276,-111.16120],[43.86289,-111.15931],
+      [43.86111,-111.14965],[43.86211,-111.15358],[43.86219,-111.15780]
+    ],
+    [
+      [43.86111,-111.14965],[43.86002,-111.14599],[43.86183,-111.14058],[43.86260,-111.13974],
+      [43.86233,-111.13902],[43.86322,-111.13863],[43.86282,-111.13720],[43.86331,-111.13669],
+      [43.86395,-111.13688],[43.86436,-111.13530],[43.86597,-111.13500],[43.86662,-111.13148],
+      [43.86735,-111.13093],[43.86793,-111.12711],[43.86912,-111.12472],[43.87070,-111.11421],
+      [43.87091,-111.11538],[43.87000,-111.11628],[43.86868,-111.12037],[43.86920,-111.12357]
+    ],
+    [
+      [43.92701,-111.23860],[43.92610,-111.23919],[43.92520,-111.23871],[43.92243,-111.23891],
+      [43.92120,-111.23960],[43.91899,-111.23865],[43.91767,-111.23881],[43.91669,-111.23787],
+      [43.91541,-111.23903],[43.91300,-111.23829],[43.92737,-111.23951],[43.92651,-111.24449],
+      [43.92708,-111.24688],[43.92512,-111.25080],[43.92658,-111.24866]
+    ],
+    [
+      [43.91300,-111.23829],[43.91202,-111.23860],[43.91088,-111.23745],[43.90885,-111.23701],
+      [43.90464,-111.23752],[43.90210,-111.23613],[43.89921,-111.23377],[43.89842,-111.23090],
+      [43.89743,-111.23019],[43.89626,-111.22331],[43.89347,-111.22181],[43.89213,-111.21964],
+      [43.88675,-111.21871],[43.88416,-111.21640],[43.88558,-111.21659]
+    ],
+    [
+      [43.91448,-111.27893],[43.91798,-111.27497],[43.91976,-111.27035],[43.91968,-111.26865],
+      [43.92361,-111.26243],[43.92377,-111.26115],[43.91537,-111.28142],[43.91510,-111.28038]
+    ],
+    [
+      [43.92512,-111.25080],[43.92461,-111.25516],[43.92297,-111.25890],[43.92377,-111.26115]
+    ]
+  ]
+},
+{
+  id:"tv_northbadgercreek", name:"North Badger Creek", color:"#9f8f4f",
+  state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>. This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The north fork of Badger Creek, dropping off the range front above Tetonia.",
+  fish:"Small cutthroat water in a tight canyon.",
+  coords:[
+    [43.90245,-111.04682],[43.90267,-111.05030],[43.89957,-111.05637],[43.89925,-111.05797],
+    [43.89794,-111.05927],[43.89720,-111.06366],[43.89549,-111.06719],[43.89548,-111.07034],
+    [43.89449,-111.07190],[43.89476,-111.07385],[43.89357,-111.07447],[43.88853,-111.08269],
+    [43.88718,-111.08359],[43.88546,-111.08364],[43.88371,-111.08689],[43.88070,-111.08839],
+    [43.87894,-111.09024],[43.87687,-111.09668],[43.87475,-111.09744],[43.87262,-111.10038],
+    [43.87278,-111.10156],[43.87121,-111.10426],[43.87292,-111.10688],[43.87303,-111.10815],
+    [43.87159,-111.10988],[43.87070,-111.11421]
+  ]
+},
+{
+  id:"tv_southbadgercreek", name:"South Badger Creek", color:"#8f6f3f",
+  state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>. This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The south fork of Badger Creek, the two joining on the bench below.",
+  fish:"Small cutthroat water.",
+  coords:[
+    [
+      [43.86498,-111.08114],[43.86315,-111.07911],[43.86935,-111.10331],[43.86964,-111.10150],
+      [43.86920,-111.10040],[43.86988,-111.09827],[43.86956,-111.09212],[43.86690,-111.08278],
+      [43.86578,-111.08118]
+    ],
+    [
+      [43.86297,-111.06119],[43.86263,-111.05959],[43.86233,-111.06474],[43.86337,-111.07418],
+      [43.86291,-111.07225]
+    ],
+    [
+      [43.86935,-111.10331],[43.86868,-111.10599],[43.86872,-111.10914],[43.87070,-111.11421]
+    ],
+    [
+      [43.86263,-111.05959],[43.85977,-111.05439],[43.86143,-111.04747],[43.85991,-111.05220]
+    ],
+    [
+      [43.86337,-111.07418],[43.86249,-111.07675],[43.86315,-111.07911]
+    ]
+  ]
+},
+{
+  id:"tv_bitchcreek", name:"Bitch Creek", color:"#7f5f2f",
+  state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>. This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The Teton's biggest tributary, in from the north through a deep basalt canyon to meet the river below Felt. The name is a worn-down version of the French <i>biche</i> — the canyon is the real character of it.",
+  fish:"Cutthroat in a rugged, committing canyon that is a scramble to get into and out of. Named in the state's tributary rule, and the one Teton Valley tributary that fishes like a small river rather than a creek.",
+  coords:[
+    [
+      [43.94304,-111.16983],[43.94405,-111.16728],[43.94427,-111.16267],[43.94616,-111.16145],
+      [43.94650,-111.16268],[43.94714,-111.16279],[43.94870,-111.16052],[43.94985,-111.15683],
+      [43.95097,-111.15629],[43.95131,-111.15548],[43.95090,-111.15443],[43.95124,-111.15167],
+      [43.95198,-111.15003],[43.95278,-111.15005],[43.95133,-111.14137],[43.95046,-111.14388],
+      [43.95121,-111.14519],[43.95240,-111.14544],[43.95350,-111.14759],[43.95295,-111.14972]
+    ],
+    [
+      [43.95133,-111.14137],[43.95174,-111.14097],[43.95417,-111.14138],[43.95841,-111.13883],
+      [43.95806,-111.13246],[43.96405,-111.11892],[43.97778,-111.07293],[43.97712,-111.07821],
+      [43.97409,-111.08338],[43.97448,-111.08717],[43.97374,-111.09043],[43.97209,-111.09322],
+      [43.97229,-111.09752],[43.96855,-111.10267],[43.96909,-111.11123],[43.96817,-111.11473],
+      [43.96661,-111.11690]
+    ],
+    [
+      [43.93725,-111.20295],[43.93501,-111.20289],[43.93390,-111.20197],[43.93860,-111.20321],
+      [43.94047,-111.20256],[43.94351,-111.20415],[43.94369,-111.20697],[43.94293,-111.20833],
+      [43.94097,-111.20928],[43.94086,-111.21194],[43.93954,-111.21633],[43.94053,-111.21976],
+      [43.94236,-111.22093],[43.94617,-111.22950],[43.94508,-111.22857],[43.94344,-111.22354]
+    ],
+    [
+      [43.94013,-111.25962],[43.93956,-111.25553],[43.93865,-111.25426],[43.94012,-111.25080],
+      [43.94152,-111.24987],[43.94228,-111.24732],[43.94321,-111.24616],[43.94361,-111.24316],
+      [43.94309,-111.24080],[43.94409,-111.23904],[43.94549,-111.23795],[43.94881,-111.23712],
+      [43.94862,-111.23501],[43.94918,-111.23347],[43.93853,-111.26872],[43.93846,-111.26781]
+    ],
+    [
+      [43.93892,-111.17930],[43.93981,-111.17718],[43.93906,-111.17217],[43.94005,-111.17111],
+      [43.94217,-111.17175],[43.94287,-111.17111],[43.94304,-111.16983],[43.93713,-111.17974],
+      [43.93574,-111.18126],[43.93483,-111.18353],[43.93438,-111.19961],[43.93336,-111.19653],
+      [43.93230,-111.18979],[43.93221,-111.18712],[43.93303,-111.18523]
+    ],
+    [
+      [43.92395,-111.28916],[43.92650,-111.28065],[43.92724,-111.27983],[43.92874,-111.27964],
+      [43.93541,-111.27575],[43.93448,-111.27624],[43.93342,-111.27520],[43.93259,-111.27629],
+      [43.93143,-111.27634],[43.93042,-111.27821],[43.92931,-111.27842]
+    ],
+    [
+      [43.98263,-111.04941],[43.98393,-111.05436],[43.98427,-111.05855],[43.98337,-111.06178],
+      [43.98169,-111.06438],[43.98034,-111.07048],[43.97857,-111.07098],[43.97778,-111.07293]
+    ],
+    [
+      [43.93853,-111.26872],[43.93858,-111.27177],[43.93781,-111.27303],[43.93628,-111.27392],
+      [43.93541,-111.27575]
+    ],
+    [
+      [43.94617,-111.22950],[43.94747,-111.23156],[43.94911,-111.23264],[43.94918,-111.23347]
+    ]
+  ]
+},
+{
+  id:"tv_milkcreek", name:"Milk Creek", color:"#6f7f4f",
+  state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The long west-side creek draining the Big Hole Mountains into the Teton River north of Tetonia — the opposite side of the valley from the Teton Range creeks.",
+  fish:"Cutthroat in lower-gradient water than the range-front creeks, and a different feel: sage and aspen rather than granite.",
+  coords:[
+    [
+      [43.84268,-111.28855],[43.84547,-111.28835],[43.84784,-111.28730],[43.85015,-111.28540],
+      [43.85387,-111.28447],[43.85794,-111.28815],[43.86297,-111.29070],[43.86430,-111.29448],
+      [43.86667,-111.29860],[43.86579,-111.30015],[43.86631,-111.30206],[43.84255,-111.28861],
+      [43.84033,-111.28933],[43.83557,-111.28955],[43.82930,-111.29234],[43.82888,-111.29191],
+      [43.81085,-111.32150],[43.81180,-111.32045],[43.81531,-111.30758],[43.81695,-111.30446],
+      [43.81857,-111.29708],[43.81969,-111.29496],[43.82187,-111.29277]
+    ],
+    [
+      [43.92776,-111.38527],[43.92622,-111.38523],[43.92531,-111.38377],[43.92376,-111.38343],
+      [43.92180,-111.38189],[43.92147,-111.38109],[43.92303,-111.37828],[43.92362,-111.37330],
+      [43.91537,-111.36510],[43.91629,-111.36575],[43.91768,-111.36863],[43.91888,-111.36976],
+      [43.91924,-111.36942],[43.92012,-111.36984]
+    ],
+    [
+      [43.88099,-111.34212],[43.88060,-111.33891],[43.87920,-111.33620],[43.87966,-111.33440],
+      [43.88141,-111.34362],[43.88218,-111.34430],[43.88289,-111.34408],[43.88454,-111.34659],
+      [43.88498,-111.34860],[43.89610,-111.35105],[43.89257,-111.35095],[43.88955,-111.35205],
+      [43.88715,-111.34898]
+    ],
+    [
+      [43.91085,-111.36210],[43.90965,-111.36205],[43.90832,-111.36077],[43.90543,-111.36090],
+      [43.90408,-111.35941],[43.90232,-111.35890],[43.90017,-111.36001],[43.89902,-111.35976],
+      [43.89659,-111.35637],[43.91537,-111.36510],[43.91285,-111.36314]
+    ],
+    [
+      [43.78371,-111.35438],[43.78564,-111.34822],[43.79248,-111.33603],[43.79592,-111.32764],
+      [43.79651,-111.32719],[43.79959,-111.32781],[43.80258,-111.32730],[43.80937,-111.32211],
+      [43.81085,-111.32150]
+    ],
+    [
+      [43.86631,-111.30206],[43.87121,-111.30671],[43.87058,-111.30886],[43.87182,-111.31074],
+      [43.87304,-111.31630],[43.87509,-111.32133]
+    ],
+    [
+      [43.87636,-111.32547],[43.87509,-111.32133],[43.87736,-111.32939],[43.87689,-111.32853]
+    ],
+    [
+      [43.89610,-111.35105],[43.89583,-111.35538],[43.89659,-111.35637]
+    ],
+    [
+      [43.87736,-111.32939],[43.87944,-111.33192],[43.87966,-111.33440]
+    ]
+  ]
+},
+{
+  id:"tv_springcreek", name:"Spring Creek", color:"#2f9f8f",
+  state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Spring water on the valley floor between Driggs and Tetonia, feeding the Teton River — flat, cold and clear, and fed by the aquifer rather than by snowmelt.",
+  fish:"The valley's technical water: slow, weedy, and fishable when the freestone creeks are blown out. Cutthroat and rainbows.",
+  coords:[
+    [
+      [43.71583,-111.04945],[43.71326,-111.04983],[43.71231,-111.05099],[43.71223,-111.05257],
+      [43.71153,-111.05373],[43.71238,-111.05627],[43.71156,-111.06613],[43.71245,-111.06722],
+      [43.71229,-111.06918],[43.71285,-111.07033],[43.71217,-111.07371],[43.71241,-111.07502],
+      [43.71359,-111.07617],[43.71336,-111.07970],[43.71458,-111.08601],[43.71423,-111.08735],
+      [43.71245,-111.08946],[43.71224,-111.09557],[43.71078,-111.09694],[43.70864,-111.10209],
+      [43.70790,-111.10231],[43.70795,-111.10328],[43.70741,-111.10310],[43.70660,-111.10428],
+      [43.70589,-111.10750],[43.70365,-111.10831],[43.70335,-111.10930],[43.70387,-111.10983]
+    ],
+    [
+      [43.81049,-111.18895],[43.81116,-111.18920],[43.81134,-111.19306],[43.81049,-111.19609],
+      [43.81083,-111.19739],[43.81029,-111.20022],[43.81091,-111.20052],[43.81098,-111.20277],
+      [43.81201,-111.20483],[43.81220,-111.20855],[43.81098,-111.21064],[43.81124,-111.21434],
+      [43.81076,-111.21452],[43.81176,-111.21597],[43.81127,-111.21818],[43.81180,-111.22078],
+      [43.81336,-111.22339],[43.81424,-111.22344],[43.81416,-111.22439],[43.81465,-111.22470],
+      [43.81430,-111.22524],[43.81474,-111.22518],[43.81424,-111.22553]
+    ],
+    [
+      [43.80973,-111.13533],[43.81007,-111.13572],[43.81134,-111.13549],[43.81235,-111.13429],
+      [43.81470,-111.13381],[43.81679,-111.13415],[43.81811,-111.13324],[43.80874,-111.13537],
+      [43.80827,-111.13493],[43.80770,-111.13630],[43.80706,-111.13597],[43.80540,-111.13645],
+      [43.80632,-111.13857],[43.80589,-111.13956],[43.80639,-111.14028],[43.80654,-111.14345],
+      [43.80603,-111.14565],[43.80636,-111.15683],[43.80597,-111.15593],[43.80667,-111.15258],
+      [43.80601,-111.15012],[43.80654,-111.14750]
+    ],
+    [
+      [43.83868,-111.12600],[43.84029,-111.12505],[43.83732,-111.12600],[43.83627,-111.12570],
+      [43.83617,-111.12472],[43.83488,-111.12368],[43.81811,-111.13324],[43.82219,-111.13331],
+      [43.82287,-111.13247],[43.82436,-111.13227],[43.82536,-111.13410],[43.82780,-111.12993],
+      [43.82816,-111.12721],[43.82959,-111.12590],[43.83001,-111.12469],[43.83263,-111.12363],
+      [43.83397,-111.12373]
+    ],
+    [
+      [43.82389,-111.23356],[43.82334,-111.23274],[43.82354,-111.23204],[43.82253,-111.23185],
+      [43.82076,-111.23431],[43.81979,-111.23279],[43.81992,-111.23087],[43.81886,-111.23077],
+      [43.81808,-111.23213],[43.81707,-111.23098],[43.81706,-111.23011],[43.81627,-111.22988],
+      [43.81505,-111.23063],[43.81409,-111.23011],[43.81450,-111.22834],[43.81424,-111.22553],
+      [43.81401,-111.22594]
+    ],
+    [
+      [43.84884,-111.11679],[43.85209,-111.11291],[43.84615,-111.11955],[43.84473,-111.11873],
+      [43.84465,-111.11683],[43.84359,-111.11862],[43.84055,-111.11620],[43.84029,-111.12505],
+      [43.84119,-111.12196],[43.84051,-111.11916],[43.83942,-111.11789],[43.83969,-111.11691],
+      [43.83936,-111.11704]
+    ],
+    [
+      [43.80800,-111.16975],[43.80786,-111.16886],[43.80843,-111.17158],[43.81096,-111.17480],
+      [43.81125,-111.17721],[43.81077,-111.17791],[43.81049,-111.18895],[43.81064,-111.18546],
+      [43.81151,-111.18287],[43.81111,-111.17854]
+    ],
+    [
+      [43.80786,-111.16886],[43.80636,-111.15683],[43.80705,-111.15790],[43.80683,-111.16045],
+      [43.80727,-111.16090],[43.80651,-111.16330],[43.80708,-111.16436],[43.80689,-111.16558],
+      [43.80741,-111.16596]
+    ],
+    [
+      [43.72200,-111.04808],[43.72409,-111.04747],[43.72068,-111.04878],[43.71927,-111.04838],
+      [43.71583,-111.04945],[43.71616,-111.04915]
+    ],
+    [
+      [43.70324,-111.11875],[43.70241,-111.11874],[43.70111,-111.12014],[43.70344,-111.11593],
+      [43.70387,-111.10983],[43.70436,-111.11125]
+    ],
+    [
+      [43.70111,-111.12014],[43.70152,-111.12104],[43.70114,-111.12209],[43.70257,-111.12547]
+    ]
+  ]
+},
+{
+  id:"tv_warmcreek", name:"Warm Creek", color:"#3f9f9f",
+  state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A short spring-fed creek at the south end of the valley near Victor, into the Teton River. Not the Warm Creek of the lower canyon, which is a different stream with the same name.",
+  fish:"Spring-fed and cold through summer, which matters in a valley where the freestone creeks warm up.",
+  coords:[
+    [43.61583,-111.17548],[43.61480,-111.17645],[43.61452,-111.17617],[43.61441,-111.17728],
+    [43.61411,-111.17651],[43.61400,-111.17737],[43.61302,-111.17765],[43.61300,-111.17662],
+    [43.61217,-111.17655],[43.61235,-111.17555],[43.61139,-111.17583],[43.61014,-111.17340],
+    [43.60978,-111.17446],[43.60932,-111.17392],[43.60847,-111.17442],[43.60802,-111.17370],
+    [43.60770,-111.17405],[43.60719,-111.17341],[43.60665,-111.17354],[43.60680,-111.17281],
+    [43.60567,-111.17262],[43.60629,-111.17203],[43.60546,-111.17054],[43.60477,-111.17049],
+    [43.60448,-111.17117],[43.60398,-111.17065],[43.60432,-111.16963],[43.60343,-111.16990],
+    [43.60337,-111.16925],[43.60151,-111.16840],[43.60081,-111.16707],[43.59990,-111.16749],
+    [43.59978,-111.16686],[43.59803,-111.16698],[43.59631,-111.16480],[43.59525,-111.16495],
+    [43.59307,-111.16299],[43.59285,-111.16148],[43.59157,-111.16008],[43.59130,-111.16051],
+    [43.58896,-111.15858],[43.58589,-111.15204],[43.58601,-111.15074],[43.58421,-111.14304],
+    [43.58285,-111.14148],[43.58167,-111.14127],[43.58009,-111.12762],[43.57893,-111.12556],
+    [43.57816,-111.12200],[43.57541,-111.11700],[43.57368,-111.11481],[43.57186,-111.11437],
+    [43.57136,-111.11240],[43.57031,-111.11116],[43.56973,-111.10848],[43.57035,-111.10636],
+    [43.56902,-111.10373],[43.56898,-111.10245],[43.56777,-111.10122],[43.56568,-111.10185],
+    [43.56361,-111.10112],[43.56156,-111.10122],[43.55918,-111.10215]
+  ]
+},
+{
+  id:"tv_canyoncreek", name:"Canyon Creek", color:"#4f7f9f",
+  state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"In from the Big Hole Mountains to the Teton River down in the canyon below Felt — the long west-side drainage the state names in its tributary rule.",
+  fish:"Cutthroat in canyon water a long way from a road. The Teton's canyon reach here is the wild part of the valley.",
+  coords:[
+    [
+      [43.83297,-111.43771],[43.82827,-111.43752],[43.82660,-111.43568],[43.82327,-111.43822],
+      [43.82145,-111.43891],[43.82002,-111.43888],[43.81586,-111.43731],[43.81428,-111.43758],
+      [43.83354,-111.43800],[43.83546,-111.44004],[43.83698,-111.43991],[43.83871,-111.44085],
+      [43.83952,-111.44237],[43.84098,-111.44284],[43.84187,-111.44459],[43.84415,-111.44570],
+      [43.84650,-111.44567],[43.84787,-111.44671],[43.85117,-111.44670],[43.85383,-111.44847],
+      [43.85517,-111.45143],[43.85743,-111.45182],[43.86114,-111.45059],[43.86505,-111.44435],
+      [43.86525,-111.44179],[43.86779,-111.43990],[43.87184,-111.43954],[43.87338,-111.44084],
+      [43.87504,-111.44113],[43.87628,-111.44283],[43.87751,-111.44326],[43.87834,-111.44485],
+      [43.87974,-111.44419],[43.88140,-111.44709],[43.88279,-111.44775],[43.88420,-111.44637],
+      [43.88799,-111.45118],[43.88671,-111.44742],[43.88498,-111.44651]
+    ],
+    [
+      [43.74849,-111.46341],[43.74693,-111.46492],[43.74467,-111.46445],[43.74185,-111.46542],
+      [43.74025,-111.46523],[43.73866,-111.46422],[43.73663,-111.46491],[43.73573,-111.46463],
+      [43.75029,-111.46284],[43.75277,-111.46382],[43.75570,-111.46353],[43.75670,-111.46410],
+      [43.75793,-111.46340],[43.75907,-111.46372],[43.76084,-111.46226],[43.76117,-111.46274],
+      [43.76198,-111.46262],[43.76259,-111.46152],[43.76342,-111.46181],[43.76476,-111.46126],
+      [43.76518,-111.46006],[43.76695,-111.45973],[43.76777,-111.45901],[43.76955,-111.45935],
+      [43.77169,-111.45807],[43.77329,-111.45885],[43.77683,-111.45610],[43.77896,-111.45307],
+      [43.78125,-111.44714],[43.78032,-111.44917],[43.78055,-111.45162],[43.77943,-111.45302]
+    ],
+    [
+      [43.72850,-111.46215],[43.72270,-111.46448],[43.72039,-111.46367],[43.71807,-111.46498],
+      [43.71599,-111.46525],[43.71481,-111.46476],[43.71314,-111.46193],[43.71182,-111.45485],
+      [43.70993,-111.45339],[43.70926,-111.45392],[43.70833,-111.45347],[43.70772,-111.45183],
+      [43.70488,-111.45006],[43.70403,-111.44884],[43.70167,-111.44263],[43.70238,-111.43759],
+      [43.70073,-111.43601],[43.69927,-111.43332],[43.72902,-111.46203],[43.73057,-111.46335],
+      [43.73573,-111.46463],[43.73339,-111.46464],[43.73153,-111.46349]
+    ],
+    [
+      [43.78125,-111.44714],[43.78258,-111.44758],[43.78359,-111.44696],[43.78564,-111.44437],
+      [43.78569,-111.44325],[43.78760,-111.44100],[43.79044,-111.43973],[43.79075,-111.43852],
+      [43.79630,-111.43896],[43.79917,-111.43697],[43.80183,-111.43862],[43.80421,-111.43755],
+      [43.80559,-111.43862],[43.80626,-111.43834],[43.80812,-111.43925],[43.81082,-111.43941],
+      [43.81428,-111.43758]
+    ],
+    [
+      [43.90144,-111.46421],[43.90075,-111.46534],[43.89919,-111.46578],[43.89499,-111.46190],
+      [43.89439,-111.46047],[43.90316,-111.46081],[43.90558,-111.45937],[43.90656,-111.45985],
+      [43.90813,-111.46214],[43.90956,-111.46281],[43.91102,-111.46318],[43.91365,-111.46240],
+      [43.91515,-111.46299],[43.91634,-111.46222],[43.91717,-111.46308]
+    ],
+    [
+      [43.69776,-111.42661],[43.69789,-111.42492],[43.69731,-111.42380],[43.69776,-111.41910],
+      [43.69363,-111.40951],[43.69396,-111.41119],[43.69556,-111.41259],[43.69631,-111.41653]
+    ],
+    [
+      [43.69927,-111.43332],[43.69748,-111.42976],[43.69776,-111.42661],[43.69804,-111.42746],
+      [43.69746,-111.42864]
+    ],
+    [
+      [43.88799,-111.45118],[43.89049,-111.45760],[43.89366,-111.45893],[43.89439,-111.46047]
+    ]
+  ]
+},
+{
+  id:"tv_bullelkcreek", name:"Bull Elk Creek", color:"#5f7f3f",
+  state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>. This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A north-side creek joining the Teton near Badger Creek above the canyon.",
+  fish:"Small cutthroat water off the range front.",
+  coords:[
+    [
+      [43.88539,-111.19927],[43.88487,-111.19595],[43.88518,-111.19344],[43.88436,-111.19130],
+      [43.88483,-111.18906],[43.88428,-111.18908],[43.88425,-111.18800],[43.88331,-111.18674],
+      [43.88316,-111.18424],[43.88004,-111.17956],[43.87984,-111.17507],[43.88203,-111.17135],
+      [43.88239,-111.16805],[43.88318,-111.16650],[43.88449,-111.16591],[43.88849,-111.16632],
+      [43.89531,-111.14964],[43.89546,-111.15052],[43.89414,-111.15282],[43.89472,-111.15805],
+      [43.89172,-111.16205]
+    ],
+    [
+      [43.91031,-111.04788],[43.91072,-111.05840],[43.91028,-111.06391],[43.90842,-111.06853],
+      [43.90674,-111.07087],[43.90350,-111.08129],[43.89879,-111.08627],[43.89828,-111.08859],
+      [43.89531,-111.09520],[43.89316,-111.09765],[43.89129,-111.10150],[43.88846,-111.10365],
+      [43.88673,-111.10656],[43.88605,-111.11171],[43.88622,-111.11457],[43.88349,-111.12048],
+      [43.88399,-111.12308],[43.88344,-111.13088],[43.88679,-111.13345],[43.88800,-111.13322]
+    ],
+    [
+      [43.88727,-111.20415],[43.88608,-111.20231],[43.88539,-111.19927],[43.88897,-111.20734],
+      [43.89030,-111.21203],[43.89181,-111.21489],[43.89152,-111.21545],[43.89244,-111.21622],
+      [43.89255,-111.21777],[43.89214,-111.21811],[43.89333,-111.22100],[43.89283,-111.21946]
+    ],
+    [
+      [43.88874,-111.13396],[43.88800,-111.13322],[43.89288,-111.14173],[43.89090,-111.13982],
+      [43.89043,-111.13765],[43.88827,-111.13700]
+    ],
+    [
+      [43.89288,-111.14173],[43.89284,-111.14333],[43.89413,-111.14508],[43.89531,-111.14964]
+    ]
+  ]
+},
+{
+  id:"tv_packsaddlecreek", name:"Packsaddle Creek", color:"#7f6f5f",
+  state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Out of the Big Holes on the valley's west side, down past Packsaddle Lake to the Teton River near Tetonia.",
+  fish:"Cutthroat in small west-side water — shaded, cold, and largely ignored.",
+  coords:[
+    [
+      [43.75486,-111.31242],[43.75451,-111.31470],[43.75666,-111.30970],[43.75802,-111.30860],
+      [43.76228,-111.30903],[43.76624,-111.30636],[43.77032,-111.30161],[43.77213,-111.29637],
+      [43.77201,-111.29412],[43.77539,-111.28877],[43.77828,-111.28537],[43.78083,-111.28027],
+      [43.78109,-111.27534],[43.78953,-111.22087],[43.78867,-111.22204],[43.78964,-111.22497],
+      [43.78904,-111.22820],[43.78804,-111.22804],[43.78765,-111.22993],[43.78692,-111.23064],
+      [43.78693,-111.23259],[43.78732,-111.23267],[43.78648,-111.23447],[43.78551,-111.23505],
+      [43.78548,-111.23849],[43.78329,-111.24204],[43.78318,-111.24560],[43.78408,-111.24835],
+      [43.78286,-111.25289],[43.78262,-111.25743],[43.78323,-111.26038],[43.78275,-111.26451]
+    ],
+    [
+      [43.74373,-111.34580],[43.74505,-111.34741],[43.74697,-111.35173],[43.74909,-111.35379],
+      [43.74153,-111.34239],[43.74086,-111.33965],[43.74089,-111.34047]
+    ],
+    [
+      [43.74093,-111.33875],[43.74086,-111.33965],[43.74311,-111.32719],[43.74680,-111.31984],
+      [43.74489,-111.32408]
+    ],
+    [
+      [43.74680,-111.31984],[43.74884,-111.31708],[43.75052,-111.31744],[43.75223,-111.31572],
+      [43.75451,-111.31470]
+    ],
+    [
+      [43.75375,-111.35909],[43.75269,-111.35824],[43.75117,-111.35490],[43.74909,-111.35379]
+    ]
+  ]
+},
+{
+  id:"tv_horseshoecreek", name:"Horseshoe Creek", color:"#6f6f7f",
+  state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Another Big Hole Mountains creek, into the Teton between Driggs and Tetonia.",
+  fish:"Small cutthroat water on the quiet side of the valley.",
+  coords:[
+    [
+      [43.74992,-111.24947],[43.75191,-111.24792],[43.75301,-111.24735],[43.75327,-111.24768],
+      [43.75349,-111.24708],[43.75377,-111.24735],[43.75543,-111.24625],[43.75578,-111.24651],
+      [43.75639,-111.24580],[43.75933,-111.24514],[43.76040,-111.24564],[43.76226,-111.24481],
+      [43.76226,-111.24432],[43.76327,-111.24493],[43.76418,-111.24398],[43.76541,-111.24408],
+      [43.76560,-111.24360],[43.76602,-111.24392],[43.76666,-111.24322],[43.76776,-111.24316],
+      [43.76845,-111.24134],[43.76982,-111.24035],[43.77004,-111.23917],[43.77126,-111.23812],
+      [43.77190,-111.23640],[43.77332,-111.23562],[43.77400,-111.23435],[43.77384,-111.23194],
+      [43.77456,-111.23227],[43.77452,-111.23165],[43.77522,-111.23183],[43.77686,-111.22963],
+      [43.77715,-111.22756],[43.77799,-111.22774],[43.77839,-111.22714],[43.78008,-111.22149],
+      [43.78116,-111.22002],[43.78114,-111.21465],[43.78035,-111.21336]
+    ],
+    [
+      [43.72617,-111.27656],[43.72535,-111.27916],[43.72904,-111.26980],[43.73067,-111.26334],
+      [43.73047,-111.26181],[43.72973,-111.26139],[43.74992,-111.24947],[43.74579,-111.24906],
+      [43.74345,-111.25026],[43.74112,-111.25023],[43.73915,-111.25114],[43.73612,-111.25150],
+      [43.73283,-111.25445],[43.73026,-111.25942]
+    ],
+    [
+      [43.72535,-111.27916],[43.72372,-111.28506],[43.71755,-111.29854],[43.71945,-111.29319],
+      [43.72176,-111.28895]
+    ]
+  ]
+},
+{
+  id:"tv_mahoganycreek", name:"Mahogany Creek", color:"#8f5f5f",
+  state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A short west-side creek into the Teton River near Driggs.",
+  fish:"Small cutthroat water. A half-hour creek.",
+  coords:[
+    [
+      [43.72156,-111.19251],[43.72166,-111.19421],[43.72118,-111.19477],[43.70720,-111.20365],
+      [43.70785,-111.20300],[43.70854,-111.20323],[43.70863,-111.20204],[43.70923,-111.20271],
+      [43.70984,-111.20179],[43.70993,-111.20264],[43.71059,-111.20142],[43.71133,-111.20191],
+      [43.71229,-111.20023],[43.71264,-111.20106],[43.71330,-111.20019],[43.71456,-111.19996],
+      [43.71474,-111.19867],[43.71607,-111.19835],[43.71671,-111.19639],[43.71737,-111.19715],
+      [43.71745,-111.19646],[43.71794,-111.19669],[43.71893,-111.19531],[43.71947,-111.19534],
+      [43.71937,-111.19484],[43.72035,-111.19475],[43.72054,-111.19519],[43.72077,-111.19466]
+    ],
+    [
+      [43.68643,-111.20995],[43.68919,-111.20880],[43.69124,-111.20918],[43.69243,-111.20773],
+      [43.69442,-111.20695],[43.69548,-111.20728],[43.69589,-111.20651],[43.69719,-111.20604],
+      [43.69777,-111.20708],[43.69917,-111.20666],[43.69959,-111.20700],[43.70018,-111.20596],
+      [43.70057,-111.20620],[43.70248,-111.20463],[43.70261,-111.20517],[43.70386,-111.20544],
+      [43.70502,-111.20463],[43.70547,-111.20523],[43.70720,-111.20365]
+    ],
+    [
+      [43.67404,-111.23519],[43.67313,-111.24144],[43.67351,-111.24398],[43.67416,-111.23218],
+      [43.67542,-111.22868],[43.68643,-111.20995],[43.68345,-111.20993],[43.68232,-111.21121],
+      [43.68182,-111.21362],[43.67982,-111.21766],[43.67928,-111.22201],[43.67848,-111.22266],
+      [43.67795,-111.22475]
+    ],
+    [
+      [43.67239,-111.25422],[43.67379,-111.25029],[43.67320,-111.24839],[43.67351,-111.24398]
+    ]
+  ]
+},
+{
+  id:"sv_palisadescreek", name:"Palisades Creek", color:"#2f6f9f",
+  state:"ID", region:"swanvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the South Fork tributaries as a group — the book names Burns, Palisades, Pine and Rainey creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"In from the Palisades lakes to the South Fork just below the dam — the trail up to Lower and Upper Palisades Lakes is one of the best-known walks in the valley.",
+  fish:"Yellowstone cutthroat, with the state asking anglers to keep every rainbow. The creek fishes best once the June closure lifts and the snowmelt drops out.",
+  coords:[
+    [
+      [43.40102,-111.20071],[43.40284,-111.19783],[43.40265,-111.19677],[43.40318,-111.19592],
+      [43.40264,-111.19535],[43.40298,-111.19451],[43.40254,-111.19229],[43.40389,-111.18889],
+      [43.39114,-111.22195],[43.39210,-111.22178],[43.39373,-111.21926],[43.39472,-111.21872],
+      [43.39476,-111.21780],[43.39718,-111.21471],[43.39798,-111.21237],[43.39932,-111.21102],
+      [43.40137,-111.20421],[43.40113,-111.20239]
+    ],
+    [
+      [43.43005,-111.15347],[43.42894,-111.15530],[43.42936,-111.15608],[43.42698,-111.15793],
+      [43.42539,-111.16109],[43.42320,-111.16112],[43.42203,-111.16035],[43.41924,-111.16148],
+      [43.41799,-111.16397],[43.41703,-111.16467],[43.41700,-111.16550]
+    ],
+    [
+      [43.44746,-111.13203],[43.45102,-111.12871],[43.45197,-111.12890],[43.44628,-111.13176],
+      [43.44582,-111.13277],[43.44484,-111.13324],[43.44411,-111.13503],[43.43765,-111.14054],
+      [43.43856,-111.14017],[43.43978,-111.13843],[43.44261,-111.13669]
+    ],
+    [
+      [43.43582,-111.14492],[43.43623,-111.14474],[43.43481,-111.14595],[43.43435,-111.14734],
+      [43.43303,-111.14799],[43.43005,-111.15347],[43.43121,-111.15266],[43.43120,-111.15137],
+      [43.43182,-111.15119],[43.43221,-111.14908]
+    ],
+    [
+      [43.38239,-111.23358],[43.38570,-111.22944],[43.38143,-111.23474],[43.38108,-111.23766],
+      [43.37339,-111.24478],[43.37412,-111.24281],[43.37624,-111.24253],[43.37883,-111.23923],
+      [43.37931,-111.23976]
+    ],
+    [
+      [43.47112,-111.10425],[43.47169,-111.10317],[43.47168,-111.10122],[43.46234,-111.11132],
+      [43.46478,-111.11018],[43.46498,-111.10754],[43.46625,-111.10771],[43.46653,-111.10697],
+      [43.46743,-111.10685]
+    ],
+    [
+      [43.41322,-111.16999],[43.41417,-111.16831],[43.41524,-111.16824],[43.41700,-111.16550],
+      [43.40792,-111.17568],[43.40888,-111.17431],[43.40899,-111.17280],[43.40998,-111.17180]
+    ],
+    [
+      [43.40697,-111.18444],[43.40813,-111.17958],[43.40806,-111.17809],[43.40731,-111.17687],
+      [43.40669,-111.18582],[43.40522,-111.18678],[43.40583,-111.18719]
+    ],
+    [
+      [43.39025,-111.22271],[43.39114,-111.22195],[43.38570,-111.22944],[43.38804,-111.22501],
+      [43.38801,-111.22404],[43.38936,-111.22321]
+    ],
+    [
+      [43.46234,-111.11132],[43.46041,-111.11468],[43.45878,-111.11631],[43.45846,-111.11822],
+      [43.45733,-111.12002]
+    ],
+    [
+      [43.45197,-111.12890],[43.45733,-111.12002],[43.45715,-111.12071]
+    ],
+    [
+      [43.43623,-111.14474],[43.43765,-111.14054],[43.43682,-111.14307]
+    ]
+  ]
+},
+{
+  id:"sv_raineycreek", name:"Rainey Creek", color:"#3f7f9f",
+  state:"ID", region:"swanvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the South Fork tributaries as a group — the book names Burns, Palisades, Pine and Rainey creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Into the South Fork at Irwin, with a road up the main fork — one of the two tributaries most Swan Valley anglers actually fish.",
+  fish:"Cutthroat, and a genuine spawning tributary for South Fork fish, which is why the June closure is on it.",
+  coords:[
+    [
+      [43.44472,-111.32584],[43.44427,-111.32285],[43.44275,-111.32107],[43.44105,-111.32061],
+      [43.43964,-111.31688],[43.43827,-111.31668],[43.43509,-111.31414],[43.43426,-111.31283],
+      [43.43295,-111.31331],[43.43093,-111.31231],[43.43005,-111.31044],[43.42978,-111.30796],
+      [43.43027,-111.30686],[43.42975,-111.30550],[43.43218,-111.30453],[43.43438,-111.30548],
+      [43.43763,-111.30371],[43.43906,-111.30472],[43.43918,-111.30371],[43.43992,-111.30327],
+      [43.44043,-111.30062],[43.44271,-111.29784],[43.44374,-111.29488],[43.44617,-111.29340],
+      [43.44619,-111.29218],[43.44738,-111.29090],[43.44885,-111.28724],[43.44948,-111.28691],
+      [43.44933,-111.28457],[43.45097,-111.28343],[43.45089,-111.28216],[43.45199,-111.28127],
+      [43.45176,-111.28048],[43.45401,-111.27823],[43.45449,-111.27646],[43.45536,-111.27611],
+      [43.45579,-111.27159],[43.45905,-111.26610],[43.45979,-111.26336],[43.46172,-111.26066],
+      [43.46165,-111.25977],[43.46307,-111.25897],[43.46369,-111.25733],[43.46437,-111.25742],
+      [43.47076,-111.24180],[43.47120,-111.24317],[43.47060,-111.24564],[43.46880,-111.24786],
+      [43.46882,-111.24868],[43.46774,-111.24936],[43.46741,-111.25224],[43.46552,-111.25401],
+      [43.46498,-111.25602]
+    ],
+    [
+      [43.44462,-111.32649],[43.44472,-111.32584],[43.44460,-111.32856],[43.45091,-111.33717],
+      [43.45113,-111.33628],[43.45026,-111.33411],[43.44898,-111.33269],[43.44775,-111.33284],
+      [43.44767,-111.33159],[43.44675,-111.33138]
+    ],
+    [
+      [43.48256,-111.21496],[43.48450,-111.21263],[43.48098,-111.21643],[43.48086,-111.21776],
+      [43.47819,-111.22023],[43.47675,-111.22449],[43.47490,-111.22645],[43.47248,-111.23673],
+      [43.47325,-111.23613],[43.47340,-111.23366]
+    ],
+    [
+      [43.45327,-111.35663],[43.45309,-111.35434],[43.45402,-111.34738],[43.45241,-111.34858],
+      [43.45148,-111.35049],[43.45123,-111.35364],[43.45214,-111.35430]
+    ],
+    [
+      [43.45175,-111.36414],[43.45327,-111.35929],[43.45327,-111.35663],[43.44998,-111.36765],
+      [43.45135,-111.36554]
+    ],
+    [
+      [43.45402,-111.34738],[43.45582,-111.34534],[43.45091,-111.33717],[43.45202,-111.33942],
+      [43.45555,-111.34198]
+    ],
+    [
+      [43.44843,-111.37900],[43.44783,-111.37634],[43.44800,-111.37260],[43.44822,-111.38047],
+      [43.44841,-111.37941]
+    ],
+    [
+      [43.47076,-111.24180],[43.47248,-111.23673],[43.47146,-111.23824],[43.47132,-111.24091]
+    ],
+    [
+      [43.44823,-111.38552],[43.44822,-111.38047],[43.44825,-111.38265]
+    ],
+    [
+      [43.44998,-111.36765],[43.44766,-111.37083],[43.44800,-111.37260]
+    ],
+    [
+      [43.48825,-111.20786],[43.48450,-111.21263]
+    ]
+  ]
+},
+{
+  id:"sv_pinecreek", name:"Pine Creek", color:"#4f8f9f",
+  state:"ID", region:"swanvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the South Fork tributaries as a group — the book names Burns, Palisades, Pine and Rainey creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Down from Pine Creek Pass to the South Fork at Swan Valley — the creek the highway between Swan Valley and Victor follows, with its North Fork joining above.",
+  fish:"Cutthroat in a creek that connects the two valleys: over the pass is Teton Valley and a different river entirely.",
+  coords:[
+    [
+      [43.56061,-111.25412],[43.56188,-111.25634],[43.56200,-111.25895],[43.56328,-111.26169],
+      [43.56373,-111.26521],[43.56067,-111.27343],[43.56015,-111.27361],[43.55996,-111.27568],
+      [43.55933,-111.27629],[43.55899,-111.27584],[43.55865,-111.27674],[43.55900,-111.27866],
+      [43.55805,-111.27943],[43.55790,-111.28168],[43.55673,-111.28474],[43.55470,-111.28745],
+      [43.55398,-111.28742],[43.55312,-111.28828],[43.55291,-111.28948],[43.55190,-111.29057],
+      [43.55172,-111.29242],[43.55228,-111.29308]
+    ],
+    [
+      [43.55279,-111.29471],[43.55294,-111.29378],[43.55228,-111.29308],[43.55220,-111.29480],
+      [43.55134,-111.29569],[43.54984,-111.29577],[43.54953,-111.29690],[43.54821,-111.29747],
+      [43.54529,-111.30074],[43.54450,-111.30061],[43.54394,-111.29970],[43.54301,-111.30084],
+      [43.54224,-111.30057],[43.54117,-111.30331],[43.54048,-111.30244],[43.53944,-111.30411],
+      [43.53798,-111.30441],[43.53816,-111.30590],[43.53664,-111.30954],[43.53740,-111.30770]
+    ],
+    [
+      [43.50131,-111.37119],[43.50107,-111.36842],[43.50153,-111.36667],[43.50368,-111.36603],
+      [43.50443,-111.36382],[43.50889,-111.35909],[43.50873,-111.35657],[43.51012,-111.35314],
+      [43.50961,-111.35076],[43.51051,-111.34983],[43.51297,-111.34391],[43.51695,-111.33931],
+      [43.51424,-111.34247]
+    ],
+    [
+      [43.49672,-111.38856],[43.49756,-111.38552],[43.49869,-111.38384],[43.49738,-111.37798],
+      [43.49796,-111.37435],[43.49917,-111.37300],[43.50035,-111.37298],[43.50131,-111.37119],
+      [43.49571,-111.39018],[43.49238,-111.39903],[43.49176,-111.39610],[43.49344,-111.39240]
+    ],
+    [
+      [43.53664,-111.30954],[43.53574,-111.30997],[43.53506,-111.31184],[43.53200,-111.31273],
+      [43.53082,-111.31486],[43.52975,-111.31535],[43.52908,-111.31806],[43.52956,-111.31848],
+      [43.52930,-111.32014],[43.52885,-111.32124],[43.52821,-111.32106]
+    ],
+    [
+      [43.52576,-111.32486],[43.52564,-111.32563],[43.52480,-111.32506],[43.52492,-111.32674],
+      [43.52347,-111.32929],[43.52355,-111.33098],[43.52263,-111.33417],[43.51987,-111.33697],
+      [43.51900,-111.33907],[43.51695,-111.33931]
+    ],
+    [
+      [43.57111,-111.22911],[43.56869,-111.22545],[43.56565,-111.21855],[43.57257,-111.23384],
+      [43.57170,-111.23734],[43.56061,-111.25412],[43.56141,-111.25243],[43.56428,-111.24957],
+      [43.57021,-111.24040]
+    ],
+    [
+      [43.52665,-111.32458],[43.52705,-111.32438],[43.52682,-111.32312],[43.52771,-111.32364],
+      [43.52821,-111.32106],[43.52576,-111.32486],[43.52527,-111.32407],[43.52601,-111.32402]
+    ],
+    [
+      [43.49238,-111.39903],[43.49267,-111.40163],[43.49208,-111.40837],[43.49079,-111.41499],
+      [43.49144,-111.41762]
+    ]
+  ]
+},
+{
+  id:"sv_northforkpinecreek", name:"North Fork Pine Creek", color:"#5f9f9f",
+  state:"ID", region:"swanvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the South Fork tributaries as a group — the book names Burns, Palisades, Pine and Rainey creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The north fork above the Pine Creek road, dropping out of the Big Hole Mountains.",
+  fish:"Small cutthroat water in tight canyon country.",
+  coords:[
+    [
+      [43.58636,-111.27079],[43.58723,-111.27094],[43.58718,-111.27225],[43.58837,-111.27240],
+      [43.58879,-111.27304],[43.58880,-111.27545],[43.58940,-111.27610],[43.59109,-111.27543],
+      [43.58384,-111.26886],[43.58320,-111.27007],[43.58204,-111.26791],[43.58052,-111.26850],
+      [43.58022,-111.26971],[43.57882,-111.26985],[43.57798,-111.26888],[43.57622,-111.26990],
+      [43.57458,-111.26980],[43.57395,-111.27147],[43.56869,-111.27170],[43.57052,-111.27083],
+      [43.57129,-111.26975],[43.57303,-111.27138]
+    ],
+    [
+      [43.60487,-111.29193],[43.60622,-111.29352],[43.60630,-111.29537],[43.60770,-111.29635],
+      [43.60727,-111.29828],[43.60829,-111.29994],[43.60822,-111.30366],[43.60433,-111.29159],
+      [43.60313,-111.28929],[43.60082,-111.28793],[43.59751,-111.28404],[43.59897,-111.28640]
+    ],
+    [
+      [43.62600,-111.31842],[43.62809,-111.31947],[43.62917,-111.32346],[43.63102,-111.32542],
+      [43.63266,-111.32831],[43.63616,-111.33043],[43.62003,-111.31064],[43.62141,-111.31194],
+      [43.62229,-111.31418],[43.62322,-111.31506]
+    ],
+    [
+      [43.62003,-111.31064],[43.61922,-111.30925],[43.61775,-111.30961],[43.61761,-111.30843],
+      [43.61635,-111.30708],[43.61499,-111.30835],[43.61334,-111.30572],[43.61035,-111.30440],
+      [43.60912,-111.30456],[43.60822,-111.30366]
+    ],
+    [
+      [43.64326,-111.34287],[43.64343,-111.34595],[43.64451,-111.34815],[43.64231,-111.33784],
+      [43.64074,-111.33523],[43.63948,-111.33456],[43.63900,-111.33234],[43.63616,-111.33043],
+      [43.63700,-111.33122]
+    ],
+    [
+      [43.56285,-111.27358],[43.56490,-111.27206],[43.56567,-111.27208],[43.56654,-111.27086],
+      [43.56869,-111.27170],[43.55996,-111.27568],[43.56072,-111.27572]
+    ],
+    [
+      [43.59327,-111.27702],[43.59418,-111.28008],[43.59751,-111.28404],[43.59263,-111.27672],
+      [43.59109,-111.27543],[43.59210,-111.27720]
+    ]
+  ]
+},
+{
+  id:"sv_fallcreek", name:"Fall Creek", color:"#2f8f6f",
+  state:"ID", region:"swanvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the South Fork tributaries as a group — the book names Burns, Palisades, Pine and Rainey creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"In to the South Fork from the south through the Caribou Range, with Fall Creek Falls dropping straight into the river near the mouth — the waterfall is the thing most people come for.",
+  fish:"Cutthroat above the falls country, in a long drainage that sees far less traffic than the river it joins.",
+  coords:[
+    [
+      [43.38954,-111.46282],[43.38950,-111.46375],[43.38703,-111.46550],[43.38678,-111.46720],
+      [43.38583,-111.46804],[43.38601,-111.46870],[43.38506,-111.46908],[43.38494,-111.47038],
+      [43.38424,-111.47077],[43.38431,-111.47499],[43.38288,-111.47604],[43.38062,-111.47919],
+      [43.38012,-111.48084],[43.37876,-111.48217],[43.37806,-111.48384],[43.37706,-111.48427],
+      [43.37597,-111.48743],[43.37147,-111.49606],[43.37351,-111.49441],[43.37334,-111.49025],
+      [43.37486,-111.48801]
+    ],
+    [
+      [43.32470,-111.46720],[43.32440,-111.46616],[43.32287,-111.46463],[43.31898,-111.46419],
+      [43.31746,-111.46213],[43.32521,-111.46828],[43.33079,-111.47061],[43.33299,-111.47049],
+      [43.33442,-111.47171],[43.33528,-111.47307],[43.33543,-111.47581],[43.33712,-111.47729],
+      [43.33790,-111.47929],[43.34826,-111.48949],[43.34447,-111.48840],[43.34365,-111.48632],
+      [43.34108,-111.48421],[43.34098,-111.48310],[43.33882,-111.48089],[43.33895,-111.47992]
+    ],
+    [
+      [43.40232,-111.44323],[43.40244,-111.44466],[43.40119,-111.44473],[43.40114,-111.44530],
+      [43.39963,-111.44507],[43.39986,-111.44582],[43.39902,-111.44618],[43.39950,-111.44654],
+      [43.39921,-111.44730],[43.39833,-111.44714],[43.39795,-111.44899],[43.39714,-111.44997],
+      [43.39675,-111.44947],[43.39666,-111.45060],[43.39588,-111.45057],[43.39526,-111.45130],
+      [43.39554,-111.45106]
+    ],
+    [
+      [43.27244,-111.41813],[43.27270,-111.41933],[43.27388,-111.42060],[43.27435,-111.42050],
+      [43.27645,-111.42313],[43.27859,-111.42392],[43.28091,-111.42823],[43.28268,-111.42960],
+      [43.28426,-111.43198],[43.28700,-111.44022],[43.28700,-111.44252],[43.29075,-111.44627],
+      [43.29598,-111.44932],[43.30065,-111.44893]
+    ],
+    [
+      [43.37147,-111.49606],[43.35927,-111.49723],[43.35946,-111.49771],[43.36071,-111.49790],
+      [43.36119,-111.49902],[43.36263,-111.49889],[43.36285,-111.49942],[43.36364,-111.49882],
+      [43.36575,-111.49898],[43.36641,-111.49816],[43.36712,-111.49837],[43.36840,-111.49750],
+      [43.36925,-111.49789],[43.37049,-111.49688]
+    ],
+    [
+      [43.42954,-111.40867],[43.42536,-111.41286],[43.42401,-111.41519],[43.42277,-111.41561],
+      [43.42252,-111.41480],[43.42107,-111.41654],[43.42087,-111.41787],[43.42059,-111.41698],
+      [43.42010,-111.41727],[43.41958,-111.41914],[43.43085,-111.40663],[43.43147,-111.40520],
+      [43.43100,-111.40566]
+    ],
+    [
+      [43.44201,-111.37614],[43.43464,-111.38860],[43.43717,-111.38671],[43.43755,-111.38588],
+      [43.43692,-111.38531],[43.43704,-111.38464],[43.43872,-111.38078],[43.43950,-111.38119],
+      [43.44092,-111.38003],[43.44063,-111.37940],[43.44138,-111.37900],[43.44161,-111.37802],
+      [43.44096,-111.37712]
+    ],
+    [
+      [43.41958,-111.41914],[43.41973,-111.42068],[43.41901,-111.42089],[43.41316,-111.42757],
+      [43.41386,-111.42610],[43.41497,-111.42552],[43.41519,-111.42613],[43.41595,-111.42571],
+      [43.41593,-111.42447],[43.41756,-111.42373],[43.41738,-111.42321],[43.41827,-111.42339],
+      [43.41905,-111.42241]
+    ],
+    [
+      [43.43464,-111.38860],[43.43554,-111.38984],[43.43383,-111.39163],[43.43400,-111.39306],
+      [43.43337,-111.39474],[43.43371,-111.39515],[43.43147,-111.40520],[43.43236,-111.40446],
+      [43.43410,-111.40070],[43.43420,-111.39857],[43.43370,-111.39757],[43.43411,-111.39703],
+      [43.43322,-111.39615]
+    ],
+    [
+      [43.39016,-111.46206],[43.38954,-111.46282],[43.39168,-111.46004],[43.39160,-111.45851],
+      [43.39526,-111.45130],[43.39449,-111.45267],[43.39351,-111.45265],[43.39258,-111.45351],
+      [43.39197,-111.45695],[43.39106,-111.45709],[43.39123,-111.45798]
+    ],
+    [
+      [43.31746,-111.46213],[43.31673,-111.46062],[43.31655,-111.45668],[43.31421,-111.45516],
+      [43.31170,-111.45461],[43.30646,-111.45496],[43.30065,-111.44893],[43.30431,-111.45030],
+      [43.30535,-111.45279],[43.30517,-111.45403]
+    ],
+    [
+      [43.40303,-111.44288],[43.40232,-111.44323],[43.40369,-111.44075],[43.40338,-111.43970],
+      [43.40549,-111.43644],[43.40510,-111.43603],[43.40403,-111.43706],[43.40398,-111.43796]
+    ],
+    [
+      [43.35196,-111.49260],[43.35110,-111.49178],[43.35395,-111.49269],[43.35632,-111.49558],
+      [43.35927,-111.49723],[43.35855,-111.49736]
+    ],
+    [
+      [43.41316,-111.42757],[43.41190,-111.42997],[43.40549,-111.43644],[43.40898,-111.43281],
+      [43.40987,-111.43280]
+    ],
+    [
+      [43.34826,-111.48949],[43.34956,-111.49112],[43.35092,-111.49065],[43.35110,-111.49178]
+    ]
+  ]
+},
+{
+  id:"sv_bigelkcreek", name:"Big Elk Creek", color:"#6f9f4f",
+  state:"ID", region:"swanvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the South Fork tributaries as a group — the book names Burns, Palisades, Pine and Rainey creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>. This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"In to the east arm of Palisades Reservoir near the Wyoming line, with a popular trail up the canyon. The gap at the bottom of the line is the reservoir arm.",
+  fish:"Cutthroat, and a spawning run out of the reservoir. The drainage heads into Wyoming at the top.",
+  coords:[
+    [
+      [43.35969,-111.04684],[43.35634,-111.04973],[43.35170,-111.06115],[43.35012,-111.06196],
+      [43.34478,-111.06708],[43.34403,-111.06698],[43.34215,-111.06817],[43.34160,-111.06913],
+      [43.34117,-111.06834],[43.33918,-111.07151],[43.33880,-111.07333],[43.33650,-111.07526],
+      [43.33654,-111.07589],[43.33376,-111.07986],[43.33419,-111.08168],[43.33244,-111.08964],
+      [43.33171,-111.09108],[43.32989,-111.09225],[43.32695,-111.10045],[43.32724,-111.10154],
+      [43.32644,-111.10850]
+    ],
+    [
+      [43.32164,-111.11549],[43.32644,-111.10850],[43.32625,-111.10933],[43.32446,-111.11016],
+      [43.32413,-111.11174],[43.32259,-111.11290],[43.32262,-111.11434]
+    ]
+  ]
+},
+{
+  id:"sv_mccoycreek", name:"McCoy Creek", color:"#7f9f3f",
+  state:"ID", region:"swanvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the South Fork tributaries as a group — the book names Burns, Palisades, Pine and Rainey creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"In to the south end of Palisades Reservoir out of the Caribou Range, with the McCoy Creek road following it.",
+  fish:"Cutthroat, with reservoir fish running up in spring. Long, quiet, and a fair drive from anywhere.",
+  coords:[
+    [
+      [43.19063,-111.09318],[43.18986,-111.09381],[43.18653,-111.10368],[43.18220,-111.10791],
+      [43.17997,-111.11153],[43.17976,-111.11547],[43.18146,-111.11837],[43.17986,-111.12240],
+      [43.18055,-111.12372],[43.17971,-111.12868],[43.17900,-111.12834],[43.17774,-111.13156],
+      [43.17731,-111.13485],[43.17789,-111.13481],[43.17795,-111.13536],[43.17682,-111.14009],
+      [43.17622,-111.14045],[43.17741,-111.14511],[43.17692,-111.14212]
+    ],
+    [
+      [43.16108,-111.16376],[43.16103,-111.16416],[43.16256,-111.16298],[43.16428,-111.16358],
+      [43.16669,-111.16214],[43.16723,-111.16312],[43.16980,-111.16198],[43.17199,-111.15796],
+      [43.17283,-111.15762],[43.17356,-111.15620],[43.17501,-111.15585],[43.17531,-111.15407],
+      [43.17445,-111.15378],[43.17535,-111.15230],[43.17497,-111.14946],[43.17627,-111.14669],
+      [43.17543,-111.14774]
+    ],
+    [
+      [43.15848,-111.23529],[43.15824,-111.23795],[43.15925,-111.23230],[43.15953,-111.22862],
+      [43.15914,-111.22779],[43.15987,-111.22686],[43.15853,-111.21524],[43.15941,-111.21610],
+      [43.16030,-111.21949],[43.15997,-111.22117],[43.15919,-111.22201],[43.15989,-111.22300]
+    ],
+    [
+      [43.16103,-111.16416],[43.15962,-111.16565],[43.15868,-111.17222],[43.15791,-111.17312],
+      [43.15625,-111.17288],[43.15541,-111.17430],[43.15609,-111.17564],[43.15487,-111.17534],
+      [43.15153,-111.18463],[43.15332,-111.17843],[43.15493,-111.17735],[43.15469,-111.17665]
+    ],
+    [
+      [43.15153,-111.18463],[43.15218,-111.18683],[43.15500,-111.18922],[43.15532,-111.19116],
+      [43.15474,-111.19574],[43.15582,-111.19689],[43.15599,-111.19845],[43.15822,-111.20055],
+      [43.15715,-111.20249],[43.15895,-111.20601],[43.15799,-111.20579],[43.15728,-111.20350]
+    ],
+    [
+      [43.15853,-111.21524],[43.15941,-111.21368],[43.15963,-111.21184],[43.15892,-111.21002],
+      [43.15973,-111.20609],[43.15942,-111.20551],[43.15895,-111.20601]
+    ],
+    [
+      [43.15028,-111.24419],[43.15132,-111.24477],[43.15225,-111.24270],[43.15313,-111.24211],
+      [43.15407,-111.24272],[43.15678,-111.24052],[43.15824,-111.23795]
+    ]
+  ]
+},
+{
+  id:"sv_bearcreek", name:"Bear Creek", color:"#8f8f3f",
+  state:"ID", region:"swanvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the South Fork tributaries as a group — the book names Burns, Palisades, Pine and Rainey creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The long Caribou Range drainage into the west side of Palisades Reservoir. One of several Bear Creeks in eastern Idaho — this is the Palisades one.",
+  fish:"Cutthroat in backcountry water. Bears, as advertised.",
+  coords:[
+    [
+      [43.27946,-111.31245],[43.27877,-111.31646],[43.27751,-111.31879],[43.27781,-111.32014],
+      [43.27690,-111.32071],[43.28107,-111.31029],[43.28024,-111.30890],[43.28141,-111.30690],
+      [43.28260,-111.30602],[43.28278,-111.30417],[43.28374,-111.30338],[43.28435,-111.30171],
+      [43.28566,-111.30121],[43.28590,-111.29964],[43.28644,-111.29962],[43.28642,-111.29912],
+      [43.28568,-111.29898],[43.28561,-111.29803],[43.28619,-111.29749],[43.28566,-111.29734],
+      [43.28559,-111.29637],[43.28595,-111.29427],[43.28701,-111.29336],[43.28662,-111.29200],
+      [43.28724,-111.29081],[43.28700,-111.28728],[43.28760,-111.28437],[43.28602,-111.28375],
+      [43.28331,-111.27324],[43.28464,-111.27598],[43.28445,-111.27970],[43.28354,-111.28049],
+      [43.28517,-111.28130],[43.28569,-111.28250]
+    ],
+    [
+      [43.28331,-111.27324],[43.28251,-111.27266],[43.28261,-111.27053],[43.28111,-111.26859],
+      [43.28082,-111.26612],[43.27901,-111.26374],[43.27941,-111.26277],[43.27882,-111.26017],
+      [43.27906,-111.25806],[43.27777,-111.25555],[43.27624,-111.25539],[43.27534,-111.25293],
+      [43.27431,-111.25375],[43.27352,-111.25300],[43.27401,-111.24833],[43.27442,-111.24746],
+      [43.27484,-111.24775],[43.27543,-111.24728],[43.27584,-111.24598],[43.27590,-111.24106],
+      [43.27526,-111.23905],[43.27578,-111.23812],[43.27640,-111.23861],[43.27697,-111.23702],
+      [43.27580,-111.23266],[43.27623,-111.23013],[43.27587,-111.22952],[43.27645,-111.22891],
+      [43.27601,-111.22810],[43.27692,-111.22603]
+    ],
+    [
+      [43.27690,-111.32071],[43.27553,-111.32154],[43.27373,-111.32563],[43.27240,-111.32575],
+      [43.27312,-111.32783],[43.26996,-111.32901],[43.26828,-111.33265],[43.26725,-111.33363],
+      [43.26584,-111.33338],[43.26452,-111.33555],[43.26373,-111.33892],[43.26494,-111.34326],
+      [43.26471,-111.34786],[43.26518,-111.34804],[43.26538,-111.34942],[43.26664,-111.35016],
+      [43.26627,-111.35098],[43.26662,-111.35154],[43.26551,-111.35676],[43.26388,-111.35839],
+      [43.26306,-111.35855],[43.26079,-111.36369],[43.26144,-111.36366],[43.26160,-111.36301]
+    ],
+    [
+      [43.25150,-111.39842],[43.25165,-111.39988],[43.24974,-111.40992],[43.25316,-111.39452],
+      [43.25282,-111.39254],[43.25070,-111.39092],[43.25062,-111.38810],[43.24917,-111.38381],
+      [43.24940,-111.38155],[43.25091,-111.37875],[43.25256,-111.37837],[43.25309,-111.37763],
+      [43.25292,-111.37566],[43.25345,-111.37585],[43.25351,-111.37501],[43.25420,-111.37504],
+      [43.25517,-111.37374],[43.25565,-111.37151],[43.25519,-111.37121],[43.26079,-111.36369],
+      [43.25684,-111.36869],[43.25572,-111.36934],[43.25558,-111.37026]
+    ],
+    [
+      [43.23751,-111.42865],[43.23663,-111.43046],[43.23642,-111.43383],[43.23805,-111.43528],
+      [43.24018,-111.43980],[43.24166,-111.43980],[43.24180,-111.44043],[43.24284,-111.44049],
+      [43.24327,-111.44117],[43.24437,-111.44107],[43.24010,-111.42463],[43.24033,-111.42334],
+      [43.24465,-111.41707],[43.24163,-111.42082]
+    ],
+    [
+      [43.24437,-111.44107],[43.24813,-111.44256],[43.24992,-111.44173],[43.25181,-111.44195],
+      [43.25293,-111.44004],[43.25417,-111.44080],[43.25672,-111.44508],[43.25683,-111.44893],
+      [43.25823,-111.45101],[43.26256,-111.45431],[43.26038,-111.45318],[43.25954,-111.45178]
+    ],
+    [
+      [43.28333,-111.22112],[43.28293,-111.22220],[43.28126,-111.22208],[43.27692,-111.22603],
+      [43.28247,-111.22129],[43.28322,-111.21733],[43.28521,-111.21500],[43.28409,-111.21648]
+    ],
+    [
+      [43.28733,-111.21155],[43.28605,-111.21193],[43.28521,-111.21500],[43.29802,-111.20151],
+      [43.29613,-111.20371],[43.29138,-111.20692],[43.29003,-111.20916]
+    ],
+    [
+      [43.32207,-111.18779],[43.30310,-111.19741],[43.30490,-111.19649],[43.31225,-111.19605],
+      [43.31334,-111.19517],[43.31405,-111.18755]
+    ],
+    [
+      [43.24974,-111.40992],[43.24752,-111.41179],[43.24465,-111.41707],[43.24577,-111.41579],
+      [43.24710,-111.41260]
+    ],
+    [
+      [43.26624,-111.45869],[43.26356,-111.45645],[43.26256,-111.45431]
+    ],
+    [
+      [43.30310,-111.19741],[43.29802,-111.20151],[43.30051,-111.19901]
+    ]
+  ]
+},
+{
+  id:"sv_indiancreek", name:"Indian Creek", color:"#9f7f4f",
+  state:"ID", region:"swanvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the South Fork tributaries as a group — the book names Burns, Palisades, Pine and Rainey creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"In to the South Fork between the dam and Swan Valley, off the Caribou Range front.",
+  fish:"Small cutthroat water with a short walk in.",
+  coords:[
+    [
+      [43.25780,-111.07512],[43.25878,-111.07314],[43.25855,-111.07205],[43.25954,-111.06948],
+      [43.25926,-111.06686],[43.25992,-111.06421],[43.25055,-111.09493],[43.25122,-111.09362],
+      [43.25094,-111.09264],[43.25195,-111.09232],[43.25186,-111.09074],[43.25385,-111.08740],
+      [43.25446,-111.08287],[43.25580,-111.07924],[43.25705,-111.07817],[43.25710,-111.07654]
+    ],
+    [
+      [43.35350,-111.34641],[43.35196,-111.34415],[43.34885,-111.34161],[43.35806,-111.35069],
+      [43.35976,-111.35119],[43.38190,-111.33442],[43.37951,-111.33613],[43.37863,-111.33802],
+      [43.37683,-111.33966],[43.37442,-111.34449],[43.37295,-111.34599],[43.37037,-111.34777],
+      [43.37011,-111.34869],[43.36430,-111.35124],[43.36353,-111.35245]
+    ],
+    [
+      [43.38709,-111.33032],[43.38708,-111.33189],[43.38632,-111.33251],[43.38919,-111.32869],
+      [43.39314,-111.32755],[43.39763,-111.32802],[43.40249,-111.32599],[43.40003,-111.32735]
+    ],
+    [
+      [43.22550,-111.11074],[43.22789,-111.10670],[43.23491,-111.11228],[43.24239,-111.11416],
+      [43.24912,-111.10130],[43.24760,-111.10276],[43.24458,-111.10828]
+    ],
+    [
+      [43.41187,-111.31977],[43.41098,-111.31943],[43.40548,-111.32270],[43.40739,-111.32102]
+    ],
+    [
+      [43.25055,-111.09493],[43.25046,-111.09785],[43.24912,-111.09930],[43.24912,-111.10130]
+    ],
+    [
+      [43.34004,-111.33336],[43.34297,-111.33627],[43.34485,-111.33944],[43.34885,-111.34161]
+    ],
+    [
+      [43.40548,-111.32270],[43.40441,-111.32468],[43.40249,-111.32599],[43.40336,-111.32547]
+    ],
+    [
+      [43.38190,-111.33442],[43.38422,-111.33213],[43.38632,-111.33251]
+    ]
+  ]
+},
+{
+  id:"sv_pritchardcreek", name:"Pritchard Creek", color:"#8f6f6f",
+  state:"ID", region:"swanvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the South Fork tributaries as a group — the book names Burns, Palisades, Pine and Rainey creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"A north-side creek into the South Fork down in the canyon below Swan Valley.",
+  fish:"Small cutthroat water in the canyon — access is the limiting factor, as it is for most of this reach.",
+  coords:[
+    [
+      [43.44963,-111.43535],[43.44884,-111.43600],[43.44471,-111.44443],[43.44218,-111.44806],
+      [43.45009,-111.43491],[43.45342,-111.43486],[43.45489,-111.43040],[43.45673,-111.42909],
+      [43.45776,-111.42952],[43.45983,-111.42868],[43.46062,-111.42752],[43.46308,-111.42714],
+      [43.46160,-111.42683]
+    ],
+    [
+      [43.42267,-111.47430],[43.42214,-111.47636],[43.42108,-111.47785],[43.42073,-111.48243],
+      [43.42614,-111.46819],[43.42869,-111.46609],[43.43012,-111.46323],[43.43636,-111.45704],
+      [43.43374,-111.45879],[43.43239,-111.46117]
+    ],
+    [
+      [43.41494,-111.49905],[43.41128,-111.50617],[43.41579,-111.49421],[43.41771,-111.49153],
+      [43.42073,-111.48243],[43.41853,-111.48636]
+    ],
+    [
+      [43.41367,-111.52247],[43.41354,-111.52762],[43.41267,-111.51489],[43.41397,-111.52003]
+    ],
+    [
+      [43.44218,-111.44806],[43.43648,-111.45666],[43.43869,-111.45257],[43.44201,-111.44847]
+    ],
+    [
+      [43.41267,-111.51489],[43.41106,-111.50748],[43.41128,-111.50617]
+    ],
+    [
+      [43.41335,-111.53465],[43.41354,-111.52762]
+    ]
+  ]
+},
+{
+  id:"sv_gardencreek", name:"Garden Creek", color:"#7f7f5f",
+  state:"ID", region:"swanvalley", gauges:[], primaryGauge:null,
+  geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
+  parkRegs:"Idaho Fish &amp; Game rules the South Fork tributaries as a group — the book names Burns, Palisades, Pine and Rainey creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Into the South Fork canyon between Swan Valley and Heise, off the north rim.",
+  fish:"Small canyon-bottom cutthroat water, most easily reached from a boat on the river.",
+  coords:[
+    [
+      [43.46714,-111.46042],[43.46549,-111.46423],[43.46509,-111.46678],[43.46831,-111.45682],
+      [43.47035,-111.45384],[43.47200,-111.45246],[43.47402,-111.44244],[43.47636,-111.44069],
+      [43.47764,-111.44068],[43.47786,-111.44005],[43.47868,-111.43996],[43.48077,-111.44250],
+      [43.48338,-111.43791],[43.48324,-111.44122],[43.48216,-111.44246]
+    ],
+    [
+      [43.45105,-111.48978],[43.45119,-111.49259],[43.45015,-111.49772],[43.45059,-111.49917],
+      [43.45121,-111.48671],[43.45787,-111.47722],[43.45708,-111.47944],[43.45601,-111.48033]
+    ],
+    [
+      [43.45787,-111.47722],[43.45853,-111.47602],[43.46060,-111.47477],[43.46327,-111.47081],
+      [43.46509,-111.46678]
+    ],
+    [
+      [43.44293,-111.51389],[43.44273,-111.51598],[43.44634,-111.50773],[43.44506,-111.51049]
+    ],
+    [
+      [43.44823,-111.52606],[43.44714,-111.52245],[43.44598,-111.52145],[43.44273,-111.51598]
+    ],
+    [
+      [43.44634,-111.50773],[43.45042,-111.50113],[43.45059,-111.49917]
+    ]
+  ]
+},
 ];
 
 /* ---------- Access points ---------- */
@@ -11076,6 +12516,38 @@ const SECTIONS = [
 
 /* rivers with no float sections — floating note shown instead */
 const WADE_ONLY = {
+  // ---- Teton Valley & Swan Valley (Idaho) ----
+  tv_tetoncreek:"Wade only, off the Teton Canyon and Stateline roads east of Driggs.",
+  tv_darbycreek:"Wade only.",
+  tv_foxcreek:"Wade only.",
+  tv_trailcreek:"Wade only, with pull-offs along Highway 31 toward the pass.",
+  tv_gamecreek:"Wade only.",
+  tv_moosecreek:"Wade only.",
+  tv_southleighcreek:"Wade only.",
+  tv_northleighcreek:"Wade only.",
+  tv_badgercreek:"Wade only.",
+  tv_northbadgercreek:"Wade only.",
+  tv_southbadgercreek:"Wade only.",
+  tv_bitchcreek:"Wade only, and the canyon access is steep — plan the way out before you go in.",
+  tv_milkcreek:"Wade only.",
+  tv_springcreek:"Wade only, and the banks are soft and mostly private — use the public crossings and the river access below.",
+  tv_warmcreek:"Wade only.",
+  tv_canyoncreek:"Wade only, and canyon access is the whole problem — it is a walk in.",
+  tv_bullelkcreek:"Wade only.",
+  tv_packsaddlecreek:"Wade only.",
+  tv_horseshoecreek:"Wade only.",
+  tv_mahoganycreek:"Wade only.",
+  sv_palisadescreek:"Wade only, up the Palisades Creek trail from the campground.",
+  sv_raineycreek:"Wade only.",
+  sv_pinecreek:"Wade only.",
+  sv_northforkpinecreek:"Wade only.",
+  sv_fallcreek:"Wade only.",
+  sv_bigelkcreek:"Wade only, from the Big Elk campground and trailhead.",
+  sv_mccoycreek:"Wade only.",
+  sv_bearcreek:"Wade only.",
+  sv_indiancreek:"Wade only.",
+  sv_pritchardcreek:"Wade only.",
+  sv_gardencreek:"Wade only — most anglers step off a drift boat rather than walk in.",
   // ---- Grand Teton (no floating in the park except the Snake) ----
   pacificcreek:"Wade and bank water off the Pacific Creek Road. No floating inside the park except on the Snake.",
   cottonwoodcreekgt:"Wade only. Pull-offs along the Teton Park Road the length of it.",
