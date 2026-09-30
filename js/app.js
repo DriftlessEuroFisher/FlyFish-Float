@@ -749,10 +749,14 @@ function syncLabels(){
     /* `minor` water — the 166 named Yellowstone creeks nobody has written
        about — stays unlabelled until you are close enough to be choosing
        between them. Two hundred labels over the park is not a map. */
-    const min = (l.river && l.river.minor) ? 12
+    let min = (l.river && l.river.minor) ? 12
               : (reg === "driftless" || reg === "northshore" || reg === "doorcounty"
                  || reg === "tetonvalley" || reg === "swanvalley") ? 10
               : (reg === "yellowstone" || reg === "grandteton") ? 9 : 8;
+    // lesser classes need more zoom before their names are worth the clutter
+    const t = tierNow.get(l.river.id);
+    if(t && t.tier === "2") min += 1;
+    else if(t && t.tier === "3") min += 2;
     l.lbl.setOpacity(z >= min ? 1 : 0);
   });
 }
@@ -806,11 +810,33 @@ function riverColor(r){
   return c ? c.color : r.color;
 }
 
+/* ---------- river tiers (see js/tiers.js) ----------
+   Class 3 is hidden by default: ~480 rivers drawn at once is a map with no
+   answer to "where do I start?". Hidden means off the map entirely — not
+   dimmed — so it also costs no labels, flow animation or geometry fetches
+   (riverVisible() is what the flow and refine loops already ask). */
+const TIER_KEYS = ["gold","1","2","3"];
+let tierFilter = {gold:true, "1":true, "2":true, "3":false};
+try{
+  const saved = JSON.parse(localStorage.getItem("tierFilter")||"null");
+  if(saved && TIER_KEYS.every(k => typeof saved[k]==="boolean")) tierFilter = saved;
+}catch(e){}
+const tempShown = new Set();          // hidden rivers opened on purpose (search, gauge tap)
+const tierNow = new Map();            // river id → tierOf() for today
+function refreshTiers(){ RIVERS.forEach(r => tierNow.set(r.id, tierOf(r))); }
+refreshTiers();
+function tierShown(r){
+  const t = tierNow.get(r.id);
+  return tempShown.has(r.id) || (t ? tierFilter[t.tier] : tierFilter["3"]);
+}
+const TIER_WEIGHT = {gold:5.5, "1":4.5, "2":3.6, "3":3};
+function tierWeight(r){ const t = tierNow.get(r.id); return TIER_WEIGHT[t ? t.tier : "3"]; }
+
 const riverLayers = {}, rampMarkers = {}, gaugeDots = {};
 let highlight = null;
 
 RIVERS.forEach(r=>{
-  const line = L.polyline(r.coords,{color:riverColor(r), weight:4.5, opacity:.92,
+  const line = L.polyline(r.coords,{color:riverColor(r), weight:tierWeight(r), opacity:.92,
     lineCap:"round", lineJoin:"round", smoothFactor:1.2, pane:"riversPane"}).addTo(map);
   line.on("click",()=>openRiver(r.id));
   const mid = midCoord(r.coords);
@@ -888,6 +914,17 @@ Object.keys(GAUGE_POS).forEach(key=>{
 function gIcon(key){
   const st = statusOf(key);
   return L.divIcon({className:"", html:`<div class="gdot" style="background:${st.color}"></div>`, iconSize:[14,14], iconAnchor:[7,7]});
+}
+/* A gauge dot belongs to the rivers that list it; when every one of them is
+   filtered out by class, the dot goes too — it is a flow marker for water
+   you have chosen not to see. */
+function syncGaugeDots(){
+  Object.keys(gaugeDots).forEach(k => {
+    const on = RIVERS.some(r => r.gauges.includes(k) && tierShown(r));
+    const m = gaugeDots[k], has = gaugeLayer.hasLayer(m);
+    if(on && !has) gaugeLayer.addLayer(m);
+    else if(!on && has) gaugeLayer.removeLayer(m);
+  });
 }
 function repaintGauges(){ Object.keys(gaugeDots).forEach(k=>gaugeDots[k].setIcon(gIcon(k))); }
 
@@ -1323,6 +1360,7 @@ let curRiver = null;
 async function openRiver(id, focusGauge){
   const r = RIVERS.find(x=>x.id===id); if(!r) return;
   curRiver = id;
+  if(!tierShown(r)){ tempShown.add(id); applyFilters(); }   // opened on purpose: show it
   $("#sw").style.background = riverColor(r);
   $("#sh-title").textContent = r.name;
   const stateName = {ID:"Idaho", WY:"Wyoming", IA:"Iowa", MN:"Minnesota", WI:"Wisconsin", IL:"Illinois"}[r.state] || r.state;
@@ -1343,8 +1381,19 @@ async function openRiver(id, focusGauge){
   if(focusGauge) map.panTo(GAUGE_POS[focusGauge]);
 }
 
+function tierChipHTML(r){
+  const t = tierNow.get(r.id) || tierOf(r), info = TIER_INFO[t.tier], base = TIER_INFO[t.base];
+  let line = "";
+  if(t.state === "closed") line = `Closed ${winText(t.wins)}${t.why ? " — "+t.why : ""}`;
+  else if(t.state === "best") line = `${t.tier!==t.base ? "Usually "+base.label+" — " : ""}In season now (${winText(t.wins)}).${t.why ? " "+t.why : ""}`;
+  else if(t.state === "poor") line = `Usually ${base.label} — off this time of year (${winText(t.wins)}).${t.why ? " "+t.why : ""}`;
+  else if(t.why) line = t.why;
+  return `<div class="tierline"><span class="tierbadge" style="--tc:${info.color}">${info.label}${t.state==="closed"?" · closed":""}</span>`+
+         (line ? `<span class="tierwhy">${line}</span>` : `<span class="tierwhy">${info.blurb}</span>`)+`</div>`;
+}
+
 function renderSheet(r){
-  let h = `<p style="margin:12px 2px 2px;font-size:13.5px">${r.blurb}</p>`;
+  let h = tierChipHTML(r) + `<p style="margin:12px 2px 2px;font-size:13.5px">${r.blurb}</p>`;
 
   if(r.gauges.length){
     r.gauges.forEach(k=>{ h += flowCardHTML(k, r.id); });
@@ -1595,6 +1644,7 @@ function passFilter(s){
   return true;
 }
 function riverVisible(r){
+  if(!tierShown(r)) return false;
   if(filters.act==="fish") return true;
   const hasSecs = SECTIONS.some(s=>s.river===r.id);
   if(!hasSecs) return filters.act!=="float";   // wade-only rivers hide only in float mode
@@ -1605,9 +1655,18 @@ function riverVisible(r){
 }
 function applyFilters(){
   RIVERS.forEach(r=>{
+    const L_ = riverLayers[r.id];
+    if(!tierShown(r)){                       // hidden by class: off the map, not dimmed
+      if(map.hasLayer(L_.line)) map.removeLayer(L_.line);
+      if(map.hasLayer(L_.lbl))  map.removeLayer(L_.lbl);
+      return;
+    }
+    if(!map.hasLayer(L_.line)) L_.line.addTo(map);
+    if(!map.hasLayer(L_.lbl))  L_.lbl.addTo(map);
     const on = riverVisible(r);
-    riverLayers[r.id].line.setStyle({color:on?riverColor(r):"#9aa49b", opacity:on?0.92:0.35, weight:on?4.5:3});
+    L_.line.setStyle({color:on?riverColor(r):"#9aa49b", opacity:on?0.92:0.35, weight:on?tierWeight(r):3});
   });
+  syncGaugeDots(); syncLabels(); syncFlow(); refreshZoneCounts();
   syncMarkers();
   if(curRiver) renderSheet(RIVERS.find(r=>r.id===curRiver));
 }
@@ -1841,7 +1900,7 @@ function buildZones(){
            <div class="zc-text">
              <div class="zc-label">${z.label}</div>
              <div class="zc-short">${z.short || z.label}</div>
-             <div class="zc-count">${has ? z.count+" rivers" : "not mapped yet"}</div>
+             <div class="zc-count" data-zone="${z.id}">${has ? z.count+" rivers" : "not mapped yet"}</div>
            </div>
          </div>`})}).addTo(zoneLayer);
     m.bindTooltip(tip, {direction:"top", offset:[0,-16], className:"zone-tip"});
@@ -2115,6 +2174,84 @@ zoneCtl.onAdd = function(){
   return d;
 };
 zoneCtl.addTo(map);
+
+/* ---------- river class filter: layer-control checkboxes + chip row ----------
+   One source of truth: four empty layer groups. Ticking a box in the layer
+   control (same pattern as "Boat ramps") or tapping a chip adds/removes the
+   group, and the add/remove events are what flip tierFilter. */
+const tierGroups = {};
+const TIER_LABEL = {gold:"Gold rivers", "1":"Class 1 rivers", "2":"Class 2 rivers", "3":"All other rivers (Class 3)"};
+function syncTierChips(){
+  TIER_KEYS.forEach(k => {
+    const b = document.querySelector('#tierchips [data-tier="'+k+'"]');
+    if(b) b.classList.toggle("on", !!tierFilter[k]);
+  });
+}
+TIER_KEYS.forEach(k => {
+  const g = tierGroups[k] = L.layerGroup();
+  const set = on => {
+    if(tierFilter[k] === on) return;
+    tierFilter[k] = on;
+    tempShown.clear();
+    try{ localStorage.setItem("tierFilter", JSON.stringify(tierFilter)); }catch(e){}
+    syncTierChips(); applyFilters();
+  };
+  g.on("add", ()=>set(true));
+  g.on("remove", ()=>set(false));
+  layerControl.addOverlay(g, `<span class="tier-sw" style="background:${TIER_INFO[k].color}"></span>${TIER_LABEL[k]}`);
+});
+/* Map-layer chips beside the class chips: the same layer groups the layer
+   control drives, so ticking either one stays in sync via add/remove events. */
+const LAYER_CHIPS = [
+  ["ramps",  "Boat ramps",   rampLayer,    "#e07b1a"],
+  ["wade",   "Wade access",  wadeLayer,    "#5b6e3a"],
+  ["gauges", "Gauges",       gaugeLayer,   "#2b7fb8"],
+  ["closed", "Closed water", closureLayer, "#c0392b"],
+  ["land",   "Public land",  publicLand,   "#3f8f4f"],
+];
+const tierCtl = L.control({position:"topleft"});
+tierCtl.onAdd = function(){
+  const d = L.DomUtil.create("div");
+  d.id = "chipbar";
+  d.innerHTML =
+    `<div id="tierchips" class="chipcol" role="group" aria-label="River classes shown">`+
+    TIER_KEYS.map(k =>
+      `<button data-tier="${k}" class="${tierFilter[k]?"on":""}" aria-pressed="${!!tierFilter[k]}" style="--tc:${TIER_INFO[k].color}">`+
+      `${k==="3" ? "All" : k==="gold" ? "Gold" : "Class "+k}</button>`).join("")+
+    `</div><div id="layerchips" class="chipcol" role="group" aria-label="Map markers shown">`+
+    LAYER_CHIPS.map(([id,label,g,c]) =>
+      `<button data-layer="${id}" class="${map.hasLayer(g)?"on":""}" aria-pressed="${map.hasLayer(g)}" style="--tc:${c}">${label}</button>`).join("")+
+    `</div>`;
+  L.DomEvent.disableClickPropagation(d);
+  d.querySelectorAll("[data-tier]").forEach(b => b.addEventListener("click", ()=>{
+    const g = tierGroups[b.dataset.tier];
+    if(map.hasLayer(g)) map.removeLayer(g); else map.addLayer(g);
+    b.setAttribute("aria-pressed", String(!!tierFilter[b.dataset.tier]));
+  }));
+  LAYER_CHIPS.forEach(([id,,g]) => {
+    const b = d.querySelector('[data-layer="'+id+'"]');
+    const sync = () => { b.classList.toggle("on", map.hasLayer(g)); b.setAttribute("aria-pressed", String(map.hasLayer(g))); };
+    g.on("add remove", sync);
+    b.addEventListener("click", ()=>{ if(map.hasLayer(g)) map.removeLayer(g); else map.addLayer(g); });
+  });
+  return d;
+};
+tierCtl.addTo(map);
+TIER_KEYS.forEach(k => { if(tierFilter[k]) tierGroups[k].addTo(map); });
+
+/* A park's card counts what the map is actually showing, not everything
+   mapped there — Yellowstone reading 208 over a handful of lines is the
+   clutter this exists to remove. */
+function refreshZoneCounts(){
+  const sets = {yell: r => r.region==="yellowstone",
+                grte: r => r.region==="grandteton" || ["snake","buffalofork","grosventre"].includes(r.id)};
+  document.querySelectorAll(".zone-card .zc-count[data-zone]").forEach(el => {
+    const f = sets[el.dataset.zone]; if(!f) return;
+    const all = RIVERS.filter(f), shown = all.filter(tierShown).length;
+    el.textContent = shown === all.length ? shown+" rivers" : shown+" of "+all.length+" rivers";
+  });
+}
+applyFilters();
 
 syncMarkers();          // seed marker groups for the starting zoom
 loadPublicLand();

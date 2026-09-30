@@ -65,6 +65,10 @@
   <div class="lg-row"><span class="ap wade" style="position:static"><svg viewBox="0 0 24 24"><ellipse cx="10.5" cy="12" rx="7" ry="3.1" fill="#fff"/><path d="M16.5 12 L22 8.5 L22 15.5 Z" fill="#fff"/><circle cx="6.6" cy="11.3" r="0.95" fill="#5b6e3a"/></svg></span> Wade-fishing access (no boat ramp)</div>
   <div class="lg-row"><span class="gdot" style="position:static;background:var(--st-avg)"></span> USGS gauge — dot color = flow status</div>
   <div class="lg-note"><b>Map layers.</b> Use the layers button (bottom-left) to switch basemap and toggle what's drawn. <b>Wade access &amp; parking</b> and <b>USGS gauges</b> are on by default; <b>boat ramps</b> are off until you turn them on, so the map isn't buried in pins when you're only looking for a creek to wade. Access markers appear as you zoom in — boat ramps from zoom 8, wade access from zoom 9.</div>
+  <h2 style="margin-top:14px">River classes</h2>
+  <div class="lg-note" style="margin-top:0">Every river is ranked <b style="color:#c79a1c">Gold</b>, <b>Class 1</b>, <b>2</b> or <b>3</b> so the map opens on the water worth the drive. Gold is destination, blue-ribbon water; Class 3 is the rest and is <b>hidden until you tap "All"</b>. The scale is <b>relative to the region</b> — a Class 1 Driftless creek is a great stream for the Driftless, not a claim it matches the Madison. These are researched rankings, not official ratings.</div>
+  <div class="lg-note"><b>Classes move with the season.</b> A river drops a class in its off window (spring runoff on the Snake), rises a class when it is at its best, and drops out to Class 3 when it is closed. Tap a river to see why. Live flow status is shown separately, from the gauge.</div>
+
   <h2 style="margin-top:14px">Trout classes &amp; regulations</h2>
   <div class="lg-note" style="margin-top:0"><b>Northeast Iowa</b> — the Iowa DNR's own <i>regulation</i> class:</div>
   <div class="lg-row"><span style="display:inline-block;width:22px;height:4px;background:#7b2d8e;vertical-align:middle;margin-right:7px;border-radius:2px"></span> <b>Restrictive regulations</b> — artificial-only and/or catch-and-release; stricter than the statewide trout rules</div>
@@ -123,10 +127,11 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="js/rivers-data.js"></script>
+<script src="js/tiers.js"></script>
 <script src="js/zones.js"></script>
 <script src="js/app.js"></script>
 
-</body>
-</html>
 <script data-goatcounter="https://mattapps.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>

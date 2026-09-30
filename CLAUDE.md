@@ -34,6 +34,22 @@ like an app, not a browser tab.
   polyline itself must go through `flatCoords()` / `midCoord()` in
   `js/app.js`; don't index `r.coords[0]` directly. Segments are kept apart
   on purpose: welding them draws a channel across a gap that isn't there.
+- `js/tiers.js` — **river classes.** `TIERS` ranks every river Gold / "1" /
+  "2" / "3"; a river not listed is Class 3, and Class 3 is **hidden by
+  default** (off the map entirely, not dimmed, so it also costs no labels,
+  flow animation or geometry fetches — `riverVisible()` starts with
+  `tierShown()`). The scale is **relative to the region**: the West has more
+  Gold because it has more blue-ribbon water, and the Driftless list is a
+  labelled draft to be overruled from experience. Optional `season` windows
+  (`best` / `poor` / `closed`, months, may wrap the year) move a river one
+  class up or down, or to Class 3 when closed — `tierOf(r, date)`. It is a
+  window table, not a forecast; live CFS status still comes from the gauge
+  and is deliberately not mixed into the class. The filter is four empty
+  layer groups (layer control checkboxes + the chip row under "Regions"),
+  persisted in `localStorage.tierFilter`. Opening a hidden river (gauge tap)
+  shows it for the session (`tempShown`). Park zone cards count *visible*
+  rivers ("14 of 208") via `refreshZoneCounts()`. Yellowstone's 166 `minor`
+  creeks are never listed, so they are Class 3.
 - `js/zones.js` — the opening zone chooser, plus the region labels.
 
   **Zones are states.** Fishing regulations are written by states, and the

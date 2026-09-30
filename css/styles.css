@@ -432,3 +432,19 @@ body.zones-open .leaflet-pane.zonePane{ opacity:1; }
 @keyframes closedpulse{ 0%,100%{ opacity:.24 } 50%{ opacity:.42 } }
 .closed-line{ pointer-events: stroke; }
 @media (prefers-reduced-motion: reduce){ .closed-bar{ animation:none; opacity:.34 } }
+
+/* ---------- river classes ---------- */
+#chipbar{display:flex;gap:6px;margin-top:6px;align-items:flex-start}
+.chipcol{display:flex;flex-direction:column;gap:4px}
+#chipbar button{font:600 11.5px 'Public Sans',sans-serif;padding:6px 10px;min-width:64px;border-radius:9px;
+  border:1px solid var(--line);background:var(--paper-2);color:var(--txt-dim);text-align:left;
+  box-shadow:0 1px 4px rgba(15,30,22,.2);cursor:pointer}
+#chipbar button::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;
+  border:2px solid var(--tc);margin-right:6px;vertical-align:-1px}
+#chipbar button.on{color:var(--txt);border-color:var(--tc)}
+#chipbar button.on::before{background:var(--tc)}
+.tier-sw{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.tierline{display:flex;align-items:flex-start;gap:8px;margin:10px 2px 0}
+.tierbadge{flex:none;font:700 11px 'Barlow Condensed',sans-serif;letter-spacing:.06em;text-transform:uppercase;
+  padding:3px 8px;border-radius:6px;color:#fff;background:var(--tc)}
+.tierwhy{font-size:11.5px;color:var(--txt-dim);line-height:1.35}
