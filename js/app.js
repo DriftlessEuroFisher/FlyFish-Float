@@ -1769,6 +1769,32 @@ function enterZone(z){
   hideZones();
   goTo(L.latLngBounds(z.bounds).pad(0.08));
 }
+/* A park crest for the two national-park cards.
+
+   Deliberately NOT the National Park Service arrowhead: that emblem is
+   restricted federal insignia, and copying it onto a personal map would be
+   borrowing an authority this app doesn't have. This is the same arrowhead
+   silhouette — which is what reads as "national park" at 20 pixels — with
+   an original composition inside it, drawn in the app's own park palette
+   (the browns already on the park zone outline, cream for the figures).
+
+   Solid fills, no thin strokes: at 20px tall one SVG unit is under half a
+   pixel, and a hairline conifer would render as grey mush. */
+function parkCrest(){
+  return '<svg class="zc-crest" viewBox="0 0 40 48" aria-hidden="true" focusable="false">'+
+    '<path d="M6.4 2.2h27.2a2.6 2.6 0 0 1 2.6 2.6V20c0 11.2-6.9 20.3-16.2 26.7C10.7 40.3 3.8 31.2 3.8 20V4.8a2.6 2.6 0 0 1 2.6-2.6z" fill="#7a4f14" stroke="#f2ece0" stroke-width="2.1"/>'+
+    '<path d="M6.6 31.8 14.8 18.6 20.2 26.2 26 15.4 33.4 31.8Z" fill="#d8c49c"/>'+
+    /* The conifer is outlined in the field colour, not just filled: cream on
+       cream, it merged into the ridge behind it and the badge read as one
+       pale blob. The outline is what makes it a silhouette. */
+    '<g fill="#f2ece0" stroke="#7a4f14" stroke-width="1.7" stroke-linejoin="round">'+
+      '<path d="M13 9.6 16.7 16.8 14.9 16.8 18.3 22.6 16.4 22.6 19.6 28.4 6.4 28.4 9.6 22.6 7.7 22.6 11.1 16.8 9.3 16.8Z"/>'+
+      '<path d="M11.9 27.6h2.2v4.1h-2.2z"/>'+
+    '</g>'+
+    '<path d="M7.6 34.6q3-2.1 6 0t6 0 6 0" fill="none" stroke="#a8d4e6" stroke-width="2.6" stroke-linecap="round"/>'+
+    '</svg>';
+}
+
 function buildZones(){
   /* States first, parks last, because a park is inside a state and both are
      drawn: Leaflet paints in insertion order within a pane, so the park ends
@@ -1781,20 +1807,44 @@ function buildZones(){
     // shape — it doesn't take clicks either
     const poly = L.polygon(z.rings, {...ZONE_STYLE[z.kind], pane:"zonePane"}).addTo(zoneLayer);
     poly.on("click", ()=>enterZone(z));
-    poly.on("mouseover", ()=>poly.setStyle({fillOpacity:ZONE_STYLE[z.kind].fillOpacity+0.16}));
-    poly.on("mouseout",  ()=>poly.setStyle({fillOpacity:ZONE_STYLE[z.kind].fillOpacity}));
+    /* Hover carries more weight now that the states have no card, so it
+       lifts the fill *and* thickens the border — a fill change on its own is
+       easy to miss on a pale state at country zoom. */
+    const hov = ZONE_STYLE[z.kind];
+    poly.on("mouseover", ()=>poly.setStyle({fillOpacity:hov.fillOpacity+0.20, weight:hov.weight+1.2}));
+    poly.on("mouseout",  ()=>poly.setStyle({fillOpacity:hov.fillOpacity,      weight:hov.weight}));
+
+    const tip = `<b>${z.label}</b><br><span style="font-size:11px">${z.sub}</span>`;
+
+    /* States carry no card. A name and a river count stamped on each of six
+       outlines is a lot of furniture over a map whose only job at this zoom
+       is "which part of the country", and a state's shape is already the
+       most legible label it could have — nobody needs "Wisconsin" written
+       across Wisconsin. The name still comes up on hover and the fill lifts
+       under the cursor, so you can tell what you are about to tap.
+
+       Parks keep theirs: an NPS boundary is not a shape anyone reads at a
+       glance, and Grand Teton especially is a narrow strip inside Wyoming
+       that would otherwise look like an unexplained gap in the fill. */
+    if(z.kind === "state"){
+      poly.bindTooltip(tip, {sticky:true, className:"zone-tip"});
+      zoneCards.push({zone:z, marker:null, poly});
+      return;
+    }
 
     const has = z.count > 0;
     const m = L.marker(L.latLngBounds(z.bounds).getCenter(),
       {pane:"zonePane", riseOnHover:true,
        icon:L.divIcon({className:"", iconSize:null, html:
         `<div class="zone-card ${z.kind} ${has?"":"empty"}">
-           <div class="zc-label">${z.label}</div>
-           <div class="zc-short">${z.short || z.label}</div>
-           <div class="zc-count">${has ? z.count+" rivers" : "not mapped yet"}</div>
+           ${parkCrest()}
+           <div class="zc-text">
+             <div class="zc-label">${z.label}</div>
+             <div class="zc-short">${z.short || z.label}</div>
+             <div class="zc-count">${has ? z.count+" rivers" : "not mapped yet"}</div>
+           </div>
          </div>`})}).addTo(zoneLayer);
-    m.bindTooltip(`<b>${z.label}</b><br><span style="font-size:11px">${z.sub}</span>`,
-                  {direction:"top", offset:[0,-16], className:"zone-tip"});
+    m.bindTooltip(tip, {direction:"top", offset:[0,-16], className:"zone-tip"});
     m.on("click", ()=>enterZone(z));
     zoneCards.push({zone:z, marker:m, poly});
   });
@@ -1904,6 +1954,7 @@ function layoutZoneCards(){
 
   const plans = [];
   zoneCards.forEach(c => {
+    if(!c.marker) return;          // states are drawn without a card
     // outer ring only — the holes (national parks punched out of a region)
     // are small next to the region, and excluding them would push the name
     // off the part of the zone the label is actually describing

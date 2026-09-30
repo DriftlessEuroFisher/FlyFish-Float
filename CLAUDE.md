@@ -72,6 +72,34 @@ like an app, not a browser tab.
   and it is hidden the moment you enter a zone. At 0.12 km the state rings
   alone were 160 KB of JavaScript for detail nobody can see on a phone.
 
+  **States draw without a card.** A name and a river count stamped on each
+  of six outlines is a lot of furniture over a map whose only job at this
+  zoom is "which part of the country", and a state's shape is already the
+  most legible label it could have. The name comes up on hover and the fill
+  lifts under the cursor — `buildZones()` binds the tooltip to the polygon
+  and pushes `{marker:null}`, so `layoutZoneCards()` skips them. **Parks
+  keep their card**: an NPS boundary is not a shape anyone reads at a
+  glance, and Grand Teton is a narrow strip inside Wyoming that would
+  otherwise look like an unexplained gap in the fill.
+
+  **The park cards wear a crest, and it is deliberately not the real one.**
+  `parkCrest()` in `app.js` draws an arrowhead badge — the silhouette is
+  what reads as "national park" at 19 pixels, long before the name is
+  legible. It is *not* the National Park Service arrowhead: that emblem is
+  restricted federal insignia, and stamping it on a personal map borrows an
+  authority this app doesn't have. Same outline, original composition
+  (ridge, conifer, water), drawn in the browns already on the park zone
+  outline.
+
+  Two things about it that came from looking at it rendered, not from
+  writing it: the conifer carries a **field-coloured outline**, because
+  cream on cream merged it into the ridge behind and the badge read as one
+  pale blob; and it is all **solid fills**, because at 19px tall one SVG
+  unit is under half a pixel and a hairline stroke renders as grey mush.
+  The card is a flex **row** so the badge doesn't make it taller —
+  `layoutZoneCards()` measures the card, and a taller one reserves more
+  space and drops out of tight zones sooner.
+
   `bounds` comes from the zone's **rivers**, not its outline, so tapping
   Idaho flies to the water rather than to the whole state. `rings[0]` is the
   outer boundary and any further rings are holes. `short` is the name used
@@ -914,11 +942,13 @@ are worth calibrating first.
   sitting at defaults (everything visible). Restoring the markup and the
   one listener brings the filters back — don't delete the rest.
 - **Zone labels sit over the zone's water, not the middle of its outline.**
-  A state's pole of inaccessibility is its geographic middle, which for
-  Idaho is a hundred miles from any river on this map. `layoutZoneCards()`
-  prefers the centre of the zone's *rivers* when that point is comfortably
-  inside the visible outline, and falls back to the pole when it isn't —
-  zoomed into a corner, or the water off screen.
+  Only the two parks carry a label now, but the rule is what keeps them
+  honest and it applied to the states before them: a pole of inaccessibility
+  is a shape's geographic middle, which for Idaho was a hundred miles from
+  any river on this map. `layoutZoneCards()` prefers the centre of the
+  zone's *rivers* when that point is comfortably inside the visible outline,
+  and falls back to the pole when it isn't — zoomed into a corner, or the
+  water off screen.
 - **Park outlines are simplified by tolerance, not by point count.** A park
   boundary is long survey-line straights meeting at sharp corners, and
   even-interval decimation spends its budget on the straights and rounds the
@@ -932,7 +962,10 @@ are worth calibrating first.
   decide *which rivers are in a park* is simplified to 20 m, because a
   coarse ring cut corners hard enough to push a creek that runs along the
   park line out of the park.
-- **A zone's name stays inside that zone.** `layoutZoneCards()` puts each
+- **A zone's name stays inside that zone.** This governs the two park cards;
+  the states carry no card at all (see `js/zones.js` above), which is also
+  why the collision handling below rarely has anything to resolve now — keep
+  it, it is what makes a label safe to add back. `layoutZoneCards()` puts each
   card at the pole of inaccessibility — the interior point furthest from
   any edge — of the part of the zone currently on screen, recomputed on
   every move. A bounding-box centre drifts outside any shape that isn't a
