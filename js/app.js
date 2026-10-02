@@ -441,7 +441,9 @@ function floatEstimate(sec){
 /* zoomSnap .25 lets a pinch settle where the fingers stopped instead of
    snapping a whole level, so getZoom() is fractional: compare it with >= / <
    but never use it as a key or with === (use Math.floor). */
-const map = L.map("map",{zoomControl:true, attributionControl:true,
+/* zoomControl is off here and added bottom-right further down, above the
+   locate button: that is where a thumb is, and the top-left is now the menus. */
+const map = L.map("map",{zoomControl:false, attributionControl:true,
     zoomSnap:0.25, zoomDelta:1, wheelPxPerZoomLevel:90, wheelDebounceTime:30,
     bounceAtZoomLimits:false, inertiaDeceleration:2600})
   .setView([43.6,-100.5], 4);        // whole-country view; the zone picker opens over it
@@ -3197,6 +3199,7 @@ function offScreenArea(r, size){
   const vis = rectOverlap(r, {x0:8, y0:8, x1:size.x-8, y1:size.y-8});
   return Math.max(0, (r.x1-r.x0)*(r.y1-r.y0) - vis);
 }
+const PARK_CARD_ZOOM = 6;
 function layoutZoneCards(){
   if(!zonesShown) return;
   const size = map.getSize();
@@ -3208,8 +3211,13 @@ function layoutZoneCards(){
   const rect = {min:{x:0,y:0}, max:{x:size.x, y:size.y}};
 
   const plans = [];
+  /* At the national view forty-odd park cards cover the states they sit
+     in, and on a phone that is most of the screen. They come in once you
+     zoom toward a region; the park outlines stay drawn and tappable. */
+  const parksHidden = map.getZoom() < PARK_CARD_ZOOM;
   zoneCards.forEach(c => {
     if(!c.marker) return;          // states are drawn without a card
+    if(parksHidden){ const el=c.marker.getElement(); if(el) el.style.display="none"; return; }
     // outer ring only — the holes (national parks punched out of a region)
     // are small next to the region, and excluding them would push the name
     // off the part of the zone the label is actually describing
@@ -3365,8 +3373,8 @@ syncLakes();
 syncClosures();
 
 /* Regions button — always available, so you can get back to the chooser
-   without hunting for the right zoom level. Top *left*, under the zoom
-   control: top-right is taken by the layer control and sheet, and the
+   without hunting for the right zoom level. Top *left*, under the app bar
+   (the zoom +/− now lives bottom-right): top-right is taken by the layer control and sheet, and the
    Regions button is the one control that gets you back out. */
 const zoneCtl = L.control({position:"topleft"});
 zoneCtl.onAdd = function(){
@@ -3408,11 +3416,13 @@ farCtl.addTo(map);
    group, and the add/remove events are what flip tierFilter. */
 const tierGroups = {};
 const TIER_LABEL = {gold:"Gold rivers", "1":"Class 1 rivers", "2":"Class 2 rivers", "3":"All other rivers (Class 3)"};
+let refreshMenuCounts = () => {};      // set by tierCtl once its buttons exist
 function syncTierChips(){
   TIER_KEYS.forEach(k => {
     const b = document.querySelector('#tierchips [data-tier="'+k+'"]');
     if(b) b.classList.toggle("on", !!tierFilter[k]);
   });
+  refreshMenuCounts();
 }
 TIER_KEYS.forEach(k => {
   const g = tierGroups[k] = L.layerGroup();
@@ -3428,7 +3438,9 @@ TIER_KEYS.forEach(k => {
   layerControl.addOverlay(g, `<span class="tier-sw" style="background:${TIER_INFO[k].color}"></span>${TIER_LABEL[k]}`);
 });
 /* Map-layer chips beside the class chips: the same layer groups the layer
-   control drives, so ticking either one stays in sync via add/remove events. */
+   control drives, so ticking either one stays in sync via add/remove events.
+   A new map layer (e.g. the planned bridge access points) is one more row in
+   this table. */
 const LAYER_CHIPS = [
   ["ramps",  "Boat ramps",   rampLayer,    "#e07b1a"],
   ["wade",   "Wade access",  wadeLayer,    "#5b6e3a"],
@@ -3436,20 +3448,52 @@ const LAYER_CHIPS = [
   ["closed", "Closed water", closureLayer, "#c0392b"],
   ["land",   "Public land",  publicLand,   "#3f8f4f"],
 ];
+/* The chips live in two collapsed menus ("Rivers", "Map layers") rather than
+   two always-open columns, which covered a lot of a phone-sized map. Only one
+   panel is open at a time; a map tap or Escape closes it. Always starts
+   collapsed — nothing is remembered. */
 const tierCtl = L.control({position:"topleft"});
 tierCtl.onAdd = function(){
   const d = L.DomUtil.create("div");
   d.id = "chipbar";
   d.innerHTML =
-    `<div id="tierchips" class="chipcol" role="group" aria-label="River classes shown">`+
+    `<button type="button" class="menubtn" data-menu="tierchips" aria-expanded="false" aria-controls="tierchips">`+
+      `<span class="mlabel">Rivers</span> <span class="mcount"></span><span class="mcaret" aria-hidden="true">\u25BE</span></button>`+
+    `<div id="tierchips" class="chipcol menupanel" role="group" aria-label="River classes shown" hidden>`+
     TIER_KEYS.map(k =>
       `<button data-tier="${k}" class="${tierFilter[k]?"on":""}" aria-pressed="${!!tierFilter[k]}" style="--tc:${TIER_INFO[k].color}">`+
       `${k==="3" ? "All" : k==="gold" ? "Gold" : "Class "+k}</button>`).join("")+
-    `</div><div id="layerchips" class="chipcol" role="group" aria-label="Map markers shown">`+
+    `</div>`+
+    `<button type="button" class="menubtn" data-menu="layerchips" aria-expanded="false" aria-controls="layerchips">`+
+      `<span class="mlabel">Map layers</span> <span class="mcount"></span><span class="mcaret" aria-hidden="true">\u25BE</span></button>`+
+    `<div id="layerchips" class="chipcol menupanel" role="group" aria-label="Map markers shown" hidden>`+
     LAYER_CHIPS.map(([id,label,g,c]) =>
       `<button data-layer="${id}" class="${map.hasLayer(g)?"on":""}" aria-pressed="${map.hasLayer(g)}" style="--tc:${c}">${label}</button>`).join("")+
     `</div>`;
   L.DomEvent.disableClickPropagation(d);
+  L.DomEvent.disableScrollPropagation(d);
+  const menus = [...d.querySelectorAll(".menubtn")];
+  const closeMenus = () => menus.forEach(m => {
+    m.setAttribute("aria-expanded", "false");
+    d.querySelector("#"+m.dataset.menu).hidden = true;
+  });
+  menus.forEach(m => m.addEventListener("click", ()=>{
+    const open = m.getAttribute("aria-expanded") !== "true";
+    closeMenus();
+    if(open){
+      m.setAttribute("aria-expanded", "true");
+      d.querySelector("#"+m.dataset.menu).hidden = false;
+    }
+  }));
+  map.on("click", closeMenus);
+  document.addEventListener("keydown", e => { if(e.key === "Escape") closeMenus(); });
+  // Labels carry a count so a closed menu still says what is on the map.
+  refreshMenuCounts = () => {
+    const nt = TIER_KEYS.filter(k => tierFilter[k]).length;
+    const nl = LAYER_CHIPS.filter(([,,g]) => map.hasLayer(g)).length;
+    menus[0].querySelector(".mcount").textContent = "\u00B7 " + nt;
+    menus[1].querySelector(".mcount").textContent = "\u00B7 " + nl;
+  };
   d.querySelectorAll("[data-tier]").forEach(b => b.addEventListener("click", ()=>{
     const g = tierGroups[b.dataset.tier];
     if(map.hasLayer(g)) map.removeLayer(g); else map.addLayer(g);
@@ -3457,14 +3501,16 @@ tierCtl.onAdd = function(){
   }));
   LAYER_CHIPS.forEach(([id,,g]) => {
     const b = d.querySelector('[data-layer="'+id+'"]');
-    const sync = () => { b.classList.toggle("on", map.hasLayer(g)); b.setAttribute("aria-pressed", String(map.hasLayer(g))); };
+    const sync = () => { b.classList.toggle("on", map.hasLayer(g)); b.setAttribute("aria-pressed", String(map.hasLayer(g))); refreshMenuCounts(); };
     g.on("add remove", sync);
     b.addEventListener("click", ()=>{ if(map.hasLayer(g)) map.removeLayer(g); else map.addLayer(g); });
   });
+  refreshMenuCounts();
   return d;
 };
 tierCtl.addTo(map);
 TIER_KEYS.forEach(k => { if(tierFilter[k]) tierGroups[k].addTo(map); });
+refreshMenuCounts();
 
 /* My location — a dot on the map and a button to follow it.
 
@@ -3480,6 +3526,17 @@ TIER_KEYS.forEach(k => { if(tierFilter[k]) tierGroups[k].addTo(map); });
    The watch is released while the page is hidden — a GPS left running in a
    pocket is what flattens a phone on the drive between rivers — and resumed
    when the page is visible again.
+
+   Asking up front: a page can't change iOS location settings, it can only
+   trigger the system prompt (which needs a tap) and explain how to undo a
+   block. So one friendly card (#locask) asks once, before the system prompt,
+   and the answer is remembered in localStorage.locPref ("on"/"off" — a
+   preference, never a position). Later launches with "on" start the watch
+   by themselves in `located`, not `following`: the dot appears but the map
+   stays where it is, so we don't yank it away from the zone chooser or the
+   river you opened; the button is already lit and one tap recentres.
+   "Not now" is permanent on purpose — nagging every launch is how an app
+   gets deleted; the button still works any time.
 
    The position is never stored or sent anywhere: it lives in this closure
    for as long as the dot is drawn, not in localStorage, not in a URL, and
@@ -3497,10 +3554,19 @@ let locDot = null, locAcc = null, locBtn = null, locPillT = null;
 
 const locPill = document.body.appendChild(document.createElement("div"));
 locPill.id = "locpill"; locPill.setAttribute("role", "status");
-function locSay(msg){
+function locSay(msg, ms){
   locPill.textContent = msg; locPill.classList.add("show");
   clearTimeout(locPillT);
-  locPillT = setTimeout(() => locPill.classList.remove("show"), 5000);
+  locPillT = setTimeout(() => locPill.classList.remove("show"), ms || 5000);
+}
+let locPerm = "unknown";            // "granted" | "prompt" | "denied" | "unknown"
+function locPrefGet(){ try{ return localStorage.getItem("locPref"); }catch(e){ return null; } }
+function locPrefSet(v){ try{ localStorage.setItem("locPref", v); }catch(e){} }
+const LOC_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+function locBlockedSay(){
+  locSay(LOC_IOS
+    ? "Location is blocked for this site. On iPhone: Settings \u203A Privacy & Security \u203A Location Services \u203A Safari Websites \u203A While Using the App \u2014 then reopen the app."
+    : "Location is blocked \u2014 allow it for this site in your browser settings.", 9000);
 }
 function locSetState(s){
   locState = s;
@@ -3561,7 +3627,7 @@ function locFix(pos){
   }
 }
 function locError(e){
-  if(e.code === 1){ locStop(); locSay("Location is blocked — allow it for this site in your browser settings."); }
+  if(e.code === 1){ locStop(); locPerm = "denied"; locBlockedSay(); }
   else locSay("Can't get a location fix right now.");   // keep watching; fixes often come back
 }
 function locWatchStart(){
@@ -3569,16 +3635,21 @@ function locWatchStart(){
   locWatch = navigator.geolocation.watchPosition(locFix, locError,
     {enableHighAccuracy:true, maximumAge:10000, timeout:20000});
 }
+function locStart(mode){            // mode: "following" (tap) | "located" (auto-start, map stays put)
+  if(!navigator.geolocation || !window.isSecureContext){ locSay("Location isn't available here."); return; }
+  locFirst = mode !== "located";    // the first fix only flies the map when the user asked for it
+  locSetState(mode);
+  locWatchStart();
+}
 function locToggle(){
   if(locState === "off"){
-    if(!navigator.geolocation || !window.isSecureContext){ locSay("Location isn't available here."); return; }
-    locFirst = true;
-    locSetState("following");
-    locWatchStart();
+    if(locPerm === "denied"){ locBlockedSay(); return; }
+    locPrefSet("on");
+    locStart("following");
   } else if(locState === "located"){
     locSetState("following");
     if(locLast) goTo(locLast, map.getZoom());
-  } else locStop();
+  } else { locPrefSet("off"); locStop(); }
 }
 map.on("dragstart", () => { if(locState === "following") locSetState("located"); });
 document.addEventListener("visibilitychange", () => {
@@ -3598,12 +3669,52 @@ locCtl.onAdd = function(){
   return d;
 };
 locCtl.addTo(map);
-// The sheet slides up over the bottom of the map and would cover the button;
+// Zoom +/- sits directly above the locate button: bottom controls stack upward
+// in the order added, so it has to be added after the locate control.
+const zoomCtl = L.control.zoom({position:"bottomright"}).addTo(map);
+// The one-time ask (see the comment above) and the quiet auto-start.
+const locAsk = document.body.appendChild(document.createElement("div"));
+locAsk.id = "locask"; locAsk.setAttribute("role", "dialog"); locAsk.setAttribute("aria-label", "Show where you are");
+locAsk.innerHTML = `<div class="la-ic">${LOC_ICON}</div><div class="la-body"><h3>Show where you are?</h3>
+  <p>See your position on the map while you drive and fish. Your location stays on this phone \u2014 it\u2019s never saved or sent anywhere.</p>
+  <div class="la-btns"><button type="button" id="la-yes">Turn on location</button><button type="button" id="la-no">Not now</button></div></div>`;
+document.getElementById("la-yes").addEventListener("click", () => {
+  locAsk.classList.remove("show"); locPrefSet("on");
+  if(locState === "off") locStart("following");     // this tap is the gesture iOS needs for its prompt
+});
+document.getElementById("la-no").addEventListener("click", () => { locAsk.classList.remove("show"); locPrefSet("off"); });
+(function(){
+  if(!navigator.geolocation || !window.isSecureContext) return;
+  let q = null;
+  try{
+    q = navigator.permissions && navigator.permissions.query({name:"geolocation"});
+  }catch(e){ q = null; }
+  const boot = () => setTimeout(() => {
+    if(locPerm === "denied" || locState !== "off") return;
+    const pref = locPrefGet();
+    if(pref === "on") locStart("located");
+    else if(pref === null) locAsk.classList.add("show");
+  }, 1200);
+  if(q && q.then) q.then(st => {
+    locPerm = st.state;
+    st.addEventListener("change", () => {
+      locPerm = st.state;
+      if(st.state === "denied" && locState !== "off") locStop();
+    });
+    boot();
+  }, boot);
+  else boot();
+})();
+// The sheet slides up over the bottom of the map and would cover the buttons;
 // watching its class is simpler than hooking every place it opens or closes.
 (function(){
   const sheetEl = document.getElementById("sheet");
   if(!sheetEl || !window.MutationObserver) return;
-  const sync = () => locCtl.getContainer().classList.toggle("loc-hide", sheetEl.classList.contains("open"));
+  const sync = () => {
+    const open = sheetEl.classList.contains("open");
+    locCtl.getContainer().classList.toggle("loc-hide", open);
+    zoomCtl.getContainer().classList.toggle("loc-hide", open);   // zoom stays on the chooser, locate doesn't
+  };
   new MutationObserver(sync).observe(sheetEl, {attributes:true, attributeFilter:["class"]});
   sync();
 })();
@@ -3627,3 +3738,15 @@ syncMarkers();          // seed marker groups for the starting zoom
 loadPublicLand();
 setTimeout(trickleGeometry, 600);
 
+
+/* The app bar floats over the map and its height isn't fixed: the title
+   wraps to two lines on a narrow phone. The top control stacks clear it by
+   its measured height (--appbar-h in styles.css), not a guessed constant. */
+(function(){
+  const bar = document.getElementById("appbar");
+  if(!bar) return;
+  const set = () => document.documentElement.style.setProperty("--appbar-h", bar.offsetHeight + "px");
+  set();
+  if(window.ResizeObserver) new ResizeObserver(set).observe(bar);
+  else window.addEventListener("resize", set);
+})();

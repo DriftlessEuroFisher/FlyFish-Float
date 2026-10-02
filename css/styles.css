@@ -87,11 +87,16 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 /* ---------- Map ---------- */
 #map{position:fixed;inset:0;z-index:1}
 .leaflet-control-attribution{font-size:9px}
-.leaflet-control-zoom{margin-top:104px !important}
-/* the app bar floats over the map, so the top-right controls need the same
-   clearance the zoom control already has, or the Regions button hides
-   behind the title */
-.leaflet-top.leaflet-right{margin-top:96px}
+/* the app bar floats over the map, so the top-left stack (Regions, menus)
+   needs clearance, and so do the top-right controls, or the Regions button
+   hides behind the title */
+.leaflet-top.leaflet-left{margin-top:var(--appbar-h,94px)}
+/* zoom lives bottom-right above the locate button: thumb-sized on touch,
+   and 8px right margin so its 2px border lines up with the 44px locate dot */
+.leaflet-control-zoom{margin:0 8px 10px 0 !important}
+.leaflet-touch .leaflet-control-zoom a{width:44px;height:44px;line-height:44px;font-size:22px}
+.leaflet-control-zoom.loc-hide{display:none}
+.leaflet-top.leaflet-right{margin-top:calc(var(--appbar-h,94px) + 2px)}
 
 /* ---------- flow animation ----------
    A dashed overlay stroke crawling downstream. The dash period is 31
@@ -430,15 +435,26 @@ body.zones-open .leaflet-pane.zonePane{ opacity:1; }
 @media (prefers-reduced-motion: reduce){ .closed-bar{ animation:none; opacity:.34 } }
 
 /* ---------- river classes ---------- */
-#chipbar{display:flex;gap:6px;margin-top:6px;align-items:flex-start}
+#chipbar{margin-top:6px;display:flex;flex-direction:column;align-items:flex-start;gap:6px}
 .chipcol{display:flex;flex-direction:column;gap:4px}
-#chipbar button{font:600 11.5px 'Public Sans',sans-serif;padding:6px 10px;min-width:64px;border-radius:9px;
-  border:1px solid var(--line);background:var(--paper-2);color:var(--txt-dim);text-align:left;
-  box-shadow:0 1px 4px rgba(15,30,22,.2);cursor:pointer}
-#chipbar button::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;
-  border:2px solid var(--tc);margin-right:6px;vertical-align:-1px}
-#chipbar button.on{color:var(--txt);border-color:var(--tc)}
-#chipbar button.on::before{background:var(--tc)}
+/* menu buttons match #btn-zones; panels open under their button */
+#chipbar .menubtn{font:700 13px "Barlow Condensed",sans-serif;letter-spacing:.06em;text-transform:uppercase;
+  min-height:40px;padding:0 12px;border-radius:9px;cursor:pointer;display:flex;align-items:center;gap:4px;
+  border:1px solid var(--line);background:var(--paper-2);color:var(--txt);box-shadow:0 1px 4px rgba(15,30,22,.2)}
+#chipbar .menubtn .mcaret{display:inline-block;margin-left:4px;transition:transform .15s}
+#chipbar .menubtn[aria-expanded="true"] .mcaret{transform:rotate(180deg)}
+#chipbar .menubtn[aria-expanded="true"]{background:var(--paper)}
+#chipbar .menupanel{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:6px;
+  box-shadow:var(--shadow);max-height:calc(100vh - 330px);max-height:calc(100dvh - 330px);overflow:auto;
+  -webkit-overflow-scrolling:touch}
+#chipbar .menupanel[hidden]{display:none}
+#chipbar .menupanel button{font:600 13px 'Public Sans',sans-serif;padding:0 12px;min-height:40px;min-width:150px;
+  border-radius:9px;border:1px solid var(--line);background:var(--paper-2);color:var(--txt-dim);text-align:left;
+  cursor:pointer}
+#chipbar .menupanel button::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;
+  border:2px solid var(--tc);margin-right:8px;vertical-align:-1px}
+#chipbar .menupanel button.on{color:var(--txt);border-color:var(--tc)}
+#chipbar .menupanel button.on::before{background:var(--tc)}
 .tier-sw{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
 .tierline{display:flex;align-items:flex-start;gap:8px;margin:10px 2px 0}
 .tierbadge{flex:none;font:700 11px 'Barlow Condensed',sans-serif;letter-spacing:.06em;text-transform:uppercase;
@@ -487,6 +503,22 @@ body.zones-open .leaflet-pane.zonePane{ opacity:1; }
   border-radius:99px;padding:7px 14px;box-shadow:var(--shadow);display:none;
 }
 #locpill.show{display:block}
+/* One-time "show where you are?" ask. Over the map and chooser, under the
+   sheet and the Field Book; the wrapper ignores taps so only the card takes them. */
+#locask{
+  position:fixed;z-index:1270;left:12px;right:12px;margin:0 auto;max-width:420px;
+  bottom:calc(12px + env(safe-area-inset-bottom));display:none;gap:12px;align-items:flex-start;
+  background:var(--paper);color:var(--txt);border:1px solid var(--line);border-radius:14px;
+  padding:14px;box-shadow:var(--shadow);
+}
+#locask.show{display:flex}
+#locask .la-ic{flex:none;width:38px;height:38px;border-radius:50%;background:var(--river);color:#fff;display:flex;align-items:center;justify-content:center}
+#locask .la-ic svg{width:22px;height:22px}
+#locask h3{font-family:"Barlow Condensed",sans-serif;font-size:20px;text-transform:uppercase;letter-spacing:.04em;line-height:1.1;margin-bottom:4px}
+#locask p{font-size:13px;line-height:1.4;color:var(--txt-dim)}
+#locask .la-btns{display:flex;gap:8px;margin-top:11px}
+#locask .la-btns button{min-height:42px;padding:0 14px;border-radius:9px;font-size:14px;font-weight:600;background:#e0e6df;color:var(--txt)}
+#locask .la-btns #la-yes{flex:1;background:var(--river);color:#fff}
 
 /* "Rules today" card — first thing in the sheet. Status dots are muted brick /
    amber / green / grey; the closure-tape red stays reserved for the map. */
