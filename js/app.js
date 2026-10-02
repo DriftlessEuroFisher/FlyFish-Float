@@ -438,8 +438,153 @@ function floatEstimate(sec){
 /* ============================================================
    MAP
    ============================================================ */
-const map = L.map("map",{zoomControl:true, attributionControl:true})
+/* zoomSnap .25 lets a pinch settle where the fingers stopped instead of
+   snapping a whole level, so getZoom() is fractional: compare it with >= / <
+   but never use it as a key or with === (use Math.floor). */
+const map = L.map("map",{zoomControl:true, attributionControl:true,
+    zoomSnap:0.25, zoomDelta:1, wheelPxPerZoomLevel:90, wheelDebounceTime:30,
+    bounceAtZoomLimits:false, inertiaDeceleration:2600})
   .setView([43.6,-100.5], 4);        // whole-country view; the zone picker opens over it
+
+/* ============================================================
+   TAPS AND GESTURES
+   Every interactive layer on this map (rivers, lakes, public land, the
+   zone chooser) used to act on the first click. That is fatal to
+   double-tap-to-zoom: tap one opens a sheet or popup, which autoPans the
+   map out from under tap two, and Leaflet never sees a double click.
+   Google and Apple Maps solve it by waiting a beat before committing to a
+   single tap, so onTap() does the same: the action runs ~250 ms after the
+   click unless a dblclick or a zoom turns up first. Point targets (gauge
+   dots, access pins) stay immediate — nobody double-taps a 28 px pin.
+   Leaflet propagates a path's dblclick to the map, which is what actually
+   zooms; nothing here stops it. Markers do not bubble by default, so the
+   lake and zone-card markers are created with bubblingMouseEvents:true.
+   ============================================================ */
+const TAP_DELAY = 250;
+let tapTimer = null;
+function cancelTap(){ if(tapTimer){ clearTimeout(tapTimer); tapTimer = null; } }
+map.on("dblclick zoomstart", cancelTap);
+function onTap(layer, fn){
+  layer.on("click", e => {
+    cancelTap();
+    tapTimer = setTimeout(() => { tapTimer = null; fn(e); }, TAP_DELAY);
+  });
+  layer.on("dblclick", cancelTap);
+}
+
+/* One-finger zoom and two-finger tap, the two touch gestures Leaflet lacks.
+   Double-tap-and-hold, then drag: down zooms in, up zooms out (Google's
+   direction), around the point you touched. A second tap that lifts without
+   moving is left alone and zooms in as an ordinary double tap. Two fingers
+   landing together and lifting quickly, without moving or pinching, zooms
+   out one level around the midpoint. The hold-drag zoom uses the same
+   internal path Leaflet's own pinch does (_moveStart, then _move with
+   pinch:true each frame, then one _animateZoom/_resetView on release), so
+   zoomend and moveend fire once at the end rather than every frame.
+   Dragging is switched off from the moment the second touch lands, so the
+   map cannot pan before the zoom takes over, and restored on every exit. */
+(function(){
+  const el = map.getContainer();
+  const MOVE_PX = 8, PX_PER_ZOOM = 110;
+  let lastTap = null;          // {t,x,y} of the previous short, still tap
+  let one = null;              // single-finger tracking
+  let two = null;              // two-finger tap tracking
+  let firstDown = 0;           // when the first finger of this touch landed
+  let raf = 0, pendingZ = null;
+
+  const pt = t => { const r = el.getBoundingClientRect(); return L.point(t.clientX - r.left, t.clientY - r.top); };
+
+  // the map centre that keeps the anchor's lat/lng under the finger at zoom z
+  function centerFor(z){
+    return map.unproject(map.project(one.anchorLL, z)
+      .subtract(one.anchor.subtract(map.getSize().divideBy(2))), z);
+  }
+  function finishHold(){
+    if(!one || !one.second) return;
+    map.dragging.enable();
+    if(!one.active) return;
+    if(raf){ cancelAnimationFrame(raf); raf = 0; }
+    pendingZ = null;
+    const z = map._limitZoom(one.z);
+    if(map.options.zoomAnimation) map._animateZoom(one.center, z, true, map.options.zoomSnap);
+    else map._resetView(one.center, z);
+    // the browser still fires a dblclick after this touchend; keep the
+    // handler off a moment longer so it cannot add a level on top
+    setTimeout(() => map.doubleClickZoom.enable(), 450);
+  }
+  function applyZoom(){
+    raf = 0;
+    if(pendingZ == null || !one || !one.active) return;
+    const z = Math.max(map.getMinZoom(), Math.min(map.getMaxZoom(), pendingZ));
+    pendingZ = null;
+    one.z = z; one.center = centerFor(z);
+    map._move(one.center, z, {pinch:true, round:false});
+  }
+
+  el.addEventListener("touchstart", e => {
+    const n = e.touches.length;
+    if(n === 1){
+      firstDown = Date.now();
+      two = null;
+      const p = pt(e.touches[0]);
+      const second = lastTap && firstDown - lastTap.t < 300 && Math.hypot(p.x-lastTap.x, p.y-lastTap.y) < 40;
+      one = {x:p.x, y:p.y, anchor:p, anchorLL:map.containerPointToLatLng(p),
+        z0:map.getZoom(), z:map.getZoom(), center:null, active:false, second, t:firstDown};
+      if(second) map.dragging.disable();
+    } else if(n === 2){
+      if(one) finishHold();
+      one = null; lastTap = null;
+      const a = pt(e.touches[0]), b = pt(e.touches[1]);
+      if(e.changedTouches.length === 2) firstDown = Date.now();   // both fingers in one event, common on iOS
+      two = (Date.now() - firstDown < 150)
+        ? {t:firstDown, a, b, d:a.distanceTo(b), moved:false} : null;
+    } else { one = null; two = null; }
+  }, {passive:true});
+
+  el.addEventListener("touchmove", e => {
+    if(two && e.touches.length === 2){
+      const a = pt(e.touches[0]), b = pt(e.touches[1]);
+      if(a.distanceTo(two.a) > 10 || b.distanceTo(two.b) > 10 || Math.abs(a.distanceTo(b) - two.d) > 10) two.moved = true;
+      return;
+    }
+    if(!one || e.touches.length !== 1) return;
+    const p = pt(e.touches[0]);
+    if(!one.active){
+      if(!one.second || Math.abs(p.y - one.y) <= MOVE_PX) return;
+      one.active = true;
+      map.doubleClickZoom.disable();
+      cancelTap();
+      map._stop();
+      map._moveStart(true, false);
+    }
+    e.preventDefault();
+    pendingZ = one.z0 + (p.y - one.y) / PX_PER_ZOOM;
+    if(!raf) raf = requestAnimationFrame(applyZoom);
+  }, {passive:false});
+
+  el.addEventListener("touchend", e => {
+    if(e.touches.length) return;
+    const now = Date.now();
+    if(two){
+      if(!two.moved && now - two.t < 300){
+        const mid = two.a.add(two.b).divideBy(2);
+        map.setZoomAround(mid, Math.max(map.getMinZoom(), map.getZoom() - 1));
+      }
+      two = null; lastTap = null; one = null;
+      return;
+    }
+    if(one){
+      if(one.second){ finishHold(); lastTap = null; }
+      else {
+        const tap = now - one.t < 250;
+        // a second tap ends the chain, so a third starts fresh
+        lastTap = (tap && !one.second) ? {t:now, x:one.x, y:one.y} : null;
+      }
+    }
+    one = null;
+  }, {passive:true});
+  el.addEventListener("touchcancel", () => { if(one) finishHold(); one = null; two = null; lastTap = null; }, {passive:true});
+})();
 
 /* USGS "US Topo" — the default. Same quadrangle cartography the paper
    sheets use: cream ground, blue hydrography in italic serif, green
@@ -680,12 +825,12 @@ const LAKE_LABEL_ZOOM = 8;
 (typeof LAKES === "undefined" ? [] : LAKES).forEach(k => {
   const poly = L.polygon(k.ring, {pane:"lakePane", color:"#0e5f72", weight:1.8,
     fillColor:"#3aa7c2", fillOpacity:.34, className:"lake-shape"}).addTo(lakeLayer);
-  poly.on("click", () => openLake(k.id));
+  onTap(poly, () => openLake(k.id));
   poly.bindTooltip(`<b>${k.name}</b>`, {direction:"top", className:"zone-tip"});
-  const mark = L.marker(k.at, {pane:"lakePane", riseOnHover:true,
+  const mark = L.marker(k.at, {pane:"lakePane", riseOnHover:true, bubblingMouseEvents:true,
     icon:L.divIcon({className:"", iconSize:null,
       html:`<div class="lake-label"><span>${k.short}</span></div>`})}).addTo(lakeLayer);
-  mark.on("click", () => openLake(k.id));
+  onTap(mark, () => openLake(k.id));
   lakeShapes[k.id] = {lake:k, poly, mark};
 });
 function syncLakes(){
@@ -1309,7 +1454,7 @@ let highlight = null;
 RIVERS.forEach(r=>{
   const line = L.polyline(r.coords,{color:riverColor(r), weight:tierWeight(r), opacity:.92,
     lineCap:"round", lineJoin:"round", smoothFactor:1.2, pane:"riversPane"}).addTo(map);
-  line.on("click",()=>openRiver(r.id));
+  onTap(line, ()=>openRiver(r.id));
   const mid = midCoord(r.coords);
   const lbl = L.marker(mid,{interactive:false,icon:L.divIcon({className:"riv-label",html:r.name.split("—")[0].split("(")[0].trim(),iconSize:null})}).addTo(map);
   riverLayers[r.id]={line,lbl,river:r};
@@ -1517,12 +1662,14 @@ async function loadPublicLand(){
         const open = p.Pub_Access === "OA"
           ? '<span style="color:#1d7a2e;font-weight:700">Open access</span>'
           : '<span style="color:#9c7a2a;font-weight:700">Restricted access</span> — permit, season or limited entry';
-        lyr.bindPopup(
+        // not bindPopup: its built-in click opens at once and breaks a double-tap
+        const html =
           `<b>${p.Unit_Nm || c.label}</b><br>`+
           `<span style="font-size:11px">`+
           `<span style="color:${c.color};font-weight:700">${c.label}</span> · ${open}<br>`+
           `${[p.DesTp_Desc, p.MngNm_Desc, acres].filter(Boolean).join(" · ")}<br>`+
-          `<i>PAD-US boundaries are approximate — check the state's current maps and the signage at the parcel.</i></span>`);
+          `<i>PAD-US boundaries are approximate — check the state's current maps and the signage at the parcel.</i></span>`;
+        onTap(lyr, e => L.popup().setLatLng(e.latlng).setContent(html).openOn(map));
       }
     }).addTo(publicLand);
     padusKey = key;
@@ -2219,14 +2366,12 @@ window.addEventListener("pointermove",e=>{
 });
 window.addEventListener("pointerup",()=>dragY=null);
 
-/* ---------- legend / safety ---------- */
+/* ---------- legend ---------- */
 const scrim=$("#scrim"), legend=$("#legend");
 $("#btn-legend").addEventListener("click",()=>{scrim.classList.add("show");legend.classList.add("show");});
 $("#legend-x").addEventListener("click",closeLegend);
 scrim.addEventListener("click",closeLegend);
 function closeLegend(){scrim.classList.remove("show");legend.classList.remove("show");}
-$("#safety-x").addEventListener("click",()=>{ $("#safety").style.display="none"; store.set("safetyDismissed", Date.now()); });
-if(store.get("safetyDismissed")) $("#safety").style.display="none";
 
 /* ---------- refresh loop ----------
    Ordered by region, nearest first. The region you're looking at is fetched
@@ -2396,7 +2541,7 @@ function buildZones(){
        why the earlier note said a park could not be in pieces. */
     const shape = z.parts && z.parts.length ? [z.rings].concat(z.parts) : z.rings;
     const poly = L.polygon(shape, {...ZONE_STYLE[z.kind], pane:"zonePane"}).addTo(zoneLayer);
-    poly.on("click", ()=>enterZone(z));
+    onTap(poly, ()=>enterZone(z));
     /* Hover carries more weight now that the states have no card, so it
        lifts the fill *and* thickens the border — a fill change on its own is
        easy to miss on a pale state at country zoom. */
@@ -2424,7 +2569,7 @@ function buildZones(){
 
     const has = z.count > 0;
     const m = L.marker(L.latLngBounds(z.bounds).getCenter(),
-      {pane:"zonePane", riseOnHover:true,
+      {pane:"zonePane", riseOnHover:true, bubblingMouseEvents:true,
        icon:L.divIcon({className:"", iconSize:null, html:
         `<div class="zone-card ${z.kind} ${has?"":"empty"}">
            ${parkCrest()}
@@ -2435,7 +2580,7 @@ function buildZones(){
            </div>
          </div>`})}).addTo(zoneLayer);
     m.bindTooltip(tip, {direction:"top", offset:[0,-16], className:"zone-tip"});
-    m.on("click", ()=>enterZone(z));
+    onTap(m, ()=>enterZone(z));
     zoneCards.push({zone:z, marker:m, poly});
   });
 }
@@ -2650,7 +2795,7 @@ const regionLabels = (typeof REGION_LABELS === "undefined" ? [] : REGION_LABELS)
 }));
 function syncRegionLabels(){
   const z = map.getZoom();
-  const on = !zonesShown && z >= REGION_LABEL_ZOOM.min && z <= REGION_LABEL_ZOOM.max;
+  const on = !zonesShown && z >= REGION_LABEL_ZOOM.min && Math.floor(z) <= REGION_LABEL_ZOOM.max;
   const view = map.getBounds();
   regionLabels.forEach(rl => {
     const show = on && view.intersects(L.latLngBounds(rl.def.bounds || [rl.def.at, rl.def.at]));
@@ -2701,8 +2846,8 @@ syncClosures();
 
 /* Regions button — always available, so you can get back to the chooser
    without hunting for the right zoom level. Top *left*, under the zoom
-   control: the safety panel opens over the top-right corner the moment you
-   enter a zone, and it was burying the one control that gets you back. */
+   control: top-right is taken by the layer control and sheet, and the
+   Regions button is the one control that gets you back out. */
 const zoneCtl = L.control({position:"topleft"});
 zoneCtl.onAdd = function(){
   const d = L.DomUtil.create("div");
@@ -2800,6 +2945,148 @@ tierCtl.onAdd = function(){
 };
 tierCtl.addTo(map);
 TIER_KEYS.forEach(k => { if(tierFilter[k]) tierGroups[k].addTo(map); });
+
+/* My location — a dot on the map and a button to follow it.
+
+   Nothing asks for location until the first tap: a permission prompt on page
+   load, before you've said why you want it, is both rude and the quickest way
+   to a permanent "Block". One tap starts the watch and follows the dot. The
+   map chases the position only while following, and only when the dot has
+   wandered out of the middle third of the view, so a truck on a bumpy road
+   doesn't make the map twitch. Dragging the map is you saying "I'm looking
+   somewhere else": it drops to `located` (dot stays, map stops chasing), and
+   a tap brings you back. A tap while following turns it all off.
+
+   The watch is released while the page is hidden — a GPS left running in a
+   pocket is what flattens a phone on the drive between rivers — and resumed
+   when the page is visible again.
+
+   The position is never stored or sent anywhere: it lives in this closure
+   for as long as the dot is drawn, not in localStorage, not in a URL, and
+   not in anything the analytics script can see. */
+const locatePane = map.createPane("locatePane");
+locatePane.style.zIndex = 650;      // above the markers: it must never hide under a gauge
+locatePane.style.pointerEvents = "none";
+
+const LOC_ICON = `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="6.5"/><circle cx="12" cy="12" r="2" fill="currentColor"/><path d="M12 2v3.5M12 18.5V22M2 12h3.5M18.5 12H22"/></svg>`;
+let locState = "off";               // "off" | "following" | "located"
+let locWatch = null;                // watchPosition id while a watch is live
+let locLast = null;                 // latest fix, in memory only
+let locFirst = true;
+let locDot = null, locAcc = null, locBtn = null, locPillT = null;
+
+const locPill = document.body.appendChild(document.createElement("div"));
+locPill.id = "locpill"; locPill.setAttribute("role", "status");
+function locSay(msg){
+  locPill.textContent = msg; locPill.classList.add("show");
+  clearTimeout(locPillT);
+  locPillT = setTimeout(() => locPill.classList.remove("show"), 5000);
+}
+function locSetState(s){
+  locState = s;
+  if(!locBtn) return;
+  locBtn.classList.toggle("following", s === "following");
+  locBtn.classList.toggle("located", s === "located");
+  locBtn.setAttribute("aria-pressed", String(s === "following"));
+  locBtn.setAttribute("aria-label", s === "off" ? "Show my location"
+    : s === "following" ? "Stop following my location" : "Recentre on my location");
+}
+function locClear(){
+  if(locDot){ map.removeLayer(locDot); locDot = null; }
+  if(locAcc){ map.removeLayer(locAcc); locAcc = null; }
+  locLast = null;
+}
+function locStop(){
+  if(locWatch !== null && navigator.geolocation) navigator.geolocation.clearWatch(locWatch);
+  locWatch = null;
+  locClear();
+  locSetState("off");
+}
+function locDraw(c){
+  const ll = L.latLng(c.latitude, c.longitude);
+  locLast = ll;
+  const moving = typeof c.heading === "number" && !isNaN(c.heading) && c.speed > 1;
+  if(!locDot){
+    locDot = L.marker(ll, {
+      pane:"locatePane", interactive:false, keyboard:false,
+      icon:L.divIcon({className:"loc-icon", iconSize:[16,16], iconAnchor:[8,8],
+        html:`<span class="loc-halo"></span><span class="loc-wedge"></span><span class="loc-core"></span>`})
+    }).addTo(map);
+  } else locDot.setLatLng(ll);
+  const wedge = locDot.getElement() && locDot.getElement().querySelector(".loc-wedge");
+  if(wedge){
+    wedge.style.display = moving ? "block" : "none";
+    if(moving) wedge.style.transform = "rotate(" + c.heading + "deg)";
+  }
+  // The accuracy ring only earns its place when the fix is loose enough to matter.
+  if(c.accuracy > 25){
+    if(!locAcc) locAcc = L.circle(ll, {pane:"locatePane", interactive:false, radius:c.accuracy,
+      color:"#1a73e8", weight:1, opacity:.5, fillColor:"#1a73e8", fillOpacity:.1}).addTo(map);
+    else locAcc.setLatLng(ll).setRadius(c.accuracy);
+  } else if(locAcc){ map.removeLayer(locAcc); locAcc = null; }
+  return ll;
+}
+function locInMiddleThird(ll){
+  const s = map.getSize(), p = map.latLngToContainerPoint(ll);
+  return p.x > s.x/3 && p.x < s.x*2/3 && p.y > s.y/3 && p.y < s.y*2/3;
+}
+function locFix(pos){
+  const ll = locDraw(pos.coords);
+  if(locFirst){
+    locFirst = false;
+    if(zonesShown) hideZones();
+    goTo(ll, Math.max(map.getZoom(), 11));
+  } else if(locState === "following" && !locInMiddleThird(ll)){
+    goTo(ll, map.getZoom());
+  }
+}
+function locError(e){
+  if(e.code === 1){ locStop(); locSay("Location is blocked — allow it for this site in your browser settings."); }
+  else locSay("Can't get a location fix right now.");   // keep watching; fixes often come back
+}
+function locWatchStart(){
+  if(locWatch !== null) return;
+  locWatch = navigator.geolocation.watchPosition(locFix, locError,
+    {enableHighAccuracy:true, maximumAge:10000, timeout:20000});
+}
+function locToggle(){
+  if(locState === "off"){
+    if(!navigator.geolocation || !window.isSecureContext){ locSay("Location isn't available here."); return; }
+    locFirst = true;
+    locSetState("following");
+    locWatchStart();
+  } else if(locState === "located"){
+    locSetState("following");
+    if(locLast) goTo(locLast, map.getZoom());
+  } else locStop();
+}
+map.on("dragstart", () => { if(locState === "following") locSetState("located"); });
+document.addEventListener("visibilitychange", () => {
+  if(locState === "off") return;
+  if(document.visibilityState === "hidden"){
+    if(locWatch !== null){ navigator.geolocation.clearWatch(locWatch); locWatch = null; }
+  } else locWatchStart();
+});
+
+const locCtl = L.control({position:"bottomright"});
+locCtl.onAdd = function(){
+  const d = L.DomUtil.create("div", "loc-ctl");
+  d.innerHTML = `<button id="btn-locate" type="button" aria-label="Show my location" aria-pressed="false">${LOC_ICON}</button>`;
+  L.DomEvent.disableClickPropagation(d);
+  locBtn = d.querySelector("button");
+  locBtn.addEventListener("click", locToggle);
+  return d;
+};
+locCtl.addTo(map);
+// The sheet slides up over the bottom of the map and would cover the button;
+// watching its class is simpler than hooking every place it opens or closes.
+(function(){
+  const sheetEl = document.getElementById("sheet");
+  if(!sheetEl || !window.MutationObserver) return;
+  const sync = () => locCtl.getContainer().classList.toggle("loc-hide", sheetEl.classList.contains("open"));
+  new MutationObserver(sync).observe(sheetEl, {attributes:true, attributeFilter:["class"]});
+  sync();
+})();
 
 /* A park's card counts what the map is actually showing, not everything
    mapped there — Yellowstone reading 208 over a handful of lines is the
