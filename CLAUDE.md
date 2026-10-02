@@ -54,9 +54,26 @@ like an app, not a browser tab.
 
   **Zones are states.** Fishing regulations are written by states, and the
   state line is the one border that actually changes what you may do, so it
-  is the border the chooser draws. Six states carry rivers (ID, WY, IA, MN,
-  WI, IL); Montana is skipped because its only river, Specimen Creek,
-  belongs to Yellowstone.
+  is the border the chooser draws. **Ten states, sixteen parks.** Six states
+  carry rivers (ID, WY, IA, MN, WI, IL). **CA, OR, WA and MT are drawn as
+  states with no rivers of their own yet**, but ten of their fourteen national
+  parks now carry their fishing water — see *Western national parks* below.
+  The four that don't (Joshua Tree, Death Valley, Pinnacles, Channel Islands)
+  stay as zones reading "not mapped yet", on purpose. Montana had been skipped
+  on the grounds that its only river, Specimen Creek, belongs to Yellowstone;
+  it is now drawn because Glacier is in it.
+
+  The fourteen added parks are Olympic, Mount Rainier, North Cascades,
+  Crater Lake, Glacier, Redwood, Lassen Volcanic, Yosemite, Kings Canyon,
+  Sequoia, Pinnacles, Death Valley, Joshua Tree and Channel Islands. Four of
+  those have no fishable water to speak of (Joshua Tree, Death Valley,
+  Pinnacles, Channel Islands) and say so in their `sub` line rather than
+  implying a fishery — they are on the map because they are national parks
+  in those states, not because they are destinations.
+
+  A zone with no rivers takes its `bounds` from its own outline, since the
+  usual rule — bounds come from the zone's *rivers*, so tapping flies to the
+  water — has nothing to work with yet.
 
   **National parks keep their own NPS boundary** and are drawn *on top of*
   the state they sit in — states first, parks last, so the park takes the
@@ -118,7 +135,22 @@ like an app, not a browser tab.
 
   `bounds` comes from the zone's **rivers**, not its outline, so tapping
   Idaho flies to the water rather than to the whole state. `rings[0]` is the
-  outer boundary and any further rings are holes. `short` is the name used
+  outer boundary and any further rings are holes.
+
+  **`parts` is how a zone in genuine pieces is drawn.** It holds additional
+  *detached* polygons, each shaped like `rings` (outer first, then its
+  holes). Leaflet reads a list of ring-lists as a multipolygon, so a zone
+  with `parts` is still **one layer — one hover, one tap, one zone**. This
+  was needed the moment the chooser left the Rockies: Channel Islands *is*
+  five islands, Olympic is the massif plus a detached coastal strip, North
+  Cascades and Kings Canyon are each two units. Before `parts`, a second
+  polygon could only have been expressed as a hole, so the first build drew
+  one of the five Channel Islands and silently dropped the rest.
+
+  Pieces are kept when they are worth at least **2% of the main one** and
+  dropped below that. Olympic alone has 285 slivers under the threshold —
+  drawing them is kilobytes of noise at a zoom where the whole park is a
+  centimetre across. `short` is the name used
   when a zone is too small at the current zoom to carry the full one.
   `count` is rivers mapped there, and 0 renders as "not mapped yet".
   Regenerate with `zones2.py` in the scratchpad.
@@ -130,7 +162,7 @@ like an app, not a browser tab.
 
 ## Rivers covered
 
-493 rivers and 9 lakes. Full list and gauge IDs live in `js/rivers-data.js`; this file
+989 rivers and 22 lakes. Full list and gauge IDs live in `js/rivers-data.js`; this file
 doesn't duplicate it since the code is the source of truth. Rivers carry a
 `region` field — `"driftless"` and `"northshore"` on the two small-stream
 sub-regions, absent on the original western rivers *and* on the two
@@ -661,9 +693,226 @@ Rockefeller, Jr. Memorial Parkway**, sat between this map's Yellowstone
 headwaters reach and its Jackson Hole one and was covered by neither. It is
 now `snakeflagg`. The Parkway is a separate NPS unit and is deliberately
 **not** in the park zone: zone `rings[1..]` are holes, not separate polygons,
-so a disjoint second ring would render as a hole punched in the park. It
-falls in the Wyoming zone, which is correct — it is outside both parks.
+so a disjoint second ring would have rendered as a hole punched in the park.
+(`parts` would express it now — see `js/zones.js` above — but the decision
+stands on its own: the Parkway is a separate NPS unit under its own rules.)
+It falls in the Wyoming zone, which is correct — it is outside both parks.
 Polecat Creek is in the Parkway for the same reason and is left off.
+
+## Western national parks
+
+**112 rivers in ten parks** — Glacier 25, Olympic 16, Yosemite 16, Sequoia 12,
+North Cascades 10, Mount Rainier 9, Kings Canyon 9, Redwood 7, Lassen 6 and
+Crater Lake 2 — plus **Crater Lake itself** in `LAKES`. Each carries a tier,
+and 31 live USGS gauges are attached. Joshua Tree, Death Valley, Pinnacles and
+Channel Islands are zones with no rivers, by choice.
+
+**Which water: the parks' own lists.** The rule is Yellowstone's — named
+rivers, plus the creeks the park itself names, open, closed or under a
+special rule. **Closed water is mapped on purpose** (the Elwha, Ruby Creek,
+Sun Creek, Glacier's ten wholly closed creeks) and tiered Class 3 with
+`closed:[[1,12]]`, so it is hidden by default but answers "can I fish this?"
+when someone looks, rather than leaving a blank they have to guess about.
+
+### The licence rule is the point, and it is different in every park
+
+All regulation copy is from each park's own fishing page, fetched
+2026-10-01, and lives in **`PARK_INFO`** in `app.js` — one table, keyed by
+region, that every authority-naming spot in the sheet reads (subtitle, badge,
+regulation note, "verify with", footer, ungauged copy, zone counts, label
+zoom, and `openLake`). Ten more parks as ten more `if` branches in six places
+was the alternative.
+
+- **No state licence:** Olympic (except the Pacific from shore; a catch record
+  card for salmon and steelhead), Mount Rainier (same card), Crater Lake.
+- **Washington's:** North Cascades — and licences aren't sold in the park.
+- **California's:** Yosemite, Sequoia, Kings Canyon, Lassen, Redwood.
+- **Glacier is split:** no licence on the **North Fork** from park land,
+  **Montana's** on the **Middle Fork**.
+
+**`PARK_INFO` must be declared above the river layers.** `syncLabels()` reads
+it on its first call at startup. Declared next to the sheet code it was still
+in its temporal dead zone, the `ReferenceError` killed the rest of `app.js`,
+and the map came up with no chooser and no sheet.
+
+Seasons that are dates go in `tiers.js` windows: Mount Rainier has **two**
+(White, Huckleberry, West Fork, Carbon and Mowich close on Labor Day; the
+Puyallup, Nisqually, Cowlitz and Ohanapecosh on October 31 — so in October
+its card reads "2 of 9"), Glacier's streams run the third Saturday in May to
+November 30, and the Queets closes October 1 – November 30.
+
+### Geometry: OSM, clipped to the real boundary
+
+NHD's query endpoints were down for the whole of this pass, so the channel is
+**OpenStreetMap**, clipped to the full-resolution NPS boundary simplified only
+to 20 m, and carried as `geom:"osm"`. **North Cascades is clipped to its whole
+complex** — NOCA, Ross Lake NRA and Lake Chelan NRA — because its rules are
+written for the complex and the Stehekin and the Skagit are in the NRAs, not
+the park proper.
+
+Four traps, each of which produced wrong geometry first:
+
+- **"Same river" is a question for the unclipped channel.** The Hoh leaves the
+  park and re-enters miles downstream in Olympic's coastal strip; a proximity
+  test on the clipped pieces called its own mouth a namesake.
+- **A lake breaks a river in OSM** — the waterway stops at the inlet and starts
+  again at the outlet — so lower McDonald Creek, below Lake McDonald, looked
+  like a different creek. Pieces that *chain* (one's downstream end facing
+  another's upstream start) are the same river, across up to 20 km.
+- **…but namesakes can be closer than lakes are long.** Yosemite has two
+  streams called just "Lyell Fork", to the Tuolumne and to the Merced, and a
+  20 km allowance merged them into one 33 km creek. The allowance is per
+  river: 3 km where a namesake is expected (`near` specs), 16 for McDonald
+  Creek, which has both a lake and a namesake.
+- **Boundary rivers aren't clipped.** Glacier's North and Middle Forks *are*
+  the park line and are fished "from park lands"; clipping would shred them,
+  so they keep the reach within 1.2 km of the boundary.
+
+**Gauges are attached only if they are on that river** — the station name
+names it *and* it sits within 1.5 km of the river's own line — and only if
+NWIS's IV service returned a discharge reading within the last week.
+
+**Not mapped, and why:** the **Klamath** has only 0.8 km inside the federal
+boundary — Redwood is run jointly with three California state parks, and the
+NPS boundary covers only the federal land. The Dickey (1.7 km) and Crater
+Lake's Lost Creek (1.4 km) fall under the 2 km rule. Grassy Swale Creek and
+Kings Canyon's Paradise Creek have no OSM flowline under those names, and the
+East Fork Quinault is mapped in OSM as the Quinault River itself. Crater
+Lake's outline doesn't subtract Wizard Island.
+
+**The pipeline lives in `~/.cache/flyfish-osm/parks/`, not the scratchpad.**
+The session scratchpad is wiped when a session ends, and one restart threw
+away 59 cached fetches. `specs.py` (what to map and each river's rule),
+`fetch.py`, `build.py`, `apply.py` — and `apply.py` is fenced and idempotent,
+so re-running it replaces its own block rather than duplicating it.
+
+**Overpass:** order the endpoints by what is *up*, not by preference — a dead
+endpoint costs a full timeout on every request before the next is tried, and
+for a while the mirrors were dead while the main instance had recovered. Wait
+on `/api/status` (it wants a `User-Agent`) for a free slot rather than guessing
+a backoff; a 429 means the request came before the slot did.
+
+## California, Oregon, Washington & Montana
+
+**169 state rivers** — Montana 38, California 45, Oregon 41, Washington 45 —
+outside the parks: the recognised fly-fishing trout water, held to roughly
+the density Idaho and Wyoming got rather than every creek with a trout in it.
+Regions are `montana` / `california` / `oregon` / `washington`; geometry is
+OSM (`geom:"osm"`) built by the same pipeline as the parks, with
+`~/.cache/flyfish-osm/states/` (`specs.py`, `fetch.py`, `build.py`,
+`apply.py`, all fenced and idempotent). The parks' rivers are excluded from
+the state builds: a reach inside a park is under the park's rules.
+
+Two geometry rules beyond the parks' four:
+
+- **Pick a namesake by length *inside the state*.** Bishop Creek first came out
+  as Nevada's. A `near` anchor plus in-state length decides it.
+- **Big rivers are reaches, not whole rivers.** `between` gives two points
+  and the build takes the shortest path across the run network between them
+  (links up to 2 km, falling back to 10), so the Yakima is Easton to Roza —
+  the water its regulation entry is written for — not the river to the Columbia.
+  The Trinity's lower reach carries a different OSM name, hence `lonmax`.
+
+### Every state river carries its own regulations, verbatim
+
+Clicking a state river shows **that river's entry from the state's 2026
+booklet**, reproduced word for word, then the standard rule it falls back to.
+It uses the same `parkRegs` / `parkRegsSrc` fields and `PARK_INFO` rows the
+parks do (`heading:"Regulations"`, `labelZoom:8`), so the sheet credits
+Montana FWP, CDFW, ODFW or WDFW, and the footer carries the licence facts.
+Entries over 1,400 characters fold into a `<details>` ("6 reaches, tap to
+read") — the Madison is a page long. Where a river has no entry of its own
+it shows the standard rule alone and says so (MT 13, CA 8, OR 1).
+
+The booklets are PDFs, read with PyMuPDF (venv at `~/.cache/flyfish-osm/venv`),
+and **each state's layout needed a different reading order** — a single
+extractor garbled every one of them:
+
+- **Montana:** the authored block order. Sorting blocks by position
+  interleaves the two columns mid-entry.
+- **California:** per-page column edges taken from where *that page's* "Open"
+  and "Daily" headers sit — fixed x positions drifted page to page — and
+  multi-period rows split line by line, each with its own bag limit. The
+  §7.40 salmon/steelhead tables don't survive extraction, so they are
+  **cited, not reproduced**: a half-garbled limit is worse than a pointer.
+- **Oregon:** authored order, zone decided by page range — which is also how
+  the Clatsop County John Day stopped being matched for the real one.
+  Willamette Zone streams are catch-and-release for trout, not 2 a day; that
+  was checked, because it is the opposite of every other zone.
+- **Washington:** column-aware block sort, and an inline "Other game fish"
+  row that has to be split off the trout row it shares a line with.
+
+**A fenced writer must strip its own block before it reads the existing
+gauge keys.** `states/apply.py` once read them first, took its own previous
+gauges for ones already on the map, reused their keys, then deleted the block
+they lived in: a re-run silently dropped 241 gauges, every river still
+pointing at them. Count referenced against defined keys after any re-run.
+
+The North Fork Lewis came in on a targeted fetch (`osm/WA_x_lewis.json`): in
+OSM it is plain "Lewis River", and the state tile it fell in had missed it. The three Montana spring creeks (Armstrong, DePuy, Nelson's) aren't in OSM
+under those names and are commented out of `specs.py`.
+
+## Colorado, Utah & Alaska
+
+**215 rivers** — Colorado 42 plus Rocky Mountain 21, Black Canyon 1 and Great
+Sand Dunes 2; Utah 28 plus Capitol Reef 3, Zion 4 and Canyonlands 2; Alaska
+63 plus Katmai 8, Lake Clark 8, Denali 8, Wrangell-St. Elias 9, Gates of the
+Arctic 7, Kobuk Valley 4, Glacier Bay 4 and Kenai Fjords 1. Mesa Verde,
+Arches and Bryce Canyon are zones with no rivers, like Joshua Tree. Pipeline:
+`~/.cache/flyfish-osm/rockies/` — one directory for park and state rivers
+(`specs.py`, `fetch.py` for state tiles, `fetch_ak.py` for Alaska area boxes,
+`fetch_extra.py` for OSM spellings found missing after a build, `build.py`,
+`apply.py`, `parkinfo.py`, `regs/`), fenced in the data files as
+"rockies & alaska rivers". The zones come from `zones_add2.py`.
+
+**A park can be two features.** The NPS boundary service returns Denali,
+Gates of the Arctic, Glacier Bay, Katmai, Lake Clark, Wrangell-St. Elias and
+Great Sand Dunes each as a National Park *and* a National Preserve under one
+`UNIT_CODE`. Keying on the code kept whichever came last, so Great Sand Dunes
+was drawn as its preserve alone and Katmai lost the preserve where Funnel
+Creek runs. The zone script merges every feature of a unit.
+
+**Alaska sits outside the opening frame** (`far:true` on its zones).
+`showZones()` fits only the zones without it, because a frame wide enough
+for Anchorage shrinks the lower 48 to slivers. Alaska is drawn and tappable,
+reached by panning or from the Alaska entries in "Jump to region".
+
+**Regulations, by booklet:**
+
+- **Colorado** (CPW *2026 Colorado Fishing*, "Special Regulations: Fishing
+  Waters"): keep only the 8.5–9 pt body faces, because the map pages are
+  interleaved with the listings and their labels are other fonts. A sidebar
+  set in the same 9 pt face runs on after some entries, so once an entry's
+  numbered rules begin, only rules, reach headings and notes belong to it.
+  Gold Medal reaches are kept and marked.
+- **Utah** (DWR *2026 Utah Fishing Guidebook*, "Rules for specific waters"):
+  a two-column layout read out of order, which put Green River section (b) on
+  another page, so lines are sorted by column before parsing. "See X"
+  entries resolve to X.
+- **Alaska** (ADF&G 2026 Southcentral, Southwest, Southeast and Northern
+  summaries): each river's entry is found by its exact heading and read until
+  the next water heading. The body faces are Montserrat 8.8 pt; the font
+  filter is what keeps map labels and photo captions out. Where the booklet
+  sets a water's rules as tables and maps — the Kenai mainstem, the Gulkana's
+  Middle Fork — the sheet cites the pages rather than reproducing a garbled
+  table. Every Alaska river also points at its area's general regulations by
+  page.
+
+Park regulation lines are from each park's own fishing page, fetched
+2026-10-01. Denali is the odd one out: no licence in the former Mount
+McKinley park, an Alaska licence in the additions and preserve.
+
+**Not mapped, and why:** OSM has no flowline for the West Fork Duchesne,
+Mammoth Creek (only 1.6 km), the Agulowak, Lower Talarik Creek, the
+Stuyahok, the Pasagshak, the Kadashan, the Kulik, Katmai's Battle Creek,
+Lake Clark's Silver Salmon Creek or the East Alsek. Rocky Mountain's Fern
+Creek and Kodiak's Olds River fall under 2 km, Gates of the Arctic's Wild
+River has nothing inside the park under that name, and Kenai Fjords'
+Resurrection River came out as eleven slivers along the boundary and was
+dropped. OSM's "South Platte River" starts at Spinney Mountain Reservoir;
+the Hartsel reach above it is drawn as the Middle Fork, which carries both
+CPW entries. Alaska geometry is simplified at 80 m rather than 40: the
+rivers are long and remote, and at 40 m they added 26,000 points.
 
 ## Teton Valley & Swan Valley, Idaho
 
@@ -816,6 +1065,15 @@ Two traps from that pass:
   single-page app — don't introduce a bundler, framework, or backend.
 - **Always** verify USGS gauge IDs against monitoring-locations metadata
   at runtime rather than trusting a hardcoded ID silently.
+- **Never** hand-enter a gauge coordinate. `GAUGE_POS` comes from the NWIS
+  site service (`waterservices.usgs.gov/nwis/site`, `siteOutput=expanded`,
+  which takes a comma-separated `sites=` list and is *not* on the
+  `api.waterdata.usgs.gov` request budget). 36 of the 182 were once more
+  than a kilometre from the station they name and 14 were more than five —
+  the North Platte above Seminoe was **52 km** out. This was not a cosmetic
+  problem: the hand-digitized river lines were drawn *through* these points,
+  so a wrong gauge pulled its river off the channel with it, and
+  `nearestGaugedRiver()` measured regional wetness from the wrong place.
 
 ## Talking to the flow API (request budget)
 
@@ -841,11 +1099,18 @@ Measured against a stubbed API, a full cold load is **67 requests instead of
   7 × ceil(n/30) rather than 7 × n.
 - `verifyGaugesBatch(keys)` — same idea against monitoring-locations.
 
-**Ordered by region, nearest first.** `regionsByDistance()` sorts the five
-buckets (`west`, `ciowa`, `driftless`, `northshore`, `uppermidwest`, from
+**Ordered by region, nearest first.** `regionsByDistance()` sorts the
+buckets (`west`, `ciowa`, `driftless`, `northshore`, `uppermidwest`, the
+park and valley regions, and one `w-XX` bucket per far-western state, from
 `regionOfRiver()`) by distance from the map centre, and `paintFlows()` runs
 after each one — so the water you're looking at colours in before the rest
 of the country is fetched.
+
+**The far-western states batch by state, not by region tag**
+(`STATE_BUCKET`: CA, OR, WA, MT, CO, UT, AK). Every park and every state is
+its own `region`, and a bucket holding one gauge still costs its own latest
+call and seven history calls; thirty small buckets roughly doubled a cold
+load. Yellowstone and Grand Teton keep their own buckets as before.
 
 Two things to preserve if you touch this:
 
@@ -1170,7 +1435,8 @@ are worth calibrating first.
   streams aren't gauged — the default text talks about Driftless spring
   creeks and is wrong everywhere else; the zoom gate in `syncLabels()` if
   the streams sit close together; the `REGIONS` quick-jump list; and the
-  legend copy in `index.html`. A new region does **not** need
+  legend copy in `index.html`. **A new national park is one `PARK_INFO`
+  entry** in `app.js` instead of most of that list. A new region does **not** need
   a zone any more — zones are states. If the region is a named place worth
   showing on the map, add it to `REGION_LABELS` in `zones2.py` instead; if
   it brings a new *state* onto the map, add that state's FIPS code to the

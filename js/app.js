@@ -45,7 +45,13 @@ Object.keys(GAUGES).forEach(k => { KEY_BY_SITE[GAUGES[k].site] = k; });
 /* Which region each gauge belongs to. Batches are built per region so the
    water you're actually looking at loads first and the rest trickles in —
    see refreshAll(). */
+// The far-western states and their parks batch by STATE, not by region tag:
+// every park and state is its own region, and a bucket of one gauge still
+// costs a latest call and seven history calls of its own -- thirty small
+// buckets roughly doubled a cold load against the 1,000/hour budget.
+const STATE_BUCKET = new Set(["CA","OR","WA","MT","CO","UT","AK"]);
 function regionOfRiver(r){
+  if(STATE_BUCKET.has(r.state) && r.region!=="yellowstone" && r.region!=="grandteton") return "w-"+r.state;
   if(r.region) return r.region;               // "driftless" | "northshore"
   if(r.state==="ID" || r.state==="WY") return "west";
   if(r.state==="IA") return "ciowa";
@@ -448,6 +454,84 @@ const REGIONS = [
   ["Minocqua / Manitowish (WI)", [45.95,-89.80,9]],
   ["Wolf River (WI)", [44.90,-88.70,8]],
   ["Lower Wisconsin Riverway", [43.20,-90.20,9]],
+  ["── West Coast & Montana ──", null],
+  ["California", [37.27,-119.31,5]],
+  ["Eastern Sierra / Owens", [37.55,-118.70,9]],
+  ["Shasta / McCloud / Pit", [41.05,-122.10,9]],
+  ["Oregon", [44.15,-120.58,6]],
+  ["Deschutes / Metolius", [44.75,-121.15,9]],
+  ["McKenzie / Willamette", [44.10,-122.40,9]],
+  ["Rogue / Umpqua", [42.80,-123.00,8]],
+  ["Washington", [47.27,-120.88,6]],
+  ["Yakima / Cle Elum", [47.00,-120.60,9]],
+  ["Methow / Wenatchee", [47.95,-120.40,8]],
+  ["Olympic Peninsula rivers", [47.85,-124.20,9]],
+  ["Montana", [46.68,-110.04,5]],
+  ["Madison / Ennis", [45.20,-111.60,9]],
+  ["Missouri / Craig", [47.10,-111.90,10]],
+  ["Bighorn / Fort Smith", [45.50,-107.80,10]],
+  ["Missoula (Blackfoot / Bitterroot / Clark Fork)", [46.85,-113.95,8]],
+  ["Big Hole / Beaverhead", [45.40,-112.90,9]],
+  ["── Colorado & Utah ──", null],
+  ["Colorado", [39.00,-105.55,6]],
+  ["South Platte (Dream Stream–Deckers)", [39.10,-105.40,9]],
+  ["Blue / Colorado (Silverthorne–Kremmling)", [39.85,-106.25,9]],
+  ["Roaring Fork / Fryingpan", [39.40,-106.95,10]],
+  ["Gunnison / Taylor", [38.65,-106.95,9]],
+  ["Arkansas (Leadville–Cañon City)", [38.80,-106.00,8]],
+  ["Rio Grande / Conejos", [37.55,-106.50,9]],
+  ["Animas / Dolores / San Juan", [37.45,-107.90,8]],
+  ["Yampa / Elk / North Park", [40.50,-106.70,8]],
+  ["Utah", [39.40,-111.70,6]],
+  ["Green River (Flaming Gorge)", [40.90,-109.30,10]],
+  ["Provo / Weber", [40.70,-111.40,9]],
+  ["Logan / Cache Valley", [41.80,-111.70,9]],
+  ["Uinta Basin (Duchesne / Strawberry)", [40.45,-110.50,8]],
+  ["── National parks, West Coast & Montana ──", null],
+  ["Olympic", [47.87,-123.93,8]],
+  ["Mount Rainier", [46.85,-121.68,10]],
+  ["North Cascades", [48.69,-121.14,9]],
+  ["Crater Lake", [42.93,-122.13,10]],
+  ["Glacier", [48.62,-113.86,9]],
+  ["Redwood", [41.46,-124.00,9]],
+  ["Lassen Volcanic", [40.50,-121.41,10]],
+  ["Yosemite", [37.84,-119.54,9]],
+  ["Kings Canyon", [36.92,-118.66,9]],
+  ["Sequoia", [36.50,-118.58,9]],
+  ["Pinnacles", [36.49,-121.17,10]],
+  ["Death Valley", [36.47,-117.14,8]],
+  ["Joshua Tree", [33.90,-115.86,9]],
+  ["Channel Islands", [33.77,-119.74,8]],
+  ["── National parks, Colorado & Utah ──", null],
+  ["Rocky Mountain", [40.35,-105.70,10]],
+  ["Black Canyon of the Gunnison", [38.57,-107.72,11]],
+  ["Great Sand Dunes", [37.80,-105.55,10]],
+  ["Mesa Verde", [37.20,-108.48,10]],
+  ["Capitol Reef", [38.20,-111.17,9]],
+  ["Zion", [37.30,-113.03,10]],
+  ["Canyonlands", [38.25,-109.90,9]],
+  ["Arches", [38.73,-109.58,10]],
+  ["Bryce Canyon", [37.57,-112.18,10]],
+  ["── Alaska ──", null],
+  ["Alaska", [61.50,-151.00,5]],
+  ["Kenai Peninsula (Kenai / Russian / Kasilof)", [60.40,-150.80,8]],
+  ["Mat-Su (Deshka / Willow / Little Su)", [61.85,-150.30,8]],
+  ["Copper basin (Gulkana / Klutina)", [62.20,-145.40,8]],
+  ["Fairbanks (Chena / Delta Clearwater)", [64.50,-146.80,7]],
+  ["Bristol Bay (Naknek / Kvichak / Alagnak)", [59.10,-156.20,7]],
+  ["Iliamna (Copper / Gibraltar / Newhalen)", [59.80,-155.20,8]],
+  ["Kuskokwim Bay (Kanektok / Goodnews)", [59.70,-161.10,8]],
+  ["Kodiak (Karluk / Ayakulik)", [57.50,-153.70,8]],
+  ["Southeast (Situk / Prince of Wales)", [57.00,-134.50,6]],
+  ["── National parks, Alaska ──", null],
+  ["Katmai", [58.70,-154.90,8]],
+  ["Lake Clark", [60.60,-153.90,7]],
+  ["Denali", [63.30,-150.50,7]],
+  ["Wrangell-St. Elias", [61.70,-142.90,7]],
+  ["Gates of the Arctic", [67.70,-153.30,6]],
+  ["Kobuk Valley", [67.40,-159.10,8]],
+  ["Glacier Bay", [58.70,-136.70,7]],
+  ["Kenai Fjords", [59.90,-150.00,8]],
 ];
 const regionCtl = L.control({position:"topright"});
 regionCtl.onAdd = function(){
@@ -508,8 +592,13 @@ function openLake(id){
   $("#sw").style.background = "#3aa7c2";
   $("#sh-title").textContent = k.name;
   const grte = k.park === "grandteton";
-  $("#sh-sub").textContent = grte ? "Wyoming · Grand Teton National Park · lake"
-                                  : "Wyoming · Yellowstone National Park · lake";
+  // the western parks answer from PARK_INFO; Yellowstone and Grand Teton keep their own copy
+  const pk = PARK_INFO[k.park];
+  const stateName = {WY:"Wyoming", OR:"Oregon", WA:"Washington", CA:"California", MT:"Montana",
+                     CO:"Colorado", UT:"Utah", AK:"Alaska"}[k.state] || k.state;
+  $("#sh-sub").textContent = pk ? stateName + pk.sub + " · lake"
+                         : grte ? "Wyoming · Grand Teton National Park · lake"
+                                : "Wyoming · Yellowstone National Park · lake";
   sheet.classList.add("open");
   body.innerHTML =
     `<p style="margin:12px 2px 2px;font-size:13.5px">${k.blurb}</p>` +
@@ -517,13 +606,13 @@ function openLake(id){
     `<div class="plain">No gauge and no flow number: a lake doesn't have one. What "in shape" means here is ice-off, water temperature and wind, not CFS — and on the big lakes the wind is the thing that decides the day.</div></div>` +
     `<div class="secthead">Fishing notes</div><div class="fishnote">🎣 ${k.fish}</div>` +
     `<div class="secthead">Park regulations</div><div class="fishnote">` +
-      `<span class="badge" style="background:#4a6f8a">${grte ? "Grand Teton · Wyoming regs" : "National Park Service"}</span> ` +
+      `<span class="badge" style="background:#4a6f8a">${pk ? pk.badge : grte ? "Grand Teton · Wyoming regs" : "National Park Service"}</span> ` +
       `<span style="font-size:11.5px">${k.regs}</span>` +
-      `<div style="font-size:10.5px;color:var(--txt-dim);margin-top:8px">${grte
+      `<div style="font-size:10.5px;color:var(--txt-dim);margin-top:8px">${pk ? pk.note : grte
         ? `From the National Park Service's Grand Teton fishing information, which follows <b>Wyoming Game &amp; Fish</b> regulations. Bait is allowed on park lakes that aren't otherwise restricted — the artificial-only rule covers the streams. Seasons and limits are re-issued every year; check the current Wyoming regulations and carry a Wyoming licence.`
         : `From the park's <b>2026</b> fishing regulations. A park permit is required at 16 and over and a state licence is not valid; tackle is lead-free artificial lures or flies, barbless. Attractors such as dodgers and lake trolls may be used <b>in lakes only</b>. Re-issued every year — read the current edition before you fish.`}</div>` +
     `</div>` +
-    `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Lake outlines: USGS NHD waterbodies. Verify regulations with ${grte
+    `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Lake outline: ${k.src==="osm" ? "OpenStreetMap" : "USGS NHD waterbodies"}. Verify regulations with ${pk ? pk.regBody : grte
       ? "WY Game &amp; Fish and the park — Grand Teton takes a <b>Wyoming licence</b>, unlike Yellowstone"
       : "the National Park Service (a state fishing licence is <b>not</b> valid in the park)"}.</p>`;
 }
@@ -752,7 +841,8 @@ function syncLabels(){
     let min = (l.river && l.river.minor) ? 12
               : (reg === "driftless" || reg === "northshore" || reg === "doorcounty"
                  || reg === "tetonvalley" || reg === "swanvalley") ? 10
-              : (reg === "yellowstone" || reg === "grandteton") ? 9 : 8;
+              : (reg === "yellowstone" || reg === "grandteton") ? 9
+              : PARK_INFO[reg] ? (PARK_INFO[reg].labelZoom || 9) : 8;
     // lesser classes need more zoom before their names are worth the clutter
     const t = tierNow.get(l.river.id);
     if(t && t.tier === "2") min += 1;
@@ -831,6 +921,207 @@ function tierShown(r){
 }
 const TIER_WEIGHT = {gold:5.5, "1":4.5, "2":3.6, "3":3};
 function tierWeight(r){ const t = tierNow.get(r.id); return TIER_WEIGHT[t ? t.tier : "3"]; }
+
+/* Declared here, above the river layers, on purpose: syncLabels() reads it
+   on its first call at startup. Declared further down -- next to the sheet
+   code that also uses it -- it was still in its temporal dead zone at that
+   call, the ReferenceError killed the rest of app.js, and the map came up
+   with no chooser and no sheet. */
+/* ============================================================
+   WESTERN NATIONAL PARKS — per-park sheet copy, as data.
+
+   Yellowstone and Grand Teton each grew their own branch in every function
+   that names an authority. Ten more parks would have been ten more branches
+   in six places; this table is one place instead. Each entry answers the
+   questions the sheet asks: what to call the place, whose licence it takes,
+   who to check with, the rule summary for the footer, and what to say when
+   a creek has no gauge.
+
+   Every regulation line here is from the park's own fishing page, fetched
+   2026-10-01. The licence rule is the line that matters most and it differs
+   park to park: Olympic, Mount Rainier and Crater Lake need no state licence
+   at all; North Cascades needs Washington's; the California parks need
+   California's; Glacier needs none on the North Fork from park land but
+   Montana's on the Middle Fork. Crediting the wrong one sends someone to
+   the wrong counter, or to the river without the licence they need.
+   ============================================================ */
+const SEKI_FOOTER = `🏔 <b>A California fishing licence is required</b> at 16 and over, and the parks follow California's regulations with one important addition: in waters <b>below 9,000 feet</b> outside developed areas, <b>only barbless artificial flies or lures</b> are allowed, and <b>rainbow trout, Kern rainbow, Sacramento sucker, riffle sculpin and California roach must be released</b>. Most of this water is a long walk from any road — check the parks' current fishing information before you go.`;
+const SEKI_UNGAUGED = "There is almost no live gauging inside these two parks — the one active station is on the Marble Fork of the Kaweah near Lodgepole. These are Sierra snowmelt rivers: high and cold into early summer, dropping through late summer and fall.";
+const PARK_INFO = {
+  olympic: {zone:"olym", sub:" · Olympic National Park", badge:"Olympic · park rules",
+    note:`From Olympic National Park's <b>2026</b> fishing regulations. Seasons are set by zone and species and change every year — read the current edition before you fish.`,
+    regBody:"the National Park Service (no Washington licence inside the park; a catch record card for salmon and steelhead)",
+    footer:`🏞 <b>No Washington licence is needed</b> to fish inside Olympic — except in the Pacific from shore. A free <b>catch record card</b> is required for salmon and steelhead. Most fresh water is <b>artificial lures with a barbless single-point hook</b>. <b>All wild fish are released</b> unless a rule specifically allows keeping them, and <b>fishing for bull trout and Dolly Varden is prohibited in all park waters</b>. Two adipose-clipped hatchery steelhead may be kept. The <b>Elwha is closed</b>, the <b>Queets closes October 1 – November 30</b>, and seasons are set by zone — check which zone a river is in before you go.`,
+    ungauged:"Olympic's gauges are where the big rivers leave the park, and none is on this one. The nearest gauged river is the useful read: the peninsula's rivers take the same Pacific storms and rise and fall with them."},
+  rainier: {zone:"mora", sub:" · Mount Rainier National Park", badge:"Mount Rainier · park rules",
+    note:`From Mount Rainier National Park's fishing regulations. Seasons and closures are set by the park — check the current page before you fish.`,
+    regBody:"the National Park Service (no Washington licence inside the park; a catch record card for salmon and steelhead)",
+    footer:`🏔 <b>No Washington licence is needed</b> inside Mount Rainier, but a <b>catch record card</b> is required for salmon and steelhead. Streams are <b>artificial lures and flies only, single-point barbless hooks</b>, and <b>lead tackle is prohibited</b> parkwide. <b>Every native fish goes back</b>; brook trout and kokanee may be kept, with no minimum size. There are two seasons: the <b>White, Huckleberry, West Fork, Carbon and Mowich</b> open the first Saturday in June and close on <b>Labor Day</b>, while the <b>Puyallup, Nisqually, Cowlitz and Ohanapecosh</b> watersheds stay open to <b>October 31</b>. Klickitat, Ipsut, Laughingwater, Edith and Fryingpan Creeks are closed above their water supplies.`,
+    ungauged:"No live gauge on this one. Several of Mount Rainier's rivers are glacier-fed and run highest and greyest on hot summer afternoons rather than in spring — the nearest gauged river is the useful read, and a cool morning is the window."},
+  northcascades: {zone:"noca", sub:" · North Cascades National Park Complex", badge:"North Cascades · Washington regs",
+    note:`From the North Cascades park complex's fishing information, which follows <b>Washington Department of Fish &amp; Wildlife</b> regulations. Licences are not sold in the park — buy one before you go.`,
+    regBody:"WDFW and the park — North Cascades takes a <b>Washington licence</b>, unlike Olympic and Mount Rainier",
+    footer:`🏔 <b>North Cascades is fished on a Washington licence</b> under WDFW regulations — and licences are not sold at park facilities. The park adds its own rules: hook and line only with the rod attended, <b>no bait fish or amphibians</b> except in designated waters, and no chumming. <b>Ruby Creek is closed</b> from the Ross Lake markers to its headwaters, and <b>Big Beaver Creek</b> is closed for its first quarter mile above Ross Lake. The Stehekin and the Skagit run through the complex's two <b>National Recreation Areas</b> — Lake Chelan and Ross Lake — rather than the national park itself.`,
+    ungauged:"No live gauge on this one, though the park complex is better gauged than most — Thunder, Big Beaver and Ruby Creeks, the Skagit at Newhalem and the Stehekin all report. Its east side drains to Lake Chelan and the west to the Skagit; the nearest gauged water on the same side of the crest is the read to trust."},
+  craterlake: {zone:"crla", sub:" · Crater Lake National Park", badge:"Crater Lake · park rules",
+    note:`From Crater Lake National Park's fishing information. Check the current page before you fish.`,
+    regBody:"the National Park Service (no licence is required inside the park)",
+    footer:`🌋 <b>No fishing licence is needed</b> anywhere inside Crater Lake National Park. <b>Artificial lures only</b> — organic bait of any kind, worms included, is prohibited. There are <b>no size or catch limits</b> on rainbow trout or kokanee from the lake, or on brook and brown trout from the streams. <b>Sun Creek and Lost Creek are closed</b> to protect bull trout, and any bull trout caught elsewhere goes straight back. At the lake, fishing is not allowed within 200 feet of the Cleetwood Cove boat docks.`,
+    ungauged:"There is <b>no live gauge on any Crater Lake stream</b>, and nothing close enough to borrow — the gauges nearby are on the Rogue and the Wood River, outside the park and on different water. These are short, cold creeks off the caldera: judge them on the water."},
+  glacier: {zone:"glac", sub:" · Glacier National Park", badge:"Glacier · park rules",
+    note:`From Glacier National Park's fishing regulations. Closures and spawning-season rules move year to year — read the current page before you fish.`,
+    regBody:"the National Park Service — and Montana FWP on the Middle Fork, which takes a Montana licence",
+    footer:`🏔 <b>Glacier sets its own rules.</b> Streams are open the <b>third Saturday in May through November 30</b>; lakes are open all year. <b>Artificial flies and lures only</b> — bait is allowed only in the Two Medicine drainage above Running Eagle Falls and in the Many Glacier valley above the Swiftcurrent Lake outlet. <b>No felt-soled wading boots</b>, <b>no lead</b>, and no treble hooks on the North or Middle Fork. <b>No bull trout may be kept</b>, and <b>all native fish must be released</b>. On the <b>North Fork</b>, fishing from park land needs <b>no Montana licence</b>; on the <b>Middle Fork</b> a Montana licence is required and state rules apply. A long list of creeks is <b>closed for its entire length</b> — Ole, Park, Muir, Coal, Nyack, Fish, Lee, Otatso, Boulder and Kennedy among them — so check the park's list before you fish anything small.`,
+    ungauged:"No live gauge on this one. Glacier's gauges are on the North and Middle Forks of the Flathead, the St. Mary and Swiftcurrent Creek; on this side of the divide, the nearest of those is the useful read."},
+  redwood: {zone:"redw", sub:" · Redwood National & State Parks", badge:"Redwood · California regs",
+    note:`Redwood National and State Parks follow <b>California Department of Fish &amp; Wildlife</b> regulations, which vary by species and location — open seasons, bag and possession limits, and fishing hours. CDFW: 707-445-6493.`,
+    regBody:"the California Department of Fish &amp; Wildlife (a California licence is required)",
+    footer:`🌲 <b>A California fishing licence is required</b> to fish anywhere in the parks, and the rules are the state's: <b>open seasons, daily bag and possession limits, and fishing hours all vary by species and by river</b>. The park's own guidance is to check with the California Department of Fish &amp; Wildlife — 707-445-6493 — before you fish.`,
+    ungauged:"No live gauge on this creek — the park's gauges are on Redwood Creek at Orick and on the Smith. These are coastal streams that rise and fall with rain off the Pacific; the nearest gauged river is the read on whether a storm has the region blown out."},
+  lassen: {zone:"lavo", sub:" · Lassen Volcanic National Park", badge:"Lassen · California regs",
+    note:`From Lassen Volcanic National Park's fishing information; California state regulations apply otherwise.`,
+    regBody:"the California Department of Fish &amp; Wildlife and the park (a California licence is required)",
+    footer:`🌋 <b>A California fishing licence is required</b> in the park. <b>Manzanita Lake is catch-and-release only</b>, with a single barbless hook and lures or flies — no bait of any kind. Fishing is not permitted at the Manzanita, Butte or Juniper Lake boat launches, and <b>Juniper Lake holds no game fish</b>.`,
+    ungauged:"There is no live gauge on Lassen's streams. These are small snowmelt and spring creeks high on a volcano — judge them on the water."},
+  yosemite: {zone:"yose", sub:" · Yosemite National Park", badge:"Yosemite · park rules",
+    note:`From Yosemite National Park's fishing regulations — several changed in <b>2026</b>, including year-round seasons on the Merced and Tuolumne. Check the current page before you fish.`,
+    regBody:"the park and CDFW (a California licence is required)",
+    footer:`🏞 <b>A California fishing licence is required</b> at 16 and over. <b>All park waters are open year-round</b>, and <b>live, dead or scented bait is prohibited</b> everywhere. On the <b>Merced, the South Fork Merced and the Tuolumne</b>: artificial lures or flies with <b>barbless hooks</b> only, <b>rainbow trout are catch-and-release</b>, and brown and brook trout are five a day and ten in possession. Elsewhere the limit is five trout a day and ten in possession. Adair and Hanging Basket Lakes are catch-and-release only.`,
+    ungauged:"No live gauge on this one — Yosemite's are on the Merced in the valley and the Tuolumne above Hetch Hetchy. This is Sierra snowmelt water: high and cold in late spring and early summer, dropping through late summer."},
+  kingscanyon: {zone:"kica", sub:" · Kings Canyon National Park", badge:"Sequoia & Kings Canyon · park rules",
+    note:`From Sequoia and Kings Canyon National Parks' fishing information; the parks otherwise conform to California state regulations.`,
+    regBody:"the parks and CDFW (a California licence is required)", footer:SEKI_FOOTER, ungauged:SEKI_UNGAUGED},
+  sequoia: {zone:"sequ", sub:" · Sequoia National Park", badge:"Sequoia & Kings Canyon · park rules",
+    note:`From Sequoia and Kings Canyon National Parks' fishing information; the parks otherwise conform to California state regulations.`,
+    regBody:"the parks and CDFW (a California licence is required)", footer:SEKI_FOOTER, ungauged:SEKI_UNGAUGED},
+};
+/* The four western states fished under their own agencies' rules. Same table
+   shape as the parks, so every place the sheet names an authority answers
+   from one row: the river's own regulation entry comes from the state's 2026
+   booklet verbatim (see parkRegs on each river), and these rows supply the
+   badge, the source note, the licence footer and who to check with. */
+/* Colorado and Utah, and their parks. Rocky Mountain, Black Canyon and Great
+   Sand Dunes all take a Colorado licence; Capitol Reef, Zion and Canyonlands a
+   Utah one -- the parks add their own rules on top, and Rocky Mountain's are
+   the stricter ones (catch-and-release and closed waters by name). */
+Object.assign(PARK_INFO, {
+  colorado: {zone:"co", sub:"", heading:"Regulations", labelZoom:8, badge:"CPW · 2026",
+    note:`From Colorado Parks &amp; Wildlife's <b>2026 Colorado Fishing</b> brochure — this water's own entry in <i>Special Regulations: Fishing Waters</i>, then the statewide limits. If a water isn't on that list, the statewide regulations apply. The brochure's online version is the most current.`,
+    regBody:"Colorado Parks &amp; Wildlife",
+    footer:`🎣 <b>Colorado</b>: a fishing licence is required at 16 and older, and the licence year runs <b>March 1 to March 31</b> of the following year. Statewide, trout are <b>4 a day and 8 in possession</b>, with 10 extra brook trout of 8 inches or less. <b>Greenback cutthroat trout may not be taken.</b> A <b>Gold Medal</b> water — marked on the river's own entry — is CPW's designation for the best trout water in the state, and not every Gold Medal water carries special regulations. The brochure's own warning: <i>it is illegal to go onto private land to fish</i>.`,
+    ungauged:"No live USGS gauge on this river. Many of Colorado's gauges are run by the state's Division of Water Resources rather than the USGS and aren't read here; the nearest USGS-gauged river is the regional read — snowmelt drives all of it, peaking in late May and June."},
+  utah: {zone:"ut", sub:"", heading:"Regulations", labelZoom:8, badge:"Utah DWR · 2026",
+    note:`From the Utah Division of Wildlife Resources' <b>2026 Utah Fishing Guidebook</b> — this water's own entry in <i>Rules for specific waters</i>, which takes precedence over the general rules. Emergency changes are posted at wildlife.utah.gov.`,
+    regBody:"the Utah Division of Wildlife Resources",
+    footer:`🎣 <b>Utah</b>: a licence is required at 12 and older — younger anglers may fish without one and take a full limit. The general season is <b>January 1 through December 31</b>, 24 hours a day. The general limit is <b>4 trout</b> (trout, kokanee and Arctic grayling combined), and you may not possess kokanee anywhere from September 10 through November 30. A water's own rules take precedence, and many of the best are artificial-flies-and-lures-only with slot limits.`,
+    ungauged:"No live gauge on this river. The nearest gauged water in Utah is the read on regional conditions; most of these rivers run on Wasatch and Uinta snowmelt, and the tailwaters on what the dam releases."},
+  rockymountain: {zone:"romo", sub:" · Rocky Mountain National Park", badge:"Rocky Mountain · park rules",
+    note:`From Rocky Mountain National Park's fishing regulations — a Colorado licence, under the park's own rules on tackle, possession and its catch-and-release and closed waters. Check the current page before you fish.`,
+    regBody:"the National Park Service (a Colorado licence is required)",
+    footer:`🏔 <b>A Colorado fishing licence is required</b> at 16 and older, and a Second Rod Stamp is not honored. <b>Only artificial flies or lures with one hook</b> — children 12 and under may use worms or preserved eggs outside catch-and-release water. <b>Greenback cutthroat trout must go back</b>, parkwide. Possession is capped at 18 trout, no more than 2 of them anything but brook trout. The park names its <b>catch-and-release</b> waters (barbless, no bait) and its <b>closed</b> waters — Bear Lake, Hague Creek above the Mummy Pass junction, the South Fork Poudre above Pingree Park and Columbine Creek above 9,000 feet among them.`,
+    ungauged:"No live gauge on this one. The park's only USGS gauge is on the Big Thompson at Moraine Park; east and west of the divide run on different snowpacks, so read the nearest gauge on the same side."},
+  blackcanyon: {zone:"blca", sub:" · Black Canyon of the Gunnison National Park", badge:"Black Canyon · park rules",
+    note:`From Black Canyon of the Gunnison National Park's fishing page, which follows Colorado regulations with its own tackle and limit rules.`,
+    regBody:"the National Park Service (a Colorado licence is required)",
+    footer:`🏞 <b>A Colorado fishing licence is required.</b> Artificial flies or lures only, no bait. <b>Every rainbow trout goes back</b>; brown trout are 4 a day, 8 in possession. The river inside the park is <b>Gold Medal &amp; Wild Trout Water</b>. Inner-canyon routes need a wilderness permit (day use from East Portal does not), and vehicles over 22 feet are prohibited on the East Portal Road.`,
+    ungauged:"No live gauge inside the canyon — the release from Crystal Dam is what sets the flow."},
+  sanddunes: {zone:"grsa", sub:" · Great Sand Dunes National Park & Preserve", badge:"Great Sand Dunes · Colorado regs",
+    note:`From Great Sand Dunes National Park &amp; Preserve's fishing page, which follows the State of Colorado's licence requirements and regulations.`,
+    regBody:"the park and Colorado Parks &amp; Wildlife (a Colorado licence is required)",
+    footer:`🏜 Fished on a <b>Colorado licence</b> under state regulations, in the <b>Medano and Sand Creek drainages</b>. <b>Rio Grande cutthroat trout are catch and release only.</b> Hook and line only with the rod attended; no bait fish and no chumming.`,
+    ungauged:"No live gauge here. Medano Creek is a snowmelt creek off the Sangre de Cristo whose flow across the dunefield peaks in late May and June."},
+  capitolreef: {zone:"care", sub:" · Capitol Reef National Park", badge:"Capitol Reef · Utah regs",
+    note:`From Capitol Reef National Park's fish page; the park adopts Utah's non-conflicting fishing regulations.`,
+    regBody:"the Utah Division of Wildlife Resources (a Utah licence is required)",
+    footer:`🏜 Fished under <b>Utah's regulations</b> on a Utah licence. The Fremont gorge above Fruita holds brown trout; below Fruita there is no sport fishery.`,
+    ungauged:"No live gauge inside the park. The Fremont is gauged near Bicknell, upstream; a summer thunderstorm can blow these canyons out in an hour."},
+  zion: {zone:"zion", sub:" · Zion National Park", badge:"Zion · Utah regs",
+    note:`From Zion National Park's fish page — a Utah licence is required for everyone 12 or older.`,
+    regBody:"the Utah Division of Wildlife Resources (a Utah licence is required)",
+    footer:`🏜 <b>A Utah fishing licence is required</b> for everyone 12 or older. The park says plainly that fishing is far more productive at nearby reservoirs than in the park, and that its four native fish — Virgin spinedace, desert sucker, flannelmouth sucker and speckled dace — are under conservation agreements.`,
+    ungauged:"No live gauge here worth borrowing. Flash floods, not snowmelt, are what decide a day in Zion's canyons — check the park's flash-flood forecast."},
+  canyonlands: {zone:"cany", sub:" · Canyonlands National Park", badge:"Canyonlands · Utah regs",
+    note:`From Canyonlands National Park: a valid Utah licence and Utah's fishing regulations.`,
+    regBody:"the Utah Division of Wildlife Resources (a Utah licence is required)",
+    footer:`🏜 <b>A Utah fishing licence</b> and Utah's regulations. A backcountry trip on the Green or Colorado inside the park needs a river permit from Recreation.gov. This is big warm desert river, not trout water, and the endangered native fish here must be released immediately.`,
+    ungauged:"No gauge inside the park. The Green is gauged at Green River, Utah, and the Colorado near Cisco — both upstream."},
+});
+
+/* Alaska and its parks. Every Alaska park is fished on an Alaska licence under
+   ADF&G's rules -- except Denali's old Mount McKinley park, which needs none --
+   and the Park Service adds its own on top: Brooks River is fly-fishing-only
+   and catch-and-release above the bridge, and bears set the distance. */
+Object.assign(PARK_INFO, {
+  alaska: {zone:"ak", sub:"", heading:"Regulations", labelZoom:8, badge:"ADF&G · 2026",
+    note:`From the Alaska Department of Fish &amp; Game's <b>2026 sport fishing regulation summaries</b> — this water's own entry, then the area's general regulations. <b>Emergency orders</b> change Alaska's rules in-season, often for king salmon: check www.adfg.alaska.gov/sf/EONR before you cast.`,
+    regBody:"the Alaska Department of Fish &amp; Game",
+    footer:`🎣 <b>Alaska</b>: an Alaska sport fishing licence is required for resident anglers <b>18 and older</b> and nonresident anglers <b>16 and older</b>, in your possession, paper or electronic. King salmon need a <b>king salmon stamp</b> as well, and some harvests must be recorded on the licence as you take them. Rules are set by region and area — Southcentral, Southwest, Southeast and Northern — and by drainage within each, with dates that open and close by species. The 2026 booklets already carry <b>king salmon closures by emergency order</b> — the Susitna drainage, the Karluk and the Ayakulik among them.`,
+    ungauged:"No live gauge on this river. Alaska's gauges are few and far apart; the nearest one is a read on whether rain or glacier melt has the region high, not on this water."},
+  katmai: {zone:"katm", sub:" · Katmai National Park & Preserve", badge:"Katmai · Alaska regs + park rules",
+    note:`From Katmai National Park &amp; Preserve's fishing pages, which follow Alaska's regulations and add the park's own — on the Brooks River above all.`,
+    regBody:"ADF&amp;G and the National Park Service (an Alaska licence is required)",
+    footer:`🐻 <b>An Alaska sport fishing licence</b> is required, and fishing falls under ADF&amp;G's Bristol Bay, Kodiak/Aleutian and Lower Cook Inlet areas. <b>Keep 50 yards from every bear, and stop fishing when one is within 50 yards</b> — at Brooks no lure may stay in the water. The <b>Brooks River is fly fishing only and catch-and-release above the bridge</b>, no rainbow trout may be kept there, and permits are needed in the Brooks River corridor June 15 – October 31.`,
+    ungauged:"No live gauge in the park. These are lake-fed rivers, steadier than most — the lakes buffer them."},
+  lakeclark: {zone:"lacl", sub:" · Lake Clark National Park & Preserve", badge:"Lake Clark · Alaska regs",
+    note:`From Lake Clark National Park &amp; Preserve's fishing page: Alaska licences and tags, under State of Alaska regulations.`,
+    regBody:"ADF&amp;G (an Alaska licence is required)",
+    footer:`🏔 <b>Alaska licences and tags</b> and the <b>State of Alaska's regulations</b> — the park and the state manage the fish together. Most of this water is in ADF&amp;G's Bristol Bay area.`,
+    ungauged:"No live gauge in the park. Fly-in water: the lake levels and the weather decide the day more than any gauge could."},
+  denali: {zone:"dena", sub:" · Denali National Park & Preserve", badge:"Denali · park rules",
+    note:`From Denali National Park &amp; Preserve's fishing page. The old park and the newer additions run under different rules.`,
+    regBody:"the National Park Service — and ADF&amp;G in the park additions and preserve",
+    footer:`🏔 In the <b>former Mount McKinley National Park no licence is required</b>, and the limit is 10 fish, not to exceed 10 lbs and one fish (lake trout 2, including those hooked and released). In the <b>park additions and preserve</b> an Alaska licence is required and state rules apply. Hook and line only, no bait of any kind, no chumming; lead tackle is discouraged.`,
+    ungauged:"No live gauge on this one. Many of Denali's rivers are glacial — highest and muddiest on warm afternoons."},
+  wrangell: {zone:"wrst", sub:" · Wrangell-St. Elias National Park & Preserve", badge:"Wrangell-St. Elias · Alaska regs",
+    note:`From Wrangell-St. Elias National Park &amp; Preserve's fishing page: an Alaska licence, under ADF&amp;G's Upper Copper–Upper Susitna and Yakutat area regulations.`,
+    regBody:"ADF&amp;G (an Alaska licence is required, though exceptions may apply)",
+    footer:`🏔 A valid <b>Alaska fishing licence</b> is required, though exceptions may apply; anglers under 18 (16 for nonresidents) don't need one but must record harvest. Limits vary by species and area under ADF&amp;G's <b>Upper Copper–Upper Susitna</b> and <b>Yakutat</b> management areas.`,
+    ungauged:"No live gauge on this one. Most of the park's rivers are glacial; clearwater creeks and lakes are where the fishing is."},
+  gatesarctic: {zone:"gaar", sub:" · Gates of the Arctic National Park & Preserve", badge:"Gates of the Arctic · Alaska regs",
+    note:`From Gates of the Arctic National Park &amp; Preserve's fishing page: 36 CFR 2.3 and State of Alaska regulations where they don't conflict.`,
+    regBody:"the National Park Service and ADF&amp;G (an Alaska licence is required)",
+    footer:`🏔 A <b>State of Alaska fishing licence</b> is required — available in Fairbanks, Bettles, Coldfoot or online. <b>Hook and line only</b>; live bait and dead minnows are prohibited.`,
+    ungauged:"No live gauge in the park — this is roadless Arctic water reached by floatplane."},
+  kobukvalley: {zone:"kova", sub:" · Kobuk Valley National Park", badge:"Kobuk Valley · Alaska regs",
+    note:`From Kobuk Valley National Park's fishing page: an Alaska licence and Alaska's regulations.`,
+    regBody:"ADF&amp;G (an Alaska licence is required)",
+    footer:`🏜 An <b>Alaska state fishing licence</b> is required — available in Kotzebue or online — and Alaska's regulations apply.`,
+    ungauged:"No live gauge in the park."},
+  glacierbay: {zone:"glba", sub:" · Glacier Bay National Park & Preserve", badge:"Glacier Bay · Alaska regs + park rules",
+    note:`From Glacier Bay National Park &amp; Preserve's sport fishing regulations, which add NPS freshwater rules to ADF&amp;G's.`,
+    regBody:"ADF&amp;G and the National Park Service (an Alaska licence is required)",
+    footer:`🏔 An <b>Alaska sportfishing licence</b> is required for nonresidents 16 and older and Alaska residents 18–59. In fresh water the park allows <b>hook and line only</b>, with no bait, no unpreserved eggs or roe and no chumming. On the <b>Bartlett River</b>, harvested fish must stay within six feet of you and be packed out whole. Travel on the Alsek needs a park river permit.`,
+    ungauged:"No live gauge in the park."},
+  kenaifjords: {zone:"kefj", sub:" · Kenai Fjords National Park", badge:"Kenai Fjords · Alaska regs",
+    note:`From Kenai Fjords National Park's fishing page: state regulations and an Alaska licence.`,
+    regBody:"ADF&amp;G (an Alaska licence is required)",
+    footer:`🌊 Fished <b>per state regulations</b> on an Alaska licence. The park's fishing is mostly salt water; in the backcountry, salmon and Dolly Varden.`,
+    ungauged:"No live gauge in the park."},
+});
+
+Object.assign(PARK_INFO, {
+  montana: {zone:"mt", sub:"", heading:"Regulations", labelZoom:8, badge:"Montana FWP · 2026",
+    note:`From Montana Fish, Wildlife &amp; Parks' <b>2026 Fishing Regulations</b> — this water's own entry in the District Exceptions to Standard Regulations, then the district standard. A water's exceptions replace the standard for the items they list. FWP posts temporary and seasonal closures not in the booklet at fwp.mt.gov — check before you go.`,
+    regBody:"Montana Fish, Wildlife &amp; Parks",
+    footer:`🎣 <b>Montana</b>: most anglers need a <b>Conservation License, a Fishing License and an AIS Prevention Pass</b>; children 11 and under need no licence but must observe all limits and regulations. Rules are set by district — Western, Central and Eastern — and a water's own exceptions take the place of the district standard for the items they list. Bull trout are closed to angling statewide unless an exception says otherwise.`,
+    ungauged:"No live gauge on this river. The nearest gauged water in Montana is the read on how runoff and rain have the region — Montana's rivers are snowmelt-driven, high and cold through spring and early summer, and the small ones clear long before the big ones do."},
+  california: {zone:"ca", sub:"", heading:"Regulations", labelZoom:8, badge:"CDFW · 2026",
+    note:`From the California Department of Fish &amp; Wildlife's <b>2026 Freshwater Sport Fishing Regulations</b> — this water's own entry in §7.50 (trout waters) or §7.40 (salmon and steelhead waters), otherwise the statewide stream rule in §5.85.`,
+    regBody:"the California Department of Fish &amp; Wildlife",
+    footer:`🎣 <b>California</b>: a <b>sport fishing licence is required at 16 and older</b>. Rivers follow the statewide stream rule — open the last Saturday in April through November 15, five trout — unless listed in the special regulations, and many of the best trout waters are listed, with zero-bag, barbless or artificial-only reaches. The Eel, Mad, Mattole, Redwood Creek, Smith and Van Duzen are subject to <b>low-flow closures</b> from September 1 through April 30.`,
+    ungauged:"No live gauge on this river. The nearest gauged water in California is the read on regional conditions — Sierra and Cascade rivers run on snowmelt, the coast ranges on rain."},
+  oregon: {zone:"or", sub:"", heading:"Regulations", labelZoom:8, badge:"ODFW · 2026",
+    note:`From the Oregon Department of Fish &amp; Wildlife's <b>2026 Sport Fishing Regulations</b> — this water's own exception entry, then the standard rules for its zone.`,
+    regBody:"the Oregon Department of Fish &amp; Wildlife",
+    footer:`🎣 <b>Oregon</b>: <b>everyone 12 and older needs an Oregon Angling License</b> in possession. Rules are set by zone and a river's exceptions take precedence; in most zones streams open May 22 and trout are 2 a day with an 8-inch minimum — except the <b>Willamette Zone, which is catch-and-release for trout in streams</b> unless an exception says otherwise.`,
+    ungauged:"No live gauge on this river. The nearest gauged water in Oregon is the read on regional conditions — Cascade rivers run on snowmelt, coastal ones on rain."},
+  washington: {zone:"wa", sub:"", heading:"Regulations", labelZoom:8, badge:"WDFW · 2026–27",
+    note:`From the Washington Department of Fish &amp; Wildlife's <b>Sport Fishing Rules</b>, in effect July 1, 2026 – June 30, 2027 — this water's own Special Rules entry, otherwise the statewide freshwater rules. Emergency rules change often: (360) 902-2700 or wdfw.wa.gov.`,
+    regBody:"the Washington Department of Fish &amp; Wildlife",
+    footer:`🎣 <b>Washington</b>: annual licences include a <b>Catch Record Card</b> for salmon, steelhead and sturgeon, and anglers 15 and older fishing for salmon or steelhead on the Columbia or its tributaries need the <b>Columbia River Salmon and Steelhead Endorsement</b>. Unless a river's Special Rules say otherwise, rivers open the Saturday before Memorial Day through October 31, trout are 2 a day with an 8-inch minimum, Dolly Varden/bull trout are closed, and every wild steelhead goes back.`,
+    ungauged:"No live gauge on this river. The nearest gauged water in Washington is the read on regional conditions — the west side runs on rain, the east side and the Cascades on snowmelt."},
+});
+
 
 const riverLayers = {}, rampMarkers = {}, gaugeDots = {};
 let highlight = null;
@@ -1270,7 +1561,14 @@ function clipToDrawn(segs, drawnRuns){
 async function refineRiver(r){
   const layer = riverLayers[r.id];
   if(!layer || layer.refined || layer.refining) return;
-  if(r.geom === "iadnr" || r.geom === "widnr"){ layer.refined = true; return; }
+  /* Agency geometry and OSM geometry are both left alone. For iadnr/widnr
+     the reason is that the line IS the designated trout reach, and NHD would
+     replace it with the whole creek. For osm the reason is different: that
+     linework is already finer than the 66 m the first snap asks for, it was
+     validated against the river's own gauges when it was baked, and mixing
+     two sources along one channel would fragment the line wherever they
+     disagree by more than REFINE_BUFFER_KM. */
+  if(r.geom === "iadnr" || r.geom === "widnr" || r.geom === "osm"){ layer.refined = true; return; }
   layer.refining = true;
   const ck = "nhdfine:" + r.id;
   const cached = store.get(ck);
@@ -1363,12 +1661,15 @@ async function openRiver(id, focusGauge){
   if(!tierShown(r)){ tempShown.add(id); applyFilters(); }   // opened on purpose: show it
   $("#sw").style.background = riverColor(r);
   $("#sh-title").textContent = r.name;
-  const stateName = {ID:"Idaho", WY:"Wyoming", IA:"Iowa", MN:"Minnesota", WI:"Wisconsin", IL:"Illinois"}[r.state] || r.state;
+  const stateName = {ID:"Idaho", WY:"Wyoming", IA:"Iowa", MN:"Minnesota", WI:"Wisconsin", IL:"Illinois",
+                     CA:"California", OR:"Oregon", WA:"Washington", MT:"Montana",
+                     CO:"Colorado", UT:"Utah", AK:"Alaska"}[r.state] || r.state;
   const subRegion = {driftless:" · Driftless Area", northshore:" · North Shore",
                      doorcounty:" · Door Peninsula",
                      yellowstone:" · Yellowstone National Park",
                      grandteton:" · Grand Teton National Park",
-                     tetonvalley:" · Teton Valley", swanvalley:" · Swan Valley"}[r.region] || "";
+                     tetonvalley:" · Teton Valley", swanvalley:" · Swan Valley"}[r.region]
+                    || (PARK_INFO[r.region] && PARK_INFO[r.region].sub) || "";
   $("#sh-sub").textContent = stateName + subRegion;
   sheet.classList.add("open");
   loadRealRiver(r);                    // snap this river to exact USGS linework
@@ -1431,14 +1732,15 @@ function renderSheet(r){
        wrong counter. The Snake, Buffalo Fork and Gros Ventre carry a Grand
        Teton note without being in that region, so the source is a field. */
     const src = r.parkRegsSrc || (r.region==="yellowstone" ? "yell" : "grte");
-    const badge = src==="idfg" ? "Idaho Fish &amp; Game"
+    const pk = PARK_INFO[src];
+    const badge = pk ? pk.badge : src==="idfg" ? "Idaho Fish &amp; Game"
                 : src==="grte" ? "Grand Teton · Wyoming regs" : "National Park Service";
-    const note  = src==="idfg"
+    const note  = pk ? pk.note : src==="idfg"
       ? `From Idaho Fish &amp; Game's <b>2025–2027 Seasons &amp; Rules</b>, Upper Snake Region. Idaho re-issues the book every two years and the special-rule list changes with it — check the current one before you fish.`
       : src==="grte"
       ? `From the National Park Service's Grand Teton fishing information, which follows <b>Wyoming Game &amp; Fish</b> regulations. Seasons and closures are re-issued every year — check the current Wyoming regulations, and carry a Wyoming licence.`
       : `From the park's <b>2026</b> fishing regulations. Seasons, closures and possession limits are re-issued every year and streams close on short notice in low water — read the current edition before you fish, and carry your park permit.`;
-    h += `<div class="secthead">${src==="idfg" ? "Regulations" : "Park regulations"}</div><div class="fishnote">`+
+    h += `<div class="secthead">${(pk && pk.heading) || (src==="idfg" ? "Regulations" : "Park regulations")}</div><div class="fishnote">`+
       `<span class="badge" style="background:#4a6f8a">${badge}</span> `+
       `<span style="font-size:11.5px">${r.parkRegs}</span>`+
       `<div style="font-size:10.5px;color:var(--txt-dim);margin-top:8px">${note}</div>`+
@@ -1457,7 +1759,8 @@ function renderSheet(r){
   /* Inside a national park the state agency has nothing to do with it — a
      Wyoming or Montana licence is not valid in Yellowstone, and pointing a
      reader at Game & Fish for these rivers would be actively wrong. */
-  const regBody = r.region==="yellowstone"
+  const regBody = PARK_INFO[r.region] ? PARK_INFO[r.region].regBody
+    : r.region==="yellowstone"
     ? "the National Park Service (a state fishing licence is <b>not</b> valid in the park)"
     : r.region==="grandteton"
     ? "WY Game &amp; Fish and the park — Grand Teton takes a <b>Wyoming licence</b>, unlike Yellowstone"
@@ -1480,6 +1783,9 @@ function renderSheet(r){
   }
   if(r.region==="yellowstone"){
     h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🏞 <b>Yellowstone runs its own fishery.</b> A <b>park fishing permit</b> is required at 16 and over and a state licence is not valid — $40 for three days, $55 for seven, $75 for the season, through Recreation.gov. The standard season is the <b>Saturday of Memorial Day weekend through October 31</b>; the Firehole, the Gibbon below the bridge and the Madison above the state line open <b>May 1</b>, and the Madison below the state line and the Gardner from Osprey Falls down are <b>open year-round</b>. Tackle is <b>lead-free artificial lures or flies only, barbless or barbs pinched</b> — no bait — and up to two flies on a leader; the Firehole, Madison and lower Gibbon are <b>fly fishing only</b>. <b>All native fish go back unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. In the <b>Lamar drainage</b> every rainbow, brook trout and cutthroat/rainbow hybrid <b>must be killed</b>, as must every lake trout from Yellowstone Lake. Closures and opening dates move year to year — check the park's current fishing regulations before you go.</p>`;
+  }
+  if(PARK_INFO[r.region]){
+    h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">${PARK_INFO[r.region].footer}</p>`;
   }
   if(r.region==="doorcounty"){
     h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🌊 Door County has <b>no USGS gauge anywhere in the county</b> — every stream here is ungauged on purpose, and the nearest gauged water is a long way off. These creeks are small and rain-driven: judge them on the water. Almost all of them are <b>Great Lakes tributary</b> water, which carries its own season, a 10" minimum, a hook-gap limit and a <b>night-fishing closure</b> from September 15 — read the current Wisconsin regs before you go. Access is county park, state park and land-trust ground rather than DNR easement; there are no angling easements on the peninsula.</p>`;
@@ -1579,7 +1885,8 @@ function noGaugeHTML(r){
      the county — and nearestGaugedRiver() stays inside a region, so there is
      deliberately no proxy reading offered here. The note says so rather than
      leaving an empty card that looks like a loading failure. */
-  const ungaugedNote = (r.region==="tetonvalley" || r.region==="swanvalley")
+  const ungaugedNote = PARK_INFO[r.region] ? PARK_INFO[r.region].ungauged
+    : (r.region==="tetonvalley" || r.region==="swanvalley")
     ? "No gauge on this creek — in these two valleys the gauges are on the mainstems, and that is the right place to look anyway. Both rivers run through irrigated valleys, so late summer flow here is as much about diversions as about snowpack, and the tributaries drop and warm well before the river does. The nearest gauged water below is the useful read; remember the <b>June 1–30 closure</b> on the tributaries as well as the level."
     : r.region==="grandteton"
     ? "Only three gauges bear on Grand Teton's own water and none of them is on this one. Several of these creeks <i>have</i> USGS site numbers — Spread, Cottonwood, Ditch, Taggart, Pilgrim, Lake Creek — and not one has reported discharge since the 1990s or 2010, so there is nothing live to show. The nearest gauged water below is the useful read: these streams share one snowpack off the same range and rise and fall together. Remember the season here as well as the level — most park streams are shut until <b>August 1</b>."
@@ -1864,7 +2171,16 @@ function buildZones(){
     // rings[0] is the outer boundary, any further rings are holes; Leaflet
     // paints with fill-rule evenodd, so a hole is genuinely not part of the
     // shape — it doesn't take clicks either
-    const poly = L.polygon(z.rings, {...ZONE_STYLE[z.kind], pane:"zonePane"}).addTo(zoneLayer);
+    /* `rings` is one polygon — outer ring first, any further rings are holes.
+       `parts` holds additional *detached* polygons, each in that same shape,
+       for a zone that is genuinely in pieces: Channel Islands is five
+       islands, Olympic is the massif plus a coastal strip, North Cascades is
+       two units. Leaflet reads a list of ring-lists as a multipolygon, so
+       they all become ONE layer — one hover, one tap, one zone. Before this,
+       a detached piece could only have been expressed as a hole, which is
+       why the earlier note said a park could not be in pieces. */
+    const shape = z.parts && z.parts.length ? [z.rings].concat(z.parts) : z.rings;
+    const poly = L.polygon(shape, {...ZONE_STYLE[z.kind], pane:"zonePane"}).addTo(zoneLayer);
     poly.on("click", ()=>enterZone(z));
     /* Hover carries more weight now that the states have no card, so it
        lifts the fill *and* thickens the border — a fill change on its own is
@@ -2136,7 +2452,10 @@ function showZones(){
   // Fit the covered area rather than a fixed zoom: z4 fills a laptop but
   // shows a fraction of the country on a phone, which is the screen this
   // actually gets opened on.
-  goTo(L.latLngBounds([].concat(...ZONES.map(z=>z.bounds))).pad(0.04));
+  // Alaska and its parks are `far`: drawn and tappable, but left out of the
+  // fit, because a frame wide enough for Anchorage shrinks the lower 48 to a
+  // strip of slivers. Pan up to it, or take it from "Jump to region".
+  goTo(L.latLngBounds([].concat(...ZONES.filter(z=>!z.far).map(z=>z.bounds))).pad(0.04));
   map.once("moveend", layoutZoneCards);
   setTimeout(layoutZoneCards, 60);
   setTimeout(layoutZoneCards, 400);   // after a move deferred for container size
@@ -2245,6 +2564,7 @@ TIER_KEYS.forEach(k => { if(tierFilter[k]) tierGroups[k].addTo(map); });
 function refreshZoneCounts(){
   const sets = {yell: r => r.region==="yellowstone",
                 grte: r => r.region==="grandteton" || ["snake","buffalofork","grosventre"].includes(r.id)};
+  Object.entries(PARK_INFO).forEach(([reg, p]) => { sets[p.zone] = r => r.region === reg; });
   document.querySelectorAll(".zone-card .zc-count[data-zone]").forEach(el => {
     const f = sets[el.dataset.zone]; if(!f) return;
     const all = RIVERS.filter(f), shown = all.filter(tierShown).length;
