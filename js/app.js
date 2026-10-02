@@ -504,10 +504,13 @@ function onTap(layer, fn){
     map.dragging.enable();
     if(!one.active) return;
     if(raf){ cancelAnimationFrame(raf); raf = 0; }
+    // A quick flick can lift before the next frame has drawn the last move;
+    // apply it now, or the centre is still null and Leaflet throws.
+    if(pendingZ != null) applyZoom();
     pendingZ = null;
-    const z = map._limitZoom(one.z);
-    if(map.options.zoomAnimation) map._animateZoom(one.center, z, true, map.options.zoomSnap);
-    else map._resetView(one.center, z);
+    const z = map._limitZoom(one.z), center = one.center || centerFor(z);
+    if(map.options.zoomAnimation) map._animateZoom(center, z, true, map.options.zoomSnap);
+    else map._resetView(center, z);
     // the browser still fires a dblclick after this touchend; keep the
     // handler off a moment longer so it cannot add a level on top
     setTimeout(() => map.doubleClickZoom.enable(), 450);
@@ -1171,13 +1174,44 @@ try{
   const saved = JSON.parse(localStorage.getItem("tierFilter")||"null");
   if(saved && TIER_KEYS.every(k => typeof saved[k]==="boolean")) tierFilter = saved;
 }catch(e){}
+/* ---------- Field Book storage ----------
+   One localStorage key, loaded once into memory and written through on every
+   change. It lives up here, above tierShown(), because tierShown() asks it
+   about favourites during the first applyFilters() at startup — declared
+   lower it would still be in its temporal dead zone (same trap as PARK_INFO).
+   Every read and write is wrapped: in a private window storage can throw, and
+   then the book simply works for the session and is gone on reload. Nothing
+   here is ever sent anywhere. */
+const FB_KEY = "fieldBook";
+let fbState = {v:1, rivers:{}};
+try{
+  const saved = JSON.parse(localStorage.getItem(FB_KEY)||"null");
+  if(saved && saved.v===1 && saved.rivers && typeof saved.rivers==="object") fbState = saved;
+}catch(e){}
+function fbPersist(){ try{ localStorage.setItem(FB_KEY, JSON.stringify(fbState)); }catch(e){} }
+function fbGet(id){
+  const e = fbState.rivers[id];
+  return e ? e : {fav:false, fished:false, fishedOn:null, notes:"", updated:0};
+}
+function fbSet(id, patch){
+  const e = Object.assign({}, fbGet(id), patch, {updated:Date.now()});
+  if(!e.fav && !e.fished && !(e.notes||"").trim()) delete fbState.rivers[id];   // nothing left to keep
+  else fbState.rivers[id] = e;
+  fbPersist();
+  return e;
+}
+function fbAll(){ return fbState.rivers; }
+function fbIsFav(id){ const e = fbState.rivers[id]; return !!(e && e.fav); }
+
 const tempShown = new Set();          // hidden rivers opened on purpose (search, gauge tap)
 const tierNow = new Map();            // river id → tierOf() for today
 function refreshTiers(){ RIVERS.forEach(r => tierNow.set(r.id, tierOf(r))); }
 refreshTiers();
 function tierShown(r){
   const t = tierNow.get(r.id);
-  return tempShown.has(r.id) || (t ? tierFilter[t.tier] : tierFilter["3"]);
+  /* A favourite is a persistent tempShown: you starred it, so a class filter
+     doesn't get to hide it. */
+  return tempShown.has(r.id) || fbIsFav(r.id) || (t ? tierFilter[t.tier] : tierFilter["3"]);
 }
 const TIER_WEIGHT = {gold:5.5, "1":4.5, "2":3.6, "3":3};
 function tierWeight(r){ const t = tierNow.get(r.id); return TIER_WEIGHT[t ? t.tier : "3"]; }
@@ -1210,49 +1244,59 @@ const SEKI_UNGAUGED = "There is almost no live gauging inside these two parks �
 const PARK_INFO = {
   olympic: {zone:"olym", sub:" · Olympic National Park", badge:"Olympic · park rules",
     note:`From Olympic National Park's <b>2026</b> fishing regulations. Seasons are set by zone and species and change every year — read the current edition before you fish.`,
+    licence:"<b>No Washington licence</b> in the park (Pacific from shore excepted); catch record card for salmon, steelhead",
     regBody:"the National Park Service (no Washington licence inside the park; a catch record card for salmon and steelhead)",
     footer:`🏞 <b>No Washington licence is needed</b> to fish inside Olympic — except in the Pacific from shore. A free <b>catch record card</b> is required for salmon and steelhead. Most fresh water is <b>artificial lures with a barbless single-point hook</b>. <b>All wild fish are released</b> unless a rule specifically allows keeping them, and <b>fishing for bull trout and Dolly Varden is prohibited in all park waters</b>. Two adipose-clipped hatchery steelhead may be kept. The <b>Elwha is closed</b>, the <b>Queets closes October 1 – November 30</b>, and seasons are set by zone — check which zone a river is in before you go.`,
     ungauged:"Olympic's gauges are where the big rivers leave the park, and none is on this one. The nearest gauged river is the useful read: the peninsula's rivers take the same Pacific storms and rise and fall with them."},
   rainier: {zone:"mora", sub:" · Mount Rainier National Park", badge:"Mount Rainier · park rules",
     note:`From Mount Rainier National Park's fishing regulations. Seasons and closures are set by the park — check the current page before you fish.`,
+    licence:"<b>No Washington licence</b> in the park; catch record card for salmon and steelhead",
     regBody:"the National Park Service (no Washington licence inside the park; a catch record card for salmon and steelhead)",
     footer:`🏔 <b>No Washington licence is needed</b> inside Mount Rainier, but a <b>catch record card</b> is required for salmon and steelhead. Streams are <b>artificial lures and flies only, single-point barbless hooks</b>, and <b>lead tackle is prohibited</b> parkwide. <b>Every native fish goes back</b>; brook trout and kokanee may be kept, with no minimum size. There are two seasons: the <b>White, Huckleberry, West Fork, Carbon and Mowich</b> open the first Saturday in June and close on <b>Labor Day</b>, while the <b>Puyallup, Nisqually, Cowlitz and Ohanapecosh</b> watersheds stay open to <b>October 31</b>. Klickitat, Ipsut, Laughingwater, Edith and Fryingpan Creeks are closed above their water supplies.`,
     ungauged:"No live gauge on this one. Several of Mount Rainier's rivers are glacier-fed and run highest and greyest on hot summer afternoons rather than in spring — the nearest gauged river is the useful read, and a cool morning is the window."},
   northcascades: {zone:"noca", sub:" · North Cascades National Park Complex", badge:"North Cascades · Washington regs",
     note:`From the North Cascades park complex's fishing information, which follows <b>Washington Department of Fish &amp; Wildlife</b> regulations. Licences are not sold in the park — buy one before you go.`,
+    licence:"<b>Washington licence</b> — not sold at park facilities, buy one before you go",
     regBody:"WDFW and the park — North Cascades takes a <b>Washington licence</b>, unlike Olympic and Mount Rainier",
     footer:`🏔 <b>North Cascades is fished on a Washington licence</b> under WDFW regulations — and licences are not sold at park facilities. The park adds its own rules: hook and line only with the rod attended, <b>no bait fish or amphibians</b> except in designated waters, and no chumming. <b>Ruby Creek is closed</b> from the Ross Lake markers to its headwaters, and <b>Big Beaver Creek</b> is closed for its first quarter mile above Ross Lake. The Stehekin and the Skagit run through the complex's two <b>National Recreation Areas</b> — Lake Chelan and Ross Lake — rather than the national park itself.`,
     ungauged:"No live gauge on this one, though the park complex is better gauged than most — Thunder, Big Beaver and Ruby Creeks, the Skagit at Newhalem and the Stehekin all report. Its east side drains to Lake Chelan and the west to the Skagit; the nearest gauged water on the same side of the crest is the read to trust."},
   craterlake: {zone:"crla", sub:" · Crater Lake National Park", badge:"Crater Lake · park rules",
     note:`From Crater Lake National Park's fishing information. Check the current page before you fish.`,
+    licence:"<b>No fishing licence</b> needed anywhere inside the park",
     regBody:"the National Park Service (no licence is required inside the park)",
     footer:`🌋 <b>No fishing licence is needed</b> anywhere inside Crater Lake National Park. <b>Artificial lures only</b> — organic bait of any kind, worms included, is prohibited. There are <b>no size or catch limits</b> on rainbow trout or kokanee from the lake, or on brook and brown trout from the streams. <b>Sun Creek and Lost Creek are closed</b> to protect bull trout, and any bull trout caught elsewhere goes straight back. At the lake, fishing is not allowed within 200 feet of the Cleetwood Cove boat docks.`,
     ungauged:"There is <b>no live gauge on any Crater Lake stream</b>, and nothing close enough to borrow — the gauges nearby are on the Rogue and the Wood River, outside the park and on different water. These are short, cold creeks off the caldera: judge them on the water."},
   glacier: {zone:"glac", sub:" · Glacier National Park", badge:"Glacier · park rules",
     note:`From Glacier National Park's fishing regulations. Closures and spawning-season rules move year to year — read the current page before you fish.`,
+    licence:"<b>North Fork</b> from park land: no Montana licence. <b>Middle Fork</b>: Montana licence",
     regBody:"the National Park Service — and Montana FWP on the Middle Fork, which takes a Montana licence",
     footer:`🏔 <b>Glacier sets its own rules.</b> Streams are open the <b>third Saturday in May through November 30</b>; lakes are open all year. <b>Artificial flies and lures only</b> — bait is allowed only in the Two Medicine drainage above Running Eagle Falls and in the Many Glacier valley above the Swiftcurrent Lake outlet. <b>No felt-soled wading boots</b>, <b>no lead</b>, and no treble hooks on the North or Middle Fork. <b>No bull trout may be kept</b>, and <b>all native fish must be released</b>. On the <b>North Fork</b>, fishing from park land needs <b>no Montana licence</b>; on the <b>Middle Fork</b> a Montana licence is required and state rules apply. A long list of creeks is <b>closed for its entire length</b> — Ole, Park, Muir, Coal, Nyack, Fish, Lee, Otatso, Boulder and Kennedy among them — so check the park's list before you fish anything small.`,
     ungauged:"No live gauge on this one. Glacier's gauges are on the North and Middle Forks of the Flathead, the St. Mary and Swiftcurrent Creek; on this side of the divide, the nearest of those is the useful read."},
   redwood: {zone:"redw", sub:" · Redwood National & State Parks", badge:"Redwood · California regs",
     note:`Redwood National and State Parks follow <b>California Department of Fish &amp; Wildlife</b> regulations, which vary by species and location — open seasons, bag and possession limits, and fishing hours. CDFW: 707-445-6493.`,
+    licence:"<b>California fishing licence</b>, required anywhere in the parks",
     regBody:"the California Department of Fish &amp; Wildlife (a California licence is required)",
     footer:`🌲 <b>A California fishing licence is required</b> to fish anywhere in the parks, and the rules are the state's: <b>open seasons, daily bag and possession limits, and fishing hours all vary by species and by river</b>. The park's own guidance is to check with the California Department of Fish &amp; Wildlife — 707-445-6493 — before you fish.`,
     ungauged:"No live gauge on this creek — the park's gauges are on Redwood Creek at Orick and on the Smith. These are coastal streams that rise and fall with rain off the Pacific; the nearest gauged river is the read on whether a storm has the region blown out."},
   lassen: {zone:"lavo", sub:" · Lassen Volcanic National Park", badge:"Lassen · California regs",
     note:`From Lassen Volcanic National Park's fishing information; California state regulations apply otherwise.`,
+    licence:"<b>California fishing licence</b>, required in the park",
     regBody:"the California Department of Fish &amp; Wildlife and the park (a California licence is required)",
     footer:`🌋 <b>A California fishing licence is required</b> in the park. <b>Manzanita Lake is catch-and-release only</b>, with a single barbless hook and lures or flies — no bait of any kind. Fishing is not permitted at the Manzanita, Butte or Juniper Lake boat launches, and <b>Juniper Lake holds no game fish</b>.`,
     ungauged:"There is no live gauge on Lassen's streams. These are small snowmelt and spring creeks high on a volcano — judge them on the water."},
   yosemite: {zone:"yose", sub:" · Yosemite National Park", badge:"Yosemite · park rules",
     note:`From Yosemite National Park's fishing regulations — several changed in <b>2026</b>, including year-round seasons on the Merced and Tuolumne. Check the current page before you fish.`,
+    licence:"<b>California fishing licence</b>, required at 16 and over",
     regBody:"the park and CDFW (a California licence is required)",
     footer:`🏞 <b>A California fishing licence is required</b> at 16 and over. <b>All park waters are open year-round</b>, and <b>live, dead or scented bait is prohibited</b> everywhere. On the <b>Merced, the South Fork Merced and the Tuolumne</b>: artificial lures or flies with <b>barbless hooks</b> only, <b>rainbow trout are catch-and-release</b>, and brown and brook trout are five a day and ten in possession. Elsewhere the limit is five trout a day and ten in possession. Adair and Hanging Basket Lakes are catch-and-release only.`,
     ungauged:"No live gauge on this one — Yosemite's are on the Merced in the valley and the Tuolumne above Hetch Hetchy. This is Sierra snowmelt water: high and cold in late spring and early summer, dropping through late summer."},
   kingscanyon: {zone:"kica", sub:" · Kings Canyon National Park", badge:"Sequoia & Kings Canyon · park rules",
     note:`From Sequoia and Kings Canyon National Parks' fishing information; the parks otherwise conform to California state regulations.`,
+    licence:"<b>California fishing licence</b>, required at 16 and over",
     regBody:"the parks and CDFW (a California licence is required)", footer:SEKI_FOOTER, ungauged:SEKI_UNGAUGED},
   sequoia: {zone:"sequ", sub:" · Sequoia National Park", badge:"Sequoia & Kings Canyon · park rules",
     note:`From Sequoia and Kings Canyon National Parks' fishing information; the parks otherwise conform to California state regulations.`,
+    licence:"<b>California fishing licence</b>, required at 16 and over",
     regBody:"the parks and CDFW (a California licence is required)", footer:SEKI_FOOTER, ungauged:SEKI_UNGAUGED},
 };
 /* The four western states fished under their own agencies' rules. Same table
@@ -1267,41 +1311,49 @@ const PARK_INFO = {
 Object.assign(PARK_INFO, {
   colorado: {zone:"co", sub:"", heading:"Regulations", labelZoom:8, badge:"CPW · 2026",
     note:`From Colorado Parks &amp; Wildlife's <b>2026 Colorado Fishing</b> brochure — this water's own entry in <i>Special Regulations: Fishing Waters</i>, then the statewide limits. If a water isn't on that list, the statewide regulations apply. The brochure's online version is the most current.`,
+    licence:"<b>Colorado fishing licence</b>, required at 16 and older",
     regBody:"Colorado Parks &amp; Wildlife",
     footer:`🎣 <b>Colorado</b>: a fishing licence is required at 16 and older, and the licence year runs <b>March 1 to March 31</b> of the following year. Statewide, trout are <b>4 a day and 8 in possession</b>, with 10 extra brook trout of 8 inches or less. <b>Greenback cutthroat trout may not be taken.</b> A <b>Gold Medal</b> water — marked on the river's own entry — is CPW's designation for the best trout water in the state, and not every Gold Medal water carries special regulations. The brochure's own warning: <i>it is illegal to go onto private land to fish</i>.`,
     ungauged:"No live gauge on this river — neither USGS nor Colorado's Division of Water Resources reports discharge on it. The nearest gauged river is the regional read — snowmelt drives all of it, peaking in late May and June."},
   utah: {zone:"ut", sub:"", heading:"Regulations", labelZoom:8, badge:"Utah DWR · 2026",
     note:`From the Utah Division of Wildlife Resources' <b>2026 Utah Fishing Guidebook</b> — this water's own entry in <i>Rules for specific waters</i>, which takes precedence over the general rules. Emergency changes are posted at wildlife.utah.gov.`,
+    licence:"<b>Utah fishing licence</b>, required at 12 and older",
     regBody:"the Utah Division of Wildlife Resources",
     footer:`🎣 <b>Utah</b>: a licence is required at 12 and older — younger anglers may fish without one and take a full limit. The general season is <b>January 1 through December 31</b>, 24 hours a day. The general limit is <b>4 trout</b> (trout, kokanee and Arctic grayling combined), and you may not possess kokanee anywhere from September 10 through November 30. A water's own rules take precedence, and many of the best are artificial-flies-and-lures-only with slot limits.`,
     ungauged:"No live gauge on this river. The nearest gauged water in Utah is the read on regional conditions; most of these rivers run on Wasatch and Uinta snowmelt, and the tailwaters on what the dam releases."},
   rockymountain: {zone:"romo", sub:" · Rocky Mountain National Park", badge:"Rocky Mountain · park rules",
     note:`From Rocky Mountain National Park's fishing regulations — a Colorado licence, under the park's own rules on tackle, possession and its catch-and-release and closed waters. Check the current page before you fish.`,
+    licence:"<b>Colorado fishing licence</b>, 16 and older; Second Rod Stamp not honored",
     regBody:"the National Park Service (a Colorado licence is required)",
     footer:`🏔 <b>A Colorado fishing licence is required</b> at 16 and older, and a Second Rod Stamp is not honored. <b>Only artificial flies or lures with one hook</b> — children 12 and under may use worms or preserved eggs outside catch-and-release water. <b>Greenback cutthroat trout must go back</b>, parkwide. Possession is capped at 18 trout, no more than 2 of them anything but brook trout. The park names its <b>catch-and-release</b> waters (barbless, no bait) and its <b>closed</b> waters — Bear Lake, Hague Creek above the Mummy Pass junction, the South Fork Poudre above Pingree Park and Columbine Creek above 9,000 feet among them.`,
     ungauged:"No live gauge on this one. The park's only USGS gauge is on the Big Thompson at Moraine Park; east and west of the divide run on different snowpacks, so read the nearest gauge on the same side."},
   blackcanyon: {zone:"blca", sub:" · Black Canyon of the Gunnison National Park", badge:"Black Canyon · park rules",
     note:`From Black Canyon of the Gunnison National Park's fishing page, which follows Colorado regulations with its own tackle and limit rules.`,
+    licence:"<b>Colorado fishing licence</b> required",
     regBody:"the National Park Service (a Colorado licence is required)",
     footer:`🏞 <b>A Colorado fishing licence is required.</b> Artificial flies or lures only, no bait. <b>Every rainbow trout goes back</b>; brown trout are 4 a day, 8 in possession. The river inside the park is <b>Gold Medal &amp; Wild Trout Water</b>. Inner-canyon routes need a wilderness permit (day use from East Portal does not), and vehicles over 22 feet are prohibited on the East Portal Road.`,
     ungauged:"No live gauge inside the canyon — the release from Crystal Dam is what sets the flow."},
   sanddunes: {zone:"grsa", sub:" · Great Sand Dunes National Park & Preserve", badge:"Great Sand Dunes · Colorado regs",
     note:`From Great Sand Dunes National Park &amp; Preserve's fishing page, which follows the State of Colorado's licence requirements and regulations.`,
+    licence:"<b>Colorado licence</b>, under state regulations",
     regBody:"the park and Colorado Parks &amp; Wildlife (a Colorado licence is required)",
     footer:`🏜 Fished on a <b>Colorado licence</b> under state regulations, in the <b>Medano and Sand Creek drainages</b>. <b>Rio Grande cutthroat trout are catch and release only.</b> Hook and line only with the rod attended; no bait fish and no chumming.`,
     ungauged:"No live gauge here. Medano Creek is a snowmelt creek off the Sangre de Cristo whose flow across the dunefield peaks in late May and June."},
   capitolreef: {zone:"care", sub:" · Capitol Reef National Park", badge:"Capitol Reef · Utah regs",
     note:`From Capitol Reef National Park's fish page; the park adopts Utah's non-conflicting fishing regulations.`,
+    licence:"<b>Utah licence</b>, under Utah's regulations",
     regBody:"the Utah Division of Wildlife Resources (a Utah licence is required)",
     footer:`🏜 Fished under <b>Utah's regulations</b> on a Utah licence. The Fremont gorge above Fruita holds brown trout; below Fruita there is no sport fishery.`,
     ungauged:"No live gauge inside the park. The Fremont is gauged near Bicknell, upstream; a summer thunderstorm can blow these canyons out in an hour."},
   zion: {zone:"zion", sub:" · Zion National Park", badge:"Zion · Utah regs",
     note:`From Zion National Park's fish page — a Utah licence is required for everyone 12 or older.`,
+    licence:"<b>Utah fishing licence</b>, required for everyone 12 or older",
     regBody:"the Utah Division of Wildlife Resources (a Utah licence is required)",
     footer:`🏜 <b>A Utah fishing licence is required</b> for everyone 12 or older. The park says plainly that fishing is far more productive at nearby reservoirs than in the park, and that its four native fish — Virgin spinedace, desert sucker, flannelmouth sucker and speckled dace — are under conservation agreements.`,
     ungauged:"No live gauge here worth borrowing. Flash floods, not snowmelt, are what decide a day in Zion's canyons — check the park's flash-flood forecast."},
   canyonlands: {zone:"cany", sub:" · Canyonlands National Park", badge:"Canyonlands · Utah regs",
     note:`From Canyonlands National Park: a valid Utah licence and Utah's fishing regulations.`,
+    licence:"<b>Utah fishing licence</b> and Utah's regulations",
     regBody:"the Utah Division of Wildlife Resources (a Utah licence is required)",
     footer:`🏜 <b>A Utah fishing licence</b> and Utah's regulations. A backcountry trip on the Green or Colorado inside the park needs a river permit from Recreation.gov. This is big warm desert river, not trout water, and the endangered native fish here must be released immediately.`,
     ungauged:"No gauge inside the park. The Green is gauged at Green River, Utah, and the Colorado near Cisco — both upstream."},
@@ -1314,46 +1366,55 @@ Object.assign(PARK_INFO, {
 Object.assign(PARK_INFO, {
   alaska: {zone:"ak", sub:"", heading:"Regulations", labelZoom:8, badge:"ADF&G · 2026",
     note:`From the Alaska Department of Fish &amp; Game's <b>2026 sport fishing regulation summaries</b> — this water's own entry, then the area's general regulations. <b>Emergency orders</b> change Alaska's rules in-season, often for king salmon: check www.adfg.alaska.gov/sf/EONR before you cast.`,
+    licence:"<b>Alaska sport fishing licence</b> (resident 18+, nonresident 16+); king salmon stamp",
     regBody:"the Alaska Department of Fish &amp; Game",
     footer:`🎣 <b>Alaska</b>: an Alaska sport fishing licence is required for resident anglers <b>18 and older</b> and nonresident anglers <b>16 and older</b>, in your possession, paper or electronic. King salmon need a <b>king salmon stamp</b> as well, and some harvests must be recorded on the licence as you take them. Rules are set by region and area — Southcentral, Southwest, Southeast and Northern — and by drainage within each, with dates that open and close by species. The 2026 booklets already carry <b>king salmon closures by emergency order</b> — the Susitna drainage, the Karluk and the Ayakulik among them.`,
     ungauged:"No live gauge on this river. Alaska's gauges are few and far apart; the nearest one is a read on whether rain or glacier melt has the region high, not on this water."},
   katmai: {zone:"katm", sub:" · Katmai National Park & Preserve", badge:"Katmai · Alaska regs + park rules",
     note:`From Katmai National Park &amp; Preserve's fishing pages, which follow Alaska's regulations and add the park's own — on the Brooks River above all.`,
+    licence:"<b>Alaska sport fishing licence</b> required",
     regBody:"ADF&amp;G and the National Park Service (an Alaska licence is required)",
     footer:`🐻 <b>An Alaska sport fishing licence</b> is required, and fishing falls under ADF&amp;G's Bristol Bay, Kodiak/Aleutian and Lower Cook Inlet areas. <b>Keep 50 yards from every bear, and stop fishing when one is within 50 yards</b> — at Brooks no lure may stay in the water. The <b>Brooks River is fly fishing only and catch-and-release above the bridge</b>, no rainbow trout may be kept there, and permits are needed in the Brooks River corridor June 15 – October 31.`,
     ungauged:"No live gauge in the park. These are lake-fed rivers, steadier than most — the lakes buffer them."},
   lakeclark: {zone:"lacl", sub:" · Lake Clark National Park & Preserve", badge:"Lake Clark · Alaska regs",
     note:`From Lake Clark National Park &amp; Preserve's fishing page: Alaska licences and tags, under State of Alaska regulations.`,
+    licence:"<b>Alaska licence and tags</b>, under State of Alaska regulations",
     regBody:"ADF&amp;G (an Alaska licence is required)",
     footer:`🏔 <b>Alaska licences and tags</b> and the <b>State of Alaska's regulations</b> — the park and the state manage the fish together. Most of this water is in ADF&amp;G's Bristol Bay area.`,
     ungauged:"No live gauge in the park. Fly-in water: the lake levels and the weather decide the day more than any gauge could."},
   denali: {zone:"dena", sub:" · Denali National Park & Preserve", badge:"Denali · park rules",
     note:`From Denali National Park &amp; Preserve's fishing page. The old park and the newer additions run under different rules.`,
+    licence:"<b>No licence</b> in the former Mount McKinley park; <b>Alaska licence</b> in the additions and preserve",
     regBody:"the National Park Service — and ADF&amp;G in the park additions and preserve",
     footer:`🏔 In the <b>former Mount McKinley National Park no licence is required</b>, and the limit is 10 fish, not to exceed 10 lbs and one fish (lake trout 2, including those hooked and released). In the <b>park additions and preserve</b> an Alaska licence is required and state rules apply. Hook and line only, no bait of any kind, no chumming; lead tackle is discouraged.`,
     ungauged:"No live gauge on this one. Many of Denali's rivers are glacial — highest and muddiest on warm afternoons."},
   wrangell: {zone:"wrst", sub:" · Wrangell-St. Elias National Park & Preserve", badge:"Wrangell-St. Elias · Alaska regs",
     note:`From Wrangell-St. Elias National Park &amp; Preserve's fishing page: an Alaska licence, under ADF&amp;G's Upper Copper–Upper Susitna and Yakutat area regulations.`,
+    licence:"<b>Alaska fishing licence</b>, though exceptions may apply",
     regBody:"ADF&amp;G (an Alaska licence is required, though exceptions may apply)",
     footer:`🏔 A valid <b>Alaska fishing licence</b> is required, though exceptions may apply; anglers under 18 (16 for nonresidents) don't need one but must record harvest. Limits vary by species and area under ADF&amp;G's <b>Upper Copper–Upper Susitna</b> and <b>Yakutat</b> management areas.`,
     ungauged:"No live gauge on this one. Most of the park's rivers are glacial; clearwater creeks and lakes are where the fishing is."},
   gatesarctic: {zone:"gaar", sub:" · Gates of the Arctic National Park & Preserve", badge:"Gates of the Arctic · Alaska regs",
     note:`From Gates of the Arctic National Park &amp; Preserve's fishing page: 36 CFR 2.3 and State of Alaska regulations where they don't conflict.`,
+    licence:"<b>State of Alaska fishing licence</b> required",
     regBody:"the National Park Service and ADF&amp;G (an Alaska licence is required)",
     footer:`🏔 A <b>State of Alaska fishing licence</b> is required — available in Fairbanks, Bettles, Coldfoot or online. <b>Hook and line only</b>; live bait and dead minnows are prohibited.`,
     ungauged:"No live gauge in the park — this is roadless Arctic water reached by floatplane."},
   kobukvalley: {zone:"kova", sub:" · Kobuk Valley National Park", badge:"Kobuk Valley · Alaska regs",
     note:`From Kobuk Valley National Park's fishing page: an Alaska licence and Alaska's regulations.`,
+    licence:"<b>Alaska state fishing licence</b> required",
     regBody:"ADF&amp;G (an Alaska licence is required)",
     footer:`🏜 An <b>Alaska state fishing licence</b> is required — available in Kotzebue or online — and Alaska's regulations apply.`,
     ungauged:"No live gauge in the park."},
   glacierbay: {zone:"glba", sub:" · Glacier Bay National Park & Preserve", badge:"Glacier Bay · Alaska regs + park rules",
     note:`From Glacier Bay National Park &amp; Preserve's sport fishing regulations, which add NPS freshwater rules to ADF&amp;G's.`,
+    licence:"<b>Alaska sportfishing licence</b>: nonresidents 16+, residents 18–59",
     regBody:"ADF&amp;G and the National Park Service (an Alaska licence is required)",
     footer:`🏔 An <b>Alaska sportfishing licence</b> is required for nonresidents 16 and older and Alaska residents 18–59. In fresh water the park allows <b>hook and line only</b>, with no bait, no unpreserved eggs or roe and no chumming. On the <b>Bartlett River</b>, harvested fish must stay within six feet of you and be packed out whole. Travel on the Alsek needs a park river permit.`,
     ungauged:"No live gauge in the park."},
   kenaifjords: {zone:"kefj", sub:" · Kenai Fjords National Park", badge:"Kenai Fjords · Alaska regs",
     note:`From Kenai Fjords National Park's fishing page: state regulations and an Alaska licence.`,
+    licence:"<b>Alaska licence</b>, per state regulations",
     regBody:"ADF&amp;G (an Alaska licence is required)",
     footer:`🌊 Fished <b>per state regulations</b> on an Alaska licence. The park's fishing is mostly salt water; in the backcountry, salmon and Dolly Varden.`,
     ungauged:"No live gauge in the park."},
@@ -1364,11 +1425,13 @@ Object.assign(PARK_INFO, {
 Object.assign(PARK_INFO, {
   wisouthshore: {zone:"wi", sub:" · South Shore", heading:"Regulations", labelZoom:10, badge:"WDNR trout regulations",
     note:`From the Wisconsin DNR's trout regulations map — each reach's category, season, bag and gear rule, in the department's own words. Reach boundaries move; check the map before you fish.`,
+    licence:"<b>Wisconsin licence + Inland Trout Stamp</b> (Great Lakes Salmon &amp; Trout Stamp below the first barrier)",
     regBody:"the Wisconsin DNR",
     footer:`🎣 <b>Wisconsin</b>: a fishing licence and an <b>Inland Trout Stamp</b> (or a Great Lakes Salmon &amp; Trout Stamp on Lake Superior tributaries below the first barrier). The lower reaches here are <b>Great Lakes tributary</b> water — a different season and bag from the inland water upstream — and the <b>Bad River's lower reach runs through the Bad River Reservation</b>, under tribal jurisdiction.`,
     ungauged:"No live gauge on this stream. The South Shore streams rise and fall with rain and snowmelt off the clay hills; the nearest gauged one is the read on whether they're running high and red."},
   wicentralsands: {zone:"wi", sub:" · Central Sands", heading:"Regulations", labelZoom:10, badge:"WDNR trout regulations",
     note:`From the Wisconsin DNR's trout regulations map — each reach's category, season, bag and gear rule, in the department's own words.`,
+    licence:"<b>Wisconsin licence + Inland Trout Stamp</b>",
     regBody:"the Wisconsin DNR",
     footer:`🎣 <b>Wisconsin</b>: a fishing licence and an <b>Inland Trout Stamp</b>. The general inland season opens the first Saturday in April and runs to October 15, with a catch-and-release, artificial-lures-only early season from the first Saturday in January. These are spring-fed sand-country streams — steady, cold and clear — and much of the water is on state fishery areas.`,
     ungauged:"No live gauge on this stream. Central sands streams are groundwater-fed and change slowly; the nearest gauged one is a fair read."},
@@ -1379,6 +1442,7 @@ Object.assign(PARK_INFO, {
 Object.assign(PARK_INFO, {
   idaho: {zone:"id", sub:"", heading:"Regulations", labelZoom:8, badge:"IDFG · 2025–27",
     note:`From Idaho Fish and Game's <b>2025–2027 Fishing Seasons &amp; Rules</b> (2nd edition) — the water's own special rule in the Upper Snake Region.`,
+    licence:"<b>Idaho fishing licence</b>, required at 14 and older",
     regBody:"Idaho Fish and Game",
     footer:`🎣 <b>Idaho</b>: any person 14 years of age or older must buy a fishing licence. Rules are set by region; a water's special rule replaces the regional general rule for the items it lists.`,
     ungauged:"No live gauge on this water."},
@@ -1389,36 +1453,43 @@ Object.assign(PARK_INFO, {
 Object.assign(PARK_INFO, {
   michigan: {zone:"mi", sub:"", heading:"Regulations", labelZoom:9, badge:"Michigan DNR · 2026",
     note:`From the <b>2026 Michigan Fishing Regulations</b> (April 1, 2026 – March 31, 2027): the river's Gear Restricted Stream entries in the DNR's own words, then the stream-Type rules for each Type the DNR has assigned to its reaches.`,
+    licence:"Licence: see the Michigan DNR",
     regBody:"the Michigan DNR",
     footer:`🎣 <b>Michigan</b>: Type 1 and Type 2 trout streams open the <b>last Saturday in April through September 30</b>; Type 3 and Type 4 are open all year, with possession seasons that vary. On <b>Gear Restricted Streams</b> live, dead or preserved bait and organic or processed food are unlawful on the water or on shore, and scented material is unlawful on flies-only water. Which reach is which Type is on the DNR's Inland Trout &amp; Salmon maps.`,
     ungauged:"No live gauge on this river. Michigan's trout rivers are mostly groundwater-fed and steady; the nearest gauged river is a fair regional read after rain."},
   southdakota: {zone:"sd", sub:" · Black Hills", heading:"Regulations", labelZoom:9, badge:"SD GFP · 2026",
     note:`From the <b>2026 South Dakota Fishing Handbook</b> — the Black Hills exceptions to statewide harvest and length limits, then the statewide limit.`,
+    licence:"Licence: see South Dakota Game, Fish and Parks",
     regBody:"South Dakota Game, Fish and Parks",
     footer:`🎣 <b>South Dakota</b>: inside the <b>Black Hills Fish Management Area</b> only one trout 14 inches or longer from any Black Hills stream may be kept in the daily limit, and high grading is prohibited. Waters not listed as Black Hills exceptions fall under the statewide harvest and length limits.`,
     ungauged:"No live gauge on this creek. Black Hills creeks are spring- and reservoir-fed; the nearest gauged creek is a fair read."},
   newmexico: {zone:"nm", sub:"", heading:"Regulations", labelZoom:8, badge:"NMDOW · 2026–27",
     note:`From the <b>2026–2027 New Mexico Fishing Rules and Info</b> — the river's Special Trout Water designations (Red, Green and Xmas Chile Water) word for word, then the general trout bag.`,
+    licence:"<b>New Mexico fishing licence</b>, anglers 12 and older",
     regBody:"the New Mexico Department of Wildlife",
     footer:`🎣 <b>New Mexico</b>: anglers 12 and older need a New Mexico fishing licence, valid April 1 through March 31. <b>Special Trout Waters</b> are posted with chile symbols: <b>Red</b> is catch-and-release with single barbless artificials, <b>Green</b> is a two-trout bag with the same tackle rule, and <b>Xmas</b> is a two-trout bag with any legal tackle. Fishing in a Special Trout Water must stop once its bag is taken.`,
     ungauged:"No live gauge on this water. In New Mexico the snowmelt runoff peaks in May and June and the summer monsoon can blow small streams out in an afternoon."},
   arizona: {zone:"az", sub:"", heading:"Regulations", labelZoom:8, badge:"AZGFD · 2025–26",
     note:`From Arizona Game and Fish's <b>2025 &amp; 2026 Fishing Regulations</b>, Commission Order 40 — the water's own special regulation, then the statewide daily bag.`,
+    licence:"<b>Arizona fishing or combination licence</b>, ten and older",
     regBody:"the Arizona Game and Fish Department",
     footer:`🎣 <b>Arizona</b>: a fishing or combination licence for anglers ten and older. The statewide daily bag is <b>4 trout</b> in any combination, and the possession limit is twice the daily bag unless a water says otherwise. Several White Mountains streams are closed January 1 – April 30.`,
     ungauged:"No live gauge on this water."},
   nevada: {zone:"nv", sub:"", heading:"Regulations", labelZoom:8, badge:"NDOW · 2026–27",
     note:`From the Nevada Board of Wildlife Commissioners' <b>Fishing Seasons and Regulations, CR 25-16</b> (January 1, 2026 – December 31, 2027), set county by county.`,
+    licence:"<b>Nevada fishing licence</b> — residents 12 and older need one",
     regBody:"the Nevada Department of Wildlife",
     footer:`🎣 <b>Nevada</b>: residents 12 and older need a fishing licence. Unless a water is listed, it is open year around with a daily limit of 5 trout and 5 mountain whitefish, and the possession limit is twice the daily limit.`,
     ungauged:"No live gauge on this water."},
   grandcanyon: {zone:"grca", sub:" · Grand Canyon National Park", badge:"Grand Canyon · Arizona regs",
     note:`From Grand Canyon National Park's fishing information, which follows Arizona's regulations reach by reach down the Colorado.`,
+    licence:"<b>Arizona licence</b>, required at ten and older",
     regBody:"Arizona Game and Fish and the National Park Service (an Arizona licence is required)",
     footer:`🏜 An <b>Arizona licence</b> is required at ten and older. Down the Colorado the limit changes by reach: 6 rainbow trout from the Paria riffle to Navajo Bridge, no limit on trout from Navajo Bridge to Separation Canyon. The Colorado is closed for half a mile either side of the Little Colorado confluence, and humpback chub and other native fish are protected.`,
     ungauged:"No live gauge on this water."},
   greatbasin: {zone:"grba", sub:" · Great Basin National Park", badge:"Great Basin · Nevada regs",
     note:`From Great Basin National Park's fishing page: Nevada licence and regulations, plus the park's own rules.`,
+    licence:"<b>Nevada licence</b>, plus the park's own rules",
     regBody:"the National Park Service and NDOW (a Nevada licence is required)",
     footer:`🏔 Fished on a <b>Nevada licence</b>. Johnson and Baker Lakes are catch-and-release with single barbless artificial lures, and catch and release is encouraged on Snake Creek, where Bonneville cutthroat were reintroduced in 2019.`,
     ungauged:"No live gauge on most of these creeks."},
@@ -1427,21 +1498,25 @@ Object.assign(PARK_INFO, {
 Object.assign(PARK_INFO, {
   montana: {zone:"mt", sub:"", heading:"Regulations", labelZoom:8, badge:"Montana FWP · 2026",
     note:`From Montana Fish, Wildlife &amp; Parks' <b>2026 Fishing Regulations</b> — this water's own entry in the District Exceptions to Standard Regulations, then the district standard. A water's exceptions replace the standard for the items they list. FWP posts temporary and seasonal closures not in the booklet at fwp.mt.gov — check before you go.`,
+    licence:"<b>Conservation + Fishing Licence and AIS Prevention Pass</b> (most anglers)",
     regBody:"Montana Fish, Wildlife &amp; Parks",
     footer:`🎣 <b>Montana</b>: most anglers need a <b>Conservation License, a Fishing License and an AIS Prevention Pass</b>; children 11 and under need no licence but must observe all limits and regulations. Rules are set by district — Western, Central and Eastern — and a water's own exceptions take the place of the district standard for the items they list. Bull trout are closed to angling statewide unless an exception says otherwise.`,
     ungauged:"No live gauge on this river. The nearest gauged water in Montana is the read on how runoff and rain have the region — Montana's rivers are snowmelt-driven, high and cold through spring and early summer, and the small ones clear long before the big ones do."},
   california: {zone:"ca", sub:"", heading:"Regulations", labelZoom:8, badge:"CDFW · 2026",
     note:`From the California Department of Fish &amp; Wildlife's <b>2026 Freshwater Sport Fishing Regulations</b> — this water's own entry in §7.50 (trout waters) or §7.40 (salmon and steelhead waters), otherwise the statewide stream rule in §5.85.`,
+    licence:"<b>California sport fishing licence</b>, required at 16 and older",
     regBody:"the California Department of Fish &amp; Wildlife",
     footer:`🎣 <b>California</b>: a <b>sport fishing licence is required at 16 and older</b>. Rivers follow the statewide stream rule — open the last Saturday in April through November 15, five trout — unless listed in the special regulations, and many of the best trout waters are listed, with zero-bag, barbless or artificial-only reaches. The Eel, Mad, Mattole, Redwood Creek, Smith and Van Duzen are subject to <b>low-flow closures</b> from September 1 through April 30.`,
     ungauged:"No live gauge on this river. The nearest gauged water in California is the read on regional conditions — Sierra and Cascade rivers run on snowmelt, the coast ranges on rain."},
   oregon: {zone:"or", sub:"", heading:"Regulations", labelZoom:8, badge:"ODFW · 2026",
     note:`From the Oregon Department of Fish &amp; Wildlife's <b>2026 Sport Fishing Regulations</b> — this water's own exception entry, then the standard rules for its zone.`,
+    licence:"<b>Oregon Angling License</b>, everyone 12 and older",
     regBody:"the Oregon Department of Fish &amp; Wildlife",
     footer:`🎣 <b>Oregon</b>: <b>everyone 12 and older needs an Oregon Angling License</b> in possession. Rules are set by zone and a river's exceptions take precedence; in most zones streams open May 22 and trout are 2 a day with an 8-inch minimum — except the <b>Willamette Zone, which is catch-and-release for trout in streams</b> unless an exception says otherwise.`,
     ungauged:"No live gauge on this river. The nearest gauged water in Oregon is the read on regional conditions — Cascade rivers run on snowmelt, coastal ones on rain."},
   washington: {zone:"wa", sub:"", heading:"Regulations", labelZoom:8, badge:"WDFW · 2026–27",
     note:`From the Washington Department of Fish &amp; Wildlife's <b>Sport Fishing Rules</b>, in effect July 1, 2026 – June 30, 2027 — this water's own Special Rules entry, otherwise the statewide freshwater rules. Emergency rules change often: (360) 902-2700 or wdfw.wa.gov.`,
+    licence:"<b>Washington fishing licence</b> (annual licences include a Catch Record Card)",
     regBody:"the Washington Department of Fish &amp; Wildlife",
     footer:`🎣 <b>Washington</b>: annual licences include a <b>Catch Record Card</b> for salmon, steelhead and sturgeon, and anglers 15 and older fishing for salmon or steelhead on the Columbia or its tributaries need the <b>Columbia River Salmon and Steelhead Endorsement</b>. Unless a river's Special Rules say otherwise, rivers open the Saturday before Memorial Day through October 31, trout are 2 a day with an 8-inch minimum, Dolly Varden/bull trout are closed, and every wild steelhead goes back.`,
     ungauged:"No live gauge on this river. The nearest gauged water in Washington is the read on regional conditions — the west side runs on rain, the east side and the Cascades on snowmelt."},
@@ -2015,12 +2090,9 @@ const $ = s => document.querySelector(s);
 const sheet=$("#sheet"), body=$("#sheetbody");
 let curRiver = null;
 
-async function openRiver(id, focusGauge){
-  const r = RIVERS.find(x=>x.id===id); if(!r) return;
-  curRiver = id;
-  if(!tierShown(r)){ tempShown.add(id); applyFilters(); }   // opened on purpose: show it
-  $("#sw").style.background = riverColor(r);
-  $("#sh-title").textContent = r.name;
+/* "Idaho", "Wisconsin · Driftless Area" — the sheet subtitle, shared with the
+   Field Book rows so the two can't drift apart. */
+function riverPlace(r){
   const stateName = {ID:"Idaho", WY:"Wyoming", IA:"Iowa", MN:"Minnesota", WI:"Wisconsin", IL:"Illinois",
                      CA:"California", OR:"Oregon", WA:"Washington", MT:"Montana",
                      CO:"Colorado", UT:"Utah", AK:"Alaska", MI:"Michigan", SD:"South Dakota",
@@ -2031,7 +2103,18 @@ async function openRiver(id, focusGauge){
                      grandteton:" · Grand Teton National Park",
                      tetonvalley:" · Teton Valley", swanvalley:" · Swan Valley"}[r.region]
                     || (PARK_INFO[r.region] && PARK_INFO[r.region].sub) || "";
-  $("#sh-sub").textContent = stateName + subRegion;
+  return stateName + subRegion;
+}
+function riverStateName(r){ return riverPlace(r).split(" · ")[0]; }
+
+async function openRiver(id, focusGauge){
+  const r = RIVERS.find(x=>x.id===id); if(!r) return;
+  curRiver = id;
+  if(!tierShown(r)){ tempShown.add(id); applyFilters(); }   // opened on purpose: show it
+  $("#sw").style.background = riverColor(r);
+  $("#sh-title").textContent = r.name;
+  $("#sh-sub").textContent = riverPlace(r);
+  fbShowRow(r);
   sheet.classList.add("open");
   loadRealRiver(r);                    // snap this river to exact USGS linework
   renderSheet(r);                      // instant paint with whatever we have
@@ -2047,14 +2130,119 @@ function tierChipHTML(r){
   const t = tierNow.get(r.id) || tierOf(r), info = TIER_INFO[t.tier], base = TIER_INFO[t.base];
   let line = "";
   if(t.state === "closed") line = `Closed ${winText(t.wins)}${t.why ? " — "+t.why : ""}`;
-  else if(t.state === "best") line = `${t.tier!==t.base ? "Usually "+base.label+" — " : ""}In season now (${winText(t.wins)}).${t.why ? " "+t.why : ""}`;
+  else if(t.state === "best") line = `${t.tier!==t.base ? "Usually "+base.label+" — " : ""}Prime time now (${winText(t.wins)}).${t.why ? " "+t.why : ""}`;
   else if(t.state === "poor") line = `Usually ${base.label} — off this time of year (${winText(t.wins)}).${t.why ? " "+t.why : ""}`;
   else if(t.why) line = t.why;
   return `<div class="tierline"><span class="tierbadge" style="--tc:${info.color}">${info.label}${t.state==="closed"?" · closed":""}</span>`+
          (line ? `<span class="tierwhy">${line}</span>` : `<span class="tierwhy">${info.blurb}</span>`)+`</div>`;
 }
 
+/* Who to check with. Inside a national park the state agency has nothing to
+   do with it — a Wyoming or Montana licence is not valid in Yellowstone, and
+   pointing a reader at Game & Fish for these rivers would be actively wrong. */
+function regBodyFor(r){
+  return PARK_INFO[r.region] ? PARK_INFO[r.region].regBody
+    : r.region==="yellowstone"
+    ? "the National Park Service (a state fishing licence is <b>not</b> valid in the park)"
+    : r.region==="grandteton"
+    ? "WY Game &amp; Fish and the park — Grand Teton takes a <b>Wyoming licence</b>, unlike Yellowstone"
+    : (r.region==="tetonvalley" || r.region==="swanvalley")
+    ? "Idaho Fish &amp; Game (Upper Snake Region)"
+    : {IA:"the Iowa DNR", MN:"the Minnesota DNR", WI:"the Wisconsin DNR", IL:"the Illinois DNR", ID:"Idaho Fish &amp; Game", WY:"Wyoming Game &amp; Fish"}[r.state]
+      || "WY Game &amp; Fish / Idaho Fish &amp; Game";
+}
+
+/* "Rules today": the three things you need standing at the river — is it in
+   season, whose licence, and what the rules name — before flows and notes.
+   Season comes from the class table's closed windows, which are month-grained,
+   so the months either side of a window are called "opens or closes this
+   month" rather than guessed; "In season" never appears without the window
+   that qualifies it. Colours are muted on purpose: the closure-tape red is
+   reserved for closed water on the map. */
+/* State stream-access law: whether you may wade a private streambed is a
+   state rule, not a fishing rule, so it gets its own row. Park water is
+   federal land and the state's streambed law doesn't govern it. State rows in
+   PARK_INFO have sub:"" and do get the row. fbEsc is declared further down but
+   only called at render time, well after it exists. */
+function accessLawHTML(r){
+  const pi = PARK_INFO[r.region];
+  if(r.region==="yellowstone" || r.region==="grandteton" || (pi && /National Park|Park Complex/.test(pi.sub||""))) return "";
+  const a = typeof ACCESS_LAW!=="undefined" && ACCESS_LAW[r.state]; if(!a) return "";
+  return `<div class="rc-lic rc-access"><span class="rc-lab">Wading &amp; access</span>`+
+    `<div style="font-size:13px;line-height:1.35;margin-top:2px">${fbEsc(a.head)}</div>`+
+    `<details class="rc-law"><summary>${a.quote ? "The law, in its own words" : "Source"}</summary>`+
+    (a.quote ? `<blockquote>${fbEsc(a.quote)}</blockquote>` : "")+
+    `<div class="fb-note">Source: <a href="${fbEsc(a.url)}" target="_blank" rel="noopener">${fbEsc(a.src)}</a></div></details></div>`;
+}
+
+function rulesCardHTML(r){
+  const m = new Date().getMonth() + 1;
+  const e = TIERS[r.id], s = e && e.season, closed = s && s.closed && s.closed.length ? s.closed : null;
+  const hasText = !!(r.parkRegs || r.troutRegs);
+  let dot, head, sub = "";
+  if(closed && inWindow(m, closed)){
+    dot = "#9a4a2e"; head = "Closed season";
+    sub = `Closed ${winText(closed)}${s.why ? " — "+s.why : ""}`;
+  } else if(closed && closed.some(([a,b]) => m === (a===1 ? 12 : a-1) || m === (b%12)+1)){
+    dot = "#c48a17"; head = "Season opens or closes this month";
+    sub = `Closed ${winText(closed)}. Check the exact date in the rules below.`;
+  } else if(closed){
+    dot = "#2f7d4f"; head = "In season"; sub = `Closed ${winText(closed)}`;
+  } else {
+    dot = "#8b9690";
+    if(hasText){ head = "Season set by the rules below"; }
+    else { head = "No season on file"; sub = `Check ${regBodyFor(r)}`; }
+  }
+
+  let lic = PARK_INFO[r.region] && PARK_INFO[r.region].licence;
+  const src = r.parkRegsSrc || (r.region==="yellowstone" ? "yell" : "");
+  if(!lic){
+    if(r.region==="yellowstone") lic = "Yellowstone park fishing permit — a state licence is <b>not</b> valid";
+    else if(r.region==="grandteton" || src==="grte") lic = "<b>Wyoming</b> fishing licence (Grand Teton follows Wyoming regulations)";
+    else if(r.region==="tetonvalley" || r.region==="swanvalley") lic = "<b>Idaho</b> fishing licence — Idaho Fish &amp; Game, Upper Snake Region";
+    else {
+      const dn = r.region==="driftless" || r.region==="northshore";
+      lic = r.state==="IA" ? (r.region==="driftless" ? "<b>Iowa</b> fishing licence + trout fee for trout water" : "<b>Iowa</b> fishing licence")
+          : r.state==="MN" ? "<b>Minnesota</b> fishing licence" + (dn ? " + trout stamp" : "")
+          : r.state==="WI" ? "<b>Wisconsin</b> fishing licence" + (r.troutClass || r.region==="driftless" || r.region==="doorcounty" ? " + trout stamp" : "")
+          : r.state==="IL" ? "<b>Illinois</b> fishing licence"
+          : r.state==="ID" ? "<b>Idaho</b> fishing licence"
+          : r.state==="WY" ? "<b>Wyoming</b> fishing licence"
+          : `Licence: see ${regBodyFor(r)}`;
+    }
+  }
+
+  /* Tags are phrase matches in this river's own rule text, not interpretations,
+     and a tag may apply to one reach only. State rivers' parkRegs end with the
+     state's standard rule, so scanning stops at its heading. */
+  let txt = (r.troutRegs || "") + " " + (r.parkRegs || "");
+  const cut = /<b>[^<]*(standard|statewide)[^<]*<\/b>/i.exec(txt);
+  if(cut) txt = txt.slice(0, cut.index);
+  txt = txt.replace(/<[^>]*>/g, " ").replace(/&amp;/g, "&").replace(/\s+/g, " ");
+  const TAGS = [
+    [/catch[- ]and[- ]release/i, "Catch & release"],
+    [/fly[- ]fishing only|flies only/i, "Fly fishing only"],
+    [/artificial (flies|lures)( (and|or) (flies|lures))? only|artificial lures with/i, "Artificial only"],
+    [/barbless/i, "Barbless"],
+    [/gold medal/i, "Gold Medal"],
+    [/must be killed/i, "Mandatory kill"],
+    [/closed to (all )?(fishing|angling)/i, "Closures listed"],
+  ];
+  const noArt = txt.replace(/artificial (flies|lures)( (and|or) (flies|lures))? only/gi, "");   // "artificial flies only" is Artificial only, not Fly fishing only
+  const tags = TAGS.filter(([re]) => re.test(re.source.startsWith("fly") ? noArt : txt)).map(t => t[1]);
+
+  return `<div class="rulescard"><div class="rc-status"><span class="rc-dot" style="background:${dot}"></span>`+
+    `<div><div class="rc-head">${head}</div>${sub ? `<div class="rc-sub">${sub}</div>` : ""}</div></div>`+
+    `<div class="rc-lic">${lic}</div>`+
+    accessLawHTML(r)+
+    (tags.length ? `<div class="rc-tags"><span class="rc-lab">Named in this river's rules:</span>${tags.map(t=>`<span class="tierbadge" style="--tc:#5a6f66">${t.replace("&","&amp;")}</span>`).join("")}</div>` : "")+
+    `</div>`;
+}
+
 function renderSheet(r){
+  /* The rules come first: the card, then the full text folded under it, then
+     everything else. `full` collects the verbatim regulation blocks. */
+  let full = "";
   let h = tierChipHTML(r) + `<p style="margin:12px 2px 2px;font-size:13.5px">${r.blurb}</p>`;
 
   if(r.gauges.length){
@@ -2072,7 +2260,7 @@ function renderSheet(r){
   if(r.troutClass){
     const tc = TROUT_CLASS[r.troutClass];
     const src = TROUT_SOURCE[r.troutSource || "iadnr"];
-    h += `<div class="secthead">Trout class &amp; regulations</div><div class="fishnote">`+
+    full += `<div class="secthead">Trout class &amp; regulations</div><div class="fishnote">`+
       `<span class="badge" style="background:${tc.color}">${tc.label}</span>`+
       (r.wildTrout ? ` <span style="font-size:11.5px">Wild trout present: <b>${r.wildTrout}</b></span>` : "")+
       (r.troutRegs ? `<div style="margin-top:8px"><b>Regulations:</b> ${r.troutRegs}</div>` : "")+
@@ -2101,7 +2289,7 @@ function renderSheet(r){
       : src==="grte"
       ? `From the National Park Service's Grand Teton fishing information, which follows <b>Wyoming Game &amp; Fish</b> regulations. Seasons and closures are re-issued every year — check the current Wyoming regulations, and carry a Wyoming licence.`
       : `From the park's <b>2026</b> fishing regulations. Seasons, closures and possession limits are re-issued every year and streams close on short notice in low water — read the current edition before you fish, and carry your park permit.`;
-    h += `<div class="secthead">${(pk && pk.heading) || (src==="idfg" ? "Regulations" : "Park regulations")}</div><div class="fishnote">`+
+    full += `<div class="secthead">${(pk && pk.heading) || (src==="idfg" ? "Regulations" : "Park regulations")}</div><div class="fishnote">`+
       `<span class="badge" style="background:#4a6f8a">${badge}</span> `+
       `<span style="font-size:11.5px">${r.parkRegs}</span>`+
       `<div style="font-size:10.5px;color:var(--txt-dim);margin-top:8px">${note}</div>`+
@@ -2117,18 +2305,8 @@ function renderSheet(r){
   } else if(WADE_ONLY[r.id]) {
     h += `<div class="secthead">Floating</div><div class="fishnote">🛶 ${WADE_ONLY[r.id]}</div>`;
   }
-  /* Inside a national park the state agency has nothing to do with it — a
-     Wyoming or Montana licence is not valid in Yellowstone, and pointing a
-     reader at Game & Fish for these rivers would be actively wrong. */
-  const regBody = PARK_INFO[r.region] ? PARK_INFO[r.region].regBody
-    : r.region==="yellowstone"
-    ? "the National Park Service (a state fishing licence is <b>not</b> valid in the park)"
-    : r.region==="grandteton"
-    ? "WY Game &amp; Fish and the park — Grand Teton takes a <b>Wyoming licence</b>, unlike Yellowstone"
-    : (r.region==="tetonvalley" || r.region==="swanvalley")
-    ? "Idaho Fish &amp; Game (Upper Snake Region)"
-    : {IA:"the Iowa DNR", MN:"the Minnesota DNR", WI:"the Wisconsin DNR", IL:"the Illinois DNR"}[r.state]
-      || "WY Game &amp; Fish / Idaho Fish &amp; Game";
+  h += researchLinksHTML(r);
+  const regBody = regBodyFor(r);
   h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Flow data: USGS Water Data OGC API${r.state==="CO"?" and Colorado Division of Water Resources":""}. River lines simplified — not for navigation. Verify regulations with ${regBody}.</p>`;
   if(r.region==="driftless"){
     h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🚶 Driftless access is mostly <b>walk-and-wade</b>, and a lot of the best water runs through <b>private land under a public angling easement</b> — you may fish and walk the stream corridor, but not leave it. Park only in the marked pull-offs, and check the state's current easement map and trout regulations (including any catch-and-release or artificial-only stretches) before you go. Iowa also requires a <b>trout fee</b> on top of a fishing license.</p>`;
@@ -2154,7 +2332,8 @@ function renderSheet(r){
   if(r.state==="IA" && r.region!=="driftless"){
     h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">⚠ Central Iowa rivers have low-head dams — the "drowning machine" recirculating hydraulic at the base is dangerous at almost any flow. Scout unfamiliar stretches and check <a href="https://www.iowawhitewater.org/lhd/LHDrivers.html" target="_blank" rel="noopener">Iowa Whitewater's low-head dam list</a> before you put in.</p>`;
   }
-  body.innerHTML = h;
+  body.innerHTML = rulesCardHTML(r) +
+    (full ? `<details class="rulesfull"><summary>Full regulations — tap to read</summary>${full}</details>` : "") + h;
 
   body.querySelectorAll("[data-zoom]").forEach(el=>el.addEventListener("click",()=>{
     const s = SECTIONS.find(x=>x.id===el.dataset.zoom);
@@ -2372,6 +2551,347 @@ $("#btn-legend").addEventListener("click",()=>{scrim.classList.add("show");legen
 $("#legend-x").addEventListener("click",closeLegend);
 scrim.addEventListener("click",closeLegend);
 function closeLegend(){scrim.classList.remove("show");legend.classList.remove("show");}
+
+/* ---------- Field Book: river panel row ----------
+   The favourite / fished / notes controls live in #fbrow, a sibling that sits
+   just above #sheetbody, NOT inside it. renderSheet() rewrites #sheetbody's
+   innerHTML every time stats load or a filter changes; a textarea in there
+   would lose its focus and caret mid-sentence. Outside it, nothing re-renders
+   it: fbShowRow() rebuilds it only when the river changes (or after an
+   import), and the buttons update themselves in place. */
+let fbRowFor = null;
+const fbEsc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function fbToday(){ const d = new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function fbDateText(iso){
+  const m = /^(\d{4})-(\d\d)-(\d\d)$/.exec(iso||""); if(!m) return "";
+  return new Date(+m[1], +m[2]-1, +m[3]).toLocaleDateString([], {month:"short", day:"numeric"});
+}
+function fbRowHTML(e){
+  return `<button type="button" class="fb-btn fb-fav${e.fav?" on":""}" aria-pressed="${e.fav}">${e.fav?"★":"☆"} Favourite</button>`+
+    `<button type="button" class="fb-btn fb-fished${e.fished?" on":""}" aria-pressed="${e.fished}">✓ ${e.fished && e.fishedOn ? "Fished · "+fbDateText(e.fishedOn) : "Fished"}</button>`+
+    `<button type="button" class="fb-btn fb-notes${(e.notes||"").trim()?" has":""}" aria-expanded="false">Notes</button>`+
+    `<div class="fb-ta"><textarea rows="3" maxlength="20000" placeholder="Flies that worked, where you parked, water clarity…" aria-label="Notes for this river"></textarea>`+
+    `<span class="fb-saved" aria-live="polite"></span></div>`;
+}
+function fbShowRow(r, force){
+  const row = $("#fbrow");
+  if(!force && fbRowFor === r.id) return;
+  fbRowFor = r.id;
+  const id = r.id, e = fbGet(id);
+  row.innerHTML = fbRowHTML(e);
+  const favB = row.querySelector(".fb-fav"), fishB = row.querySelector(".fb-fished"),
+        notesB = row.querySelector(".fb-notes"), box = row.querySelector(".fb-ta"),
+        ta = row.querySelector("textarea"), saved = row.querySelector(".fb-saved");
+  ta.value = e.notes || "";
+  const openNotes = on => { box.classList.toggle("show", on); notesB.setAttribute("aria-expanded", on); };
+  openNotes(!!(e.notes||"").trim());
+  const paint = () => {
+    const c = fbGet(id);
+    favB.classList.toggle("on", c.fav); favB.setAttribute("aria-pressed", c.fav);
+    favB.textContent = (c.fav ? "★" : "☆") + " Favourite";
+    fishB.classList.toggle("on", c.fished); fishB.setAttribute("aria-pressed", c.fished);
+    fishB.textContent = "✓ " + (c.fished && c.fishedOn ? "Fished · "+fbDateText(c.fishedOn) : "Fished");
+  };
+  favB.addEventListener("click", () => {
+    fbSet(id, {fav:!fbGet(id).fav}); paint();
+    applyFilters();                        // a favourite stays on the map whatever the class filter says
+  });
+  fishB.addEventListener("click", () => {
+    const on = !fbGet(id).fished;
+    fbSet(id, {fished:on, fishedOn:on ? fbToday() : null}); paint();
+  });
+  notesB.addEventListener("click", () => {
+    const on = !box.classList.contains("show");
+    openNotes(on); if(on) ta.focus();
+  });
+  let t = null;
+  ta.addEventListener("input", () => {
+    saved.textContent = "";
+    clearTimeout(t);
+    t = setTimeout(() => {
+      fbSet(id, {notes:ta.value});
+      notesB.classList.toggle("has", !!ta.value.trim());
+      saved.textContent = "Saved";
+      setTimeout(() => { if(saved.textContent==="Saved") saved.textContent = ""; }, 1600);
+    }, 400);
+  });
+}
+
+/* ---------- Field Book: research links ----------
+   Plain outbound searches built from the river's name. Nothing is fetched. */
+function fbCleanName(r){ return r.name.split("—")[0].split("(")[0].trim(); }
+function researchLinksHTML(r, bare){
+  const n = fbCleanName(r), st = riverStateName(r), q = encodeURIComponent;
+  const links = [
+    ["Reddit — posts about this river", "https://www.reddit.com/search/?q="+q(`"${n}" ${st} fishing`)],
+    ["r/flyfishing — this river", "https://www.reddit.com/r/flyfishing/search/?restrict_sr=1&q="+q(n)],
+    ["Current fishing report (web search)", "https://www.google.com/search?q="+q(`${n} ${st} fishing report`)],
+  ];
+  const list = `<div class="fb-links">${links.map(([t,u]) => `<a href="${fbEsc(u)}" target="_blank" rel="noopener">${t} ↗</a>`).join("")}</div>`;
+  if(bare) return list;
+  return `<div class="secthead">Research</div>${list}<p class="fb-note">Links open outside the app; posts belong to their authors.</p>`;
+}
+
+/* ---------- Offline map areas ----------
+   Only the USGS Topo basemap is saved: the other basemaps' terms forbid
+   offline copies. Tiles go into the same "tiles-saved" cache the service
+   worker reads first. Saving is a page job (not the worker's) so it can show
+   progress and be cancelled. */
+const TOPO_URL = "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}";
+const TILE_KB = 18, TILE_CAP = 4000;
+const offFmt = n => n.toLocaleString("en-US");
+function offAreas(){ try{ const a = JSON.parse(localStorage.getItem("offlineAreas")||"[]"); return Array.isArray(a) ? a : []; }catch(e){ return []; } }
+function offSave(a){ try{ localStorage.setItem("offlineAreas", JSON.stringify(a)); }catch(e){} }
+function offRange(b, z){
+  const n = 2**z, X = lng => Math.floor((lng+180)/360*n),
+    Y = lat => { const p = lat*Math.PI/180; return Math.floor((1 - Math.log(Math.tan(p)+1/Math.cos(p))/Math.PI)/2*n); },
+    cl = v => Math.max(0, Math.min(n-1, v));
+  return {x0:cl(X(b[0][1])), x1:cl(X(b[1][1])), y0:cl(Y(b[1][0])), y1:cl(Y(b[0][0]))};   // north edge has the smaller y
+}
+function offCount(b, z0, z1){
+  let t = 0;
+  for(let z = z0; z <= z1; z++){ const r = offRange(b, z); t += (r.x1-r.x0+1)*(r.y1-r.y0+1); }
+  return t;
+}
+function offUrls(b, z0, z1){
+  const out = [];
+  for(let z = z0; z <= z1; z++){
+    const r = offRange(b, z);
+    for(let x = r.x0; x <= r.x1; x++) for(let y = r.y0; y <= r.y1; y++) out.push(TOPO_URL.replace("{z}",z).replace("{y}",y).replace("{x}",x));
+  }
+  return out;
+}
+/* Plan the view: zmax as deep as the 4,000-tile cap allows, from 16 down to 14. */
+function offPlan(){
+  const bb = map.getBounds(), b = [[bb.getSouth(), bb.getWest()], [bb.getNorth(), bb.getEast()]];
+  const zmin = Math.max(6, Math.floor(map.getZoom())-2);
+  for(const zmax of [16, 15, 14]){
+    if(zmax < zmin) continue;
+    const count = offCount(b, zmin, zmax);
+    if(count <= TILE_CAP) return {b, zmin, zmax, count};
+  }
+  return null;
+}
+let offJob = null;   // {cancel:bool} while a download runs
+
+function renderOffline(el){
+  if(!("caches" in window) || !("serviceWorker" in navigator)){
+    el.innerHTML = `<p class="bk-intro">Offline saving isn't supported in this browser.</p>`; return;
+  }
+  const draw = () => {
+    const areas = offAreas();
+    el.innerHTML = `<p class="bk-intro">The app itself and your last flow readings already work without signal. Save map areas here to keep the topo basemap too. Only the USGS Topo basemap is saved — the other basemaps' terms don't allow it.</p>`+
+      `<div id="of-ctl"><button type="button" class="fb-btn" id="of-go" style="width:100%">Save this area</button></div>`+
+      `<div class="secthead">Saved areas</div>`+
+      (areas.length ? areas.map(a => `<div class="of-area" data-id="${fbEsc(a.id)}"><div class="of-main"><b>${fbEsc(a.name)}</b>`+
+          `<span>${fbEsc(new Date(a.saved).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"}))} · ${offFmt(a.count)} tiles · z${a.zmin}–${a.zmax}</span></div>`+
+          `<button type="button" class="fb-btn" data-of="show">Show</button><button type="button" class="fb-btn" data-of="del">Delete</button></div>`).join("")
+        : `<p class="fb-note">Nothing saved yet.</p>`)+
+      `<p class="fb-note" id="of-use"></p>`;
+    if(navigator.storage && navigator.storage.estimate) navigator.storage.estimate().then(s => {
+      const u = el.querySelector("#of-use"); if(u && s && s.usage!=null) u.textContent = `Using ${Math.round(s.usage/1048576)} MB on this phone.`;
+    }).catch(()=>{});
+    const ctl = el.querySelector("#of-ctl");
+    el.querySelector("#of-go").addEventListener("click", () => {
+      const p = offPlan();
+      if(!p){ ctl.insertAdjacentHTML("beforeend", `<p class="fb-note" style="color:#9a4a2e">Zoom in closer — this view would be over ${offFmt(TILE_CAP)} tiles.</p>`); return; }
+      const c = map.getCenter(), open = curRiver && RIVERS.find(x => x.id===curRiver);
+      const name = open ? open.name : `Area near ${c.lat.toFixed(2)}, ${c.lng.toFixed(2)}`;
+      ctl.innerHTML = `<div class="of-box"><div>≈ ${offFmt(p.count)} tiles, about ${Math.max(1, Math.round(p.count*TILE_KB/1024))} MB (z${p.zmin}–${p.zmax})</div>`+
+        `<input type="text" id="of-name" maxlength="60" aria-label="Area name" value="${fbEsc(name)}">`+
+        `<div class="of-row"><button type="button" class="fb-btn on" id="of-ok">Save</button><button type="button" class="fb-btn" id="of-no">Cancel</button></div></div>`;
+      ctl.querySelector("#of-no").addEventListener("click", draw);
+      ctl.querySelector("#of-ok").addEventListener("click", () => offDownload(el, ctl, p, ctl.querySelector("#of-name").value.trim() || name, draw));
+    });
+    el.querySelectorAll(".of-area").forEach(row => row.addEventListener("click", ev => {
+      const act = ev.target.dataset.of, a = areas.find(x => x.id===row.dataset.id); if(!act || !a) return;
+      if(act==="show"){ closeBook(); goTo(L.latLngBounds(a.bounds)); }
+      else offDelete(a.id).then(draw);
+    }));
+  };
+  draw();
+}
+
+async function offDownload(el, ctl, p, name, done){
+  const cache = await caches.open("tiles-saved");
+  try{ navigator.storage && navigator.storage.persist && await navigator.storage.persist(); }catch(e){}
+  const urls = offUrls(p.b, p.zmin, p.zmax), job = offJob = {cancel:false};
+  let n = 0, failed = 0, i = 0;
+  ctl.innerHTML = `<div class="of-box"><div id="of-txt">0 / ${offFmt(urls.length)}</div><div class="of-bar"><i id="of-fill"></i></div>`+
+    `<div class="of-row"><button type="button" class="fb-btn" id="of-stop">Cancel</button></div></div>`;
+  ctl.querySelector("#of-stop").addEventListener("click", () => { job.cancel = true; });
+  const txt = ctl.querySelector("#of-txt"), fill = ctl.querySelector("#of-fill");
+  const tick = () => { txt.textContent = `${offFmt(n)} / ${offFmt(urls.length)}`; fill.style.width = (n/urls.length*100)+"%"; };
+  const one = async u => {
+    if(await cache.match(u)) return true;
+    for(let t = 0; t < 2; t++){                      // one retry per tile
+      try{ const r = await fetch(u, {mode:"cors"}); if(r.ok){ await cache.put(u, r); return true; } }catch(e){}
+    }
+    return false;
+  };
+  const worker = async () => {
+    while(!job.cancel && i < urls.length){
+      const u = urls[i++];
+      if(!(await one(u))) failed++;
+      n++; tick();
+    }
+  };
+  await Promise.all(Array.from({length:6}, worker));
+  offJob = null;
+  if(job.cancel){ await offPrune(); done(); return; }   // drop what a cancelled save left behind
+  const areas = offAreas();
+  areas.unshift({id:"a"+Date.now().toString(36), name, bounds:p.b, zmin:p.zmin, zmax:p.zmax, count:urls.length-failed, saved:Date.now()});
+  offSave(areas);
+  done();
+  if(failed) el.querySelector("#of-ctl").insertAdjacentHTML("beforeend", `<p class="fb-note" style="color:#9a4a2e">${offFmt(failed)} tiles couldn't be downloaded (saved the rest). Try again with a better signal.</p>`);
+}
+/* Delete every saved tile no remaining area needs: recompute the URL sets
+   rather than counting references, so overlapping areas keep shared tiles. */
+async function offPrune(){
+  const keep = new Set();
+  offAreas().forEach(a => offUrls(a.bounds, a.zmin, a.zmax).forEach(u => keep.add(u)));
+  const cache = await caches.open("tiles-saved");
+  for(const k of await cache.keys()) if(!keep.has(k.url)) await cache.delete(k);
+}
+async function offDelete(id){
+  offSave(offAreas().filter(a => a.id!==id));
+  try{ await offPrune(); }catch(e){}
+}
+
+/* ---------- Field Book page ---------- */
+/* Offline: the service worker caches the app and, by hand-off, the topo
+   tiles. Needs https (or localhost); a relative path keeps it working at the
+   GitHub Pages sub-path. */
+if("serviceWorker" in navigator && (location.protocol==="https:"||location.hostname==="localhost")) navigator.serviceWorker.register("sw.js").catch(()=>{});
+
+const bookEl = $("#book"), bookBody = $("#book-body");
+
+function bookRowsHTML(ids, fishedTab){
+  return ids.map(id => {
+    const r = RIVERS.find(x => x.id===id); if(!r) return "";
+    const e = fbGet(id), k = r.primaryGauge;
+    // Live status chip only when a reading has actually loaded — same
+    // statusOf() the flow card uses, so the colours are the gauge's own.
+    const st = k && flows[k] && flows[k].cfs!=null ? statusOf(k) : null;
+    const note = (e.notes||"").trim();
+    return `<button type="button" class="bk-row" data-fbopen="${fbEsc(id)}">`+
+      `<span class="bk-main"><span class="bk-name">${fbEsc(r.name)}</span>`+
+      `<span class="bk-place">${fbEsc(riverPlace(r))}</span>`+
+      (fishedTab && e.fishedOn ? `<span class="bk-fished">Fished · ${fbEsc(fbDateText(e.fishedOn))}</span>` : "")+
+      (note ? `<span class="bk-snip">${fbEsc(note.length>90 ? note.slice(0,90).trim()+"…" : note)}</span>` : "")+
+      `</span>`+
+      (st ? `<span class="badge" style="background:${st.color}">${st.label}</span>` : "")+
+      `</button>`;
+  }).join("");
+}
+const fbIdsWhere = fn => Object.keys(fbAll()).filter(id => RIVERS.some(r => r.id===id) && fn(fbAll()[id]));
+const fbByName = ids => ids.sort((a,b) => RIVERS.find(r=>r.id===a).name.localeCompare(RIVERS.find(r=>r.id===b).name));
+const fbEmpty = t => `<div class="bk-empty">${t}</div>`;
+
+/* Add a section here to add a tab. render(el) fills the panel; the shell owns
+   the tab bar, remembers the last tab, and makes any [data-fbopen] inside
+   it fly to that river. */
+const BOOK_SECTIONS = [
+  {id:"fav", label:"Favourites", render(el){
+    const ids = fbByName(fbIdsWhere(e => e.fav));
+    el.innerHTML = ids.length ? bookRowsHTML(ids) : fbEmpty("No favourites yet.<br>Tap <b>☆ Favourite</b> on any river to keep it here — and on the map, whatever the class filter says.");
+  }},
+  {id:"fished", label:"Fished", render(el){
+    const ids = fbIdsWhere(e => e.fished).sort((a,b) => (fbGet(b).fishedOn||"").localeCompare(fbGet(a).fishedOn||""));
+    el.innerHTML = ids.length ? bookRowsHTML(ids, true) : fbEmpty("Nothing logged yet.<br>Tap <b>✓ Fished</b> on a river after you've been, and it lands here with the date.");
+  }},
+  {id:"notes", label:"Notes", render(el){
+    const ids = fbIdsWhere(e => (e.notes||"").trim()).sort((a,b) => fbGet(b).updated - fbGet(a).updated);
+    el.innerHTML = ids.length ? ids.map(id => {
+      const r = RIVERS.find(x => x.id===id);
+      return `<button type="button" class="bk-row" data-fbopen="${fbEsc(id)}"><span class="bk-main">`+
+        `<span class="bk-name">${fbEsc(r.name)}</span><span class="bk-place">${fbEsc(riverPlace(r))}</span>`+
+        `<span class="bk-full">${fbEsc(fbGet(id).notes.trim())}</span></span></button>`;
+    }).join("") : fbEmpty("No notes yet.<br>Tap <b>Notes</b> on any river to jot down flies, parking and water clarity.");
+  }},
+  {id:"research", label:"Research", render(el){
+    const ids = fbByName(fbIdsWhere(e => e.fav));
+    let h = `<p class="bk-intro">Research for your favourite rivers — more research tools will appear here.</p>`;
+    h += ids.length ? ids.map(id => {
+      const r = RIVERS.find(x => x.id===id);
+      return `<div class="bk-res"><button type="button" class="bk-name" data-fbopen="${fbEsc(id)}">${fbEsc(r.name)}</button>${researchLinksHTML(r, true)}</div>`;
+    }).join("") + `<p class="fb-note">Links open outside the app; posts belong to their authors.</p>`
+      : fbEmpty("Favourite a river to get research links for it here.<br>Tap <b>☆ Favourite</b> on any river.");
+    el.innerHTML = h;
+  }},
+  {id:"offline", label:"Offline", render: renderOffline},
+];
+
+let bookTab = "fav";
+try{ const t = localStorage.getItem("bookTab"); if(BOOK_SECTIONS.some(s => s.id===t)) bookTab = t; }catch(e){}
+function showBookTab(id){
+  const sec = BOOK_SECTIONS.find(s => s.id===id) || BOOK_SECTIONS[0];
+  bookTab = sec.id;
+  try{ localStorage.setItem("bookTab", bookTab); }catch(e){}
+  $("#book-tabs").querySelectorAll("button").forEach(b => {
+    const on = b.dataset.tab===bookTab; b.classList.toggle("on", on); b.setAttribute("aria-selected", on);
+  });
+  sec.render(bookBody);
+  bookBody.scrollTop = 0;
+}
+function openBook(){
+  $("#book-tabs").innerHTML = BOOK_SECTIONS.map(s => `<button type="button" role="tab" data-tab="${s.id}">${s.label}</button>`).join("");
+  $("#book-msg").textContent = "";
+  showBookTab(bookTab);
+  bookEl.classList.add("show");
+}
+function closeBook(){ bookEl.classList.remove("show"); }
+$("#btn-book").addEventListener("click", openBook);
+$("#book-x").addEventListener("click", closeBook);
+window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classList.contains("show")) closeBook(); });
+$("#book-tabs").addEventListener("click", e => { const b = e.target.closest("button[data-tab]"); if(b) showBookTab(b.dataset.tab); });
+bookBody.addEventListener("click", e => {
+  const b = e.target.closest("[data-fbopen]"); if(!b) return;
+  const r = RIVERS.find(x => x.id===b.dataset.fbopen); if(!r) return;
+  closeBook();
+  hideZones();                               // no-op unless the region chooser is up
+  const pts = flatCoords(r.coords);
+  if(pts.length) goTo(L.latLngBounds(pts).pad(0.1));
+  openRiver(r.id);
+});
+
+/* Export / import. Import is a merge, never a replace: per river the newer
+   `updated` wins, so restoring an old backup can't wipe newer notes. The
+   file is untrusted input — shape-checked and each entry rebuilt field by
+   field, and rivers this build doesn't know are skipped. */
+$("#book-export").addEventListener("click", () => {
+  const blob = new Blob([JSON.stringify(fbState, null, 2)], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = `field-book-${fbToday()}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+});
+$("#book-import").addEventListener("click", () => $("#book-file").click());
+$("#book-file").addEventListener("change", async ev => {
+  const f = ev.target.files[0]; ev.target.value = "";
+  if(!f) return;
+  const msg = $("#book-msg");
+  try{
+    const d = JSON.parse(await f.text());
+    if(!d || d.v!==1 || !d.rivers || typeof d.rivers!=="object" || Array.isArray(d.rivers)) throw 0;
+    let n = 0;
+    for(const [id, e] of Object.entries(d.rivers)){
+      if(!e || typeof e!=="object" || !RIVERS.some(r => r.id===id)) continue;
+      const inc = {
+        fav: e.fav===true, fished: e.fished===true,
+        fishedOn: e.fished===true && /^\d{4}-\d\d-\d\d$/.test(e.fishedOn||"") ? e.fishedOn : null,
+        notes: typeof e.notes==="string" ? e.notes.slice(0,20000) : "",
+        updated: Number.isFinite(e.updated) ? e.updated : 0,
+      };
+      if(!inc.fav && !inc.fished && !inc.notes.trim()) continue;
+      if(inc.updated > fbGet(id).updated){ fbState.rivers[id] = inc; n++; }
+    }
+    fbPersist(); applyFilters();
+    if(curRiver){ const r = RIVERS.find(x => x.id===curRiver); if(r) fbShowRow(r, true); }
+    showBookTab(bookTab);
+    msg.textContent = n ? `Imported ${n} river${n===1?"":"s"}.` : "Nothing newer to import.";
+  }catch(e){ msg.textContent = "That file isn't a Field Book export."; }
+});
 
 /* ---------- refresh loop ----------
    Ordered by region, nearest first. The region you're looking at is fetched

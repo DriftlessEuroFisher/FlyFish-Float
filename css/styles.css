@@ -487,3 +487,88 @@ body.zones-open .leaflet-pane.zonePane{ opacity:1; }
   border-radius:99px;padding:7px 14px;box-shadow:var(--shadow);display:none;
 }
 #locpill.show{display:block}
+
+/* "Rules today" card — first thing in the sheet. Status dots are muted brick /
+   amber / green / grey; the closure-tape red stays reserved for the map. */
+.rulescard{background:var(--paper-2);border:1px dashed var(--line);border-radius:var(--radius);padding:10px 12px;margin:2px 0 9px}
+.rc-status{display:flex;align-items:flex-start;gap:9px}
+.rc-dot{flex:none;width:11px;height:11px;border-radius:50%;margin-top:3px}
+.rc-head{font-size:14px;font-weight:700;color:var(--txt);line-height:1.25}
+.rc-sub{font-size:11.5px;color:var(--txt-dim);line-height:1.35;margin-top:1px}
+.rc-lic{font-size:12.5px;color:var(--txt);line-height:1.35;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+.rc-tags{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:8px}
+.rc-lab{font-size:10.5px;color:var(--txt-dim);flex-basis:100%}
+details.rulesfull{margin-bottom:9px}
+details.rulesfull>summary{cursor:pointer;font-size:12px;font-weight:600;color:var(--river);padding:6px 2px}
+
+/* ---------- Field Book ---------- */
+/* Row above the sheet body; buttons are 44px tall for a thumb. Teal marks
+   "on" — orange stays reserved for live flow data. */
+#fbrow{flex:0 0 auto;display:flex;flex-wrap:wrap;gap:8px;padding:10px 14px 8px;border-bottom:1px solid var(--line)}
+.fb-btn{min-height:44px;padding:0 12px;border-radius:var(--radius);border:1px solid var(--line);background:var(--paper-2);
+  color:var(--txt-dim);font-size:13.5px;font-weight:600;white-space:nowrap;flex:1 1 auto}
+.fb-btn.on{background:var(--river);border-color:var(--river);color:#fff}
+.fb-btn.has{color:var(--river);border-color:var(--river-dim)}
+.fb-btn:active{transform:scale(.97)}
+.fb-ta{display:none;flex:1 0 100%;position:relative}
+.fb-ta.show{display:block}
+.fb-ta textarea{width:100%;min-height:76px;resize:vertical;font:inherit;font-size:16px;line-height:1.4;color:var(--txt);
+  background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);padding:9px 10px}
+.fb-ta textarea:focus{outline:2px solid var(--river-dim);border-color:var(--river)}
+.fb-saved{position:absolute;right:10px;bottom:8px;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--river);pointer-events:none}
+.fb-links{display:flex;flex-direction:column;gap:6px;margin-bottom:6px}
+.fb-links a{display:flex;align-items:center;min-height:40px;padding:0 12px;background:var(--paper-2);border:1px solid var(--line);
+  border-radius:var(--radius);color:var(--river);font-size:13px;font-weight:600;text-decoration:none}
+.fb-note{font-size:10.5px;color:var(--txt-dim);margin:2px 0 4px}
+
+#book{position:fixed;z-index:1600;inset:0;display:none;flex-direction:column;background:var(--paper);
+  padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+#book.show{display:flex}
+@media (min-width:900px){
+  #book{inset:auto 14px 14px auto;top:calc(110px + env(safe-area-inset-top));width:420px;border-radius:14px;
+    box-shadow:var(--shadow);overflow:hidden;padding:0}
+}
+#book-head{display:flex;align-items:center;gap:10px;padding:12px 14px 8px;background:var(--ink);color:#e8efe9;flex:0 0 auto}
+#book-head h2{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:24px;line-height:1.05;text-transform:uppercase;letter-spacing:.04em}
+#book-head .x{margin-left:auto;width:40px;height:40px;border-radius:9px;background:var(--ink-2);border:1px solid #3a4f43;color:#dfe9e1;font-size:16px}
+#book-tabs{display:flex;background:var(--ink);padding:0 8px;flex:0 0 auto}
+#book-tabs button{flex:1;min-height:42px;padding:0 4px;font-size:13px;font-weight:600;color:#9fb2a6;border-bottom:3px solid transparent}
+#book-tabs button.on{color:#fff;border-bottom-color:var(--river-dim)}
+#book-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px 20px}
+.bk-row{display:flex;align-items:flex-start;gap:10px;width:100%;text-align:left;background:var(--paper-2);border:1px solid var(--line);
+  border-radius:var(--radius);padding:10px 12px;margin-bottom:8px;min-height:44px}
+.bk-row:active{background:var(--paper)}
+.bk-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.bk-name{font-size:15px;font-weight:700;color:var(--txt);line-height:1.25}
+.bk-place{font-size:11.5px;color:var(--txt-dim)}
+.bk-fished{font-size:11.5px;font-weight:600;color:var(--river)}
+.bk-snip{font-size:12.5px;color:var(--txt-dim);line-height:1.35;margin-top:2px}
+.bk-full{font-size:13px;color:var(--txt);line-height:1.4;margin-top:4px;white-space:pre-wrap;overflow-wrap:anywhere}
+.bk-row .badge{flex:0 0 auto;margin-top:1px}
+.bk-empty{text-align:center;color:var(--txt-dim);font-size:13.5px;line-height:1.5;padding:36px 18px}
+.bk-intro{font-size:12.5px;color:var(--txt-dim);margin-bottom:12px}
+.bk-res{background:var(--paper-2);border:1px dashed var(--line);border-radius:var(--radius);padding:10px 12px;margin-bottom:10px}
+.bk-res .bk-name{display:block;text-align:left;min-height:32px;margin-bottom:4px}
+#book-foot{flex:0 0 auto;border-top:1px solid var(--line);padding:10px 14px 12px;background:var(--paper)}
+#book-foot p{font-size:10.5px;color:var(--txt-dim);margin-top:6px}
+.bk-btns{display:flex;align-items:center;gap:8px}
+.bk-btns button{min-height:40px;padding:0 16px;border-radius:var(--radius);border:1px solid var(--line);background:var(--paper-2);font-size:13.5px;font-weight:600}
+#book-msg{font-size:11.5px;color:var(--txt-dim);min-width:0}
+
+/* Stream-access law row in the Rules card; the quote folds away. */
+.rc-law{margin-top:4px}
+.rc-law summary{font-size:11.5px;color:var(--river);cursor:pointer;min-height:28px;display:flex;align-items:center}
+.rc-law blockquote{margin:4px 0 6px;padding-left:9px;border-left:2px solid var(--line);font-size:11.5px;line-height:1.4;color:var(--txt-dim)}
+.rc-law a{color:var(--river)}
+
+/* Field Book: Offline tab */
+.of-bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden;margin:8px 0 4px}
+.of-bar>i{display:block;height:100%;width:0;background:var(--river)}
+.of-box{background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);padding:10px 12px;margin:10px 0}
+.of-box input[type=text]{width:100%;min-height:40px;font-size:14px;padding:0 8px;border:1px solid var(--line);border-radius:var(--radius);background:#fff;margin:6px 0}
+.of-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.of-area{display:flex;align-items:center;gap:8px;background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);padding:8px 10px;margin-bottom:8px}
+.of-area .of-main{flex:1;min-width:0}
+.of-area b{display:block;font-size:13.5px;color:var(--txt)}
+.of-area span{font-size:11.5px;color:var(--txt-dim)}
+.of-area .fb-btn{min-height:40px;flex:0 0 auto}

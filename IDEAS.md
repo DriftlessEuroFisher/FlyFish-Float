@@ -10,7 +10,7 @@ Status: `new` → `refining` → `ready` (agreed spec) → `building` → `done`
 
 ## Ideas
 
-### Regulations first in the river panel — `refining`
+### Regulations first in the river panel — `done` (2026-10-02, uncommitted)
 - **Source:** our own discussion, 2026-10-02.
 - **Problem:** the rules sit fourth in the river panel, under the flow cards
   and notes; "can I fish this today, and how?" is the first question.
@@ -37,7 +37,7 @@ Status: `new` → `refining` → `ready` (agreed spec) → `building` → `done`
 Rated against what is already here and what fits a no-backend, no-build
 phone app. **Fit:** strong / medium / weak.
 
-#### Offline maps — `new` · fit: strong
+#### Offline maps — `building` · fit: strong
 - **Problem:** service is patchy exactly where this app gets used.
 - **Already have:** baked geometry and last-saved flow readings.
 - **Gap:** the app shell and the basemap tiles.
@@ -50,7 +50,7 @@ phone app. **Fit:** strong / medium / weak.
     so only USGS is offered for offline.
   - Show the storage used and let the user delete saved areas.
 
-#### State water access laws — `new` · fit: strong
+#### State water access laws — `building` · fit: strong (18 states researched, `js/access-laws.js`)
 - **Problem:** whether you may wade or anchor on a streambed changes at the
   state line, and it is the most expensive thing to get wrong.
   - Montana: open to the high-water mark.
@@ -329,6 +329,16 @@ would cover one person's use.
   - **Note:** the National Weather Service API is free with no key and covers
     forecasts. Start there.
 
+### Community research (Reddit and forums)
+- **Reddit Data API**
+  - **Unlocks:** pulling recent posts about a river into the app: titles,
+    dates and links, with attribution.
+  - **Cost:** you register an app and accept Reddit's Data API terms. It is
+    free at low volume for non-commercial use; commercial use is paid.
+  - **Now:** the Field Book uses Reddit **search links** per river, which
+    need no key. Posts belong to their authors, so link to them; don't copy
+    their text into the app.
+
 ### Content (licensing or partnerships, not code)
 - **Fishing reports from fly shops:** licensed or partnered content.
   Scraping their sites isn't OK.
@@ -354,6 +364,8 @@ would cover one person's use.
 - Sunrise, sunset and moon phase, computed on the phone.
 
 ## Done
+
+- **Field Book**: favourites, fished, notes, Research links (Reddit/web search), export/import; extensible `BOOK_SECTIONS` tabs (2026-10-02, uncommitted).
 
 - **Live location dot + follow mode** (2026-10-02, uncommitted).
 - **Double-tap zoom, one-finger zoom, two-finger tap out, smoother pinch**
