@@ -162,7 +162,7 @@ like an app, not a browser tab.
 
 ## Rivers covered
 
-989 rivers and 22 lakes. Full list and gauge IDs live in `js/rivers-data.js`; this file
+1,084 rivers and 31 lakes. Full list and gauge IDs live in `js/rivers-data.js`; this file
 doesn't duplicate it since the code is the source of truth. Rivers carry a
 `region` field — `"driftless"` and `"northshore"` on the two small-stream
 sub-regions, absent on the original western rivers *and* on the two
@@ -914,6 +914,128 @@ the Hartsel reach above it is drawn as the Middle Fork, which carries both
 CPW entries. Alaska geometry is simplified at 80 m rather than 40: the
 rivers are long and remote, and at 40 m they added 26,000 points.
 
+## Michigan, the Black Hills, New Mexico, Arizona & Nevada
+
+**Michigan (23).** The Au Sable and its North and South Branches, the
+Manistee, Pere Marquette, Little Manistee, Pine, Muskegon, Rifle, Boardman,
+Platte, Jordan, Pigeon, Sturgeon, Black, Betsie, White and Baldwin, and in
+the Upper Peninsula the Two Hearted, Fox, Escanaba, Yellow Dog and
+Salmon Trout. Geometry is **EGLE/DNR's designated-trout-stream layer**
+(`gisagoegle.state.mi.us/.../MiEnviro/FeatureServer/32`): NHD 1:24k reaches,
+each carrying the DNR's regulation Type. So these carry `geom:"midnr"` and,
+like `iadnr`/`widnr`, are never re-snapped or refined. Regulations come from
+the 2026 Michigan Fishing Regulations: the river's **Gear Restricted Stream**
+entries verbatim (pp. 44–46, parsed by bold river heading), then the
+stream-Type rows from the p. 43 table for every Type on the river's reaches.
+Rivers that are only Type 1/2 close October–April in `tiers.js`.
+
+**Wisconsin South Shore & central sands (22).** The Bad, White, Marengo,
+Sioux, Cranberry, Siskiwit, Flag, Fish Creek, Iron, Brunsweiler and Tyler
+Forks along Lake Superior; the Mecan, Tomorrow, Little Plover, White, Pine,
+Willow, Lawrence, Chaffee, Emmons, Crystal and Wedde in the sands. From the
+**WDNR trout-regulation layer** (`FM_Trout/FM_TROUT_REGS_WTM_Ext`, layer 0):
+the line is the regulated reach and each piece carries its category,
+season, bag and gear text, reproduced verbatim. Fetched **inside a box per
+stream** — Wisconsin has a dozen White Rivers. They use the `parkRegs` /
+`PARK_INFO` machinery with regions `wisouthshore` and `wicentralsands`, not
+`troutRegs`, so the sheet's badge, note and footer come from one row.
+
+**Black Hills (6), New Mexico (11), Arizona (7 + Grand Canyon 2), Nevada
+(5 + Great Basin 3).** NHD flowlines by name (Overpass was failing for most
+of this pass), built by the Colorado/Utah/Alaska pipeline with `src:"nhd"`.
+Regulations are quoted from each booklet: South Dakota's Black Hills
+exceptions; New Mexico's **Special Trout Waters**, parsed into Red, Green and
+Xmas Chile designations so each river shows the reaches named under each;
+Arizona's Commission Order 40 water list; Nevada's CR 25-16 county tables.
+
+Two NHD traps:
+
+- **Fallback files number their ways from -1**, so the builder's
+  de-duplication by way id silently dropped every NHD river after the first
+  in a state. It de-duplicates on (id, name) now.
+- **NHD draws wide rivers as parallel flowlines** — the Middle Fork Salmon
+  came out at 318 km, twice its length. For NHD rivers the builder keeps the
+  longest run and drops any run lying mostly within 400 m of one kept.
+
+**State outlines for these come from the Census *cartographic* (500K)
+boundary** (`Generalized_ACS2024/State_County/MapServer/7`), not TIGER:
+TIGER's Michigan includes its Great Lakes water and drew the state over Lake
+Michigan. (The older states were built from TIGER and haven't been checked
+for the same problem.)
+
+**Parks with no rivers**, by choice: Isle Royale, Badlands, Wind Cave,
+Carlsbad Caverns, White Sands, Petrified Forest and Saguaro.
+
+## Gap fills, lakes, and the finishing pass
+
+**Rivers people expected and didn't find**, added: Kelly Creek, the Middle
+Fork Salmon and the Idaho Owyhee; the Greybull and Hams Fork; Panguitch,
+Big Cottonwood and East Canyon Creeks and the Price River; Saguache Creek;
+the Hoko, the lower Snake and the Columbia's Hanford Reach; the Russian; and
+in Alaska the Aniak, Kisaralik, Kwethluk, Unalakleet, Ugashik, Eagle River,
+Campbell, Bird, Ptarmigan, Cooper and Stariski Creeks, the Moose and Funny
+Rivers, Lower Talarik Creek, the Stuyahok, the Kadashan and the East Alsek
+(several from NHD where OSM has no line). Idaho and Wyoming additions carry
+no region tag and no regulation text, like the rest of those states' rivers;
+their zone counts are the original count plus these (`zone_base.json`).
+
+**Still not mapped, and why:** Armstrong, DePuy and Nelson's spring creeks
+(unnamed in both OSM and NHD — a hand-drawn line would be a guess), the
+Kulik, the Pasagshak, Katmai's Battle Creek and Lake Clark's Silver Salmon
+Creek (in neither source), and the Agulowak (NHD's line runs on through Lake
+Nerka and the river's own ends aren't located).
+
+**Lakes (9 more, 31 in all):** Henrys Lake, Hebgen Lake, Flaming Gorge and
+Strawberry Reservoirs, East Lake, Crane Prairie, Spinney Mountain and Eleven
+Mile Reservoirs, and North Delaney Butte Lake. Outlines from OSM (NHD for
+Delaney), regulations from each state's entry for the lake (IDFG's Henrys
+Lake rule, p. 43; Montana's Central District standard for Hebgen, which has
+no entry of its own). `openLake` reads its heading, badge and agency from
+the lake's `park` row, which for these is a state row.
+
+**Colorado DWR gauges.** `GAUGES` entries with site `CODWR-<abbrev>` are read
+from the Colorado Division of Water Resources telemetry API
+(`dwr.state.co.us/Rest/GET/api/v2/telemetrystations/`) — CORS-open, batched by
+comma-separated abbrev, 1,000 requests a day. Same 7-year day-of-year median
+from DWR's daily means. 23 stations on 11 rivers that had no USGS gauge (the
+Rio Grande at Del Norte, the Poudre at the canyon mouth, the Conejos…).
+Only rivers with **no** USGS gauge get them, and spillways, outlets,
+channels, ditches and confluence gauges are excluded.
+
+**Season windows for state rivers** (`states/seasons.py`) are applied only
+where nothing in the river's own entry could open water outside the
+standard season — no year-round wording and no winter month named. Most
+western rivers turned out to be open in winter in some reach, so only 18
+qualify; ambiguity means no window, never a wrong closure.
+
+**Encoded geometry.** Generated rivers carry `cz` — Google encoded
+polylines at 1e5 — instead of `coords`, decoded at the top of `app.js`
+before anything reads them. rivers-data.js went from 4.8 MB to 2.1 MB.
+Run `~/.cache/flyfish-osm/encode_coords.py` **after every apply.py**; it is
+idempotent. Encoded strings contain `[ ] { }`, so every script that finds the
+end of `RIVERS` uses the string-aware matcher in `jsmatch.py` — plain bracket
+counting would cut the array mid-string.
+
+**Current direction for OSM/NHD/agency rivers** comes from terrain
+(`flowdir.py`, the same least-squares method as the NHD rivers) instead of
+assuming the line runs downstream. Elevations come from Open-Meteo until its
+daily allowance runs out (it counts each point as a call), then from the
+USGS EPQS point service. Results go to `flowrev_osm.json`, which every apply
+script reads, so a re-run no longer resets them to "0".
+
+**OSM rivers refine from OSM at zoom 13+** (`osmSegments()` in `app.js`): the
+same ways at full resolution from Overpass, by the river's `osmName`,
+clipped to the drawn line. Never from NHD — mixing sources fragments a line.
+
+**Access points** come from OSM: `leisure=slipway` as ramps, `leisure=fishing`
+and "… Fishing Access …" names as wade access, matched to the nearest mapped
+river within 300/400 m (`access/build.py`, fenced in `RAMPS`). Private ones
+are skipped.
+
+**A fenced writer must strip its own block before reading existing gauge
+keys** — see the state-rivers section; the Michigan, Wisconsin, lakes and
+Colorado/Utah/Alaska writers all do.
+
 ## Teton Valley & Swan Valley, Idaho
 
 **Teton Valley (21).** The Teton River and its tributaries above the canyon —
@@ -1107,7 +1229,7 @@ after each one — so the water you're looking at colours in before the rest
 of the country is fetched.
 
 **The far-western states batch by state, not by region tag**
-(`STATE_BUCKET`: CA, OR, WA, MT, CO, UT, AK). Every park and every state is
+(`STATE_BUCKET`: CA, OR, WA, MT, CO, UT, AK, MI, SD, NM, AZ, NV). Every park and every state is
 its own `region`, and a bucket holding one gauge still costs its own latest
 call and seven history calls; thirty small buckets roughly doubled a cold
 load. Yellowstone and Grand Teton keep their own buckets as before.
@@ -1281,6 +1403,12 @@ are worth calibrating first.
   their children* — Leaflet marks every interactive marker and path
   `pointer-events:auto`, and a child that opts back in is hit-tested even
   when its pane says none.
+- **The Alaska button sits under Regions while the chooser is up** (`#btn-far`).
+  Alaska is outside the opening frame, so without it nobody finds Alaska; the
+  button flips between "Alaska ▲" and "Lower 48 ▼" depending on where you are.
+- **Park cards drop out at 12% overlap, not 45%**, and parks with mapped water
+  are placed before parks without — the Four Corners cards stacked into an
+  unreadable pile otherwise. A dropped card comes back one zoom step in.
 - **The Regions button is top-left, under the zoom control.** The safety
   panel opens over the top-right corner the moment you enter a zone, and
   it was burying the one control that gets you back out.

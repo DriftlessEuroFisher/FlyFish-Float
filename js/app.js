@@ -7,6 +7,32 @@
    The API sends CORS headers for browser use; if your network
    blocks it, point API_BASE at a lightweight same-origin proxy.
    ============================================================ */
+/* ---------- river geometry: encoded polylines ----------
+   Generated rivers carry their channel as `cz` -- Google's encoded-polyline
+   format at 1e5, one string per piece -- instead of a literal `coords`
+   array: the same points at about a quarter of the bytes, which is most of
+   what a phone downloads. They are decoded here, before anything reads
+   `coords`, so every other line of this file sees plain [lat,lng] lists. A
+   hand-written river can still use `coords:[...]` directly.
+   (Regenerate with ~/.cache/flyfish-osm/encode_coords.py after any apply.) */
+function decodePolyline(str){
+  const out = []; let i = 0, lat = 0, lng = 0;
+  while(i < str.length){
+    for(let k = 0; k < 2; k++){
+      let b, shift = 0, res = 0;
+      do { b = str.charCodeAt(i++) - 63; res |= (b & 31) << shift; shift += 5; } while(b >= 32);
+      const d = (res & 1) ? ~(res >> 1) : (res >> 1);
+      if(k === 0) lat += d; else lng += d;
+    }
+    out.push([lat / 1e5, lng / 1e5]);
+  }
+  return out;
+}
+RIVERS.forEach(r => {
+  if(r.cz && !r.coords) r.coords = Array.isArray(r.cz) ? r.cz.map(decodePolyline) : decodePolyline(r.cz);
+  delete r.cz;
+});
+
 const API_BASE = "https://api.waterdata.usgs.gov/ogcapi/v0/collections";
 const STAT_YEARS = 7;        // years of history for the median
 const STAT_WINDOW = 7;       // +/- days around today's date
@@ -49,7 +75,7 @@ Object.keys(GAUGES).forEach(k => { KEY_BY_SITE[GAUGES[k].site] = k; });
 // every park and state is its own region, and a bucket of one gauge still
 // costs a latest call and seven history calls of its own -- thirty small
 // buckets roughly doubled a cold load against the 1,000/hour budget.
-const STATE_BUCKET = new Set(["CA","OR","WA","MT","CO","UT","AK"]);
+const STATE_BUCKET = new Set(["CA","OR","WA","MT","CO","UT","AK","MI","SD","NM","AZ","NV"]);
 function regionOfRiver(r){
   if(STATE_BUCKET.has(r.state) && r.region!=="yellowstone" && r.region!=="grandteton") return "w-"+r.state;
   if(r.region) return r.region;               // "driftless" | "northshore"
@@ -102,6 +128,72 @@ function fetchJSON(url, timeout=12000){
     .finally(()=>clearTimeout(t));
 }
 
+/* ---------- Colorado Division of Water Resources gauges ----------
+   Many Colorado rivers are gauged by the state, not the USGS -- the Rio
+   Grande at Del Norte, the Poudre at the canyon mouth, the Conejos -- and
+   those rivers read "ungauged" while a live state gauge sat on the water.
+   A GAUGES entry with site "CODWR-<abbrev>" is read from DWR's telemetry
+   REST API instead: live discharge in CFS, same as the USGS gauges, and the
+   same 7-year day-of-year median built from DWR's daily means. Batched by
+   comma-separated abbrev, verified against DWR's own station metadata, and
+   CORS-open. DWR allows 1,000 requests a day per client; a cold load is
+   one latest call and seven history calls per 40 stations. */
+const DWR_BASE = "https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/";
+const isDWR = key => GAUGES[key] && GAUGES[key].site.startsWith("CODWR-");
+const dwrAbbrev = key => GAUGES[key].site.slice(6);
+const MAX_DWR = 40;
+async function fetchDWRLatest(keys){
+  for(const group of chunk(keys, MAX_DWR)){
+    try{
+      const j = await fetchJSON(DWR_BASE + "telemetrystation/?format=json&parameter=DISCHRG&abbrev="
+                                + group.map(dwrAbbrev).join(","), 20000);
+      const got = new Set();
+      (j.ResultList||[]).forEach(r=>{
+        const key = KEY_BY_SITE["CODWR-"+r.abbrev];
+        const cfs = parseFloat(r.measValue);
+        if(!key || !isFinite(cfs) || !r.measDateTime) return;
+        flows[key] = {cfs, time:r.measDateTime, fetchedAt:Date.now(), stale:false};
+        store.set("flow:"+key, flows[key]);
+        meta[key] = {name:r.stationName, verified:true};
+        store.set("meta:"+GAUGES[key].site, meta[key]);
+        got.add(key);
+      });
+      markStale(group.filter(k=>!got.has(k)));
+    }catch(e){ markStale(group); }
+  }
+}
+async function fetchDWRStats(keys){
+  const need = [];
+  keys.forEach(k=>{ const c = store.get(statsCacheKey(k)); if(c) stats[k] = c; else need.push(k); });
+  if(!need.length) return;
+  const now = new Date(), vals = {};
+  const us = d => `${String(d.getMonth()+1).padStart(2,"0")}/${String(d.getDate()).padStart(2,"0")}/${d.getFullYear()}`;
+  need.forEach(k => vals[k] = []);
+  let failed = false;
+  for(const group of chunk(need, MAX_DWR)){
+    for(let y=1; y<=STAT_YEARS; y++){
+      const c = new Date(now); c.setFullYear(now.getFullYear()-y);
+      const a = new Date(c); a.setDate(c.getDate()-STAT_WINDOW);
+      const b = new Date(c); b.setDate(c.getDate()+STAT_WINDOW);
+      try{
+        const j = await fetchJSON(DWR_BASE + "telemetrytimeseriesday/?format=json&parameter=DISCHRG&abbrev="
+          + group.map(dwrAbbrev).join(",") + `&startDate=${us(a)}&endDate=${us(b)}`, 25000);
+        (j.ResultList||[]).forEach(r=>{
+          const k = KEY_BY_SITE["CODWR-"+r.abbrev], v = parseFloat(r.measValue);
+          if(k && vals[k] && isFinite(v)) vals[k].push(v);
+        });
+      }catch(e){ failed = true; }
+    }
+  }
+  need.forEach(k=>{
+    const v = vals[k].sort((a,b)=>a-b);
+    if(!v.length){ if(!failed) stats[k] = null; return; }   // same rule as USGS: don't latch on a failure
+    const st = {median:v[Math.floor(v.length/2)], mean:v.reduce((a,b)=>a+b,0)/v.length,
+                min:v[0], max:v[v.length-1], n:v.length};
+    stats[k] = st; store.set(statsCacheKey(k), st);
+  });
+}
+
 /* Fall back to whatever was last saved for these gauges. Used when a batch
    request fails outright, and for any site the batch came back without. */
 function markStale(keys){
@@ -144,6 +236,8 @@ async function fetchOneLatest(key){
    carries its own monitoring_location_id, so the response is split back
    out per gauge. */
 async function fetchLatestBatch(keys){
+  const dwr = keys.filter(isDWR);
+  if(dwr.length){ await fetchDWRLatest(dwr); keys = keys.filter(k=>!isDWR(k)); }
   if(!keys.length) return;
   if(apiPaused()){ markStale(keys); return; }
   if(!batchSupported || keys.length === 1){
@@ -197,6 +291,9 @@ function statsCacheKey(key){
    (170 x 7 = ~1,190 calls). Now it's one request per year per chunk of
    sites: 7 years x ceil(n/30) chunks, so 56 calls for the whole map. */
 async function fetchStatsBatch(keys){
+  const dwrWant = keys.filter(k => isDWR(k) && stats[k] === undefined);
+  if(dwrWant.length) await fetchDWRStats(dwrWant);
+  keys = keys.filter(k=>!isDWR(k));
   const want = keys.filter(k => stats[k] === undefined);
   if(!want.length) return;
   // serve whatever is already cached, request only the rest
@@ -258,6 +355,7 @@ async function fetchStatsBatch(keys){
 /* Verify the hardcoded site IDs against monitoring-location metadata
    instead of trusting them blindly — batched, lazy and cached. */
 async function verifyGaugesBatch(keys){
+  keys = keys.filter(k=>!isDWR(k));     // DWR stations are verified by their own latest read
   const need = [];
   keys.forEach(k=>{
     if(meta[k]) return;
@@ -440,6 +538,9 @@ const REGIONS = [
   ["Little Sturgeon (Keyes Creek)", [44.77,-87.58,12]],
   ["Ahnapee River / Algoma", [44.66,-87.47,11]],
   ["Mink River / Rowleys Bay", [45.24,-87.05,12]],
+  ["── Wisconsin South Shore & Central Sands ──", null],
+  ["South Shore (Bayfield / Ashland)", [46.50,-91.00,9]],
+  ["Central sands (Mecan / Tomorrow)", [44.10,-89.30,9]],
   ["── East-Central MN / St. Croix ──", null],
   ["Stillwater / St. Croix", [45.15,-92.75,10]],
   ["Twin Cities (Mississippi/Minnesota)", [44.98,-93.20,10]],
@@ -523,6 +624,19 @@ const REGIONS = [
   ["Kuskokwim Bay (Kanektok / Goodnews)", [59.70,-161.10,8]],
   ["Kodiak (Karluk / Ayakulik)", [57.50,-153.70,8]],
   ["Southeast (Situk / Prince of Wales)", [57.00,-134.50,6]],
+  ["── Michigan ──", null],
+  ["Au Sable (Grayling / Mio)", [44.65,-84.40,9]],
+  ["Manistee / Pere Marquette", [44.10,-85.80,8]],
+  ["Upper Peninsula (Two Hearted / Fox)", [46.40,-86.30,8]],
+  ["── Black Hills, New Mexico, Arizona & Nevada ──", null],
+  ["Black Hills (Rapid / Spearfish)", [44.10,-103.65,9]],
+  ["San Juan Quality Waters", [36.80,-107.65,12]],
+  ["Northern New Mexico (Chama / Rio Grande)", [36.40,-106.10,8]],
+  ["Lees Ferry", [36.90,-111.55,11]],
+  ["White Mountains (AZ)", [33.95,-109.60,9]],
+  ["Truckee / East Walker (NV)", [39.20,-119.40,8]],
+  ["Grand Canyon", [36.10,-112.10,9]],
+  ["Great Basin", [38.98,-114.25,11]],
   ["── National parks, Alaska ──", null],
   ["Katmai", [58.70,-154.90,8]],
   ["Lake Clark", [60.60,-153.90,7]],
@@ -595,7 +709,8 @@ function openLake(id){
   // the western parks answer from PARK_INFO; Yellowstone and Grand Teton keep their own copy
   const pk = PARK_INFO[k.park];
   const stateName = {WY:"Wyoming", OR:"Oregon", WA:"Washington", CA:"California", MT:"Montana",
-                     CO:"Colorado", UT:"Utah", AK:"Alaska"}[k.state] || k.state;
+                     CO:"Colorado", UT:"Utah", AK:"Alaska", ID:"Idaho", MI:"Michigan", SD:"South Dakota",
+                     NM:"New Mexico", AZ:"Arizona", NV:"Nevada"}[k.state] || k.state;
   $("#sh-sub").textContent = pk ? stateName + pk.sub + " · lake"
                          : grte ? "Wyoming · Grand Teton National Park · lake"
                                 : "Wyoming · Yellowstone National Park · lake";
@@ -605,7 +720,7 @@ function openLake(id){
     `<div class="flowcard"><div class="gname">Still water — ${k.areaKm2} km²</div>` +
     `<div class="plain">No gauge and no flow number: a lake doesn't have one. What "in shape" means here is ice-off, water temperature and wind, not CFS — and on the big lakes the wind is the thing that decides the day.</div></div>` +
     `<div class="secthead">Fishing notes</div><div class="fishnote">🎣 ${k.fish}</div>` +
-    `<div class="secthead">Park regulations</div><div class="fishnote">` +
+    `<div class="secthead">${(pk && pk.heading) || "Park regulations"}</div><div class="fishnote">` +
       `<span class="badge" style="background:#4a6f8a">${pk ? pk.badge : grte ? "Grand Teton · Wyoming regs" : "National Park Service"}</span> ` +
       `<span style="font-size:11.5px">${k.regs}</span>` +
       `<div style="font-size:10.5px;color:var(--txt-dim);margin-top:8px">${pk ? pk.note : grte
@@ -1009,7 +1124,7 @@ Object.assign(PARK_INFO, {
     note:`From Colorado Parks &amp; Wildlife's <b>2026 Colorado Fishing</b> brochure — this water's own entry in <i>Special Regulations: Fishing Waters</i>, then the statewide limits. If a water isn't on that list, the statewide regulations apply. The brochure's online version is the most current.`,
     regBody:"Colorado Parks &amp; Wildlife",
     footer:`🎣 <b>Colorado</b>: a fishing licence is required at 16 and older, and the licence year runs <b>March 1 to March 31</b> of the following year. Statewide, trout are <b>4 a day and 8 in possession</b>, with 10 extra brook trout of 8 inches or less. <b>Greenback cutthroat trout may not be taken.</b> A <b>Gold Medal</b> water — marked on the river's own entry — is CPW's designation for the best trout water in the state, and not every Gold Medal water carries special regulations. The brochure's own warning: <i>it is illegal to go onto private land to fish</i>.`,
-    ungauged:"No live USGS gauge on this river. Many of Colorado's gauges are run by the state's Division of Water Resources rather than the USGS and aren't read here; the nearest USGS-gauged river is the regional read — snowmelt drives all of it, peaking in late May and June."},
+    ungauged:"No live gauge on this river — neither USGS nor Colorado's Division of Water Resources reports discharge on it. The nearest gauged river is the regional read — snowmelt drives all of it, peaking in late May and June."},
   utah: {zone:"ut", sub:"", heading:"Regulations", labelZoom:8, badge:"Utah DWR · 2026",
     note:`From the Utah Division of Wildlife Resources' <b>2026 Utah Fishing Guidebook</b> — this water's own entry in <i>Rules for specific waters</i>, which takes precedence over the general rules. Emergency changes are posted at wildlife.utah.gov.`,
     regBody:"the Utah Division of Wildlife Resources",
@@ -1097,6 +1212,71 @@ Object.assign(PARK_INFO, {
     regBody:"ADF&amp;G (an Alaska licence is required)",
     footer:`🌊 Fished <b>per state regulations</b> on an Alaska licence. The park's fishing is mostly salt water; in the backcountry, salmon and Dolly Varden.`,
     ungauged:"No live gauge in the park."},
+});
+
+/* Wisconsin's South Shore and central sands: WDNR trout-regulation reaches,
+   with each reach's own rule text from the department's layer. */
+Object.assign(PARK_INFO, {
+  wisouthshore: {zone:"wi", sub:" · South Shore", heading:"Regulations", labelZoom:10, badge:"WDNR trout regulations",
+    note:`From the Wisconsin DNR's trout regulations map — each reach's category, season, bag and gear rule, in the department's own words. Reach boundaries move; check the map before you fish.`,
+    regBody:"the Wisconsin DNR",
+    footer:`🎣 <b>Wisconsin</b>: a fishing licence and an <b>Inland Trout Stamp</b> (or a Great Lakes Salmon &amp; Trout Stamp on Lake Superior tributaries below the first barrier). The lower reaches here are <b>Great Lakes tributary</b> water — a different season and bag from the inland water upstream — and the <b>Bad River's lower reach runs through the Bad River Reservation</b>, under tribal jurisdiction.`,
+    ungauged:"No live gauge on this stream. The South Shore streams rise and fall with rain and snowmelt off the clay hills; the nearest gauged one is the read on whether they're running high and red."},
+  wicentralsands: {zone:"wi", sub:" · Central Sands", heading:"Regulations", labelZoom:10, badge:"WDNR trout regulations",
+    note:`From the Wisconsin DNR's trout regulations map — each reach's category, season, bag and gear rule, in the department's own words.`,
+    regBody:"the Wisconsin DNR",
+    footer:`🎣 <b>Wisconsin</b>: a fishing licence and an <b>Inland Trout Stamp</b>. The general inland season opens the first Saturday in April and runs to October 15, with a catch-and-release, artificial-lures-only early season from the first Saturday in January. These are spring-fed sand-country streams — steady, cold and clear — and much of the water is on state fishery areas.`,
+    ungauged:"No live gauge on this stream. Central sands streams are groundwater-fed and change slowly; the nearest gauged one is a fair read."},
+});
+
+/* Idaho as a state row -- used by Henrys Lake. Idaho's rivers carry no
+   regulation text (the original western set), so only still water reads it. */
+Object.assign(PARK_INFO, {
+  idaho: {zone:"id", sub:"", heading:"Regulations", labelZoom:8, badge:"IDFG · 2025–27",
+    note:`From Idaho Fish and Game's <b>2025–2027 Fishing Seasons &amp; Rules</b> (2nd edition) — the water's own special rule in the Upper Snake Region.`,
+    regBody:"Idaho Fish and Game",
+    footer:`🎣 <b>Idaho</b>: any person 14 years of age or older must buy a fishing licence. Rules are set by region; a water's special rule replaces the regional general rule for the items it lists.`,
+    ungauged:"No live gauge on this water."},
+});
+
+/* Michigan, South Dakota, New Mexico, Arizona and Nevada, plus the two of
+   their parks with trout water. Each sheet quotes the state's own booklet. */
+Object.assign(PARK_INFO, {
+  michigan: {zone:"mi", sub:"", heading:"Regulations", labelZoom:9, badge:"Michigan DNR · 2026",
+    note:`From the <b>2026 Michigan Fishing Regulations</b> (April 1, 2026 – March 31, 2027): the river's Gear Restricted Stream entries in the DNR's own words, then the stream-Type rules for each Type the DNR has assigned to its reaches.`,
+    regBody:"the Michigan DNR",
+    footer:`🎣 <b>Michigan</b>: Type 1 and Type 2 trout streams open the <b>last Saturday in April through September 30</b>; Type 3 and Type 4 are open all year, with possession seasons that vary. On <b>Gear Restricted Streams</b> live, dead or preserved bait and organic or processed food are unlawful on the water or on shore, and scented material is unlawful on flies-only water. Which reach is which Type is on the DNR's Inland Trout &amp; Salmon maps.`,
+    ungauged:"No live gauge on this river. Michigan's trout rivers are mostly groundwater-fed and steady; the nearest gauged river is a fair regional read after rain."},
+  southdakota: {zone:"sd", sub:" · Black Hills", heading:"Regulations", labelZoom:9, badge:"SD GFP · 2026",
+    note:`From the <b>2026 South Dakota Fishing Handbook</b> — the Black Hills exceptions to statewide harvest and length limits, then the statewide limit.`,
+    regBody:"South Dakota Game, Fish and Parks",
+    footer:`🎣 <b>South Dakota</b>: inside the <b>Black Hills Fish Management Area</b> only one trout 14 inches or longer from any Black Hills stream may be kept in the daily limit, and high grading is prohibited. Waters not listed as Black Hills exceptions fall under the statewide harvest and length limits.`,
+    ungauged:"No live gauge on this creek. Black Hills creeks are spring- and reservoir-fed; the nearest gauged creek is a fair read."},
+  newmexico: {zone:"nm", sub:"", heading:"Regulations", labelZoom:8, badge:"NMDOW · 2026–27",
+    note:`From the <b>2026–2027 New Mexico Fishing Rules and Info</b> — the river's Special Trout Water designations (Red, Green and Xmas Chile Water) word for word, then the general trout bag.`,
+    regBody:"the New Mexico Department of Wildlife",
+    footer:`🎣 <b>New Mexico</b>: anglers 12 and older need a New Mexico fishing licence, valid April 1 through March 31. <b>Special Trout Waters</b> are posted with chile symbols: <b>Red</b> is catch-and-release with single barbless artificials, <b>Green</b> is a two-trout bag with the same tackle rule, and <b>Xmas</b> is a two-trout bag with any legal tackle. Fishing in a Special Trout Water must stop once its bag is taken.`,
+    ungauged:"No live gauge on this water. In New Mexico the snowmelt runoff peaks in May and June and the summer monsoon can blow small streams out in an afternoon."},
+  arizona: {zone:"az", sub:"", heading:"Regulations", labelZoom:8, badge:"AZGFD · 2025–26",
+    note:`From Arizona Game and Fish's <b>2025 &amp; 2026 Fishing Regulations</b>, Commission Order 40 — the water's own special regulation, then the statewide daily bag.`,
+    regBody:"the Arizona Game and Fish Department",
+    footer:`🎣 <b>Arizona</b>: a fishing or combination licence for anglers ten and older. The statewide daily bag is <b>4 trout</b> in any combination, and the possession limit is twice the daily bag unless a water says otherwise. Several White Mountains streams are closed January 1 – April 30.`,
+    ungauged:"No live gauge on this water."},
+  nevada: {zone:"nv", sub:"", heading:"Regulations", labelZoom:8, badge:"NDOW · 2026–27",
+    note:`From the Nevada Board of Wildlife Commissioners' <b>Fishing Seasons and Regulations, CR 25-16</b> (January 1, 2026 – December 31, 2027), set county by county.`,
+    regBody:"the Nevada Department of Wildlife",
+    footer:`🎣 <b>Nevada</b>: residents 12 and older need a fishing licence. Unless a water is listed, it is open year around with a daily limit of 5 trout and 5 mountain whitefish, and the possession limit is twice the daily limit.`,
+    ungauged:"No live gauge on this water."},
+  grandcanyon: {zone:"grca", sub:" · Grand Canyon National Park", badge:"Grand Canyon · Arizona regs",
+    note:`From Grand Canyon National Park's fishing information, which follows Arizona's regulations reach by reach down the Colorado.`,
+    regBody:"Arizona Game and Fish and the National Park Service (an Arizona licence is required)",
+    footer:`🏜 An <b>Arizona licence</b> is required at ten and older. Down the Colorado the limit changes by reach: 6 rainbow trout from the Paria riffle to Navajo Bridge, no limit on trout from Navajo Bridge to Separation Canyon. The Colorado is closed for half a mile either side of the Little Colorado confluence, and humpback chub and other native fish are protected.`,
+    ungauged:"No live gauge on this water."},
+  greatbasin: {zone:"grba", sub:" · Great Basin National Park", badge:"Great Basin · Nevada regs",
+    note:`From Great Basin National Park's fishing page: Nevada licence and regulations, plus the park's own rules.`,
+    regBody:"the National Park Service and NDOW (a Nevada licence is required)",
+    footer:`🏔 Fished on a <b>Nevada licence</b>. Johnson and Baker Lakes are catch-and-release with single barbless artificial lures, and catch and release is encouraged on Snake Creek, where Bonneville cutthroat were reintroduced in 2019.`,
+    ungauged:"No live gauge on most of these creeks."},
 });
 
 Object.assign(PARK_INFO, {
@@ -1558,17 +1738,49 @@ function clipToDrawn(segs, drawnRuns){
   });
   return out;
 }
+/* Full-resolution OSM ways for a river, by its own OSM name(s), welded where
+   ways share an end node. Overpass sends CORS headers; one small query per
+   river, only at REFINE_ZOOM, cached for a month like the NHD refinement. */
+const OVERPASS = "https://overpass-api.de/api/interpreter";
+async function osmSegments(r, bb){
+  const names = (r.osmName || r.name.replace(/\s*\(.*\)\s*/g, "")).split("|");
+  const box = `(${bb[1]},${bb[0]},${bb[3]},${bb[2]})`;
+  const q = `[out:json][timeout:25];(${names.map(n =>
+    `way["waterway"~"^(river|stream)$"]["name"="${n.replace(/\\/g,"\\\\").replace(/"/g,'\\"')}"]${box};`).join("")});out geom;`;
+  const ctl = new AbortController(); const t = setTimeout(()=>ctl.abort(), REFINE_TIMEOUT);
+  let js;
+  try{
+    const res = await fetch(OVERPASS, {method:"POST", signal:ctl.signal, body:"data="+encodeURIComponent(q),
+                                       headers:{"Content-Type":"application/x-www-form-urlencoded"}});
+    if(!res.ok) throw new Error("HTTP "+res.status);
+    js = await res.json();
+  } finally { clearTimeout(t); }
+  let runs = (js.elements || []).filter(e => e.type === "way" && e.geometry && e.geometry.length > 1)
+                                 .map(e => e.geometry.map(p => [p.lat, p.lon]));
+  const same = (a, b) => a[0] === b[0] && a[1] === b[1];
+  let joined = true;
+  while(joined){
+    joined = false;
+    outer: for(let i = 0; i < runs.length; i++) for(let j = 0; j < runs.length; j++){
+      if(i === j) continue;
+      if(same(runs[i][runs[i].length-1], runs[j][0])){
+        runs[i] = runs[i].concat(runs[j].slice(1)); runs.splice(j, 1); joined = true; break outer;
+      }
+    }
+  }
+  return runs;
+}
+
 async function refineRiver(r){
   const layer = riverLayers[r.id];
   if(!layer || layer.refined || layer.refining) return;
-  /* Agency geometry and OSM geometry are both left alone. For iadnr/widnr
-     the reason is that the line IS the designated trout reach, and NHD would
-     replace it with the whole creek. For osm the reason is different: that
-     linework is already finer than the 66 m the first snap asks for, it was
-     validated against the river's own gauges when it was baked, and mixing
-     two sources along one channel would fragment the line wherever they
-     disagree by more than REFINE_BUFFER_KM. */
-  if(r.geom === "iadnr" || r.geom === "widnr" || r.geom === "osm"){ layer.refined = true; return; }
+  /* Agency geometry is left alone: for iadnr/widnr the line IS the
+     designated trout reach, and NHD would replace it with the whole creek.
+     OSM rivers are refined from OSM itself, never from NHD -- mixing two
+     sources along one channel fragments the line wherever they disagree by
+     more than REFINE_BUFFER_KM. The baked OSM line is simplified (40 m, 80 m
+     in Alaska); the refinement is the same ways at full resolution. */
+  if(r.geom === "iadnr" || r.geom === "widnr" || r.geom === "midnr"){ layer.refined = true; return; }
   layer.refining = true;
   const ck = "nhdfine:" + r.id;
   const cached = store.get(ck);
@@ -1583,7 +1795,8 @@ async function refineRiver(r){
     const drawnRuns = (Array.isArray(drawn0[0]) ? drawn0 : [drawn0]);
     const bb = bboxOf(flatCoords(r.coords));
     const kw = riverKeyword(r).replace(/%/g,"").replace(/'/g,"''");
-    let segs = nhdSegments(await fetchJSON(nhdURL(`UPPER(GNIS_NAME) = '${kw}'`, bb, NHD_FINE), REFINE_TIMEOUT));
+    let segs = r.geom === "osm" ? await osmSegments(r, bb)
+             : nhdSegments(await fetchJSON(nhdURL(`UPPER(GNIS_NAME) = '${kw}'`, bb, NHD_FINE), REFINE_TIMEOUT));
     if(segs.length){
       if(r.geom) segs = clipToDrawn(segs, drawnRuns);
       // a refinement that loses most of the river is a bad match, not a better line
@@ -1663,7 +1876,8 @@ async function openRiver(id, focusGauge){
   $("#sh-title").textContent = r.name;
   const stateName = {ID:"Idaho", WY:"Wyoming", IA:"Iowa", MN:"Minnesota", WI:"Wisconsin", IL:"Illinois",
                      CA:"California", OR:"Oregon", WA:"Washington", MT:"Montana",
-                     CO:"Colorado", UT:"Utah", AK:"Alaska"}[r.state] || r.state;
+                     CO:"Colorado", UT:"Utah", AK:"Alaska", MI:"Michigan", SD:"South Dakota",
+                     NM:"New Mexico", AZ:"Arizona", NV:"Nevada"}[r.state] || r.state;
   const subRegion = {driftless:" · Driftless Area", northshore:" · North Shore",
                      doorcounty:" · Door Peninsula",
                      yellowstone:" · Yellowstone National Park",
@@ -1768,7 +1982,7 @@ function renderSheet(r){
     ? "Idaho Fish &amp; Game (Upper Snake Region)"
     : {IA:"the Iowa DNR", MN:"the Minnesota DNR", WI:"the Wisconsin DNR", IL:"the Illinois DNR"}[r.state]
       || "WY Game &amp; Fish / Idaho Fish &amp; Game";
-  h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Flow data: USGS Water Data OGC API. River lines simplified — not for navigation. Verify regulations with ${regBody}.</p>`;
+  h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Flow data: USGS Water Data OGC API${r.state==="CO"?" and Colorado Division of Water Resources":""}. River lines simplified — not for navigation. Verify regulations with ${regBody}.</p>`;
   if(r.region==="driftless"){
     h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🚶 Driftless access is mostly <b>walk-and-wade</b>, and a lot of the best water runs through <b>private land under a public angling easement</b> — you may fish and walk the stream corridor, but not leave it. Park only in the marked pull-offs, and check the state's current easement map and trout regulations (including any catch-and-release or artificial-only stretches) before you go. Iowa also requires a <b>trout fee</b> on top of a fishing license.</p>`;
   }
@@ -1823,7 +2037,7 @@ function flowCardHTML(key, riverId){
     curLeft = Math.min(97, Math.max(3, x));
   }
   return `<div class="flowcard">
-    <div class="gname">${name}${m&&m.verified===false?' <span title="Could not verify this site ID against USGS metadata">(unverified)</span>':''}</div>
+    <div class="gname">${name}${m&&m.verified===false?' <span title="Could not verify this site ID against the agency station metadata">(unverified)</span>':''}</div>
     <div class="flowrow">
       <span class="cfs">${cfsTxt}<small> CFS</small></span>
       <span class="badge" style="background:${st.color}">${st.label}</span>
@@ -1833,9 +2047,10 @@ function flowCardHTML(key, riverId){
       ${s?`<span>median <b>${Math.round(s.median).toLocaleString()}</b></span><span>range <b>${Math.round(s.min)}–${Math.round(s.max).toLocaleString()}</b></span><span>${STAT_YEARS}-yr, ±${STAT_WINDOW}d</span>`:`<span>${loading?"loading history…":"history unavailable"}</span>`}
       ${when?`<span>read <b>${when}</b></span>`:""}
     </div>
+    ${isDWR(key)?`<div class="flowsrc">Colorado Division of Water Resources gauge</div>`:""}
     <div class="plain">${plainLanguage(key, riverId)}</div>
     ${inGoodFlow!=null?`<div class="goodflow ${inGoodFlow?'in':'out'}">${inGoodFlow?'✓ In your good-flow range':'Outside your good-flow range'} (${gf.min}–${gf.max} CFS)</div>`:""}
-    ${f&&f.stale?`<div class="stale">⚠ Couldn't reach USGS — showing the last saved reading${f.fetchedAt?` from ${new Date(f.fetchedAt).toLocaleString([],{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})}`:""}. Cell service is patchy in these canyons; treat as out-of-date.</div>`:""}
+    ${f&&f.stale?`<div class="stale">⚠ Couldn't reach ${isDWR(key)?"Colorado DWR":"USGS"} — showing the last saved reading${f.fetchedAt?` from ${new Date(f.fetchedAt).toLocaleString([],{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})}`:""}. Cell service is patchy in these canyons; treat as out-of-date.</div>`:""}
   </div>`;
 }
 
@@ -2358,7 +2573,10 @@ function layoutZoneCards(){
   // Tightest zone first: a cramped cell has almost no choice of interior
   // point, so it should claim its one good spot before a roomy neighbour —
   // which has plenty of other interior points — parks a card on it.
-  plans.sort((a,b) => a.room - b.room);
+  // ...but a park with mapped water outranks one without: in the crowded
+  // Southwest a card for Arches (no fishing) shouldn't push Capitol Reef or
+  // Black Canyon off the chooser.
+  plans.sort((a,b) => ((a.c.zone.count ? 0 : 1) - (b.c.zone.count ? 0 : 1)) || (a.room - b.room));
 
   const placed = [];
   plans.forEach(p => {
@@ -2403,7 +2621,10 @@ function layoutZoneCards(){
     // too small at this zoom to hold its name clear of one already placed,
     // the card drops out and comes back as you zoom in. The polygon stays
     // drawn and stays clickable either way.
-    if(bestOver > 0.45 * w * h){ if(el) el.style.display = "none"; return; }
+    // 12%: overlapping cards stack into an unreadable pile at country zoom
+    // (the Four Corners parks did exactly that), and a dropped card comes
+    // back one zoom step in.
+    if(bestOver > 0.12 * w * h){ if(el) el.style.display = "none"; return; }
     placed.push(rectAt(pick, w, h));
     p.c.marker.setLatLng(map.containerPointToLatLng(L.point(pick.x, pick.y)));
   });
@@ -2432,7 +2653,7 @@ function syncRegionLabels(){
   const on = !zonesShown && z >= REGION_LABEL_ZOOM.min && z <= REGION_LABEL_ZOOM.max;
   const view = map.getBounds();
   regionLabels.forEach(rl => {
-    const show = on && view.intersects(L.latLngBounds(rl.def.bounds));
+    const show = on && view.intersects(L.latLngBounds(rl.def.bounds || [rl.def.at, rl.def.at]));
     const has = regionLabelLayer.hasLayer(rl.marker);
     if(show && !has) regionLabelLayer.addLayer(rl.marker);
     else if(!show && has) regionLabelLayer.removeLayer(rl.marker);
@@ -2493,6 +2714,28 @@ zoneCtl.onAdd = function(){
   return d;
 };
 zoneCtl.addTo(map);
+
+/* Alaska is left out of the chooser's opening frame (see showZones), which
+   makes it easy to miss entirely. While the chooser is up, one button jumps
+   between the lower 48 and Alaska; it says which way it will go. */
+const farCtl = L.control({position:"topleft"});
+farCtl.onAdd = function(){
+  const d = L.DomUtil.create("div");
+  d.innerHTML = `<button id="btn-far" title="Jump to Alaska">Alaska ▲</button>`;
+  L.DomEvent.disableClickPropagation(d);
+  const btn = d.querySelector("button");
+  const inAlaska = () => map.getCenter().lng < -129 && map.getCenter().lat > 51;
+  const label = () => { btn.textContent = inAlaska() ? "Lower 48 ▼" : "Alaska ▲"; };
+  btn.addEventListener("click", ()=>{
+    const far = ZONES.filter(z=>z.far), near = ZONES.filter(z=>!z.far);
+    const set = inAlaska() ? near : far;
+    goTo(L.latLngBounds([].concat(...set.map(z=>z.bounds))).pad(0.04));
+    map.once("moveend", ()=>{ label(); layoutZoneCards(); });
+  });
+  map.on("moveend", label);
+  return d;
+};
+farCtl.addTo(map);
 
 /* ---------- river class filter: layer-control checkboxes + chip row ----------
    One source of truth: four empty layer groups. Ticking a box in the layer
