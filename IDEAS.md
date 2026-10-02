@@ -10,7 +10,7 @@ Status: `new` → `refining` → `ready` (agreed spec) → `building` → `done`
 
 ## Ideas
 
-### Regulations first in the river panel — `done` (2026-10-02, uncommitted)
+### Regulations first in the river panel — `done` (2026-10-02)
 - **Source:** our own discussion, 2026-10-02.
 - **Problem:** the rules sit fourth in the river panel, under the flow cards
   and notes; "can I fish this today, and how?" is the first question.
@@ -37,7 +37,7 @@ Status: `new` → `refining` → `ready` (agreed spec) → `building` → `done`
 Rated against what is already here and what fits a no-backend, no-build
 phone app. **Fit:** strong / medium / weak.
 
-#### Offline maps — `building` · fit: strong
+#### Offline maps — `done` (ff80c5b) · fit: strong
 - **Problem:** service is patchy exactly where this app gets used.
 - **Already have:** baked geometry and last-saved flow readings.
 - **Gap:** the app shell and the basemap tiles.
@@ -50,7 +50,7 @@ phone app. **Fit:** strong / medium / weak.
     so only USGS is offered for offline.
   - Show the storage used and let the user delete saved areas.
 
-#### State water access laws — `building` · fit: strong (18 states researched, `js/access-laws.js`)
+#### State water access laws — `done` (ff80c5b, `js/access-laws.js`) · fit: strong
 - **Problem:** whether you may wade or anchor on a streambed changes at the
   state line, and it is the most expensive thing to get wrong.
   - Montana: open to the high-water mark.
@@ -365,12 +365,14 @@ would cover one person's use.
 
 ## Done
 
-- **Field Book**: favourites, fished, notes, Research links (Reddit/web search), export/import; extensible `BOOK_SECTIONS` tabs (2026-10-02, uncommitted).
+- **Location pop-up + auto-start, collapsible Rivers/Map layers menus, zoom bottom-right, park cards hidden below z6** (cbe940a).
 
-- **Live location dot + follow mode** (2026-10-02, uncommitted).
+- **Field Book**: favourites, fished, notes, Research links (Reddit/web search), export/import; extensible `BOOK_SECTIONS` tabs (2026-10-02).
+
+- **Live location dot + follow mode** (2026-10-02).
 - **Double-tap zoom, one-finger zoom, two-finger tap out, smoother pinch**
-  (2026-10-02, uncommitted).
-- **"Read me first" banner moved into the ? panel** (2026-10-02, uncommitted).
+  (2026-10-02).
+- **"Read me first" banner moved into the ? panel** (2026-10-02).
 
 ## Dropped
 

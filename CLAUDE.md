@@ -1036,6 +1036,135 @@ are skipped.
 keys** — see the state-rivers section; the Michigan, Wisconsin, lakes and
 Colorado/Utah/Alaska writers all do.
 
+## Phone-first features (October 2026)
+
+Added on 2026-10-02 after using the app on an iPhone. Backlog and status for
+everything here and to come: **`IDEAS.md`**.
+
+### Rules today card (top of every river panel)
+`rulesCardHTML(r)` renders first in `renderSheet`, then the full official
+text folded in `<details class="rulesfull">`, then flows, blurb and the rest.
+- **Season status comes only from `closed` windows in `tiers.js`, and those
+  are whole months.** So the card never says a bare "Open": in the month
+  before or after a closed window it says "Season opens or closes this
+  month — check the exact date". No closed window → "Season set by the rules
+  below" (or "No season on file").
+- **Licence line** = `PARK_INFO[region].licence`, written only from text
+  already in that row's footer/note/regBody, plus a small by-state fallback
+  for the older regions. Michigan and South Dakota rows say "see …" because
+  their rows never stated a licence.
+- **Tags are phrase matches, not interpretations**, scanned from the river's
+  own `troutRegs`/`parkRegs`, cut at the first bold "standard"/"statewide"
+  heading so a state's standard rule doesn't tag every river. Trap: "artificial
+  lures **or flies only**" contains "flies only" — it is stripped before the
+  fly-only test, or 169 Yellowstone creeks read "Fly fishing only".
+- The tier chip's best-season wording is **"Prime time now"**, not "In
+  season" — "in season" now means legally open, on the card above it.
+
+### Stream-access law — `js/access-laws.js`
+`ACCESS_LAW[state] = {head, quote, src, url}` for all 18 states, shown as the
+"Wading & access" row of the rules card. Every quote is verbatim from the
+state's 2026 booklet or the agency's own page (working notes with page
+numbers: `~/.cache/flyfish-osm/accesslaw/notes.md`). AZ, NV and IL publish no
+stream-access rule and the entry says so (`quote:null`) instead of guessing.
+Skipped for national-park rivers — federal land, not the state's streambed law.
+
+### Field Book (book icon in the header)
+Per-river ☆ Favourite / ✓ Fished (date) / notes, stored **on the phone only**
+in `localStorage.fieldBook` (`fbGet`/`fbSet`/`fbAll`). The row lives in
+`#fbrow`, *outside* `#sheetbody`, so `renderSheet` re-running doesn't steal
+focus from the notes box. Favourites are always visible on the map
+(`tierShown`). The page is a tab registry, **`BOOK_SECTIONS`** — a new research
+feature is one more entry. Tabs: Favourites, Fished, Notes, Research (Reddit
+and web-search *links* — posts are their authors', so link, don't copy),
+Offline. Export/import JSON is the only backup. Notes are escaped (`fbEsc`).
+
+### Offline — `sw.js`
+Service worker at the repo root; every URL relative because the site is at a
+GitHub Pages sub-path. App files are **network-first with a 4 s timeout** (so
+updates still arrive, and dead signal falls back to cache). USGS Topo tiles
+are cached while browsing (`tiles-browse`, ~2,500) and saved on purpose from
+the Field Book's Offline tab (`tiles-saved`, `localStorage.offlineAreas`,
+capped at 4,000 tiles per area). **Only USGS Topo is ever cached** —
+OpenTopoMap, Esri and Google terms forbid offline storage. API calls (USGS
+water, DWR, NHD, PAD-US, Overpass) are not intercepted. **Bump `VERSION` in
+`sw.js` when the shell file list changes.**
+
+### Location
+Locate button bottom-right. On first launch a card (`#locask`) asks once,
+and "Turn on" is the tap that triggers iOS's own prompt. A page can't change
+iOS settings itself. After that, `localStorage.locPref="on"` starts the dot
+on launch in **`located`** mode (dot shown, map not moved). "Not now" is
+permanent. Denied → the pill gives the iPhone Settings path. Coordinates are
+never stored or sent.
+
+### Gestures and controls
+- **Single taps on rivers, lakes, zones and public land wait 250 ms**
+  (`onTap`) so a double tap zooms instead of opening something. Point
+  markers stay immediate.
+- **One-finger zoom** (double-tap-hold-drag) uses Leaflet's own pinch path
+  (`_move` per frame, `_animateZoom` at the end) so `zoomend` fires once.
+  `finishHold` applies any pending frame first — a quick flick otherwise
+  handed Leaflet a null centre.
+- **Two-finger tap** zooms out. Both fingers often land in one event on iOS.
+- **`zoomSnap` is 0.25, so `getZoom()` is fractional.** Compare with `>=`/`<`;
+  floor it before using it as a key or with `<=` on an integer maximum.
+- **Rivers ▾ and Map layers ▾ are collapsible menus**, built from `TIER_KEYS`
+  and the **`LAYER_CHIPS`** table — a new layer (bridge access points) is one
+  more row.
+- **Zoom +/− is bottom-right** above locate. Top-left controls clear the app
+  bar by its *measured* height (`--appbar-h`, set by a ResizeObserver): the
+  title wraps to two lines on a phone.
+- **Park cards are hidden below zoom 6** (`PARK_CARD_ZOOM`). The outlines
+  stay tappable.
+
+### Big layers: static tiled data (`data/<layer>/`)
+Data too big for a JS file is cut into **1° cells** —
+`data/<layer>/<floor(lat)>_<floor(lng)>.json` plus `index.json` listing the
+cells that exist — served by GitHub Pages as plain files. `makeTiledLayer()`
+in `app.js` loads the index on first use and only the cells in view, from a
+minimum zoom. This is how the app stays no-backend at 100k+ points. `sw.js`
+serves `data/` stale-while-revalidate, so viewed cells work offline and a
+rebuilt layer still reaches phones.
+- **Bridge access** (`data/bridges/`, `~/.cache/flyfish-osm/bridges/build.py`):
+  FHWA **National Bridge Inventory 2025**, 129,214 bridges in the 18 states.
+  Kept: route-on records over a waterway, open, publicly owned (no private,
+  railroad or military). **Canals, ditches, drains, spillways and laterals are
+  dropped**, which removed 15,412. Irrigation works aren't fishing water, and
+  Montana's law excludes them. Row `[lat,lng,water,road,owner,year,state]`.
+  The popup shows that state's `ACCESS_LAW.head`, because **a bridge is not
+  legal access everywhere**. From zoom 11, canvas renderer, off by default.
+- **Falls, rapids & dams** (`data/hazards/`, `~/.cache/flyfish-osm/hazards/`):
+  NHD point layer FTYPE 487/431/343, deduplicated by permanent ID. Mostly
+  waterfalls. NHD maps few rapids or dams as points, so absence of a marker
+  means nothing, and the popup names the source. On by default, a safety
+  layer, from zoom 10.
+
+### All USGS gauges (off by default)
+Every live **discharge** gauge in view, fetched from `latest-continuous` by
+bbox per 1° cell (cached 15 min), from zoom 8, skipping gauges already in
+`GAUGES`. Tapping one opens a popup with the live CFS and `statusOf()` against
+the 7-year median (via `fetchStatsBatch` and a temporary non-enumerable key).
+It honours `apiPaused()`. Off by default because each cell is a request
+against the hourly budget.
+
+### Still open
+- The OSM access-point fetch (`~/.cache/flyfish-osm/access/fetch.py`) stalled
+  when Overpass started refusing connections. It resumes from saved tiles.
+  When it finishes, run `python3 ~/.cache/flyfish-osm/access/build.py`, then
+  `python3 ~/.cache/flyfish-osm/encode_coords.py`, check, and push.
+
+## How we work on this project
+
+- **Opus plans and reviews, Sonnet writes the code** (a Sonnet subagent with
+  a self-contained brief). Review every diff against the data in the browser
+  before calling it done. Most of the bugs this project has had looked fine
+  in the diff.
+- **Commit and push only when asked.**
+- **One feature per session.** Finish it, update this file and `IDEAS.md`,
+  push, start fresh. A long session re-reads its whole history on every
+  reply. This file is what carries the context forward.
+
 ## Teton Valley & Swan Valley, Idaho
 
 **Teton Valley (21).** The Teton River and its tributaries above the canyon —

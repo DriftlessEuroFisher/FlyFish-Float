@@ -3,9 +3,13 @@
    - tiles-browse: USGS Topo tiles seen while browsing, trimmed to ~2500.
    - tiles-saved: tiles the user downloaded on purpose (Field Book > Offline).
      Deliberately unversioned so an app update never wipes saved areas.
+   - data-tiles: the 1-degree cell JSON under data/ (bridges, hazards…),
+     stale-while-revalidate: the cached cell answers at once (and offline),
+     and a background fetch refreshes it, so a rebuilt layer reaches phones
+     on the next visit instead of never.
    Every URL here is relative: the site lives at a sub-path on GitHub Pages. */
-const VERSION = "flyroutes-v1";
-const TILES_BROWSE = "tiles-browse", TILES_SAVED = "tiles-saved";
+const VERSION = "flyroutes-v3";
+const TILES_BROWSE = "tiles-browse", TILES_SAVED = "tiles-saved", DATA_TILES = "data-tiles";
 const TOPO = "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/";
 const LEAFLET = [
   "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css",
@@ -53,6 +57,13 @@ async function cacheFirst(req){
   if(res.ok || res.type==="opaque") cache.put(req, res.clone());
   return res;
 }
+async function dataTile(req){
+  const cache = await caches.open(DATA_TILES);
+  const hit = await cache.match(req);
+  const net = fetch(req).then(res => { if(res.ok) cache.put(req, res.clone()); return res; });
+  if(hit){ net.catch(() => {}); return hit; }
+  return net;
+}
 async function trimBrowse(cache){
   const keys = await cache.keys();                 // insertion order, oldest first
   for(let i = 0; i < keys.length - BROWSE_MAX; i++) await cache.delete(keys[i]);
@@ -79,6 +90,7 @@ self.addEventListener("fetch", e => {
   if(req.method!=="GET") return;
   const url = new URL(req.url);
   if(req.url.startsWith(TOPO)){ e.respondWith(tile(req)); return; }
+  if(url.origin===self.location.origin && /\/data\/[^/]+\/[^/]+\.json$/.test(url.pathname)){ e.respondWith(dataTile(req)); return; }
   if(url.origin===self.location.origin || LEAFLET.includes(req.url)){
     e.respondWith(networkFirst(req, req.mode==="navigate")); return;
   }

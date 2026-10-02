@@ -1765,6 +1765,345 @@ layerControl.addOverlay(gaugeLayer, "USGS gauges");
 layerControl.addOverlay(closureLayer, "Closed water (year-round)");
 
 /* ============================================================
+   ALL USGS GAUGES — every live discharge gauge in view
+   Includes rivers this map doesn't carry. Tap one for a popup (not the river
+   sheet): name, live CFS, reading time, and the same relative-to-median status
+   the curated gauges get.
+
+   - OFF by default. Each 1-degree cell is a request against the 1,000/hour
+     anonymous budget, and the curated gauges already cost ~67 on a cold load.
+     Nobody pays for this until they ask for it.
+   - Cached per 1-degree cell, and whole cells are fetched, not the viewport.
+     A viewport bbox is different on every pan, so nothing would ever be
+     reused; a cell is the same request however you arrive at it, so panning
+     back and forth costs nothing for 15 minutes. If more than MAX_AG_CELLS
+     cells are in view (zoomed too far out) nothing new is fetched.
+   - Curated gauges are skipped: their dot already shows them, with the river
+     sheet behind it, and a second marker would just sit underneath.
+   - Discharge only (00060), like everything else here. Stage-only sites are
+     never requested, so they never appear.
+   - Statuses reuse statusOf()/fetchStatsBatch() unchanged. fetchStatsBatch
+     only knows GAUGES keys, so a tapped site is registered under a temporary
+     NON-ENUMERABLE key (invisible to Object.keys(GAUGES), so the refresh
+     loops never see it) for the duration of that one call. */
+const allGaugePane = map.createPane("allGaugePane");
+allGaugePane.style.zIndex = 590;                 // under the curated dots (marker pane, 600)
+const allGaugeLayer = L.layerGroup();            // off until switched on
+const AG_MIN_ZOOM = 8, MAX_AG_CELLS = 12, AG_MAX_MARKERS = 400, AG_TTL_MS = 15*60*1000;
+const AG_COLOR = "#5a7894";
+const agCells = new Map();      // "lat,lng" -> {at, feats:[{id,lat,lng,cfs,time}]}
+const agInflight = new Set();
+const agMarkers = new Map();    // id -> circleMarker
+const agNames = {};             // id -> monitoring_location_name
+let agTimer = null;
+
+const agBare = id => id.replace(/^USGS-/, "");
+const agOn = () => map.hasLayer(allGaugeLayer) && !zonesShown && map.getZoom() >= AG_MIN_ZOOM;
+const agEsc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function agCellsFor(b){
+  const out = [];
+  for(let la = Math.floor(b.getSouth()); la <= Math.floor(b.getNorth()); la++)
+    for(let ln = Math.floor(b.getWest()); ln <= Math.floor(b.getEast()); ln++) out.push([la, ln]);
+  return out;
+}
+
+async function agFetchCell(la, ln){
+  const k = la+","+ln;
+  agInflight.add(k);
+  try{
+    const j = await fetchJSON(apiURL("latest-continuous/items", {
+      bbox: `${ln},${la},${ln+1},${la+1}`, parameter_code:"00060", limit:"500"
+    }), 20000);
+    const feats = [];
+    (j.features||[]).forEach(f=>{
+      const p = f.properties || {}, c = f.geometry && f.geometry.coordinates;
+      const cfs = parseFloat(p.value);
+      if(!c || !isFinite(cfs) || !p.monitoring_location_id) return;
+      feats.push({id:p.monitoring_location_id, lat:c[1], lng:c[0], cfs, time:p.time});
+    });
+    agCells.set(k, {at:Date.now(), feats});
+  }catch(e){ /* a missing cell is retried on the next move */ }
+  finally{ agInflight.delete(k); }
+}
+
+async function agUpdate(){
+  if(!agOn()){ agClear(); return; }
+  const b = map.getBounds().pad(0.1);
+  const cells = agCellsFor(b);
+  const stale = cells.filter(([la,ln]) => {
+    const c = agCells.get(la+","+ln);
+    return (!c || Date.now()-c.at > AG_TTL_MS) && !agInflight.has(la+","+ln);
+  });
+  if(cells.length <= MAX_AG_CELLS && stale.length && !apiPaused()){
+    for(const g of chunk(stale, 3)){
+      if(apiPaused()) break;
+      await Promise.all(g.map(([la,ln]) => agFetchCell(la, ln)));
+      if(!agOn()) return;
+      agDraw(b);                      // paint as cells land
+    }
+  }
+  agDraw(b);
+}
+
+function agDraw(b){
+  const curated = new Set(Object.keys(GAUGES).map(k => GAUGES[k].site));
+  const c = b.getCenter(), want = new Map();
+  agCellsFor(b).forEach(([la,ln])=>{
+    const cell = agCells.get(la+","+ln);
+    if(!cell) return;
+    cell.feats.forEach(f=>{
+      if(curated.has(f.id) || !b.contains([f.lat, f.lng]) || want.has(f.id)) return;
+      want.set(f.id, f);
+    });
+  });
+  // keep the 400 nearest the middle of the view
+  const keep = [...want.values()]
+    .sort((a,z) => (a.lat-c.lat)**2+(a.lng-c.lng)**2 - ((z.lat-c.lat)**2+(z.lng-c.lng)**2))
+    .slice(0, AG_MAX_MARKERS);
+  const keepIds = new Set(keep.map(f=>f.id));
+  agMarkers.forEach((m,id)=>{ if(!keepIds.has(id)){ allGaugeLayer.removeLayer(m); agMarkers.delete(id); } });
+  keep.forEach(f=>{
+    if(agMarkers.has(f.id)) return;
+    const m = L.circleMarker([f.lat, f.lng], {
+      pane:"allGaugePane", radius:5, weight:1.5, color:"#fff", fillColor:AG_COLOR,
+      fillOpacity:.95, interactive:true
+    }).addTo(allGaugeLayer);
+    m._ag = f;
+    m.on("click", () => agOpen(m));
+    agMarkers.set(f.id, m);
+  });
+}
+
+function agClear(){ allGaugeLayer.clearLayers(); agMarkers.clear(); }
+
+function agPopupHTML(f, key){
+  const name = agNames[f.id];
+  const t = new Date(f.time);
+  const when = isNaN(t) ? "" : "read " + t.toLocaleTimeString([], {hour:"numeric", minute:"2-digit"});
+  const st = statusOf(key), s = stats[key];
+  const line = s ? `<span class="badge" style="background:${st.color}">${st.label}</span>`
+             : s === null ? `<span class="ag-note">No history to compare</span>`
+             : `<span class="ag-note">Comparing with the last 7 years…</span>`;
+  const cfs = f.cfs >= 100 ? Math.round(f.cfs) : +f.cfs.toFixed(1);
+  return `<div class="ag-pop"><div class="gname">USGS ${agEsc(name || f.id)}</div>`+
+    `<div class="flowrow"><span class="cfs">${cfs.toLocaleString()} <small>cfs</small></span>${line}</div>`+
+    `<div class="ag-note">${when}</div>`+
+    `<a href="https://waterdata.usgs.gov/monitoring-location/${agBare(f.id)}/" target="_blank" rel="noopener">USGS station page</a></div>`;
+}
+
+function agOpen(m){
+  const f = m._ag, key = "ag:"+f.id;
+  // the reading we already have, so statusOf() can compare it
+  flows[key] = {cfs:f.cfs, time:f.time, fetchedAt:Date.now(), stale:false};
+  const refresh = () => { if(m.isPopupOpen && m.isPopupOpen()) m.getPopup().setContent(agPopupHTML(f, key)); };
+  if(!m.getPopup()) m.bindPopup("", {maxWidth:260, className:"ag-popup"});
+  m.getPopup().setContent(agPopupHTML(f, key));
+  m.openPopup();
+  if(!agNames[f.id]){
+    const c = store.get("agname:"+f.id);
+    if(c){ agNames[f.id] = c; refresh(); }
+    else if(!apiPaused()){
+      fetchJSON(apiURL("monitoring-locations/items", {id:f.id, limit:"2"}), 12000).then(j=>{
+        const p = j.features && j.features[0] && j.features[0].properties;
+        if(p && p.monitoring_location_name){
+          agNames[f.id] = p.monitoring_location_name;
+          store.set("agname:"+f.id, agNames[f.id]);
+          refresh();
+        }
+      }).catch(()=>{});
+    }
+  }
+  if(stats[key] === undefined && !apiPaused()){
+    const hide = {value:undefined, enumerable:false, configurable:true, writable:true};
+    Object.defineProperty(GAUGES, key, {...hide, value:{site:f.id, label:f.id}});
+    KEY_BY_SITE[f.id] = key;
+    fetchStatsBatch([key]).finally(()=>{
+      delete GAUGES[key]; delete KEY_BY_SITE[f.id];
+      refresh();
+    });
+  }
+}
+
+function agSchedule(){ clearTimeout(agTimer); agTimer = setTimeout(agUpdate, 600); }
+map.on("moveend", agSchedule);
+allGaugeLayer.on("add", agSchedule);
+allGaugeLayer.on("remove", agClear);
+layerControl.addOverlay(allGaugeLayer, "All USGS gauges");
+
+/* ============================================================
+   STATIC TILED DATA — the pattern for layers too big for a JS file
+   This app has no backend, so a large dataset is pre-cut at build time into
+   1-degree cells and served as plain static files:
+       data/<layer>/index.json            ["45_-112", …]  cells that exist
+       data/<layer>/<floor(lat)>_<floor(lng)>.json   [row, row, …]
+   makeTiledLayer() is the whole client: it reads the index once (the first
+   time the layer is switched on), and on each pause in panning fetches only
+   the cells under the view (padded 20%), keeps the latest ~40 in memory,
+   and draws markers for the cells in view alone. A layer is one call with a
+   `rowToMarker`; the next big layer should be too. URLs are RELATIVE — the
+   site lives at a sub-path on GitHub Pages. sw.js caches cells cache-first
+   (they never change within a release), so viewed areas work offline.
+   Fails quietly: a missing index or cell just means the layer shows nothing.
+   - Off-view cells are cheap to keep and costly to draw, so markers are
+     built once per cell and added/removed as the cell enters/leaves view.
+   - If the view needs more than maxCells cells (zoomed too far out for the
+     layer's density) nothing is fetched; cells already loaded still draw. */
+function makeTiledLayer({dir, minZoom, maxCells, pane, rowToMarker}){
+  const group = L.layerGroup();
+  const rows = new Map();        // cell key -> rows (insertion order = age)
+  const drawn = new Map();       // cell key -> [markers currently in `group`]
+  const inflight = new Set();
+  const KEEP = 40, PARALLEL = 4;
+  let index = null, indexP = null, timer = null;
+
+  const on = () => map.hasLayer(group) && !zonesShown && map.getZoom() >= minZoom;
+  function loadIndex(){
+    if(!indexP) indexP = fetch(dir + "/index.json").then(r => r.ok ? r.json() : Promise.reject())
+      .then(a => { index = new Set(a); }, () => { indexP = null; });   // retry next time
+    return indexP;
+  }
+  async function fetchCell(k){
+    inflight.add(k);
+    try{
+      const r = await fetch(dir + "/" + k + ".json");
+      if(r.ok){
+        rows.set(k, await r.json());
+        while(rows.size > KEEP){
+          const old = rows.keys().next().value;       // oldest that isn't on screen
+          const gone = [...rows.keys()].find(c => !drawn.has(c));
+          const victim = gone !== undefined ? gone : old;
+          rows.delete(victim); undraw(victim);
+        }
+      }
+    }catch(e){ /* retried on the next move */ }
+    finally{ inflight.delete(k); }
+  }
+  function undraw(k){
+    (drawn.get(k) || []).forEach(m => group.removeLayer(m));
+    drawn.delete(k);
+  }
+  function draw(keys){
+    const want = new Set(keys);
+    [...drawn.keys()].forEach(k => { if(!want.has(k)) undraw(k); });
+    keys.forEach(k => {
+      if(drawn.has(k) || !rows.has(k)) return;
+      const ms = [];
+      rows.get(k).forEach(row => { const m = rowToMarker(row); if(m){ m.addTo(group); ms.push(m); } });
+      drawn.set(k, ms);
+    });
+  }
+  async function update(){
+    if(!on()){ draw([]); return; }
+    await loadIndex();
+    if(!index || !on()) return;
+    const b = map.getBounds().pad(0.2), cells = [];
+    for(let la = Math.floor(b.getSouth()); la <= Math.floor(b.getNorth()); la++)
+      for(let ln = Math.floor(b.getWest()); ln <= Math.floor(b.getEast()); ln++){
+        const k = la + "_" + ln;
+        if(index.has(k)) cells.push(k);
+      }
+    const need = cells.filter(k => !rows.has(k) && !inflight.has(k));
+    if(need.length && need.length <= maxCells){
+      for(const g of chunk(need, PARALLEL)){
+        await Promise.all(g.map(fetchCell));
+        if(!on()) return;
+        draw(cells);                       // paint as cells land
+      }
+    }
+    draw(cells);
+  }
+  const schedule = () => { clearTimeout(timer); timer = setTimeout(update, 300); };
+  map.on("moveend", schedule);
+  group.on("add", schedule);
+  group.on("remove", () => draw([]));
+  return group;
+}
+
+/* Full state names for the popups below. */
+const TL_STATE = {ID:"Idaho", WY:"Wyoming", IA:"Iowa", MN:"Minnesota", WI:"Wisconsin", IL:"Illinois",
+  CA:"California", OR:"Oregon", WA:"Washington", MT:"Montana", CO:"Colorado", UT:"Utah", AK:"Alaska",
+  MI:"Michigan", SD:"South Dakota", NM:"New Mexico", AZ:"Arizona", NV:"Nevada"};
+
+/* ============================================================
+   BRIDGE ACCESS — public-owned bridges over water (data/bridges/)
+   FHWA National Bridge Inventory 2025, public owners only, canals and
+   ditches removed. Row: [lat, lng, water, road, owner, year, state].
+   A bridge is where a public road crosses the water, which is how most
+   people get to a stretch they can't otherwise reach — but it is NOT an
+   access sign, and whether you may step off it varies by state, so the popup
+   leads with that state's rule (ACCESS_LAW) rather than implying access.
+   Iowa and Illinois can have thousands of rows in one cell, hence plain
+   circleMarkers on one canvas renderer instead of a DOM node apiece. Warm
+   grey-brown: orange is the live-data readout, red is closed water. */
+const BR_COLOR = "#8a7560";
+const bridgePane = map.createPane("bridgePane");
+bridgePane.style.zIndex = 580;                   // over the rivers, under every dot
+const bridgeRenderer = L.canvas({pane:"bridgePane", padding:.3});
+function bridgePopupHTML(row){
+  const [, , water, road, owner, year, st] = row;
+  const law = typeof ACCESS_LAW !== "undefined" && ACCESS_LAW[st];
+  return `<div class="ag-pop tl-pop">`+
+    `<div class="tl-title">${fbEsc(water || "Unnamed waterway")}</div>`+
+    (road ? `<div>${fbEsc(road)} bridge</div>` : `<div>Bridge</div>`)+
+    `<div class="ag-note">${fbEsc(owner || "Public")}${year ? " · built " + fbEsc(year) : ""}</div>`+
+    (law ? `<div class="tl-label">Access from a bridge isn’t automatic — in ${fbEsc(TL_STATE[st] || st)}:</div>`+
+           `<div>${fbEsc(law.head)}</div>` : "")+
+    `<div class="ag-note">Bridge location from the National Bridge Inventory; it is not a parking or access sign.</div></div>`;
+}
+const bridgeLayer = makeTiledLayer({
+  dir:"data/bridges", minZoom:11, maxCells:9, pane:"bridgePane",
+  rowToMarker: row => L.circleMarker([row[0], row[1]], {
+      renderer:bridgeRenderer, pane:"bridgePane", radius:4.5, weight:1.5, color:"#fff",
+      fillColor:BR_COLOR, fillOpacity:.95
+    }).bindPopup(() => bridgePopupHTML(row), {maxWidth:270, className:"ag-popup"})
+});
+layerControl.addOverlay(bridgeLayer, "Bridge access");
+
+/* ============================================================
+   WATERFALLS, RAPIDS & DAMS — a safety layer (data/hazards/)
+   USGS National Hydrography Dataset. Row: [lat, lng, type, name|null],
+   type "falls" | "rapids" | "dam". ON by default: knowing there is a low-head
+   dam below the next bend matters more than any other marker here. Glyphs are
+   inline SVG with a white outline so they read over blue topo water; they sit
+   in a pane above the rivers (410) and below the markers (600). */
+const hazardPane = map.createPane("hazardPane");
+hazardPane.style.zIndex = 430;
+const HZ_COLOR = "#3b4a56";
+const HZ_GLYPH = {
+  falls:  `<polyline points="3,4 8,4 8,9 13,9 13,14 16,14"`,         // stepped drop
+  rapids: `<path d="M2 6q2-3 4 0t4 0t4 0M2 12q2-3 4 0t4 0t4 0"`,      // wavy lines
+  dam:    `<rect x="2.5" y="6.5" width="13" height="5" rx="1"`,       // solid bar
+};
+const HZ_LABEL = {falls:"Waterfall", rapids:"Rapids", dam:"Dam or weir"};
+function hazardIcon(type){
+  const g = HZ_GLYPH[type] || HZ_GLYPH.dam;
+  const shape = (extra) => g + ` fill="none" stroke-linecap="round" stroke-linejoin="round" ${extra}/>`;
+  const svg = type === "dam"
+    ? `<svg viewBox="0 0 18 18" width="18" height="18">${g} fill="${HZ_COLOR}" stroke="#fff" stroke-width="2"/></svg>`
+    : `<svg viewBox="0 0 18 18" width="18" height="18">${shape('stroke="#fff" stroke-width="4.6"')}${shape(`stroke="${HZ_COLOR}" stroke-width="2.2"`)}</svg>`;
+  return L.divIcon({className:"hz-icon", html:svg, iconSize:[18,18], iconAnchor:[9,9], popupAnchor:[0,-9]});
+}
+function hazardPopupHTML(row){
+  const [, , type, name] = row;
+  const say = type === "rapids"
+    ? "Rapids — difficulty changes with flow. Scout first."
+    : "Scout before you float — portage if in doubt. Low-head dams are deadly at almost any flow.";
+  return `<div class="ag-pop tl-pop">`+
+    `<div class="tl-title">${HZ_LABEL[type] || "Hazard"}</div>`+
+    (name ? `<div>${fbEsc(name)}</div>` : "")+
+    `<div class="tl-warn">${say}</div>`+
+    `<div class="ag-note">Source: USGS National Hydrography Dataset.</div></div>`;
+}
+const hazardLayer = makeTiledLayer({
+  dir:"data/hazards", minZoom:10, maxCells:9, pane:"hazardPane",
+  rowToMarker: row => L.marker([row[0], row[1]], {icon:hazardIcon(row[2]), pane:"hazardPane", keyboard:false})
+    .bindPopup(() => hazardPopupHTML(row), {maxWidth:270, className:"ag-popup"})
+});
+layerControl.addOverlay(hazardLayer, "Falls, rapids &amp; dams");
+hazardLayer.addTo(map);                          // on by default
+
+/* ============================================================
    EXACT RIVER GEOMETRY — live USGS NHD high-resolution flowlines
    Pulls the real channel linework (1:24,000 NHD, layer 6) from The
    National Map and replaces the built-in approximation. The built-in
@@ -3445,6 +3784,9 @@ const LAYER_CHIPS = [
   ["ramps",  "Boat ramps",   rampLayer,    "#e07b1a"],
   ["wade",   "Wade access",  wadeLayer,    "#5b6e3a"],
   ["gauges", "Gauges",       gaugeLayer,   "#2b7fb8"],
+  ["allgauges", "All USGS gauges", allGaugeLayer, "#5a7894"],
+  ["hazards", "Falls, rapids &amp; dams", hazardLayer, "#3b4a56"],
+  ["bridges", "Bridge access", bridgeLayer, "#8a7560"],
   ["closed", "Closed water", closureLayer, "#c0392b"],
   ["land",   "Public land",  publicLand,   "#3f8f4f"],
 ];

@@ -416,6 +416,7 @@ body.zones-open .riv-label{ opacity:.25; transition:opacity .25s; }
    Zone cards are markers in zonePane, so they keep their clicks. */
 body.zones-open .leaflet-pane.riversPane,
 body.zones-open .leaflet-pane.landPane,
+body.zones-open .leaflet-pane.allGaugePane,
 body.zones-open .leaflet-marker-pane,
 body.zones-open .riv-label{ pointer-events:none; }
 /* Leaflet marks every interactive marker and path pointer-events:auto, and
@@ -423,7 +424,8 @@ body.zones-open .riv-label{ pointer-events:none; }
    so the children have to be named too. */
 body.zones-open .leaflet-marker-pane > *,
 body.zones-open .leaflet-pane.riversPane path,
-body.zones-open .leaflet-pane.landPane path{ pointer-events:none !important; }
+body.zones-open .leaflet-pane.landPane path,
+body.zones-open .leaflet-pane.allGaugePane path{ pointer-events:none !important; }
 body.zones-open .leaflet-pane.zonePane{ opacity:1; }
 
 /* Closed water — hazard tape over the river. The bar pulses very slightly so
@@ -604,3 +606,16 @@ details.rulesfull>summary{cursor:pointer;font-size:12px;font-weight:600;color:va
 .of-area b{display:block;font-size:13.5px;color:var(--txt)}
 .of-area span{font-size:11.5px;color:var(--txt-dim)}
 .of-area .fb-btn{min-height:40px;flex:0 0 auto}
+
+/* All USGS gauges popup */
+.ag-pop{min-width:190px}
+.ag-pop .gname{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--txt-dim);margin-bottom:2px}
+.ag-pop .cfs{color:var(--flag)}
+.ag-pop .ag-note{font-size:12px;color:var(--txt-dim);margin-top:4px}
+.ag-pop a{display:inline-block;margin-top:6px;font-size:12px}
+.tl-pop{max-width:250px}
+.tl-title{font-weight:700;font-size:14px;margin-bottom:2px}
+.tl-label{font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--txt-dim);margin-top:8px}
+.tl-warn{font-weight:600;margin-top:6px}
+.hz-icon{background:none;border:0}
+.hz-icon svg{display:block;overflow:visible}
