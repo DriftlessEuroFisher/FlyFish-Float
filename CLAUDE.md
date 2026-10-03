@@ -1148,6 +1148,28 @@ the 7-year median (via `fetchStatsBatch` and a temporary non-enumerable key).
 It honours `apiPaused()`. Off by default because each cell is a request
 against the hourly budget.
 
+### Rulebook streams — `~/.cache/flyfish-osm/west2/` (fence "western rulebook streams")
+The user asked for **every stream with its own entry in a state's 2026
+regulations**, one state per session. Montana is done (2026-10-03): **93
+streams** from FWP's District Exceptions, ids ending `mt2`, region
+`montana`, tier 2, creeks `minor:true` (labels from z12). Each carries its
+exception text verbatim plus the district standard. `gen_<state>.py` is the
+only state-specific file; see `west2/README.md`.
+- **Parent rule:** a heading "(tributary to X)" means a candidate run must
+  have an end within 1.5 km of a way named X. With no parent or anchor, a name
+  is taken only if all its in-state runs form one cluster. Otherwise the
+  stream is skipped and reported, never guessed. 19 Montana entries were
+  skipped this way: no line in OSM/NHD, ambiguous Sage Creek, etc.
+- Montana's booklet text: parse **`mt2026.raw.txt`**. The `.txt` variant
+  squashes Central-district headings ("BEAVERCREEK(…)").
+- Zone `count` for the state must be bumped by hand in `zones.js` (MT 38 → 131).
+- **`mfsalmon` FLOW_REV is pinned to "0000000000".** A full `flowdir.py`
+  run recomputes it to a mixed pattern. Restore it after any flowdir run.
+- Next states: Colorado (163 unmapped rulebook streams in
+  `rockies/regs/co_entries.json`, with county), Utah (~30, `ut_entries.json`),
+  then California, Oregon and Washington, whose full heading lists still need
+  parsing from their booklets.
+
 ### Access points (finished 2026-10-02)
 All 139 OSM tiles fetched: 860 access points on 199 rivers (555 slipways,
 305 fishing sites). Overpass refused this machine for most of a day after
