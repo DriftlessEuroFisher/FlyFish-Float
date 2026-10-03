@@ -1148,11 +1148,10 @@ the 7-year median (via `fetchStatsBatch` and a temporary non-enumerable key).
 It honours `apiPaused()`. Off by default because each cell is a request
 against the hourly budget.
 
-### Still open
-- The OSM access-point fetch (`~/.cache/flyfish-osm/access/fetch.py`) stalled
-  when Overpass started refusing connections. It resumes from saved tiles.
-  When it finishes, run `python3 ~/.cache/flyfish-osm/access/build.py`, then
-  `python3 ~/.cache/flyfish-osm/encode_coords.py`, check, and push.
+### Access points (finished 2026-10-02)
+All 139 OSM tiles fetched: 860 access points on 199 rivers (555 slipways,
+305 fishing sites). Overpass refused this machine for most of a day after
+heavy use; `fetch.py` resumes from saved tiles, so just re-run it later.
 
 ## How we work on this project
 
