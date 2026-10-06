@@ -1569,7 +1569,8 @@ cz:["cpppGrjznSg@sNbBcL~HoPg@oZjCcQwGk\\?_XcB_SbGsb@{@kHnAoU~H_XcGcLg@kMcLc[cGbB
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"The Green's big tributary, gathering at New Fork Lakes and winding past Pinedale through willowed ranch bottoms. Locally famous for large browns and the autumn streamer bite.",
   fish:"A genuine drift-boat fishery — local shops in Pinedale run floats through mostly private land (river itself is public). Hopper season and October streamers are the draws.",
-  cz:"o__fGnra~S~iZotL~oR_|B~lV~uJnnT~rNnqPntL~xF~{B"
+  geom:"osm", osmName:"New Fork River", // OSM, 2026-10-06: the NHD snap missed the bend east past Boulder, where WGFD's access points are
+  cz:["a|ddGtfi}SzEfFbI}C_@oDbFn@c@iB`DsB~E`GvDwBLsDeGoJjAiEzE~@|BkGuFoJCuJ~FaArDuM`FhCK}OcFoCf@sCzKzFpByA{@eLhC{`@yBwFbCeJy@oBiE|DaGu[rElCe@wLvJiDoEeFd@mD~JlE\\mWdGiTrIaDvG_QpFm@jCrHbDyEHkQaFyEMoHlGoFjD\\hC{GaHwDqAoTrD}LoCyJzI}DvCrF`FwEdKlL`CyFmDuPlH_CjIdD_@uKaHeHjAyCzGwA~DrIfD}Cs@mOeGfBkKkPdBeMzMn@fAsCwHaK[oIjD_DpQtGsAoRbC{BfGbBdFwKqAoDyHv@[cGvKiCzDpBjEuJnI`BvCmBf@wFkEiXhHiP|CzFjB[g@_PlQnEbBeD_BuHx@{F``@qD`KtL~B`NnHjFfUyEfD`B~@bEoBlJhCrFfL{H?mWnHcBvCzGuEvEYzLnFnPnGzBvE_FbEeSpUkBjEgSbG_BhGhNjNx@~C}Es@gOxDwFjD|@jBzH~IdE|Pm\\lGvEdNwRjS`OfHuBZdGlEXwApGdCrFvHyDnCdCZuFtBGfEnJKpL~E|FtBz]bGKl@mQbFoLnHKpFvO`MRtXns@dIdC`AjDHxIaFhEtD`H]dDqKpEkCrGfA|ErJhEx@jGkMfE{AfGf@jNzb@tg@OdRiItGaAzE~PgErEkFvG^xD`EmFzOdKnBtExc@w@|CmJzAf@zUpG|HrLcC|JrDkEb]gOnOvAlIvMnFrClKkClj@vDdEtVvDpCjHd@vTbR|FyIbSaLp@{H|LkB|Mv@vG|CnCvIsC`C|Hw@~EqLzKBtIxG`AdQyGpKdD`L`MhFj`@jRnDlXkEhN`NvHrZvGdEfPBlM`ZfFzCb_@lG~[{Bx^~ClHyArLuRzJqDtYfPhOjVjQhFpR|BlGqB|KfMzHfCvOo@jMgLnLdG_BlYnDhb@kNd\\_Dh_@nUpa@jHtYmEfXhG`Ze@jTnFhl@eM|TLpH|GvA|GcLrTaApFpHNbMyWlReBlGdB`IdOnNhYpAlGbLp@jRvK`HjJe@bG`K~g@kGrInAvErc@xM~K`Rff@vH`CpKyCrHrF^hRhMdLxAvNkBfFgOsAoBpH~IjIxFu@rFbUiEfZsHfHhB`SqRpg@","owvdGjdy}S~ARfBgHrBjDtG_BQcDzC]VcEbB|B~@qDhM{En@_IxEnA[mIrIoR|CqArBzFpBeB]cExU_CpAeGxSgAhIcTdI`BlAqFjEP^sHpDcGqAgGlPs@lEyIrNgAOuKfJsH~B~DbC_B_@mDrFvBlBuI~CaA`CyQyB{GpD{ClC}TbLuHxA`Hx@wGzEwBA{D~Gt@q@{D`DeFxBzEMyD|EgBGwDtCtE~Cc@iC{PvE`Az@cMfBbCdAwChEG{BmLbChA~@qC_BgChCJq@wEtCmCxBbAx@kG~AhFjHvDzCaMmBmDvDqEbN~DnBsFnD|BrHkHvR[|GpII~HnOtDX}GcDuIfNh@xGuGnBsMlDnDdJyW`HpDvOeNxCxDjByC{A{EhE_AhGcOdC~AjCsDUeEiEx@cAaEfLeIr@yKjHPnGgKmByRvIwExBlDrEqRtC`BjD{GHzBrFmA","ignfGruk}SrCxHtKbExLvRtRbEvXnPjJz@fFaDjAdCfRgH~R`GpC}B|GvB`Lj`@pVdwA\\vhAfJlAtApNhRT~Mv\\lF~AhAfSnEbEf@xZpEtArIdR|CyB~ArHpBgDv@hDvDuAdI~GwCzB~DhA|@jWbGc@bC`DUlRfGvA`@pE~C}BvDzAxAqBa@|CdB`@fFaC^nG`CmDnCzAzDcChBtQ","ol~eG~fe~SqAnXvOlGhNpu@fD?~MzZ{FrXDbQnC~DrP|BJlUpJvFnHlZx@vPbFpBnG}BtQzUrNgKf[wBbW|HxClOtPjDdFrGjDi@vBtJrHh@~^iStM}MfQ}D|Wm\\dMq@nKvJjIz@zMoBdPaJrFeMdIgAxA}L","ewtcG~|u|SxEnLhOkIbJzA`GdKbHeGdAdHxC?p@~DzDgA|E|FrFiBhFqOtBP","snedGrii}ShAqAZdGpCRxDaF?yFhEpDv@gJpJhEnAkBiAuGnEfH","ui|bGrt{}SfJtNnO}B"]
 },
 {
   id:"encampmentwy", name:"Encampment River", color:"#8c3a2a",
@@ -14257,41 +14258,41 @@ const RAMPS = [
   {id:"blm23",  river:"snake", name:"BLM Parcel 23 (Fall Creek Rd)", role:"wade", pos:[43.4300,-110.8100], note:"Carry-in only — swim hole and bank fishing south of Jackson."},
   {id:"kingsw", river:"snake", name:"King's Wave (kayak access)", role:"launch", pos:[43.2820,-110.8040], note:"Highway turnout for kayak surfers near Hoback Junction; no facilities."},
   {id:"tacoh",  river:"snake", name:"Taco Hole (kayak access)",  role:"launch", pos:[43.2540,-110.8560], note:"Steep trail/stairs to a play wave ~27 mi south of Jackson; no facilities."},
-  {id:"pritch", river:"snake", name:"Pritchard",     role:"both",    pos:[43.2620,-110.8380], note:"BTNF permit ramp; start of the 8-mile braided run to West Table."},
+  {id:"pritch", river:"snake", name:"Pritchard",     role:"both",    pos:[43.2916,-110.7908], note:"Dog Creek/Pritchard ramp, just below Astoria; start of the braided run to West Table.", src:"WGFD river access points"},
   {id:"elbow",  river:"snake", name:"Elbow",         role:"both",    pos:[43.2450,-110.8720], note:"BTNF ramp with walk-in and drive-in access; restrooms, no camping."},
   {id:"etable", river:"snake", name:"East Table",    role:"launch",  pos:[43.2380,-110.8820], note:"BTNF permit ramp just above West Table; campground nearby."},
   {id:"kahuna", river:"snake", name:"Big Kahuna / Lunch Counter", role:"wade", pos:[43.2080,-110.9340], note:"Roadside surf access at the canyon's biggest waves; experts only."},
   // ---- South Fork of the Snake (Swan Valley) — full access set ----
   {id:"palcr",  river:"southfork", name:"Palisades Creek", role:"both",  pos:[43.3500,-111.2280], note:"Interagency access/campground just below the dam reach."},
   {id:"wolf",   river:"southfork", name:"Wolf Flat (Irwin)", role:"launch", pos:[43.3760,-111.2560], note:"Dirt/makeshift ramp near Irwin — 4WD recommended; a mellow jump-off above Spring Creek."},
-  {id:"cott",   river:"southfork", name:"Cottonwood (Fullmer)", role:"both", pos:[43.5320,-111.5460], note:"Mid-canyon interagency access; common overnight-float camp zone."},
-  {id:"heise",  river:"southfork", name:"Heise",      role:"both",    pos:[43.6120,-111.6850], note:"Popular lower-river access by the hot springs; below the canyon."},
+  {id:"cott",   river:"southfork", name:"Cottonwood (Fullmer Boat Landing)", role:"both", pos:[43.5992,-111.4941], note:"Mid-canyon interagency access; common overnight-float camp zone.", src:"USFS recreation sites"},
+  {id:"heise",  river:"southfork", name:"Heise Bridge",      role:"both",    pos:[43.6451,-111.7013], note:"Popular lower-river access by the hot springs; below the canyon.", src:"BLM Idaho recreation sites"},
   // ---- Teton River (Victor / Driggs) — full access set ----
-  {id:"foxc",   river:"teton", name:"Fox Creek",     role:"wade",    pos:[43.5960,-111.1560], note:"Upstream F&G access; ~250-yard walk to slow, placid water."},
+  {id:"foxc",   river:"teton", name:"Fox Creek (West)",     role:"wade",    pos:[43.6556,-111.1784], note:"Upstream F&G access; ~250-yard walk to slow, placid water.", src:"IDFG fishing & boating access sites"},
   {id:"sbates", river:"teton", name:"South Bates",   role:"both",    pos:[43.6560,-111.2020], note:"Quieter put-in just upstream of Bates Bridge."},
   {id:"horse",  river:"teton", name:"Horseshoe",     role:"both",    pos:[43.7780,-111.2330], note:"Mid-valley access between Rainey and Cache."},
-  {id:"tcache",  river:"teton", name:"Cache Bridge",  role:"both",    pos:[43.8120,-111.2380], note:"The valley's most popular access — minutes from town; busy weekends."},
+  {id:"tcache",  river:"teton", name:"Cache Bridge",  role:"both",    pos:[43.7812,-111.2100], note:"The valley's most popular access — minutes from town; busy weekends.", src:"IDFG fishing & boating access sites"},
   {id:"buxton", river:"teton", name:"Buxton Bridge (Buxton River Park)", role:"both", pos:[43.8360,-111.2460], note:"Moderate pressure, decent parking; good first-timer option."},
   // Snake (Jackson)
-  {id:"jld",   river:"snake", name:"Jackson Lake Dam", role:"launch",  pos:[43.8585,-110.5870], note:"Flat water below the dam; bald eagle alley."},
-  {id:"pac",   river:"snake", name:"Pacific Creek",    role:"both",    pos:[43.8430,-110.5120], note:"GTNP permit required to launch in the park."},
-  {id:"dead",  river:"snake", name:"Deadman's Bar",    role:"both",    pos:[43.7320,-110.6740], note:"Steep ramp; the classic Teton-view launch."},
-  {id:"moose", river:"snake", name:"Moose",            role:"both",    pos:[43.6560,-110.7150], note:"Busy mid-summer — arrive early."},
-  {id:"wils",  river:"snake", name:"Wilson Bridge (Hwy 22)", role:"both", pos:[43.4906,-110.8330], note:"County ramp on river left below the bridge."},
-  {id:"spark", river:"snake", name:"South Park (Pritchard ramp)", role:"both", pos:[43.3960,-110.7880], note:"WGFD access; popular evening-float put-in."},
-  {id:"astor", river:"snake", name:"Astoria",          role:"both",    pos:[43.2910,-110.7870], note:"Below Hoback Junction; last mellow access before the canyon."},
-  {id:"wtab",  river:"snake", name:"West Table",       role:"launch",  pos:[43.2320,-110.8900], note:"Whitewater launch — Class III below here."},
-  {id:"sheep", river:"snake", name:"Sheep Gulch",      role:"takeout", pos:[43.1760,-110.9890], note:"Canyon take-out. Do not miss it."},
+  {id:"jld",   river:"snake", name:"Jackson Lake Dam", role:"launch",  pos:[43.8584,-110.5863], note:"Flat water below the dam; bald eagle alley.", src:"WGFD river access points"},
+  {id:"pac",   river:"snake", name:"Pacific Creek",    role:"both",    pos:[43.8458,-110.5178], note:"GTNP permit required to launch in the park.", src:"WGFD river access points"},
+  {id:"dead",  river:"snake", name:"Deadman's Bar",    role:"both",    pos:[43.7606,-110.6274], note:"Steep ramp; the classic Teton-view launch.", src:"WGFD river access points"},
+  {id:"moose", river:"snake", name:"Moose",            role:"both",    pos:[43.6553,-110.7145], note:"Busy mid-summer — arrive early.", src:"WGFD river access points"},
+  {id:"wils",  river:"snake", name:"Wilson Bridge (Hwy 22)", role:"both", pos:[43.5002,-110.8408], note:"County ramp on river left below the bridge.", src:"WGFD river access points"},
+  {id:"spark", river:"snake", name:"South Park / von Gontard Landing", role:"both", pos:[43.3833,-110.7422], note:"WGFD access; popular evening-float put-in.", src:"WGFD river access points"},
+  {id:"astor", river:"snake", name:"Astoria",          role:"both",    pos:[43.3013,-110.7755], note:"Below Hoback Junction; last mellow access before the canyon.", src:"WGFD river access points"},
+  {id:"wtab",  river:"snake", name:"West Table",       role:"launch",  pos:[43.2046,-110.8213], note:"Whitewater launch — Class III below here.", src:"WGFD river access points"},
+  {id:"sheep", river:"snake", name:"Sheep Gulch",      role:"takeout", pos:[43.1860,-110.9547], note:"Canyon take-out. Do not miss it.", src:"WGFD river access points"},
   // South Fork
   {id:"pdam",  river:"southfork", name:"Palisades Dam",       role:"launch", pos:[43.3370,-111.2100], note:"Tailwater start; check release schedule."},
-  {id:"sprcr", river:"southfork", name:"Spring Creek", role:"both",   pos:[43.4006,-111.3050], note:"Mid-Swan-Valley access near Irwin."},
-  {id:"conan", river:"southfork", name:"Conant",              role:"both",   pos:[43.4501,-111.3984], note:"Last ramp before the canyon stretch."},
-  {id:"bying", river:"southfork", name:"Byington",            role:"both",   pos:[43.6226,-111.6653], note:"Standard canyon take-out near Ririe."},
-  {id:"loren", river:"southfork", name:"Lorenzo (Twin Bridges)", role:"takeout", pos:[43.5450,-111.9300], note:"Lower-river take-out off US-20."},
+  {id:"sprcr", river:"southfork", name:"Spring Creek", role:"both",   pos:[43.4499,-111.3975], note:"Caribou-Targhee boating site in Swan Valley, a short way above Conant.", src:"USFS recreation sites"},
+  {id:"conan", river:"southfork", name:"Conant Valley",              role:"both",   pos:[43.4635,-111.4272], note:"Last ramp before the canyon stretch.", src:"BLM Idaho recreation sites"},
+  {id:"bying", river:"southfork", name:"Byington",            role:"both",   pos:[43.6227,-111.6654], note:"Standard canyon take-out near Ririe.", src:"BLM Idaho recreation sites"},
+  {id:"loren", river:"southfork", name:"Twin Bridges (Lorenzo)", role:"takeout", pos:[43.6730,-111.7683], note:"Lower-river take-out off US-20.", src:"IDFG fishing & boating access sites"},
   // Teton
-  {id:"bates", river:"teton", name:"Bates Bridge",   role:"both",    pos:[43.7100,-111.2230], note:"Meadow water upstream and down."},
-  {id:"rain",  river:"teton", name:"Rainey (Big Eddy)",  role:"both",    pos:[43.7540,-111.2320], note:"Quiet mid-valley access."},
-  {id:"harr",  river:"teton", name:"Harrops Bridge (Hwy 33)", role:"takeout", pos:[43.8600,-111.2550], note:"Last easy take-out before the canyon."},
+  {id:"bates", river:"teton", name:"Bates Bridge",   role:"both",    pos:[43.7236,-111.1872], note:"Meadow water upstream and down.", src:"IDFG fishing & boating access sites"},
+  {id:"rain",  river:"teton", name:"Rainey Bridge",  role:"both",    pos:[43.7519,-111.2049], note:"Quiet mid-valley access.", src:"IDFG fishing & boating access sites"},
+  {id:"harr",  river:"teton", name:"Harrops Bridge (Hwy 33)", role:"takeout", pos:[43.8251,-111.2331], note:"Last easy take-out before the canyon.", src:"IDFG fishing & boating access sites"},
   // Salt
   {id:"etna",  river:"salt", name:"Etna Bridge",  role:"launch",  pos:[43.0400,-111.0100], note:"Gentle launch into meadow bends."},
   {id:"saltm", river:"salt", name:"Salt River mouth (Alpine)", role:"takeout", pos:[43.1650,-111.0450], note:"Take out before the reservoir wind."},
@@ -14312,8 +14313,8 @@ const RAMPS = [
   {id:"thermo",river:"bighorn", name:"Hot Springs State Park (Thermopolis)", role:"takeout", pos:[43.6520,-108.2000], note:"Take out by the travertine terraces."},
   {id:"boysd", river:"wind", name:"Boysen Dam (canyon put-in)", role:"launch", pos:[43.4180,-108.1800], note:"Wind River Canyon — tribal permit + Class III–IV."},
   // Green
-  {id:"warrb", river:"green", name:"Warren Bridge (Hwy 191)", role:"launch", pos:[43.0190,-110.1180], note:"BLM ramp; upper Green classic."},
-  {id:"danl",  river:"green", name:"Daniel Bridge", role:"takeout", pos:[42.8700,-110.0700], note:"Take-out near the Daniel junction."},
+  {id:"warrb", river:"green", name:"Warren Bridge (Hwy 191)", role:"launch", pos:[43.0189,-110.1185], note:"BLM ramp; upper Green classic.", src:"WGFD river access points"},
+  {id:"danl",  river:"green", name:"Daniel (Hwy 189 / Zach Roberts — private)", role:"takeout", pos:[42.8775,-110.0729], note:"WGFD lists this take-out as private (Zach Roberts) — check access before you rely on it.", src:"WGFD river access points"},
   // Salmon
   {id:"shoupb",river:"salmon", name:"Shoup Bridge", role:"launch", pos:[45.1300,-113.8950], note:"ID F&G access south of Salmon."},
   {id:"islp",  river:"salmon", name:"Island Park ramp (Salmon)", role:"takeout", pos:[45.1830,-113.8950], note:"Town take-out in Salmon."},
@@ -15434,63 +15435,79 @@ const RAMPS = [
   {id:"osm_n3699315817", river:"nflewis", name:"Fishing access", role:"wade", pos:[45.95856,-122.56007], note:"Fishing access mapped in OpenStreetMap — check signage and land status before you park."},
   {id:"osm_n5981566348", river:"nflewis", name:"Fishing access", role:"wade", pos:[45.89502,-122.73814], note:"Fishing access mapped in OpenStreetMap — check signage and land status before you park."},
 /* <<< osm access points */
+  // --- New Fork River: Wyoming Game & Fish river access points (All_River_Access_Points, NFR1–NFR10),
+  //     upstream to down. NFR3 (Hocker) is listed as private and left off. ---
+  {id:"nf1", river:"newfork", name:"Tyler / Mesa Access", role:"launch", pos:[42.8370,-109.8633], note:"WGFD public river access on the New Fork.", src:"WGFD river access points"},
+  {id:"nf2", river:"newfork", name:"Airport", role:"both", pos:[42.7872,-109.8207], note:"WGFD public river access on the New Fork.", src:"WGFD river access points"},
+  {id:"nf4", river:"newfork", name:"Boulder Bridge", role:"both", pos:[42.7506,-109.7289], note:"WGFD public river access on the New Fork.", src:"WGFD river access points"},
+  {id:"nf5", river:"newfork", name:"East Fork confluence", role:"both", pos:[42.6840,-109.7374], note:"WGFD public river access on the New Fork.", src:"WGFD river access points"},
+  {id:"nf6", river:"newfork", name:"Gas Wells", role:"both", pos:[42.6673,-109.7890], note:"WGFD public river access on the New Fork.", src:"WGFD river access points"},
+  {id:"nf7", river:"newfork", name:"Remmick", role:"both", pos:[42.6519,-109.8393], note:"WGFD public river access on the New Fork.", src:"WGFD river access points"},
+  {id:"nf8", river:"newfork", name:"Hwy 351", role:"both", pos:[42.6069,-109.8554], note:"WGFD public river access on the New Fork.", src:"WGFD river access points"},
+  {id:"nf9", river:"newfork", name:"USGS gage station", role:"both", pos:[42.5686,-109.9302], note:"WGFD public river access on the New Fork.", src:"WGFD river access points"},
+  {id:"nf10", river:"newfork", name:"BLM below the gage station", role:"both", pos:[42.5514,-109.9474], note:"WGFD public river access on the New Fork.", src:"WGFD river access points"},
 ];
 
 /* ---------- Float sections ---------- */
 // typSpeed = typical float speed (mph) at around-average flow
 const SECTIONS = [
+  /* Miles on the Snake (Jackson), Teton, South Fork and upper Green sections are
+     measured along the mapped channel between the agency-sourced ramp positions
+     (WGFD / IDFG / USFS / BLM, 2026-10-06). The earlier figures were tied to
+     ramp pins that sat 1.5–8 km off the river. f4 (to Twin Bridges) keeps its
+     old figure: Twin Bridges is off the drawn South Fork, so it can't be measured. */
   // --- added with expanded Jackson/Victor/Swan access set ---
   {id:"s8", river:"snake", name:"Pritchard → West Table", put:"pritch", take:"wtab",
    miles:8.0, klass:"II", beginner:false, typSpeed:4.3,
    notes:"The braided canyon-approach run below Astoria — fast, wood-strewn channels that re-converge. Take out at West Table unless you're committed to the Class III below.",
    shuttle:"BTNF permit required May 1–Nov 1; US-89 turnouts, Jackson/Alpine outfitters shuttle."},
   {id:"f5", river:"southfork", name:"Canyon (upper): Conant → Cottonwood", put:"conan", take:"cott",
-   miles:13.0, klass:"II", beginner:false, typSpeed:4.2,
+   miles:14.2, klass:"II", beginner:false, typSpeed:4.2,
    notes:"First half of the roadless canyon — cliffs, side streams, and the 16 designated camps begin here. A common overnight put-in.",
    shuttle:"Interagency fee site; long shuttle via Swan Valley Hwy — book through a fly shop."},
   {id:"f6", river:"southfork", name:"Canyon (lower): Cottonwood → Byington", put:"cott", take:"bying",
-   miles:12.0, klass:"II", beginner:false, typSpeed:4.2,
+   miles:11.0, klass:"II", beginner:false, typSpeed:4.2,
    notes:"Second half out of the canyon. Watch the 'Devils Kitchen' S-bend and an irrigation channel/boulders just above Byington.",
    shuttle:"~45 min via Ririe; Swan Valley shops run it."},
   {id:"f7", river:"southfork", name:"Lower river: Byington → Heise", put:"bying", take:"heise",
-   miles:6.5, klass:"I", beginner:true, typSpeed:4.0,
+   miles:3.0, klass:"I", beginner:true, typSpeed:4.0,
    notes:"Mellow water below the canyon past the hot springs — cottonwood islands and easy banks, far fewer boats than the canyon.",
    shuttle:"Short shuttle on the Heise/Ririe roads."},
   {id:"t3", river:"teton", name:"Fox Creek → Bates Bridge", put:"foxc", take:"bates",
-   miles:6.0, klass:"I", beginner:true, typSpeed:2.2,
+   miles:6.6, klass:"I", beginner:true, typSpeed:2.2,
    notes:"The quiet upper valley — placid, shallow, SUP-friendly water. Fox Creek is a short carry to the river.",
    shuttle:"Driggs/Victor rental shops shuttle the valley accesses."},
   {id:"t4", river:"teton", name:"Rainey (Big Eddy) → Cache Bridge", put:"rain", take:"tcache",
-   miles:5.0, klass:"I", beginner:true, typSpeed:2.4,
+   miles:3.3, klass:"I", beginner:true, typSpeed:2.4,
    notes:"Glassy meadow bends with the Tetons on full display; moose are common. Slow current — budget more time than the miles imply.",
    shuttle:"Easy valley shuttle; Cache is the busiest access on weekends."},
   {id:"t5", river:"teton", name:"Cache Bridge → Harrops Bridge", put:"tcache", take:"harr",
-   miles:4.0, klass:"I", beginner:true, typSpeed:2.5,
+   miles:5.6, klass:"I", beginner:true, typSpeed:2.5,
    notes:"The last mellow stretch. TAKE OUT AT HARROPS — below it the river drops into a Class IV–V canyon for experts only.",
    shuttle:"Hwy 33 two-car shuttle."},
   // Snake (Jackson)
   {id:"s1", river:"snake", name:"Jackson Lake Dam → Pacific Creek", put:"jld", take:"pac",
-   miles:4.8, klass:"I", beginner:true, typSpeed:3.2,
+   miles:4.4, klass:"I", beginner:true, typSpeed:3.2,
    notes:"Flat, scenic dam water. Great first row and a solid wade/float fishery at the Oxbow. GTNP boat permit required.",
    shuttle:"Short shuttle along US-89/191; Signal Mountain area outfitters run this reach."},
   {id:"s2", river:"snake", name:"Pacific Creek → Deadman's Bar", put:"pac", take:"dead",
-   miles:10.5, klass:"II", beginner:false, typSpeed:4.2,
+   miles:11.2, klass:"II", beginner:false, typSpeed:4.2,
    notes:"Braided channels and wood. Route-finding matters; channels move every spring.",
    shuttle:"GTNP concession shuttles or two-car; ~25 min drive."},
   {id:"s3", river:"snake", name:"Deadman's Bar → Moose", put:"dead", take:"moose",
-   miles:10.2, klass:"II", beginner:false, typSpeed:4.5,
+   miles:9.8, klass:"II", beginner:false, typSpeed:4.5,
    notes:"The postcard float — and the park's most demanding rowing. Fast water, tight braids, strainers.",
    shuttle:"Triangle X and other park outfitters run scenic trips here."},
   {id:"s4", river:"snake", name:"Moose → Wilson Bridge", put:"moose", take:"wils",
-   miles:13.0, klass:"II", beginner:false, typSpeed:4.5,
+   miles:14.4, klass:"II", beginner:false, typSpeed:4.5,
    notes:"Long braided reach leaving the park. Excellent fishing; still wood-hazard water.",
    shuttle:"~20 min via Moose-Wilson Rd (when open) or Hwy 89."},
   {id:"s5", river:"snake", name:"Wilson Bridge → South Park", put:"wils", take:"spark",
-   miles:8.0, klass:"I-II", beginner:true, typSpeed:4.0,
+   miles:13.2, klass:"I-II", beginner:true, typSpeed:4.0,
    notes:"Mellower town stretch behind the levees. Evening caddis floats are a local ritual.",
    shuttle:"15 min on Hwy 89/22; several Jackson shops rent rafts for this reach."},
   {id:"s6", river:"snake", name:"South Park → Astoria", put:"spark", take:"astor",
-   miles:9.5, klass:"I-II", beginner:true, typSpeed:4.0,
+   miles:8.2, klass:"I-II", beginner:true, typSpeed:4.0,
    notes:"Riffle-pool water past Hoback Junction. Take out at Astoria unless you mean to run the canyon.",
    shuttle:"US-26/89 follows the river; quick shuttle."},
   {id:"s7", river:"snake", name:"Snake River Canyon: West Table → Sheep Gulch", put:"wtab", take:"sheep",
@@ -15499,16 +15516,16 @@ const SECTIONS = [
    shuttle:"Commercial outfitters in Jackson & Alpine run multiple daily trips."},
   // South Fork
   {id:"f1", river:"southfork", name:"Palisades Dam → Spring Creek Bridge", put:"pdam", take:"sprcr",
-   miles:7.3, klass:"I", beginner:true, typSpeed:4.0,
+   miles:13.3, klass:"I", beginner:true, typSpeed:4.0,
    notes:"Classic upper tailwater: riffles, side channels, rising fish. Friendly rowing at normal releases.",
    shuttle:"US-26 parallels; Swan Valley fly shops run shuttles."},
   {id:"f2", river:"southfork", name:"Spring Creek → Conant", put:"sprcr", take:"conan",
-   miles:7.0, klass:"I-II", beginner:true, typSpeed:4.0,
+   miles:2.1, klass:"I-II", beginner:true, typSpeed:4.0,
    notes:"More side channels and gravel bars. At high releases the water gets pushy — check CFS before committing.",
    shuttle:"Short hop on US-26."},
   {id:"f3", river:"southfork", name:"Canyon: Conant → Byington", put:"conan", take:"bying",
-   miles:14.5, klass:"II", beginner:false, typSpeed:4.2,
-   notes:"The famous roadless canyon. No bail-outs for 14 miles — commit to the full day.",
+   miles:25.2, klass:"II", beginner:false, typSpeed:4.2,
+   notes:"The famous roadless canyon — about 25 miles, with Cottonwood (Fullmer) the one access part-way. A long day; most split it or camp.",
    shuttle:"Long shuttle (~45 min) via Ririe; book it through a Swan Valley shop."},
   {id:"f4", river:"southfork", name:"Byington → Lorenzo (Twin Bridges)", put:"bying", take:"loren",
    miles:8.5, klass:"I", beginner:true, typSpeed:4.0,
@@ -15516,11 +15533,11 @@ const SECTIONS = [
    shuttle:"Easy shuttle via Hwy 48/US-20."},
   // Teton
   {id:"t1", river:"teton", name:"Bates Bridge → Rainey Bridge", put:"bates", take:"rain",
-   miles:6.0, klass:"I", beginner:true, typSpeed:2.4,
+   miles:3.7, klass:"I", beginner:true, typSpeed:2.4,
    notes:"Glassy meadow meanders — the best first-time rowing water in the region. Slow current; budget extra time.",
    shuttle:"10 min on valley back roads; Driggs/Victor shops shuttle."},
   {id:"t2", river:"teton", name:"Rainey → Harrops Bridge", put:"rain", take:"harr",
-   miles:6.5, klass:"I", beginner:true, typSpeed:2.4,
+   miles:9.0, klass:"I", beginner:true, typSpeed:2.4,
    notes:"More spring-creek bends, rising fish on calm evenings. TAKE OUT AT HARROPS — Class IV–V canyon downstream.",
    shuttle:"Hwy 33 makes this an easy two-car shuttle."},
   // Salt
@@ -15561,7 +15578,7 @@ const SECTIONS = [
    shuttle:"US-20 runs the canyon rim."},
   // Green
   {id:"g1", river:"green", name:"Warren Bridge → Daniel", put:"warrb", take:"danl",
-   miles:11.5, klass:"I", beginner:true, typSpeed:3.4,
+   miles:16.9, klass:"I", beginner:true, typSpeed:3.4,
    notes:"Sagebrush solitude with the Wind River Range filling the horizon. Browns, rainbows, the odd big fish on a hopper.",
    shuttle:"US-191/189; Pinedale shops shuttle."},
   // Salmon
@@ -15634,6 +15651,16 @@ const SECTIONS = [
    miles:5.0, klass:"I", beginner:true, typSpeed:2.3,
    notes:"The in-town Ames stretch — riffle-pool water, popular with ISU students.",
    shuttle:"Short shuttle within Ames."},
+  /* New Fork (newfork) — DRAFT, deliberately not entered as sections yet.
+     Between WGFD access points (RAMPS nf1–nf10), miles measured along the mapped
+     channel 2026-10-06:
+       Tyler/Mesa → Airport 6.7 · Airport → Boulder Bridge 9.5 ·
+       Boulder Bridge → East Fork confluence 7.5 · East Fork confluence → Gas Wells 4.5 ·
+       Gas Wells → Remmick 4.4 · Remmick → Hwy 351 3.6 · Hwy 351 → USGS gage 6.9
+     UNCLASSED: no agency publishes a whitewater class for the New Fork. Likely
+     Class I, or not whitewater at all (WGFD describes a meadow/ranch-land drift
+     river) — but that is a judgement, not a source, so they carry no `klass`
+     and Float Mode doesn't offer them. Confirm before adding. */
 ];
 
 /* rivers with no float sections — floating note shown instead */
@@ -17132,7 +17159,7 @@ const FLOW_REV = {
   namekagonriver:"0",
   nbranchroot:"0",
   nemadji:"0",
-  newfork:"0",
+  newfork:"0000000",
   nezpercecreek:"1",
   nfclearwater:"0",
   nfpayette:"00",

@@ -1170,6 +1170,44 @@ only state-specific file; see `west2/README.md`.
   then California, Oregon and Washington, whose full heading lists still need
   parsing from their booklets.
 
+### Float Mode — `js/float.js` (2026-10-06)
+Personal, on-phone only. A section card's **🛶 Start float** opens a planner
+(craft, launch time, take-out window, share plan), then a live panel (miles
+left/done, ETA, pace, stopped time, keep-screen-on).
+- **Scope is deliberate:** `FLOAT_RIVERS` (snake, teton, southfork, green;
+  newfork once its sections have a class) and `floatEligible()`: Class III or
+  lower, a `klass` required, and `FLOAT_EXCLUDE` (`s7`, the Snake canyon — a
+  whitewater run, not a fishing float). Whole sections only, so a route never
+  runs past a section's end into harder water.
+- **Route** = Dijkstra along the *drawn* line (`riverLayers[id].line`), with
+  piece ends welded to the nearest point on another piece within 0.5 km
+  (braids rejoin mid-segment). Ramps must snap within 1.5 km or the planner
+  says it can't trace the section — **don't raise that limit; fix the ramp.**
+  Progress is fraction-along × the section's official `miles`.
+- **No coordinates are stored.** The log is `{t, a}` (time, fraction along);
+  the location feature's promise holds. Finished floats live in
+  `fbState.floats` and come through Field Book export/import.
+- Baseline ETA is `floatEstimate()` ÷ the `CRAFT` factor (guesses), replaced
+  by the median of your completed floats on that section. Never show a water
+  speed — gauges report discharge, not velocity.
+- **Ramp pins come from the agencies** (2026-10-06), carried as `src` on the
+  `RAMPS` entry: WGFD *All_River_Access_Points* (services6.arcgis.com/
+  cWzdqIyxbijuhPLw — ordered upstream→down per river, with launch/egress
+  flags) for the Snake, Green and New Fork; IDFG *Fishing and Boating Access
+  Sites* for the Teton and Twin Bridges; USFS EDW Recreation Opportunities
+  for Spring Creek and Fullmer; BLM Idaho Recreation Site Point for Conant,
+  Byington and Heise. Nine pins had been 1.5–8 km off (Deadman's Bar by 5 km,
+  South Park by 3.7). Section `miles` were then **re-measured along the
+  channel** between them; the old figures were tied to the wrong pins.
+- **19 of 20 sections trace.** f4 (Byington → Twin Bridges) doesn't: Twin
+  Bridges is 3 km off the drawn South Fork. The Daniel take-out on g1 is
+  listed by WGFD as **private** (Zach Roberts) and says so.
+- **New Fork:** 9 WGFD access points (Hocker, private, left off) and its line
+  rebaked from OSM — the NHD snap had missed the bend east past Boulder.
+  **No New Fork sections yet**: no agency publishes a whitewater class for
+  it, and `floatEligible()` needs one. Likely Class I or not whitewater at
+  all; the measured draft sections sit in a comment at the end of `SECTIONS`.
+
 ### Access points (finished 2026-10-02)
 All 139 OSM tiles fetched: 860 access points on 199 rivers (555 slipways,
 305 fishing sites). Overpass refused this machine for most of a day after

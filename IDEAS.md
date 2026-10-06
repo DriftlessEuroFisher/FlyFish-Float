@@ -10,6 +10,12 @@ Status: `new` → `refining` → `ready` (agreed spec) → `building` → `done`
 
 ## Ideas
 
+### Rulebook streams, every western state — `building`
+Every stream with its own entry in the state's 2026 regulations, one state
+per session (CLAUDE.md, "Rulebook streams"). Montana done (93, 7d267c5).
+Next: Colorado (163), Utah (~30), then California, Oregon, Washington, and
+New Mexico, Arizona, Nevada, Idaho and Wyoming.
+
 ### Regulations first in the river panel — `done` (2026-10-02)
 - **Source:** our own discussion, 2026-10-02.
 - **Problem:** the rules sit fourth in the river panel, under the flow cards
@@ -71,7 +77,7 @@ phone app. **Fit:** strong / medium / weak.
   personal ranking.
 - **Data:** CPW publishes Gold Medal reaches as GIS. The others need checking.
 
-#### Nationwide stream gauges + real-time data — `new` · fit: strong
+#### Nationwide stream gauges + real-time data — `done` (fe062f7) · fit: strong
 - **Already have:** 747 gauges attached to mapped rivers.
 - **Proposal:**
   - A layer showing *every* active USGS discharge gauge in view, fetched per
@@ -81,7 +87,7 @@ phone app. **Fit:** strong / medium / weak.
 - **Watch:** the USGS request budget of 1,000 an hour. Fetch by bbox from
   zoom 8 and batch the reads.
 
-#### Parking, boat ramps, campsites, trailheads — `new` · fit: strong
+#### Parking, boat ramps, campsites, trailheads — `building` (ramps + fishing access done 6e1b584; parking, campsites, trailheads to do) · fit: strong
 - **Already have:** ramps and fishing access in progress (OSM access pipeline).
 - **Proposal:** extend the same pipeline with OSM `amenity=parking` near
   rivers, `tourism=camp_site` and `highway=trailhead`, each its own toggle.
@@ -146,7 +152,7 @@ phone app. **Fit:** strong / medium / weak.
 
 ### Batch 2026-10-02 (2): scale and points of interest
 
-#### Enabler: static tiled data — `new` · needed by several items below
+#### Enabler: static tiled data — `done` (fe062f7, `makeTiledLayer`) · needed by several items below
 - **Problem:** 55k streams or 350k bridges can't be baked into one JS file.
   The current 2.6 MB `rivers-data.js` is already the ceiling for a phone.
 - **Proposal:**
@@ -186,7 +192,7 @@ phone app. **Fit:** strong / medium / weak.
 - **Elsewhere:** the state's standard rule plus a link to the booklet. No
   paraphrase.
 
-#### Bridge access points (350k+) — `new` · fit: strong (uses the enabler)
+#### Bridge access points (350k+) — `done` (fe062f7; 129k in the 18 states) · fit: strong (uses the enabler)
 - **Data:** the FHWA **National Bridge Inventory**, public domain, about
   620k bridges with coordinates. Filter it to bridges carrying a public road
   over a waterway (NBI item 42B, "service under" = waterway). That should
@@ -204,7 +210,7 @@ phone app. **Fit:** strong / medium / weak.
 - **Proposal:** OSM shops shipped as static tiled points, each with a phone
   number and website when OSM has them. Allow adding a favourite shop by hand.
 
-#### Waterfalls & rapids — `new` · fit: strong
+#### Waterfalls & rapids — `done` (a745121) · fit: strong
 - **Problem:** this is a safety feature for anyone floating.
 - **Data:** OSM `waterway=waterfall`, `waterway=rapids` / `whitewater=*`,
   and GNIS falls.
@@ -269,6 +275,189 @@ phone app. **Fit:** strong / medium / weak.
 
 **Possible later:** affiliate links on shop searches could pay for the API
 use.
+
+### Batch 2026-10-06: Float Mode, community access points, phased roadmap
+
+Your own feature list. Half of it fits the app as built; the other half needs
+accounts and a server, which CLAUDE.md currently rules out ("no backend").
+That is your call to make, not the code's — see **The fork in the road** at
+the end of this batch.
+
+#### Float Mode (personal) — `building` (v1 in `js/float.js`, uncommitted 2026-10-06; 19 of 20 sections trace after the agency ramp fix; New Fork sections drafted but unclassed — likely Class I / not whitewater, unconfirmed) · fit: strong for the on-phone parts
+- **Problem:** "if I put in here at 9, when am I at the take-out?" — and on
+  the water, "am I behind?"
+- **Scope (decided 2026-10-06): only rivers around Pinedale WY, Jackson WY
+  and Victor ID.** Float Mode is not offered anywhere else.
+
+  | Area | River | Sections offered | Notes |
+  |---|---|---|---|
+  | Jackson | Snake — Jackson Hole (`snake`) | 7: Jackson Lake Dam → … → West Table | All Class I–II. The canyon below West Table is excluded (see the whitewater rule). |
+  | Victor | Teton (`teton`) | 5: Fox Creek → … → Harrops Bridge | All Class I. Hard stop at Harrops; below is Class IV–V. |
+  | Victor / Swan Valley | South Fork of the Snake (`southfork`) | 7: Palisades Dam → … → Heise / Lorenzo | All Class I–II. Included as Victor's home float, 30 min over Pine Creek Pass. |
+  | Pinedale | Green (`green`) | 1: Warren Bridge → Daniel | Thin: only 2 access points. |
+  | Pinedale | New Fork (`newfork`) | 0 for now | A real drift-boat river with no ramps on the map. Needs access points first. |
+
+- **Whitewater rule (decided 2026-10-06): Class III and lower, and no
+  whitewater runs.**
+  - Float Mode offers only `SECTIONS` whose `klass` is III or lower. A
+    section with no `klass` isn't offered.
+  - **Snake River Canyon (West Table → Sheep Gulch, `s7`) is excluded.** It
+    is rated III, but it is a whitewater trip (Big Kahuna, Lunch Counter),
+    not a fishing float. The judgement call: "Class III and lower" lets in a
+    Class III riffle on a fishing reach; it doesn't let in a named
+    whitewater run.
+  - A route can't run past a section's end into harder water, so you can't
+    draw your own put-in and take-out across one. Below Harrops on the
+    Teton and below West Table on the Snake are never routed.
+  - Any section added later must carry a `klass`.
+- **Left out on purpose:**
+  - Gros Ventre, Hoback, Buffalo Fork, Greys, Flat Creek, Fall River and
+    Snake–Flagg Ranch: their `WADE_ONLY` notes say they are wade water or
+    hazardous to float.
+  - The Salt River (Etna → Alpine): Star Valley is about 35 mi from Jackson
+    and isn't "around" any of the three towns. It's easy to add later.
+- **Pinedale access points come from Wyoming Game & Fish.** For the New Fork
+  and the upper Green, use the WGFD Public Access Area records (the agency's
+  own list of where the public may launch and park), checked against BLM
+  sites. Each New Fork section gets a `klass` from the same source, or from
+  you, before it's offered. Your own put-ins can be added by hand on top.
+  No pin is placed from guesswork.
+- **Builds on `SECTIONS`.** Each section already has a put-in, a take-out,
+  miles, a class, a beginner flag and a `typSpeed` (mph). The first version
+  can let you pick a section instead of two arbitrary points, and use
+  `typSpeed` as the baseline estimate before you launch.
+- **Proposal:**
+  - Tap a put-in and a take-out (snapping to `RAMPS` / OSM access points, or
+    any point on the line). The route is the river's own drawn line between
+    them, measured along the channel.
+  - Live GPS progress: miles done, miles left, ETA at the take-out, using
+    your actual pace so far, with stops (no movement for a few minutes)
+    taken out of the pace.
+  - **Baseline ETA before you launch:** craft speed (drift boat, raft,
+    kayak, pontoon) plus a flow factor from the gauge's `statusOf()` bucket.
+    Shown as **"estimate"**, never as a measured speed — USGS gauges report
+    discharge, not velocity, so a "current speed" number would be
+    fabricated.
+  - Each finished float is saved to the Field Book (date, reach, gauge CFS
+    that day, time on water, stops). Your own history then replaces the
+    baseline for that reach at a similar flow.
+- **Already have:** river geometry, access points, live CFS, Field Book
+  storage, the location dot.
+- **Watch:**
+  - **A web app gets no GPS with the screen off.** iOS stops `watchPosition`
+    when the phone locks or the app is backgrounded. Logging works with the
+    screen on (a "keep awake" option via the Wake Lock API), and gaps are
+    filled by the next fix. True background tracking needs a native app
+    (see *Distribution* below).
+  - **Routing has to cross gaps honestly.** `coords` comes in pieces; a lake
+    or millpond in the middle of a float is real, and the distance across it
+    should be measured as lake, not stitched as river.
+  - GPS logging with no signal already works — the GPS chip doesn't need
+    service. "Syncs when service returns" only matters once there is a
+    server to sync to.
+- **Depends on:** nothing new for the personal version.
+
+#### Shuttle times — `new` · fit: medium
+- **Proposal:** drive time between put-in and take-out on the Float Mode
+  card.
+- **Watch:** routing needs a directions service — OpenRouteService has a free
+  key, others are paid (see *Places and routes* below). A key in client code
+  is public. Until then: straight-line distance plus a "Directions" link that
+  opens Apple/Google Maps between the two pins, which costs nothing.
+
+#### Float plan sharing + late-arrival alert — `new` · fit: split
+- **Now (no server):** "Share float plan" opens the phone's share sheet with
+  a text: river, put-in, take-out, launch time, expected take-out time, a
+  map link to each. The person you send it to *is* the alert.
+- **Later (server):** an automatic text or push if you haven't checked in by
+  a set time. That needs a server that runs on a timer and can send
+  messages — it can't be done from a page on a phone that may have no
+  signal.
+
+#### Community access points with on-site verification — `new` · fit: needs a server
+- **Proposal (as written):** user pins with type, craft, parking, land
+  status, photos, notes → Unverified; 2–3 independent verifiers physically
+  within ~100 yd → Verified; Disputed on disagreement; last-verified dates,
+  re-verify prompts, report a problem; reputation, rate limits, badges.
+- **What is good about it:** the GPS-on-site rule is the right shape —
+  it is the only verification that actually means "someone stood there".
+- **Watch:**
+  - **A browser can't prove where it is.** Location from a web page can be
+    faked from the developer tools in a minute. On-site verification raises
+    the bar; it doesn't make it secure. A native app is harder (not
+    impossible) to fool.
+  - **Trespass is the real risk.** A wrong pin on private land sends people
+    onto someone's property under this app's name. Quick-hide on report and
+    a landowner removal path are not optional extras — they ship with the
+    first public pin or the feature doesn't ship. The PAD-US layer already on
+    the map is the land-status cross-check.
+  - Accounts, moderation and stored photos mean personal data, a privacy
+    policy, and someone (you) on the hook for takedown requests.
+- **Now (no server):** your own pins, on the phone, with the same fields
+  (this is the **Waypoints with photos** idea above, given access-point
+  fields). They feed Float Mode just the same.
+
+#### Pooled float tracks, AI ETA, main-channel mapping, stop heat maps — `parked` · needs a server and users
+- Needs many people's real floats before any of it means anything; with one
+  user it's your own history, which Float Mode already uses.
+- **Privacy design in the list is right and should stay attached to it:**
+  opt-in only, trim the first and last ~quarter mile of every track (that's
+  where someone's house or truck is), and never show an aggregate built from
+  fewer than N floats.
+
+#### Conditions additions — `new` · fit: strong (mostly free sources)
+- **Gauge height:** USGS 00065, same batched calls. Worth showing *beside*
+  CFS, never instead — status still needs discharge (CLAUDE.md, Always/Never).
+- **Water temperature:** USGS 00010 where the gauge reports it. Also the
+  trout-stress cue (warm afternoons in August).
+- **Weather & wind:** National Weather Service API, free, no key — forecast,
+  wind and gusts at the river's midpoint.
+- **Clarity outlook:** no source measures it. A rising-flow-after-rain
+  heuristic could be offered **labelled as a guess**, or left out. Clarity
+  on arrival is still the honest answer (same as the Driftless rule).
+- **Hatch charts:** need a sourced table per region (see *Content* below).
+- **Already have:** flow, regulations, closures, falls/rapids/dams.
+
+#### Logistics & on-the-water additions — `new` · mostly covered elsewhere
+- Land ownership: PAD-US (done); owner names are the paid parcel layer below.
+- Camping/lodging: see *Parking, boat ramps, campsites, trailheads* above.
+- Fly shop links: see *Fly shops & retailers* above.
+- Fishing log / auto-filled journal / personal stats: the Field Book, extended
+  — a catch entry can auto-fill river, date, gauge CFS, water temp and
+  weather from what the app already fetched. On the phone, no account.
+- Fly recommendations: see the *AI fly box* batch above.
+- Hazard pins: your own, on the phone (waypoints); shared ones need the server.
+- Gear checklists: on the phone, trivial, low value — `parked`.
+
+#### Later: AI "where should I fish today", crowding, guide profiles — `parked`
+- "Where today" works with your own Claude key on the phone, over live
+  flows, seasons, tiers and your Field Book — see *AI* below.
+- Crowding needs pooled data or a paid source. Guide/outfitter profiles are
+  a business directory, not a fishing-map feature.
+
+#### The fork in the road (decision for you)
+Your phased roadmap is sound in its ordering — each phase does supply the
+next. The catch is Phase 3: **accounts and cloud sync are the moment this
+stops being a no-backend app**, and the "Always keep this no-build,
+no-framework, no-backend" rule in CLAUDE.md would have to change. Two ways
+to go:
+
+1. **Stay single-user.** Do Phases 1–2 fully (they fit as built), plus the
+   on-phone versions of 3–5 noted above. The app stays a free static site
+   with nothing to run, secure or moderate.
+2. **Add a small server** (Supabase / Cloudflare — see the top of the
+   section below). Unlocks community pins, sync, alerts and pooled data, and
+   brings accounts, privacy duties, moderation and a running cost.
+
+Suggested next step either way: **Float Mode (personal)**, scoped to Pinedale / Jackson / Victor — it is the
+biggest new feature that needs no decision on the above.
+
+**Where the roadmap stands today:**
+- Phase 1 (foundation): map, live USGS, regulations, offline maps — done.
+  Local fishing log — partly (Field Book has notes and fished dates, not
+  catches). Data model for floats / catches — not yet.
+- Phase 2 (Float Mode, personal) — not started.
+- Phases 3–5 — blocked on the fork above.
 
 ## Future upgrades that need a paid key or subscription — `parked` (on the radar)
 

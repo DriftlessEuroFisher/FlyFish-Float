@@ -866,6 +866,7 @@ function openLake(id){
                                 : "Wyoming · Yellowstone National Park · lake";
   sheet.classList.add("open");
   body.innerHTML =
+    (desigHTML(k.id) ? `<div class="rulescard">${desigHTML(k.id)}</div>` : "") +
     `<p style="margin:12px 2px 2px;font-size:13.5px">${k.blurb}</p>` +
     `<div class="flowcard"><div class="gname">Still water — ${k.areaKm2} km²</div>` +
     `<div class="plain">No gauge and no flow number: a lake doesn't have one. What "in shape" means here is ice-off, water temperature and wind, not CFS — and on the big lakes the wind is the thing that decides the day.</div></div>` +
@@ -1949,7 +1950,17 @@ layerControl.addOverlay(allGaugeLayer, "All USGS gauges");
      built once per cell and added/removed as the cell enters/leaves view.
    - If the view needs more than maxCells cells (zoomed too far out for the
      layer's density) nothing is fetched; cells already loaded still draw. */
-function makeTiledLayer({dir, minZoom, maxCells, pane, rowToMarker}){
+/* One fetch per URL, shared by every layer reading the same directory (the
+   three POI layers use one set of cells). A failure is forgotten so the next
+   move retries it. `filter` keeps only some rows of a cell for this layer. */
+const TILE_JSON = new Map();
+function tileJSON(url){
+  if(!TILE_JSON.has(url))
+    TILE_JSON.set(url, fetch(url).then(r => r.ok ? r.json() : Promise.reject())
+      .catch(e => { TILE_JSON.delete(url); throw e; }));
+  return TILE_JSON.get(url);
+}
+function makeTiledLayer({dir, minZoom, maxCells, pane, rowToMarker, filter}){
   const group = L.layerGroup();
   const rows = new Map();        // cell key -> rows (insertion order = age)
   const drawn = new Map();       // cell key -> [markers currently in `group`]
@@ -1959,16 +1970,16 @@ function makeTiledLayer({dir, minZoom, maxCells, pane, rowToMarker}){
 
   const on = () => map.hasLayer(group) && !zonesShown && map.getZoom() >= minZoom;
   function loadIndex(){
-    if(!indexP) indexP = fetch(dir + "/index.json").then(r => r.ok ? r.json() : Promise.reject())
+    if(!indexP) indexP = tileJSON(dir + "/index.json")
       .then(a => { index = new Set(a); }, () => { indexP = null; });   // retry next time
     return indexP;
   }
   async function fetchCell(k){
     inflight.add(k);
     try{
-      const r = await fetch(dir + "/" + k + ".json");
-      if(r.ok){
-        rows.set(k, await r.json());
+      const all = await tileJSON(dir + "/" + k + ".json");
+      {
+        rows.set(k, filter ? all.filter(filter) : all);
         while(rows.size > KEEP){
           const old = rows.keys().next().value;       // oldest that isn't on screen
           const gone = [...rows.keys()].find(c => !drawn.has(c));
@@ -2102,6 +2113,53 @@ const hazardLayer = makeTiledLayer({
 });
 layerControl.addOverlay(hazardLayer, "Falls, rapids &amp; dams");
 hazardLayer.addTo(map);                          // on by default
+
+/* ============================================================
+   PARKING, CAMPSITES & TRAILHEADS (data/poi/) — three layers, one set of cells
+   OpenStreetMap. Row: [lat, lng, type, name|null, river_id|null, extra|null],
+   type "parking" | "camp" | "trailhead". Each layer filters the shared cells
+   by type. All off by default (they are a lot of pins) and from zoom 11.
+   Glyphs are small inline SVG with a white outline, in a pane between the
+   hazards (430) and the markers (600). Colours avoid orange (live data),
+   red (closures) and the public-land greens. */
+const poiPane = map.createPane("poiPane");
+poiPane.style.zIndex = 440;
+const POI = {
+  parking:   {label:"Parking",    none:"Unnamed parking",    color:"#5d7a70",
+              glyph:`<rect x="2" y="2" width="14" height="14" rx="3.5" fill="C" stroke="#fff" stroke-width="1.6"/><path d="M7 13V5h2.6a2.3 2.3 0 010 4.6H7" fill="none" stroke="#fff" stroke-width="1.7" stroke-linejoin="round"/>`},
+  camp:      {label:"Campsite",   none:"Unnamed campsite",   color:"#0e6b55",
+              glyph:`<path d="M9 2L1.5 15.5h15z" fill="C" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 7.5l-2.6 8h5.2z" fill="#fff"/>`},
+  trailhead: {label:"Trailhead",  none:"Unnamed trailhead",  color:"#7a5230",
+              glyph:`<rect x="8" y="2" width="2" height="15" rx="1" fill="C" stroke="#fff" stroke-width="1.2"/><path d="M10 3.5h6l1.6 2.2L16 7.9h-6z" fill="C" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 9.5H2.4L.8 11.7 2.4 13.9H8z" fill="C" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/>`},
+};
+function poiIcon(type){
+  const d = POI[type];
+  return L.divIcon({className:"hz-icon", iconSize:[18,18], iconAnchor:[9,9], popupAnchor:[0,-9],
+    html:`<svg viewBox="0 0 18 18" width="18" height="18">${d.glyph.replace(/"C"/g, `"${d.color}"`)}</svg>`});
+}
+function poiPopupHTML(row){
+  const [, , type, name, rid, extra] = row, d = POI[type] || POI.parking;
+  const rv = rid && RIVERS.find(x => x.id === rid);
+  return `<div class="ag-pop tl-pop">`+
+    `<div class="tl-label" style="margin-top:0">${d.label.toUpperCase()}</div>`+
+    `<div class="tl-title">${fbEsc(name || d.none)}</div>`+
+    (extra ? `<div>${fbEsc(extra)}</div>` : "")+
+    (rv ? `<div class="ag-note">Near <a href="#" class="poi-river" data-rid="${fbEsc(rv.id)}">${fbEsc(rv.name)}</a></div>` : "")+
+    `<div class="ag-note">From OpenStreetMap — check signs; access can change.</div></div>`;
+}
+const poiLayers = {};
+Object.keys(POI).forEach(type => {
+  poiLayers[type] = makeTiledLayer({
+    dir:"data/poi", minZoom:11, maxCells:9, pane:"poiPane", filter: row => row[2] === type,
+    rowToMarker: row => L.marker([row[0], row[1]], {icon:poiIcon(type), pane:"poiPane", keyboard:false})
+      .bindPopup(() => poiPopupHTML(row), {maxWidth:270, className:"ag-popup"})
+  });
+  layerControl.addOverlay(poiLayers[type], POI[type].label + (type==="parking" ? "" : "s"));
+});
+document.addEventListener("click", e => {
+  const a = e.target.closest && e.target.closest("a.poi-river"); if(!a) return;
+  e.preventDefault(); map.closePopup(); openRiver(a.dataset.rid);
+});
 
 /* ============================================================
    EXACT RIVER GEOMETRY — live USGS NHD high-resolution flowlines
@@ -2516,6 +2574,16 @@ function accessLawHTML(r){
     `<div class="fb-note">Source: <a href="${fbEsc(a.url)}" target="_blank" rel="noopener">${fbEsc(a.src)}</a></div></details></div>`;
 }
 
+/* An agency's own designation (Gold Medal, Blue Ribbon), from designations.js.
+   Gold Medal wears this app's gold; Blue Ribbon a deep blue, not gauge blue. */
+function desigHTML(id){
+  const d = typeof DESIGNATIONS !== "undefined" && DESIGNATIONS[id], s = d && DESIG_SRC[d.src];
+  if(!s) return "";
+  const col = /gold/i.test(s.label) ? "#c79a1c" : "#1f3f8f";
+  return `<div class="rc-desig"><span class="tierbadge" style="--tc:${col}">${fbEsc(s.label)}</span>`+
+    `<span class="rc-dsub"><a href="${fbEsc(s.url)}" target="_blank" rel="noopener">${fbEsc(s.by)}</a> · ${fbEsc(d.reach)}</span></div>`;
+}
+
 function rulesCardHTML(r){
   const m = new Date().getMonth() + 1;
   const e = TIERS[r.id], s = e && e.season, closed = s && s.closed && s.closed.length ? s.closed : null;
@@ -2565,14 +2633,14 @@ function rulesCardHTML(r){
     [/fly[- ]fishing only|flies only/i, "Fly fishing only"],
     [/artificial (flies|lures)( (and|or) (flies|lures))? only|artificial lures with/i, "Artificial only"],
     [/barbless/i, "Barbless"],
-    [/gold medal/i, "Gold Medal"],
+    ...(typeof DESIGNATIONS !== "undefined" && DESIGNATIONS[r.id] ? [] : [[/gold medal/i, "Gold Medal"]]),
     [/must be killed/i, "Mandatory kill"],
     [/closed to (all )?(fishing|angling)/i, "Closures listed"],
   ];
   const noArt = txt.replace(/artificial (flies|lures)( (and|or) (flies|lures))? only/gi, "");   // "artificial flies only" is Artificial only, not Fly fishing only
   const tags = TAGS.filter(([re]) => re.test(re.source.startsWith("fly") ? noArt : txt)).map(t => t[1]);
 
-  return `<div class="rulescard"><div class="rc-status"><span class="rc-dot" style="background:${dot}"></span>`+
+  return `<div class="rulescard">${desigHTML(r.id)}<div class="rc-status"><span class="rc-dot" style="background:${dot}"></span>`+
     `<div><div class="rc-head">${head}</div>${sub ? `<div class="rc-sub">${sub}</div>` : ""}</div></div>`+
     `<div class="rc-lic">${lic}</div>`+
     accessLawHTML(r)+
@@ -2679,6 +2747,9 @@ function renderSheet(r){
   body.querySelectorAll("[data-zoom]").forEach(el=>el.addEventListener("click",()=>{
     const s = SECTIONS.find(x=>x.id===el.dataset.zoom);
     zoomSection(s);
+  }));
+  body.querySelectorAll("[data-float]").forEach(el=>el.addEventListener("click",()=>{
+    if(typeof floatOpenPlanner==="function") floatOpenPlanner(el.dataset.float);
   }));
   body.querySelectorAll("[data-river]").forEach(el=>el.addEventListener("click",()=>{
     openRiver(el.dataset.river);
@@ -2804,6 +2875,10 @@ function sectionHTML(s){
     <div class="notes" style="margin-top:4px"><span style="color:#1d7a46;font-weight:700">●</span> Put-in <b>${put.name}</b> &nbsp;→&nbsp; <span style="color:#8c4a1d;font-weight:700">●</span> Take-out <b>${take.name}</b></div>
     <div class="shuttle"><b>Shuttle/outfitters:</b> ${s.shuttle}</div>
     <button class="zoom" data-zoom="${s.id}">Show on map →</button>
+    ${typeof floatEligible==="function" && floatEligible(s) ? `<div class="floatbtns">
+      <button class="zoom floatgo" data-float="${s.id}">🛶 Start float</button>
+      <a class="zoom shuttle-link" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=${put.pos[0]},${put.pos[1]}&destination=${take.pos[0]},${take.pos[1]}">Shuttle directions →</a>
+    </div>` : ""}
   </div>`;
 }
 
@@ -3216,6 +3291,7 @@ $("#book-file").addEventListener("change", async ev => {
     const d = JSON.parse(await f.text());
     if(!d || d.v!==1 || !d.rivers || typeof d.rivers!=="object" || Array.isArray(d.rivers)) throw 0;
     let n = 0;
+    const nf = window.floatImport ? floatImport(d.floats) : 0;
     for(const [id, e] of Object.entries(d.rivers)){
       if(!e || typeof e!=="object" || !RIVERS.some(r => r.id===id)) continue;
       const inc = {
@@ -3230,7 +3306,7 @@ $("#book-file").addEventListener("change", async ev => {
     fbPersist(); applyFilters();
     if(curRiver){ const r = RIVERS.find(x => x.id===curRiver); if(r) fbShowRow(r, true); }
     showBookTab(bookTab);
-    msg.textContent = n ? `Imported ${n} river${n===1?"":"s"}.` : "Nothing newer to import.";
+    msg.textContent = (n||nf) ? "Imported " + [n&&`${n} river${n===1?"":"s"}`, nf&&`${nf} float${nf===1?"":"s"}`].filter(Boolean).join(" and ") + "." : "Nothing newer to import.";
   }catch(e){ msg.textContent = "That file isn't a Field Book export."; }
 });
 
@@ -3787,6 +3863,9 @@ const LAYER_CHIPS = [
   ["allgauges", "All USGS gauges", allGaugeLayer, "#5a7894"],
   ["hazards", "Falls, rapids &amp; dams", hazardLayer, "#3b4a56"],
   ["bridges", "Bridge access", bridgeLayer, "#8a7560"],
+  ["parking", "Parking",     poiLayers.parking,   POI.parking.color],
+  ["camps",   "Campsites",   poiLayers.camp,      POI.camp.color],
+  ["trailheads", "Trailheads", poiLayers.trailhead, POI.trailhead.color],
   ["closed", "Closed water", closureLayer, "#c0392b"],
   ["land",   "Public land",  publicLand,   "#3f8f4f"],
 ];
@@ -3967,6 +4046,7 @@ function locFix(pos){
   } else if(locState === "following" && !locInMiddleThird(ll)){
     goTo(ll, map.getZoom());
   }
+  if(window.floatOnFix) floatOnFix(pos);   // float.js: tracks progress down the river
 }
 function locError(e){
   if(e.code === 1){ locStop(); locPerm = "denied"; locBlockedSay(); }
@@ -3991,6 +4071,9 @@ function locToggle(){
   } else if(locState === "located"){
     locSetState("following");
     if(locLast) goTo(locLast, map.getZoom());
+  } else if(window.floatActiveNow && floatActiveNow()){
+    // mid-float the dot is the whole point: tapping cycles follow/free, never off
+    locSetState("located");
   } else { locPrefSet("off"); locStop(); }
 }
 map.on("dragstart", () => { if(locState === "following") locSetState("located"); });
