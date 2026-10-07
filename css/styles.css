@@ -717,3 +717,38 @@ details.rulesfull>summary{cursor:pointer;font-size:12px;font-weight:600;color:va
 .rp-link,.rp-open{min-height:40px;padding:0 4px;background:none;color:var(--river);font-size:12.5px;font-weight:600;text-decoration:underline}
 .rp-open{display:block;margin:0 0 6px}
 .rp-wrap{margin-top:12px;text-align:center}
+
+/* ---------- Welcome card + guided tour (js/tour.js) ----------
+   Above everything (the Field Book is 1600, the report form 1700). The
+   spotlight is one ring whose giant box-shadow dims the rest of the screen;
+   #tour-block sits under it to swallow taps so the demo can't be driven. */
+#welcome{position:fixed;inset:0;z-index:1800;display:none;align-items:center;justify-content:center;padding:16px;
+  background:rgba(12,22,16,.62);overflow-y:auto}
+#welcome.show{display:flex}
+#welcome .wl-card{width:100%;max-width:420px;margin:auto;background:var(--paper);border-radius:16px;padding:20px 18px 16px;box-shadow:var(--shadow);border-top:4px solid var(--river)}
+#welcome h2{font-family:"Barlow Condensed",sans-serif;font-size:26px;line-height:1.05;text-transform:uppercase;letter-spacing:.03em;color:var(--ink);margin-bottom:10px}
+#welcome p{font-size:14px;line-height:1.45;color:var(--txt);margin:0 0 10px}
+#welcome .wl-btns{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+#welcome .wl-btns button{min-height:46px;border-radius:10px;font-size:15px;font-weight:700;background:#e0e6df;color:var(--txt)}
+#welcome .wl-btns #wl-go{background:var(--river);color:#fff}
+#tour-block{position:fixed;inset:0;z-index:1810;display:none}
+#tour-block.show{display:block}
+#tour-block.dim{background:rgba(12,22,16,.62)}
+#tour-ring{position:fixed;z-index:1820;display:none;pointer-events:none;border-radius:12px;
+  box-shadow:0 0 0 9999px rgba(12,22,16,.62);outline:2px solid #fff;outline-offset:-1px}
+@media (prefers-reduced-motion:no-preference){ #tour-ring{transition:left .18s,top .18s,width .18s,height .18s} }
+#tour-tip{position:fixed;z-index:1830;display:none;background:var(--paper);color:var(--txt);border-radius:14px;
+  padding:12px 14px 12px;box-shadow:var(--shadow);border-top:3px solid var(--river)}
+#tour-tip.show{display:block}
+#tour-tip .tt-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
+#tour-tip .tt-n{font:600 11px "IBM Plex Mono",monospace;color:var(--txt-dim)}
+#tour-tip .tt-end{min-height:40px;padding:0 4px 0 12px;font-size:12.5px;font-weight:600;color:var(--txt-dim)}
+#tour-tip h3{font-family:"Barlow Condensed",sans-serif;font-size:21px;line-height:1.1;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+#tour-tip .tt-text{font-size:13.5px;line-height:1.4;color:var(--txt)}
+#tour-tip .tt-extra{display:none;gap:8px;margin-top:10px}
+#tour-tip .tt-extra button{flex:1;min-height:42px;border-radius:9px;font-size:14px;font-weight:600;background:#e0e6df;color:var(--txt)}
+#tour-tip .tt-nav{display:flex;gap:8px;margin-top:10px}
+#tour-tip .tt-nav button{flex:1;min-height:44px;border-radius:9px;font-size:14.5px;font-weight:700;background:#e0e6df;color:var(--txt)}
+#tour-tip .tt-nav .tt-next{background:var(--river);color:#fff}
+#tour-tip .tt-nav button:disabled{opacity:.4}
+#tour-tip .tt-primary{background:var(--river) !important;color:#fff !important}

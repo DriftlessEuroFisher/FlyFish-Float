@@ -1194,7 +1194,9 @@ by `~/.cache/flyfish-osm/poi/`. Three layers share one cell cache
 ### Report an issue — `#report` (2026-10-07)
 A form with three fields: river (optional, autocomplete), issue (required) and
 email (optional, for a reply). It opens from the bottom of every river and
-lake sheet, prefilled, and from the ? legend.
+lake sheet, prefilled, from the ? legend, and from the **flag button in the
+header** (`#btn-report`, added 2026-10-07 so testers can find it), which
+prefills the river whose sheet is open. It may move into a menu later.
 - Reports go to the Supabase table in **`supabase/reports.sql`**. Its RLS
   policy is insert-only, so the public key can never read reports back and
   reporters' emails stay private. Read reports in the Supabase dashboard.
@@ -1205,9 +1207,45 @@ lake sheet, prefilled, and from the ? legend.
   `Authorization` (it isn't a JWT). The project doesn't grant table access
   by default, so every table needs an explicit `grant` (see the SQL file).
 - **Never put the service_role key in the app.**
+- **Keep-alive:** free projects pause after about a week idle.
+  `.github/workflows/supabase-keepalive.yml` calls `rpc/keepalive`
+  (`supabase/keepalive.sql`) every 3 days. A failed run emails the owner,
+  and that email is the signal to click Restore. GitHub turns scheduled jobs
+  off after 60 days without commits.
 - An unsent draft is kept in `localStorage.reportDraft`. A hidden honeypot
   field drops bot posts.
 - **`APP_VERSION` in `app.js` must be bumped alongside `VERSION` in `sw.js`.**
+
+### Welcome card and tour — `js/tour.js` (2026-10-07)
+First launch shows a welcome card (`localStorage.welcomeSeen`; `?tour=1`
+forces it). It says which areas get the most attention (Jackson Hole, Swan
+Valley, NE Iowa Driftless; that is the owner's wording, keep it) and invites
+testers to use the report flag. **Take the tour** or **Skip for now**. The
+tour can be replayed from the `?` legend.
+- **The welcome owns a first launch.** app.js holds back `#locask` while
+  `welcomePending()` is true. Skip, or the end of the tour, hands it back
+  through `locAskLater()`, which does nothing once location has an answer
+  or is blocked.
+- **Spotlight, not interaction.** `#tour-block` swallows every tap, so the
+  demo can't favourite, start a float or write to the Field Book. Targets are
+  looked up fresh on each step, because the sheet re-renders when stats
+  arrive. A step whose `sel` matches nothing visible is skipped.
+- **Two parts:** "Map" (header buttons, zoom, locate, Regions, the two
+  menus, Add to Home Screen) and "River" (the Snake opened as an example:
+  Rules today, Live flow, a float section, Start float, Field Book row,
+  report link). A checkpoint card between them offers "Show me" or "Done
+  for now". The counter reads "Map · 3 / 11", computed from each step's
+  `part` tag, so adding a step renumbers itself.
+- **Step options:** `skip()` hides a step for now (Add to Home Screen when
+  already installed). `text` may be a function (the location step appends
+  the app's own blocked-location wording, copied from `locBlockedSay()`, so
+  keep the two in step). `extra()` gives the step's own buttons, and the
+  location step uses it for Turn on / Not now, which only show when
+  location can still be asked for.
+- **Test in a visible pane.** A hidden preview pane runs timers at about
+  1 Hz, so a scripted walk times out and screenshots lag the ring's glide.
+  Read `#tour-ring` / `#tour-tip` with `getBoundingClientRect()` after a
+  wait instead of trusting a screenshot.
 
 ### More than one session can work here at once
 On 2026-10-06 a second session (Float Mode, `js/float.js`) committed while
@@ -1263,15 +1301,43 @@ heavy use; `fetch.py` resumes from saved tiles, so just re-run it later.
 
 ## How we work on this project
 
-- **Opus plans and reviews, Sonnet writes the code** (a Sonnet subagent with
-  a self-contained brief). Review every diff against the data in the browser
+- **Plan at Max, build at the level the change needs** (decided
+  2026-10-07). The first request for a change runs on Opus 5.5 at **Max**
+  effort. That turn plans the change, writes a self-contained brief, and
+  picks the builder, naming it in one line. The builders live in
+  `.claude/agents/`, each with its own model and `effort`:
+  - `build-sonnet-medium`: mechanical edits with a complete spec (copy,
+    CSS, a data fix, one file).
+  - `build-sonnet-high`: small features that follow a pattern already in
+    the code.
+  - `build-opus-high`: features that touch several files or existing state
+    (the sheet, filters, the service worker, Field Book storage).
+  - `build-opus-xhigh`: what every user hits, or where a subtle mistake is
+    costly (first launch, permissions, Float Mode, regulation display).
+  - `build-opus-max`: hard bugs and data correctness (geometry and
+    regulation pipelines, the USGS request budget).
+
+  Sonnet is the default; Opus has to be justified by the change. **Never
+  build with the general-purpose agent**: a subagent with no `effort` of its
+  own inherits the session's, which is Max. **Don't set
+  `CLAUDE_CODE_EFFORT_LEVEL`**, which overrides every agent's `effort`. A
+  session can't lower its own effort (the app refuses), so the planning
+  session's later turns stay at Max unless you change it in the app.
+  Housekeeping (CLAUDE.md, IDEAS.md, previews, git when asked) stays in the
+  planning session. Review every diff against the data in the browser
   before calling it done. Most of the bugs this project has had looked fine
   in the diff.
 - **Commit and push only when asked.**
 - **Pilot regions (decided 2026-10-07).** New data-driven features are built
   and refined in a test region first, then rolled out a step at a time:
-  - **Float features:** Jackson, Pinedale and Victor (the Snake in Jackson
-    Hole, the Green and New Fork, the Teton, the South Fork).
+  - **Pilot West** — float features: Jackson, Pinedale and the Idaho side
+    (Victor / Teton Valley, Swan Valley): the Snake in Jackson Hole, the
+    Green and New Fork, the Teton, the South Fork.
+  - **Pilot Central** — field testing close to home: the NE Iowa Driftless
+    trout streams (`region:"driftless"`, `state:"IA"`) and the Central Iowa
+    water trails around Des Moines (`state:"IA"`, no driftless tag). Covers
+    walk-and-wade and hike-in-only water, not just floatable rivers, so
+    wade/access features are tested here.
   - **National-park features:** Grand Teton and Yellowstone.
 
   Expand once a week of real use turns up nothing wrong. Pure UI changes,

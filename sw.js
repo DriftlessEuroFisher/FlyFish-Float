@@ -8,14 +8,14 @@
      and a background fetch refreshes it, so a rebuilt layer reaches phones
      on the next visit instead of never.
    Every URL here is relative: the site lives at a sub-path on GitHub Pages. */
-const VERSION = "flyroutes-v6";
+const VERSION = "flyroutes-v8";
 const TILES_BROWSE = "tiles-browse", TILES_SAVED = "tiles-saved", DATA_TILES = "data-tiles";
 const TOPO = "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/";
 const LEAFLET = [
   "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css",
   "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js",
 ];
-const SHELL = ["./", "index.html", "css/styles.css", "js/app.js", "js/float.js", "js/rivers-data.js", "js/tiers.js",
+const SHELL = ["./", "index.html", "css/styles.css", "js/app.js", "js/float.js", "js/tour.js", "js/rivers-data.js", "js/tiers.js",
   "js/zones.js", "js/access-laws.js", "js/designations.js", "js/config.js", "manifest.json", "icons/icon-192.png", "icons/icon-512.png", ...LEAFLET];
 const BROWSE_MAX = 2500, TRIM_EVERY = 50, NET_TIMEOUT = 4000;
 let puts = 0;

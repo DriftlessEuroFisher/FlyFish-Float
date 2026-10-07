@@ -3266,7 +3266,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v6";
+const APP_VERSION = "flyroutes-v8";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){
@@ -3318,6 +3318,8 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && reportEl.classL
 document.addEventListener("click", e => {
   const b = e.target.closest("[data-report]"); if(b) openReport(b.dataset.report || null);
 });
+/* Header flag: always reachable. Prefills the river whose sheet is open, if any. */
+$("#btn-report").addEventListener("click", () => openReport(sheet.classList.contains("open") ? curRiver : null));
 $("#rp-river").addEventListener("input", () => {
   const hit = rpMap && rpMap.get($("#rp-river").value.trim().toLowerCase());
   rpRiverId = hit ? hit.id : null; rpSaveDraft();
@@ -4207,11 +4209,17 @@ document.getElementById("la-no").addEventListener("click", () => { locAsk.classL
   try{
     q = navigator.permissions && navigator.permissions.query({name:"geolocation"});
   }catch(e){ q = null; }
+  // The welcome card (js/tour.js) owns a first launch: the location ask waits
+  // behind it and is handed back by locAskLater() once the welcome is dismissed.
+  window.locAskLater = () => {
+    if(locPerm === "denied" || locState !== "off" || locPrefGet() !== null) return;
+    locAsk.classList.add("show");
+  };
   const boot = () => setTimeout(() => {
     if(locPerm === "denied" || locState !== "off") return;
     const pref = locPrefGet();
     if(pref === "on") locStart("located");
-    else if(pref === null) locAsk.classList.add("show");
+    else if(pref === null && !(typeof welcomePending === "function" && welcomePending())) locAsk.classList.add("show");
   }, 1200);
   if(q && q.then) q.then(st => {
     locPerm = st.state;

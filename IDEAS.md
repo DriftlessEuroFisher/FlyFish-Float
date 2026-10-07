@@ -10,7 +10,10 @@ Status: `new` → `refining` → `ready` (agreed spec) → `building` → `done`
 
 ## Ideas
 
-**Pilot regions:** float features start around Jackson, Pinedale and Victor.
+**Pilot regions:** *Pilot West* (float features) is Jackson, Pinedale and
+the Idaho side — Victor/Teton Valley and Swan Valley. *Pilot Central* is the
+NE Iowa Driftless streams plus the Des Moines-area water trails, for field
+testing close to home, including wade and hike-in-only water.
 National-park features start in Grand Teton and Yellowstone. Expand only
 after they've been used for real there. (See CLAUDE.md, "How we work".)
 
@@ -19,6 +22,30 @@ Every stream with its own entry in the state's 2026 regulations, one state
 per session (CLAUDE.md, "Rulebook streams"). Montana done (93, 7d267c5).
 Next: Colorado (163), Utah (~30), then California, Oregon, Washington, and
 New Mexico, Arizona, Nevada, Idaho and Wyoming.
+
+### Welcome card and guided tour — `done` (2026-10-07, not yet committed)
+Owner's request: welcome new users, say honestly which regions get the most
+attention, offer a tour of the header buttons, zoom, location, the left-side
+menus and a Snake River panel, and push the report flag (including "want to
+keep testing? tell us and we'll build out your home water"). Added from
+review: Add to Home Screen (protects the Field Book from Safari's storage
+clearing), the ungauged-creek note, and a Map/River split so people can stop
+early. Details in CLAUDE.md, "Welcome card and tour".
+
+### Pilot rivers coloured by class — `refining` (raised 2026-10-07)
+Owner's question: standardise stream colours in the pilot regions by
+category. West rivers will mostly class well; the Central Iowa test rivers
+mostly won't. Counts on 2026-10-07: Pilot West 40 rivers (3 Gold, 2 Class 1,
+9 Class 2, 26 Class 3), NE Iowa Driftless 65 (6/10/49 in Classes 1–3), Des
+Moines water trails 7 (1 Class 2, 6 Class 3). **Class 3 is hidden by
+default, so most of Pilot Central is off the map** while it's being field
+tested. Proposed, awaiting the owner's answer:
+1. Colour pilot rivers by tier (one colour each for Gold/1/2/3).
+2. In Pilot Central, show Class 3 muted instead of hidden.
+3. Move Iowa's DNR regulation class off the line colour (a chip in the
+   panel, maybe a dashed line for restrictive water). This reverses the
+   CLAUDE.md rule that trout regulations drive the line colour, but only in
+   the pilot regions.
 
 ### Float leaderboards — `ready` (decided 2026-10-07; build in a fresh session)
 - **Problem:** make floating fun: who has floated the most miles on each river
