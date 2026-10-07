@@ -858,6 +858,31 @@ const GAUGES = {
   tonguerivermAshland: { site:"USGS-06307662", label:"Tongue River at Ashland, MT" },
   tonguerivermBrandenbergAshland: { site:"USGS-06307830", label:"Tongue River Bl Brandenberg Bridge nr Ashland Mt" },
   tonguerivermMilesCity: { site:"USGS-06308500", label:"Tongue River at Miles City, MT" },
+  bearcreekelpColoradoSprings: { site:"USGS-07105000", label:"Bear Creek Near Colorado Springs, CO" },
+  bearcreekjefEvergreen: { site:"USGS-06710385", label:"Bear Creek Above Evergreen, CO" },
+  bearcreekjefBearCreek: { site:"USGS-06710605", label:"Bear Creek Above Bear Creek Lake Near Morrison, CO" },
+  bearcreekjefBearCreek2: { site:"USGS-06711040", label:"Turkey Creek Above Bear Creek Lake Near Morrison Creek" },
+  bobtailcreekJonesPass: { site:"USGS-09034900", label:"Bobtail Creek Near Jones Pass, CO" },
+  bouldercreekNorthTh: { site:"USGS-06730200", label:"Boulder Creek At North 75th St. Near Boulder, CO" },
+  bouldercreekMouthLongmont: { site:"USGS-06730500", label:"Boulder Creek At Mouth Near Longmont, CO" },
+  bouldercreekBoulderCr: { site:"USGS-06730525", label:"St Vrain Cr below Boulder Cr At Hwy 119 nr Longmont" },
+  canyoncreekgNewCastle: { site:"USGS-09085500", label:"Canyon Creek Near New Castle, CO." },
+  elkcreekgarfNewCastle: { site:"USGS-09087500", label:"Elk Creek At New Castle, CO." },
+  fishcreekrouUpperSta: { site:"USGS-09238900", label:"Fish Cr At Upper Sta nr Steamboat Springs, CO" },
+  grizzlycreekGrizzlyLake: { site:"USGS-09071295", label:"Grizzly Creek nr Grizzly Lake nr Glenwood Spgs, CO" },
+  northforkgunSomerset: { site:"USGS-09132500", label:"North Fork Gunnison River Near Somerset, CO." },
+  northforkgunPaonia: { site:"USGS-09134100", label:"North Fork Gunnison River Below Paonia, CO" },
+  hamiltoncreeTabernash: { site:"USGS-09032200", label:"Hamilton Creek Near Tabernash, CO" },
+  huerfanoriveBoone: { site:"USGS-07116500", label:"Huerfano River Near Boone, CO." },
+  joewrightcreJoeWright: { site:"USGS-06746110", label:"Joe Wright Creek Below Joe Wright Reservoir, CO" },
+  mancosriverTowaoc: { site:"USGS-09371000", label:"Mancos River Near Towaoc, CO." },
+  mcelmocreekTrailCanyon: { site:"USGS-09371520", label:"Mcelmo Creek Above Trail Canyon Near Cortez, CO" },
+  mcelmocreekColoradoUtah: { site:"USGS-09372000", label:"Mcelmo Creek Near Colorado-utah State Line" },
+  northforkpouVaDale: { site:"USGS-06751145", label:"N Fk Cache La Poudre River Abv Halligan Res nr Va Dale" },
+  northforkpouHalliganRes: { site:"USGS-06751150", label:"N Fk Cache La Poudre River below Halligan Res nr Va Dale" },
+  tenmilecreekNorthTenmile: { site:"USGS-09050100", label:"Tenmile Creek below North Tenmile Creek, AT FRISCO" },
+  vallecitocreBayfield: { site:"USGS-09352900", label:"Vallecito Creek Near Bayfield, CO." },
+  littlevasqueWinterPark: { site:"USGS-09031700", label:"Vasquez Diversion 2 nr Winter Park, CO" },
 /* <<< western rulebook streams */
 };
 
@@ -1149,7 +1174,15 @@ const GAUGE_POS = {
   musselshellrMudCr:[46.31899,-109.46055], musselshellrBigCoulee:[46.28906,-108.93761], musselshellrRoundup:[46.42772,-108.57010],
   musselshellrMusselshell:[46.52242,-108.10887], musselshellrMosby:[46.99469,-107.88916], tonguerivermStateLine:[45.00914,-106.83594],
   tonguerivermTongueDam:[45.14128,-106.77136], tonguerivermBirneyDay:[45.41161,-106.45735], tonguerivermAshland:[45.59775,-106.27494],
-  tonguerivermBrandenbergAshland:[45.84039,-106.22343], tonguerivermMilesCity:[46.38459,-105.84552],
+  tonguerivermBrandenbergAshland:[45.84039,-106.22343], tonguerivermMilesCity:[46.38459,-105.84552], bearcreekelpColoradoSprings:[38.82249,-104.88859],
+  bearcreekjefEvergreen:[39.63317,-105.33694], bearcreekjefBearCreek:[39.65203,-105.17325], bearcreekjefBearCreek2:[39.64071,-105.15935],
+  bobtailcreekJonesPass:[39.76026,-105.90640], bouldercreekNorthTh:[40.05167,-105.17833], bouldercreekMouthLongmont:[40.13878,-105.02022],
+  bouldercreekBoulderCr:[40.16047,-105.00794], canyoncreekgNewCastle:[39.57454,-107.44792], elkcreekgarfNewCastle:[39.57380,-107.53993],
+  fishcreekrouUpperSta:[40.47500,-106.78639], grizzlycreekGrizzlyLake:[39.71763,-107.31772], northforkgunSomerset:[38.92582,-107.43422],
+  northforkgunPaonia:[38.85750,-107.62194], hamiltoncreeTabernash:[39.99728,-105.74681], huerfanoriveBoone:[38.22500,-104.26080],
+  joewrightcreJoeWright:[40.56193,-105.86390], mancosriverTowaoc:[37.02750,-108.74149], mcelmocreekTrailCanyon:[37.32666,-108.70066],
+  mcelmocreekColoradoUtah:[37.32416,-109.01567], northforkpouVaDale:[40.89458,-105.36722], northforkpouHalliganRes:[40.87833,-105.33750],
+  tenmilecreekNorthTenmile:[39.57526,-106.11058], vallecitocreBayfield:[37.47750,-107.54306], littlevasqueWinterPark:[39.88915,-105.81177],
 /* <<< western rulebook streams */
 };
 
@@ -14246,6 +14279,2162 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   fish:"Fished under Montana FWP rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
   cz:["kgsqGr_jkSsSS{@cGvBwGkCc[wQzJsIoP~RoFvLkWnKoAbBsXg@oFwLcG~CsIoAkHoFwBsDvGsD{J{O{J?gJbGgJvj@{J","cfsqGra_kS{EnAwB_DrDkRSwLkCcBsNfY{@nUbBzYgOjHkHsNcG{@{TvQkCnZ_DrDcLgOoAkMrDgJbQcLRgO{EwQoPoKoAs]~CwQcQ{Y_]wGgJ~CoArI~HjHf@nFsDbGcGz@cGcG?wQoFoF_IS{J~C_DnZkMz@{JcQ_NrD{@_IzEoAz@cGkCwGsScLsDnF_Dj\\sIfOsIvBcBcGbL{Yg@cGkCwBoP?oKjH{J{J_IbBwGoPkRkRgEcQ{OgOwLSoKb[{EfEcVcG{r@ve@gc@rDc`@gYkRc`@kH_l@_NsSsg@kR{^cy@{O{E{TjMoUjWoPrDoPoKw[_l@{c@{Ew`@wVgEnAkCrSkHzJsIwBoUsg@zEc`@gJ_XwVgO{E_IwQkHkHk\\{YcVjCcV~M?f@_NgYgYoKf@kH~RcBf|@{EfJkWz@?kH{O_]vBc[nKgTgEkRkMnAwGbGsNnUkRbj@gJf@_DgJoKsIkC_IRgErXwVb[gObLkWnA{YoPcVcGSgOvBc`@nZwVsb@o_@jC_DwBwB{OvBsIzY{m@jMgJz@sI{E_XwQ{J_]g@gc@jRwLnKsNoFkf@rD{ToASgJfY_]zE_SrN{Tz@cLoZ{TwLwQgE_]cBoAwVbB{E~RsDRsNs]kCw`@nAkW_D{@sDzJk\\vVsNnAsNnZkH{@cVgr@wV_IsDgE{@{TvGkWoFwL{JsDsDcLvGw`@g@gc@cBwBk\\f@oUbG{JScGoFjH{TrDco@oFsNoPbGwG~HwQoAoP_IoFoU{EcG_DR{EnK?jMrDrI_DnFgYvBsNcLgE_SbB{JbGkCzEw~@kCoFkHRg@{EnPgOnAgOkMcLgJvB{JcGRwGrDcB~HoZkMwQgJoA{JbVcGsI{EgTwQ{TScBrIwG~CsSce@oP~CcQjW_Sj\\_DbBcLkRw[wQkMwGSkHnFz@~HkCbB{@fY_DvG{J_SkMwLgEkM_DR{@bQcG{EgEsb@nFwGnFRvBwG_IcLcL{@{@gEwGkCcB_IrDkM~M{ERcLcQgTg@gJvBsIkH{EsSbGoA{EfJ{m@jHkHzJS?_DwQkHgEvBcQwBwLnK{EcGf@wG{EcBoA{JkC_DoFvB{@rNsDfE{EwGRwLnFgOnK?oA{O{JcGkMf@wG_NwQcBsN~CkRvV_Df^kHzTnArI_D~MgJjMcB~MsD?z@sS{TgY?kRw[bBgJvG{EgEkM_]kHsIwGcj@cLoZcLcBcQwLwBbG~C~C?zE{@bB{EoAsDcLoAwo@jCgJnK{ESgJ{O?_I~MoFf@cGnPsg@wLkCrDoF?cQgm@_SsN?oFrNgJcBkMoPfE_I_NgEvL_DkH_I~CoFsb@?oFvLw[RcG{EgOoPjHgEzOf@fTwBzEsIz@wGgJoA{JfOgY{@gO_SgJwLf@gObL_NcG?gJ~HkMnK{@?cGkp@nAkMrIsIbQ_Iz@cL{^bBcj@sIw[zc@S~Hkf@oAwLgJ{EgTbGwGwBwQka@_IgEkHjCsIcBkCgEkCgTgJ~HkCjMf@bGwB~CsScQoF_SoUf@_DgEcBgJnF_I?{TgT{@wBsIbBkHfOjCvBwQkM_I{E~HkHoAwBkMrD_I{EgJ_NfY{Og@z@sNnFoARsNnKoFnAwGcBcG_]oFjCoPjMwBz@gE{EoP_XvBgJcGwGwVsIkCgJrIcB~MvBnFvQnKSfJgTf^{JvBkHkC_D_If@cG~RcVkHgw@sDoKoFsDgOvBcBvQkCz@wLoPrD{TvGsDz@gE_IcLoKkC~CwQoA{^oKkf@wVcVw[vB{OwG{EcVfOgOcGoKw[rIcBjHbBzOsD~H{Ez@sNgEgEkHSk\\kCcV_I{O_NcL{EbBoAzJoKgES_IrDkWgEsSfE_DnFvBz@kHkMwB_DbBwBjRsDfEsN_I{JjM_NSsNsIgJoPz@gJzJoAvBwGsDsSoPkCoKbBsDrNoF~CsD{Jz@gOzTgEfEoFoKwBkRjC{EoKwLnFS~W_If^{JnAcBwGvBgOgEcVzJkMgJwLwGoAoAgEf@kHbQgERwGsDkM_Nf@kCrDsDnUbGrD?~CsNv`@wLjHsSsD_DwLbG{ERwGnFcBfEwQfOjCnAwLkCkHgJ?wBsIoKfJgEvLgOsIkCsIjCkHnKjCnFwBf@wG_NwVkR{OwGrDwBzO_DRg@{JbLkWRwGcQkM_D?cGfOgE{@gJkf@fE{Tg@oFkMjHwGnP_SkCkM~CwLkHvBgJfJ_I{@wGgY_DwGoFwGg@wG~MsDvBcQwBoFnKkM{^sDnFbBnK{Yja@cGfTbGfJS~CsI~C{JgO?{YkCgTwBoAwBjHoFRcBgJoUvLkHbLg@nPgE~C{O_XbBcGfOzEjC_DcB{JwBcB_DrDwLoAcGjCcGgEkC_NbGsIbLnFrD{@vBoPsDwGjCgErDbBfEkCnAcV{T{JkCgJz@oFkCwGsS{EsDnZoFfOoPR_DfEoAnPnAnFbGnAzEzJkMzTsNkHoAoP{E{EgJvQsDRg@w[z@gEfJ{EnAgJoKwL{J{@_NrXf@~\\fOf^sDvBkf@wLgJcVcBgYsXsIsDrIfEzw@rDzJ_I~WcGvBoAwBcBkMbBkRkCoP{^c[oP~RoAnU{YzYcLja@cGnFkHkCg@kCrDkHRc[sDgJgERkWbVcVnAsIwG?c[sDoFsNzJwj@zJoKnPsDgEf@oFbLsScLgJwQwBc`@fYoUrDgEs]oFoFcL?wG~HoPbGsSoPcLnA_SbQ{JzTsDbBsIwG{EgYgEoFcGg@gTnUkHzOkCnPvBjM_DzEwG_IwG{|@sIwLwe@vLsXr]wLcGgE_NgJ{@{@bVcLrDsI{@wBrDvG~\\SnFkCnF_SS{EzEgJv[_DbB_D{@kCoK~H_Xg@oPsScj@w[sSoAcG~CgY{E{c@wLcVoK_DkHnAoFvLg@~RcL~MgJnA_NkHkMg@f@sb@sIsSsD{@cGbG{@jHz@~a@gJrDgE{JnAsNkHoUcLkC_NzE{E{J~HoP{@cGwGz@wGrN_NwGwLfEkH_DoAcQcLoZvBkWwBkM_N??~HsDvG{O_DkC{EbBoUcG{E{ObVcBoFz@wLvG{OzEcBnAkM{EkMoKnAwGoP{^jM_D~Rz@jMsXrSgO{EcBoZnA{EzOg@jCoFg@oUvB{O_D{JkRg@_NzEsDjRgEbBkHgToKnAwGsDf@{OgEoKwQnASwQkHkC_DkMkC{@gORfEnZkHvLsDgEnA{JkHoZ{OScB~Cf@zOvG?bB~CnAvLsDbG_DSwB_IsNsDoAoPoF_DcL~CsInK{JgESkMbG{JjCkRkCwQoFoFSgOoPrIwBrIwBoAScG_Ng^S{JjCgJsD{OkCoAcLfE{@jCrDnFSrDcGRg@wB?_l@vLsIwVcBsDsD_Nc`@_D?{Yj\\gE?cQsNcLgT_IfJoAgJvBwG~HwBvBcGgJsDoPzEwBcBwB{JnFgYoAoKwGwGwVrb@{J{@wQsNwGnA_DjMbBfOg@jCgE?oKcG_Ic[RcGnFoK?wGcLf@kMv`@sN_NkCkRz@gTrNsX_D_NgE_DwLf@wLfE_IbLkM{@kCgTvGc[g@cGgTgToPRoFgJcBgTbGk\\R_S{EgOkMoA{EsIvB{TcBsXbG_Xz@_XkMkH{ObLkM{@gOkHwG~C{JSwV{J_I_SzJkp@zOgTnA{TkCgEwGg@sIbG_I?SoFbGsSfJ{OgE{OkRkWcBgJjC{Tf@_]kMkRScV_XrNgO~\\sS_DgJzOkHSoPoPoFf@gJbLkW{OcQf@_NjHwBwB_Dc`@rIk\\cGkMgJ{m@gTcy@sSgO{ToAoKcGcGoAwLfEoAcQbBoF~HkCbBgEg@sIcG_NoKvBgEb`@gJwBg@wLgJ{^oAcVz@wQ_DwGoKR_DzJ_NjCcGcBwLcVcQbB{JsDoA{EnFcVoK{TbBsb@cGoKsD?sDzJcG_IvBgJjM{JvGwQjH_IbBgJoKcLoZbB_DkCvBw`@{Ywy@oFgEcG{@sIfEgJvLgJoFoFsNoFka@wLgEnK_l@{E_IsNkC{@{EwBkWvGwLSwG{TkH_b@bBwGsInAsS~Wwy@g@kC_XoFcGfEoF{EgEjHRzJoFRwLgO_DgORsDjHsDjCwLkM_I{EnFwB~MrDvQ_D~M_DnAgJ_DcLsN{JcB{EjHoAbLkHnAgE_]f@kHzOsNf@wGsDsIkWjHoFvGSrq@kCnFkH{TnAwj@sIoFcG?{EbGoKbB_g@sNz@sl@nU{EvGgToAoKsIwGoAwGjCkHzO_D_DcQgJ{EbBsIvLcB{EoUbBwQoKsXgJwBsDwGgEo_@kMoAkCjCRjMsDzEsD_IwBw[_Sk\\cLz@kCbQ~CzTfOnP?zEoKbLoUsDgJwVoFsDcQbL{JgJfEsX_DcQfEoPSkHkCgEwLrDsDcBoAwQfEgJzJkHjCRzEvLjHg@Roi@cLgc@bGgTg@kHkCgEcV?oFsXcGcGoAoF~C_NSoKoFsSgOcBwGvBwGjHSjMwBbBwG_DcB{c@kMf@{JcLrNoZwB_IwLsDcG~Mg@fOwL?cB_Iz@cGnPwVbLg@?oP_XoFkHcVoUg@_NvLsNzaA_DbBwLwGkMk\\cQoFwQnUsDnUkCz@gE_DSkHjCk\\kMsXwVoFw[os@sNf@gEgE{@sXbBs]gEgJkMkCwBvBgEzYwLrNsIbB{O{EgYzJcVcGcL{c@oPoUoAsInAkMzOkMSsNsDgEsIvBgYja@oFoAoFwVf@{O~HwLbQvBjCcGg@{JcGsIc`@{T_Iw`@c[oAgTvBgOvLcGzh@o_@gE_SgJgO_]w[vGoFkCkHoUS_XcGwG_SrIoKnUgJf@{EkH_DcQbBkHzEsDz@oP_D{EoKcB{^fEsDnFkWbLsSjWkRni@gT~CsSsSoKbG{@nKrDfY_DzJ{EvBoFg@wG_IsDcQRw[wB{@kHjWcQnKgObVkM_ScG_DkHvBgErIsl@S{OfEsg@ja@kRrDcQoKsDwGg@c`@_DcLgT{OwGz@wGzTg^j\\w`@fJoAvGbB~MvGbBjWgEzErS{@jHoKjMoU{J{EbB{ErIoAbL~CfY{@nPsDf@_DsDkCo_@z@cLoAgEwG_DkWvBsDvGcQnFsInK?rSjMvVbVvQnAnK{@bL_DbGwQf@{JgOsI{EkRjCsN~a@{YfOwBbLjCrNgErD{EgEvB{OoFsIgO{@cLjH{EjWvBvGbLzErS?nFzJ{Jrg@kM~HkCvVgJnAgYcL_X{@sS~H_SzY{Eg@oAkHcB?{@vVbBbLrNzJbB~HkCzT{EjHgJ{E{@_SoPkHsI?_IzJ{m@fTgJoAoAcLoFS{EzJvBfYsDrN{OgEcGfOw`@bV{Jb[sSnU"]
 },
+{
+  id:"abramscreekco2", name:"Abrams Creek", color:"#5b8c2a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Abrams Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 12.1 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["_{mpFb~kkS{JwBgm@gh@w[cGkW{OcGwVzEw[cQgh@kk@ka@sD{J{c@_]gEwQoP{YcB{T{EwBcBsIkWkf@gTwQ_DsIkW{OgOgT_XoFsN{Jo_@wGgEnA{O~WkH?gTbQ_XvB"]
+},
+{
+  id:"westantelopecreekco2", name:"West Antelope Creek", color:"#2f7f8f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"West Antelope Creek|West Fork Antelope Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 16.5 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["{k_kFbnqlSg@{pAbGw[RwQnFkMvLoAvLoPjf@z@nn@cG~z@wQ~MkH~a@oFbQcLjR_DzJoPz|@c`@jRsSnZsIrIcLzTkf@fh@ox@fJ_v@jHgJrD_Nb[w[nPs]zEcVbBoZoA{J~CoU{@gc@nFkp@kCoK"]
+},
+{
+  id:"northforkanthracitecreekco2", name:"North Fork Anthracite Creek", color:"#6f7f7f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"North Fork Anthracite Creek|North Anthracite Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to the confluence with Hell Creek:</b><br>• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 11.5 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["g}amFr|nmSbBgO?{^_]kWcGsI_IccAsS_g@rD{^rI{OnK{EbLsNb[sD~R{JvBnAnFcB~CjCbGSrIrNv[~RrN{E~M~CnF{@bVgTzw@fYnZ~Cfm@{@bVjH~\\{@rIfJ"]
+},
+{
+  id:"arapahocreekco2", name:"Arapaho Creek", color:"#1f6f8b",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Arapaho Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From Monarch Lake downstream to USFS RD. 125:</b><br>• Artificial flies and lures only.<br>• Bag and possession limit for trout is 2.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 12.4 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["oxgsFr}_dSkCcGwGSoKgJ_Dw`@wBgE_b@~C_NwGsNz@sDrNsSnK{EjRf@bGkH~MSjHo_@be@cLR_DvLcGvBwQzT{w@~\\cLfT_InFoFbBwGkCsNb[gc@vV{@bQgTj\\gE?wVfYgJfE{JfOoFR{EbGkWoFwQzJoP?RfT"]
+},
+{
+  id:"archuletacreekco2", name:"Archuleta Creek", color:"#8a6a2f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Archuleta Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>Within the Cochetopa State Wildlife Area (Snyder Ranch) downstream from Dome Lakes State Wildlife Area:</b><br>• Artificial flies and lures only.<br>• Trout must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 18.0 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["k{|gFbvsiS~RfEzTzYRnn@cBnP{EzEcGvVgOrIoU~k@_NvGw`@jHwGjRce@jWgEvj@nPf^kCzc@sNnUgTbQkC~MsIrNcBnUwQb`@~CzOzr@jp@rIb`@fEr]g@rIrDbLnAnZwBjH","ga`hFzaijSwL~Rz@~HsDRoAzEnAvBoKjCR~C_Df@wGnPoArXkCvBf@~HsIvV_l@vLwQoAwL_IwG?s]vQ_DwBoFnAsDjH{O{@SjC"]
+},
+{
+  id:"middleforksoutharkansasriverco2", name:"Middle Fork South Arkansas River", color:"#3f7f9f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Middle Fork South Arkansas River|Middle Fork of the South Arkansas River",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to Boss Lake:</b><br>• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 8.2 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["owrjF~abhSbVnAzTkRzEwLfYkM~Rf@rg@cQvj@oZrIwQrDcBfOkf@v`@kp@rD{h@rN{^~HoF~R{@jHsDfJ_S~C_]"]
+},
+{
+  id:"augustoracreekco2", name:"Augustora Creek", color:"#6e8c3a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Augustora Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 5.9 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["k|jbFflajSbQrNzO{E~RjMvQSrNsNf^g@zEoFnPRjRnK~Hz@fY_NzJ_SfEgm@nPkRzY_N"]
+},
+{
+  id:"bardcreekco2", name:"Bard Creek", color:"#a8552a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"nhd",   // NHD flowlines (OSM has no line under this name), clipped to the state with park water removed — don't re-snap
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 11.7 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["okoqFznvdSzOg^fT_v@s]wt@cV{nBf@k`CzEg^?{^sNw`@?_NkR_XoUcy@{Ec[{@c[rDcV{@_I{O_Nod@cQkRka@wG{@"]
+},
+{
+  id:"basincreekgunnisonco2", name:"Basin Creek (Gunnison County)", color:"#4f8f6f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Basin Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 3.8 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["wbpnFbklnSbQ~\\f@v[_Dve@~CnAvBnKbLnPg@vGzE~RfEfE?bLzEz@~H~MfYrS"]
+},
+{
+  id:"bearcreekconejosco2", name:"Bear Creek (Conejos County)", color:"#7b2d8e",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Bear Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to the confluence with the Conejos River:</b><br>• Artificial flies and lures only.<br>• Bag and possession limit for trout is 2.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 5.0 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["sjdaFffygS{c@_S_NnAsIcGcLg@wQ{O_XS{J_I","gqaaFfv{gS{@wQrDgYkWgh@kHwBoF~HoFbBwLsIcLR"]
+},
+{
+  id:"bearcreekelpasoco2", name:"Bear Creek (El Paso County)", color:"#a07d2a",
+  state:"CO", region:"colorado", gauges:["bearcreekelpColoradoSprings"], primaryGauge:"bearcreekelpColoradoSprings", minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Bear Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to Gold Camp Road:</b><br>• Fishing prohibited.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 16.8 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["glzkF~ut_ScL{@_DsNbBgYbVc`@z^oPnF_XzOkH~Hgc@zOsSnAkR{Osg@zJod@wB{OsDgEf@gJ_Ic[gYsSgObBcQkHwGf@kCkHcLwGcB_NkWgc@oUcL_D_N{JcGwGsSkHsDgJoU_]_g@rDs]g@{E~CcLg@{E~CkCnA{OjM_]vGg^bGoKoA_DbGs]nKwQgO{Ef@wGoF{ORoZ","s{wkFzes_SgJwe@f@{^gE_I"]
+},
+{
+  id:"bearcreekjeffersonco2", name:"Bear Creek (Jefferson County)", color:"#2a6e7d",
+  state:"CO", region:"colorado", gauges:["bearcreekjefEvergreen","bearcreekjefBearCreek","bearcreekjefBearCreek2"], primaryGauge:"bearcreekjefBearCreek", minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Bear Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the base of Evergreen Dam downstream to Bear Creek Reservoir:</b><br>• Artificial flies and lures only.<br>• Bag and possession limit for trout (except rainbow and cutbow) is 2.<br>• Rainbow trout and cutbow must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 43.2 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["_k_qF~|}_SnFcL","slaqFjmq`SRsDcGkMScy@oFsIoAcLvGcj@_DkRcG{@wBsDsDsS~Mw[jMkCnKoPz@oKwB_NvGk\\?_I~RgYz@sXnPs`ASoF~CoFRoKkHcG_DoUjWknAwGoKg@_IvBce@vG{O","{o{pFb{yaS_DoFg@sSgEgEwGsS{JzE{EoArDsSk\\{@wB_Dg@_NoFwBoFSoA~HwGgEoFbB_IkHoUwBRfE_Dg@kCkMnA{EsNw[f@{JbGoK_I{c@bBwGvLnARsD{^kHsDjCsN_NkHrIgERRsDbGwG?kWoAkHcGcBRkHwGgE~MkRsNsIbG_SwQ_]S{J~HsNRc[vG_InPnA?_S{O{O?{JwBsDb[_XRgEwG{OzEcBzEfE{@cQvLSwB_NgEsDvB{JzJSoAoKbGkHkCoFbBkWfTgJnA{E{@sIjCoK_DsDSgOrI{Jg@_DoF{@fE_S_DsIrDwQkC{TkHcGjHsSzE{c@g@oPcGwQbGgYrDgaAoFgOfEoPsDsIoAcVRoPfEwBg@{J","ok{pFfembSoFoKR_I_I{Jz@s]_DsNnA{J_D{ObBkH{EsIbB_N_DkCoAbBwBcGkHg@sDcGz@w[gEkHz@kMzJwGwGgYbBgEsDg@gE_NvBcGg@_IsN_NSgOsDgJjCsNg@sI_IoK~CwLoAoUbL_N?{OnFcGrI?nA{EnKoAR_InKkR?cG~CRS_IvGsDcG{^rDwLkC_X"]
+},
+{
+  id:"bearcreekmontezumaco2", name:"Bear Creek (Montezuma County)", color:"#5f6f9f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Bear Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to the confluence with the Dolores River:</b><br>• Artificial flies and lures only.<br>• Bag and possession limit for trout is 2.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 21.4 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["swpcFb`qrSkC_NcG?gToPoi@gJgm@?kMoKcVrDoFjHkCg@oFvQgJz@cBfE{Eg@wVvL_DkCoFz@S~CoFg@sb@~a@{JvBcQzYnAbGoArNsNz^kCz@?vG_DbBz@bGcG~WgJg@gEjCf@rIcLvLnA~HwQnKcBbLoUbVg@rIwGf@oAnFwt@ni@sDbGg@fJoU~WSzJ_Nb`@wGbGkCvQ_l@ja@cLnZkMrNS~HwBnA{EcBoArDoFz@kWzc@?rIwGfTw`@ja@S~HwGnPnArIoArIgTjRg@zTsIrS{OfJSfO_DRwBbG{^bGcGcB"]
+},
+{
+  id:"beavercreekgarfieldco2", name:"Beaver Creek (Garfield County)", color:"#8f6f4f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Beaver Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 20.2 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["_ljoFnqjqSnAoFrI_If@{TcGsNzEoZwBw`@kH{Tf@kWsDsSkW{JkdAgJkR{OwfB_]{YnFwL{@oZfToK~CcmAfOsN_Dku@bB{c@sIstAnFgYkCoi@zE_S_IcQ?kMcQgJsD_XjR{Tf^gOf@_IjMnAj_AcG~f@bBvGjR~HbBbLcGz^_IrN"]
+},
+{
+  id:"beavercreekmineralco2", name:"Beaver Creek (Mineral County)", color:"#3a8c5b",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Beaver Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 11.3 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["ozfdFvbykSg@cL~Hwj@nUsSjCgJzJoK?_IbG{ObGobAfEcQbBwVnF_NfOwLvBkHnd@wLvGkHb[oAfEgJfTbLvGrN~H{@r]rS?fEnPvLrDbLzEf@jWnZb[nAnKbGbVbBbQnKbV~CrSzO"]
+},
+{
+  id:"westbeavercreekco2", name:"West Beaver Creek", color:"#7f6f5f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"West Beaver Creek|West Fork Beaver Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 12.1 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["c_akFjhfmSzE_SnUkHjCw`@fE_DrDkRcBcmArDg^cB_g@~Cgh@rI{OjMgJvQ_D~WgOrX~Cja@sNbQ{TfOgJzYw`@rX_l@bBgO~M{TrDc[~Rwt@bBc[wBgYrNsX"]
+},
+{
+  id:"beaverdamscreekco2", name:"Beaver Dams Creek", color:"#5b8c2a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Beaver Dams Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters and unnamed tributary stream downstream to USFS boundary:</b><br>• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 5.2 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["knthFrtwrS{OzE_XwBsIvGwQ~Ck\\gE_b@bB{JoAkR{^kRwLgYR_SvGkf@_I"]
+},
+{
+  id:"bigbendcreekco2", name:"Big Bend Creek", color:"#2f7f8f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Big Bend Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 7.5 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["cyldFzphrSvLgsBoA_InAgO{JsNbLkp@_D{Yz@oKkCsN~CwQoAkHnZkz@vV_XjH_]~CcBzOod@fE{T_DwL"]
+},
+{
+  id:"bigholecreekco2", name:"Big Hole Creek", color:"#6f7f7f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Big Hole Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 5.3 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["oe|qFf_xhSkHjHwLSwQc[gJ{EwVz@kWoFwQgJwQsSoZcGwGf@g^rScQ?oUwGgTnK"]
+},
+{
+  id:"bobtailcreekco2", name:"Bobtail Creek", color:"#1f6f8b",
+  state:"CO", region:"colorado", gauges:["bobtailcreekJonesPass"], primaryGauge:"bobtailcreekJonesPass", minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Bobtail Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to the Denver Water Board Diversion:</b><br>• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 8.2 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["s`lqFb~meSoKjM_DnP_IrDsSRk\\cGkxAcrAsb@cLsIRcL{JsNnAsIkCcj@vQwLzYgOvQsSbL{TjWgJ~CsIjM"]
+},
+{
+  id:"bouldercreekboulderco2", name:"Boulder Creek (Boulder County)", color:"#8a6a2f",
+  state:"CO", region:"colorado", gauges:["bouldercreekNorthTh","bouldercreekMouthLongmont","bouldercreekBoulderCr"], primaryGauge:"bouldercreekNorthTh", minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Boulder Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the upper end of Eben Fine Park (within Boulder city limits) downstream to 55th Street:</b><br>• Artificial flies and lures only.<br>• Trout must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 60.2 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["c`}rFv~xbSz@oF_D_I_DwB_IbBcGwLkC_N~CkMoFgTg@gYcQcB_IkWSsIgJoKR_N{J?{E_D{E_SbB{OwBcQ{Y{^bB_N_IoPjCcQS{JgOcQf@_XsI{^kHsDkMrN_IcBoAsDjCoK{@_IgJcGsNf@cQ{h@nK{pAvGs]rIoKoAoPsXoKcBcQvBoZzO_DnAgOg@wGsIsDgEgJ~CgJsDcLR{JwGcGbG_NwBkWcGsNf@{YoAkCrD_IwGkRbB_SrDkCwBsNnF{E_D{EoKRvBgOoKgEbBgJcBkH_NbBcG_IsDScGbL_DgJjCsSkC_I~HcGjCsNsDkHkHwB{@gOnFoAjCwLbGf@vB{E_DkMnA{YkH?oA_DrDsSkCsSf@ce@cG{w@bQw`@vBcVg@{JjCgO_Ds]rDc`@_D{c@gTk\\wBcLgJ{JoK_b@gEcB{@{T_D?cBsNoU{E{@gOcGoA_DcGcGfEkMsDwBoFvBcG_NgYwBkRoKvBkHwG?sIbGoKf@s]_ScG?cLcL{TkHf@cQsNoF~CsIk\\gEoFcB{OvB_X_Ig^jCkRwBkHjHkHsIwGvB_IoFoPjCkHwGgTnA{EvBvBnF_D_DcLnAsX{JsNfEwBvGnFbB{@oAkRfEcGg@sI~HwG_D_NrD{E{@{JfEcLS_b@zEoF{J_DsDoFSwLwGsSnAwQsIsNf@gJ_Iw[_I_D_DsN{JcBg@cLcG{@g@k\\kH_b@f@oKsIgEoA{J{E?wBgOcGRkC_I{Jg@cVgYRsSoK{Y{@wLcLc`@cQsI{JkR{O_Non@{JoZs]ka@sS_Ig@{@kR{Jz@z@gEsIwVkCRg@wGsDS{@oFcQsSkHoZ_NsDoZgY_b@sIoF_DwBcGo_@kMkCkHoAvBoKoAcBnF_N~H_N?{c@{YcGrDkMkHgEf@oUkHkHsDbBoKoKgJcBzE","shnsF~`p`SbBgOoA{@SjCwBf@"]
+},
+{
+  id:"brushcreekeagleco2", name:"Brush Creek (Eagle County)", color:"#3f7f9f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Brush Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the confluence with the Eagle River upstream for 2.5 miles:</b><br>• Bag and possession limit for trout is 2.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 16.7 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["syipFztqjS{ESgJnFkCzEc[rSgOvQkMScL{E{YbL_SvBsXRoKoFk\\vBcG{EwLRwB{EwQvBcGkHoPrDkCwBkRz@wLcGoZvGkW{J{OjHoZbB{JzEc[wGg^z^cBrDz@zE{O~McGnAf@bGgEvBoAve@gEbGnAzOkCbB","k~zpFfdyjSoF~Cf@zJsI~HkHv[gJvQkMzaA{JzTcBSg@jMkCg@oFnFnAzTsDRkCjH?~WkCjHkHf@cBfJwB?nAzE_Dz@z@zEcBrDz@rIkMnP"]
+},
+{
+  id:"westbrushcreekco2", name:"West Brush Creek", color:"#6e8c3a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"West Brush Creek|West Fork Brush Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>In the Sylvan Lake inlet and upstream for 0.5 miles:</b><br>• Fishing prohibited Sept. 1–Nov. 30.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 14.2 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["_juoFfpdjS{YwBsDbBcB~HoUzYkCzOoPnPwBzOsInUoFnFgTg@_Srb@{J~HkMnd@wVzh@sSnP{O_DsD~C","{y}oFrqmjS?jR_Xzc@sNnF{JfO_NbBoKbG{c@~a@_ScLcQ?kMcG_SvLkC?g@gEwL_D{JfJsIoAoF_IoFcBoPnAwQ_IgTvBcG~C_D{@gErDoFcBoKjCkMbGkH~M{JnA_DwB"]
+},
+{
+  id:"cabincreekgarfieldco2", name:"Cabin Creek (Garfield County)", color:"#a8552a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"nhd",   // NHD flowlines (OSM has no line under this name), clipped to the state with park water removed — don't re-snap
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From Trappers Lake upstream for 0.5 miles:</b><br>• Fishing prohibited.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 16.2 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["ck_sFjcmlSfw@rNja@_IfJs]?ka@_Do_@nKg^vQkCjH{ErX_b@zE_XrNc[rIbBvQcG~MjCzJ_S~a@{JnPc[fTwVrDsIf@cVfEkHf@{OvBoFg@{TnFoUjHkCfJ{Y~HoKrb@{_Bz@sI_D{EnFkMnAwQbGoFjM_Xz@_XfEkMzTcVz@_NfJgOrIc`@z@wVcBoA?_I"]
+},
+{
+  id:"canyoncreekgarfieldco2", name:"Canyon Creek (Garfield County)", color:"#4f8f6f",
+  state:"CO", region:"colorado", gauges:["canyoncreekgNewCastle"], primaryGauge:"canyoncreekgNewCastle", minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Canyon Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From north side of I-70 bridge downstream to the confluence with the Colorado River:</b><br>• Fishing prohibited March 15–May 31 and Oct. 1–Nov. 30.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 23.8 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["wumqFbtjnSzE{@jCjM~Hf@fOrSjHRzTzTbQzJnAwBjMbGbBzJ~HnArDnFrD{@jCbGfEg@jCbG~MvGjMfY~HbGrXg@nFvB~CfJrIbBz@jWnKnAnAvQ~CzEfE?~CnFjWcBbG~C~Mv[~Hr]rS~WrIv[rDnAb[rb@zERfJjM~MbGnFrIzTjMjHcBvLfOzw@zJfEbLrSkCjH{E~gBgEzTrXfTbGbLSzJsSjRsNnUsDzEnFbVkCrSrIb`@vGbLRzOgEja@bBvLoF","{eoqFrgjnSjW?rD{EbLbL","g}rqF~yhnSnFzJfc@b[vG?~CoFvQbVfYf@bLgJ"]
+},
+{
+  id:"middlecarnerocreekco2", name:"Middle Carnero Creek", color:"#7b2d8e",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Middle Carnero Creek|Middle Fork Carnero Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 15.4 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["_i`gFf{thSrNw`@zTnA~WkWrX_Ib[vLzYkCz^ka@jHwVz^?~HjC~\\_Xvj@r]ve@~CbV~RnZnK~MSjRnFnd@wL~HnFnZgc@jRkMv[w`@jMcGrDgOjHwGnPwe@bVcVvQkHja@c[n_@_b@~C_N"]
+},
+{
+  id:"northcarnerocreekco2", name:"North Carnero Creek", color:"#a07d2a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"North Carnero Creek|North Fork Carnero Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 11.3 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["cuyfFf{ehSbLfOnUbGfOrNjMz@z@zTjMbGnFbVnPnAf^rb@jWfEbQ_DrI~CvBnFzYbB~\\oAf^sNfc@bGfJcBvBjC~Mz@bL_Dz^~H~\\SbQgErDvBn_@{@jMvB","wo|fFn~dhSfOfJz^_D~WzJ"]
+},
+{
+  id:"southcarnerocreekco2", name:"South Carnero Creek", color:"#2a6e7d",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"nhd",   // NHD flowlines (OSM has no line under this name), clipped to the state with park water removed — don't re-snap
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 21.7 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["gtqfFfzpiSoZwt@gh@sb@oF{Y_SwV{Tk_A_b@_b@cGwQoAk\\rDgT{@oUzJgY~C{TwGgh@Sgw@vL_SbQcBbGwQoAw[bBoUnF{JnKcBvGcGzYg@~a@kWfJ?rNc[rI{EnAcLfJsNR_IrIcVve@ogAz^oUrXs]zY{OjHoKjMo_@nAoUbGc[g@wGrSos@{@gm@bBgO?_jAvGkR{@gOnF_X"]
+},
+{
+  id:"cartercreekco2", name:"Carter Creek", color:"#5f6f9f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Carter Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 13.3 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["ktauFnzkhSrIrIrIbVja@fJjiAwLvV{TjMzEnPg@fJfOoAvLrDnFzJSfYjMzYwGjHnAfEjHjMsI","{{wtFnbmhSjMzEvGoAnKgOzJbBnK_DbVSzEvQsDvGoAfOfEf@~HvL?nPvQjRnFbVrIrDf@rDjH?f@vG~CnAr]rDvLzErNkCz@fOzTb`@vBvQ","c{buFf`khSfc@~W"]
+},
+{
+  id:"cascadecreekconejosco2", name:"Cascade Creek (Conejos County)", color:"#8f6f4f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Cascade Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 3.0 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["or}bFfb|iSoUon@cGwGwB{^gJ{JgJcj@sI_NkRf@"]
+},
+{
+  id:"cascadecreekhuerfanoco2", name:"Cascade Creek (Huerfano County)", color:"#3a8c5b",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"nhd",   // NHD flowlines (OSM has no line under this name), clipped to the state with park water removed — don't re-snap
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>The headwaters downstream to the USFS boundary:</b><br>• Fishing prohibited.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 4.2 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["kzvdFnxdbScGrSgOvQgE~R_Sb[zJbe@cBnFbBjMkCfh@sDvQcGrSgJjMgE~CkH{@"]
+},
+{
+  id:"castlecreeklaplataco2", name:"Castle Creek (La Plata County)", color:"#7f6f5f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Castle Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 5.5 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["gtmcFn}xqSzO_Sb[?jHwGbQkCvL~CvLfJzOwGr]z@~HbGnKg@fOrNbLoAfErDnKf@vBfJgE~WvBf@?fEnFnFoAnFbLzJ"]
+},
+{
+  id:"catcreekco2", name:"Cat Creek", color:"#5b8c2a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Cat Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 16.5 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["_ihcFfj|gSRk\\oKgc@bBs]bL_XnFgEbLS~CsNbLcQRsSrDoK_DsNrIc[cBgYvBod@~HwQ","gifcFf`rgSfEcGvGkk@oAk\\nAgTrDsNfT{^bBk\\rIcLf@cLoFwLoAcQ{EwGoAwQnAsIwBgE_D_l@nAoAoAkMvGkHjCobA_]sjAkMkRkMsb@oP_ScQc`@{YgEgaA_D"]
+},
+{
+  id:"northforkcatcreekco2", name:"North Fork Cat Creek", color:"#2f7f8f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"North Fork Cat Creek|North Cat Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 4.7 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["{xkcFbudhSwBgc@fTc[vG{YkCct@fE_XjRcVjWsIbB{TnFoFfE_NbVkR"]
+},
+{
+  id:"southforkcatcreekco2", name:"South Fork Cat Creek", color:"#6f7f7f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"South Fork Cat Creek|South Cat Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 5.2 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["weicFzcghSvG{JkCcLR{TzEgEnAgJvBcj@bV_l@ScV{E_X~Cgc@sDk\\nAkMkHka@SkRbBgJ"]
+},
+{
+  id:"cataractcreekco2", name:"Cataract Creek", color:"#1f6f8b",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Cataract Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 14.5 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["gavqFbdehS{h@fOgEkHgJzEcGgJkHbB{@cG{Ef@","km~qFj~`hScBbGgOvBcGgJ{EvB{JwG","k_`rFv}`hSwB{@g@kRnA{EcGw[","{`yqFbzdhSwBkC{J~CRoPgE_DsDbB{EcL","k~sqFfzchSgTzOwe@rS","ov`rFv|~gSkMcGwLwQoAkHoKvG{EkC","ww{qFvtbhSwBcQoFgE{YnKz@kRoZg^kRvB","{rzqFzfchSgE_IkHrDkHkHoKfEf@gE","sicrF~~{gS{J{TvBkRg@sNwQgh@{J{E_DnAg^kk@gT_I_S{Oc[gJwBsDR{JgE{E"]
+},
+{
+  id:"chaircreekco2", name:"Chair Creek", color:"#8a6a2f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Chair Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 11.8 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["_flmFncymSkCcBkCwQwQoZgJcBcBsDkRkCcGnAkHwBkMbG{h@on@cy@_]{O_SSwL~C_NSsDsDkC","{hsmFz}xmSgw@n}@nAvG~f@nx@zEr{@sDfc@vBfOg@nP{T~k@vB~R_D~Hf@vLwBjMz@vVkHzJf@zE"]
+},
+{
+  id:"chalkcreekchaffeeco2", name:"Chalk Creek (Chaffee County)", color:"#3f7f9f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Chalk Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>Within Wright’s Lake State Wildlife Area:</b><br>• Artificial flies and lures only.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 42.1 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["sdsjFbfdhSkMgYgh@oAgOgE{TjHoUsDwGvBoAjHsN~M{h@zJkM?_SjH{EfOka@b`@wLzEsXr]o_@bGg^cGkRR_I_IwL?o_@c`@_SoKoZwt@sb@_XcGgJ{TgJsSRkH{EsDnAwL_DgJcL{J_XsDoA{@gJ_DoA?_l@kMoZR_DkCSz@sXkCkCg@gYoKgJoF_NbBcL_D{@~CwQgE_SfT_]g@kMzE_D?_IjCcGcGc[nFwV{@wVbB_DcLc`@sScQbB{JwBgEnFwQg@wGrDgTsDoP{EwBRoFgEoAbBkC?cj@zO_]zOoPrD_NgYwVzEkRzJsIkHwBcG_I{@{Oz@wQzE{Of@{TcBkMbBgOoAoFnFkMSwG{EkWoFR{OoZz@kC{E_XrD_S_DoFwG{h@_NwL?kMoK_NgEkMgO{JgYcGoAcGz@kR{EoUnAcGkHcGcGgTz@_NsDwLgYcVcBkHRwLsD_D{@gJcGoFsDgO_SoZ_S{h@f@{h@zEoKcB_DrIcVz@cVfEwQwBsDrD{OSs]bG_DwBwG~C{@oA{J~C{J{@sIrIcQ~CgYoAgc@jC{ORoUjCkCwBsIvBcG{EkR"]
+},
+{
+  id:"northcheyennecreekco2", name:"North Cheyenne Creek", color:"#6e8c3a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"North Cheyenne Creek|North Fork Cheyenne Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to Gold Camp Road:</b><br>• Fishing prohibited.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 8.8 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["c_ukFzox_S?cV{EkRz@oKwBce@~C_Nz@kf@jHcVfO{J~Mce@cBsD{OcGwQkRsNkf@{@sNoPgJsIoU_Don@nAoUsNkMbQsXcB{ER{TsI_IkHkR?oFzE_I"]
+},
+{
+  id:"clearcreekchaffeeco2", name:"Clear Creek (Chaffee County)", color:"#a8552a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Clear Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the gauging station (approximately 0.5 miles above Clear Creek Reservoir) downstream to Clear Creek Reservoir:</b><br>• Snagging kokanee permitted Oct. 1–Dec. 31.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 17.9 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["_a}lF~jthSz@sDcB{JwLsXRoKwLoUnAka@kCoFbB_]sDwG~C_IkMw[_D{@g@kHgJkHfE{r@kMsb@oFoFsDgTvB_DRcLwGkHcBgJbB_NwB{JvBoA{@oFbBsIwGsX~C_NsD_Df@_NoK_Xz@kHgEkCz@gEsDoPbBwLkCgOnFg^kC_D~Cg@z@wGoAcQsIgEkCwGcGos@gJkC{EwG?cLgE{E?oFcG_D{@{JcBS{@_]gEwBSsD_IsDcBkMnF{O_D_IbB{JkCcLsIgJf@oFgEg@ScGoFwBsDoKjC_IoKwV~C{Eg@kHwBg@z@gEnKwLoAg^gJkRcGnAoAcG","wibmF~h|gSoK_b@"]
+},
+{
+  id:"clearcreeklaplataco2", name:"Clear Creek (La Plata County)", color:"#4f8f6f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Clear Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 8.8 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["o~pcFbg|qS_XfOoKg@{r@{^{EsN_SoUgEsScQ_XsDka@{E_Ng@wQgJgE_DgOg@kz@nF_q@gOkp@SkM{JsDkC{T{T{OsDsN{OkH"]
+},
+{
+  id:"westforkclearcreekco2", name:"West Fork Clear Creek", color:"#7b2d8e",
+  state:"CO", region:"colorado", gauges:["clearcreekEmpire","clearcreekEmpire2"], primaryGauge:"clearcreekEmpire", minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"West Fork Clear Creek|West Clear Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters to the confluence of Butler Gulch:</b><br>• Artificial flies and lures only.<br>• Trout must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 21.6 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["_yvqFfz_eSz@cVwB_NzEk\\wBsSoFcLjCoK{@kRvB_XfOoUwGo_@nAgEcBoP_DoFcGk\\cLgTkH{^nAcGkCoA?wLcBoA~HcLoAce@rDwQz@s]jH{Tg@oP~Cka@bG{OrIcG~H_SjCsXbG_DRkMrDz@bB{OfEsIScQrDkHkCwGvBw[sDcLRgc@vGcQ~C{^wBkMfEkM?_SrDcGoA_DvBcLwBcGbBsIsDcGvBwVoA{EvB_DSsSbBsIcBkM~C_XbG{JRkM{J_q@?gOnFoZkCgY~CcL","_{zqFnyeeSjW_l@vGwGvQ{Jvo@{ErScQ~Mgh@z@on@"]
+},
+{
+  id:"clearforkofmuddycreekco2", name:"Clear Fork of Muddy Creek", color:"#a07d2a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Clear Fork Muddy Creek|Clear Fork of Muddy Creek|Clear Fork",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 14.6 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["sfonFz`snSns@nFfYcG~R~RnZ~f@~WzOvQf@fh@nPfYoFzOvLvj@{EnKvBzJ~H~H?zE~MrX~MrD~WnKrNbLvBvLg@be@nFnd@oKzEgJfOcLjMoAja@w[ja@rDvBgEz@cVfJwLnK{@","sfonFz`snSwQbG{YbVcG?w`@b`@"]
+},
+{
+  id:"cliffcreekgunnisonco2", name:"Cliff Creek (Gunnison County)", color:"#2a6e7d",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Cliff Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to the confluence with South Prong Cliff Creek:</b><br>• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 15.9 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["cpykFriamS_IfJ?vVgOrDce@nd@_IjsA{OrI{@fm@~CvGoAjRjCbQwBnU~Mrb@jCve@rDjCf@vLrIjMrDfw@oAjWgOj\\{EbBwBbLRrS{EbQcGvj@gJrXg@vL_N~f@RrD{EbG_DrSgOfT{Yns@SnFgJnFsIzOwLbGgJjRgJjCgEnP_S~a@f@fJsDjWvB~W"]
+},
+{
+  id:"corneliuscreekco2", name:"Cornelius Creek", color:"#5f6f9f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"nhd",   // NHD flowlines (OSM has no line under this name), clipped to the state with park water removed — don't re-snap
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 7.0 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["w`qxFf|{cSzEk\\kHoi@bBkk@nFsb@wLkf@z@_NnFcGg@{c@gJsXzEkf@oFg|@z@{YzEoPcG{Y?_SgJoU"]
+},
+{
+  id:"corralcreeksanjuanco2", name:"Corral Creek (San Juan County)", color:"#8f6f4f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Corral Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to the confluence with Hermosa Creek:</b><br>• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 5.2 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["wiceFn{yqSzE?bBvGb[fOnKg@~CbBzJsDja@fJzOcBvGwG~f@oFzJcLrDwLvGwVrDc`@rIkRRoKrDgE"]
+},
+{
+  id:"corralcreeksummitco2", name:"Corral Creek (Summit County)", color:"#3a8c5b",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Corral Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 3.3 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["oyjpFncggSrDnAfT{ErSbBj\\_Nn}@gEvVbBvQ{E"]
+},
+{
+  id:"littlecottonwoodcreekmoffatco2", name:"Little Cottonwood Creek (Moffat County)", color:"#7f6f5f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"nhd",   // NHD flowlines (OSM has no line under this name), clipped to the state with park water removed — don't re-snap
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From Freeman Reservoir upstream for 0.25 miles:</b><br>• Fishing prohibited Jan. 1–July 31.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 13.2 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["c~xwF~_unSoFnPfE~a@vGzEvLfc@nPnUbBvQg@zYgOvt@nAbGvLjHjCbGs]n_@{@v~@bQzYrXvQfJbQjHSzOjM~H?zJfJnP~CzEvLfOzOrXg@zEnFrSnF~RrSzJf@nK{EzTcBvVjH~HzOjWfEzJoAfJkM?wGzOoFz@bBrDgE"]
+},
+{
+  id:"culebracreekco2", name:"Culebra Creek", color:"#5b8c2a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Culebra Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From Colo. 159 bridge downstream approximately 3 miles to the Jaquez Bridge:</b><br>• Artificial flies and lures only.<br>• Trout must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 55.8 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["se}aFv_iaSwBzTf@jHkHrb@nUby@z@vQbGbLzEv`@vBjH~CbBoAbVbGbQcBnPjHzO{@rDvBrNcBfEz@jWcGvQnArXsIbVvBvLcBzYjCjH_DzE?vLgEzJg@bLwBnARvGcGbQgEvBjHzJSvBjHvQzJnKz@nFrIrDnAfJrNzTrDvQg@rNbLbLfEbLSfw@~Wfr@g@jf@vQn_@f@zYrIjf@z^rl@rNni@bBzYwBrD{@vV_IjHcBjRoKzT?jHwLzEoKfOoFvB{E{EoKjCSrDoPRgErDRwB_Dg@oArD{EwBRrD{Jz@oFrIsI{ES~CkHg@f@nF_DbB_DwB{@rD_DsIwBf@oAkCcQrDcL_IwQrI_DgE{@vGcGS?rDgEf@bBzEwBz@{@bG_IjCcGjR?fJ~HvGvBrq@_DbG{@jR{EvB{@fEsIjCSjW~CrD{@bBgEcBz@bLsDjCwB~Hz@rD{EzEvBbLoKnFz@fEoFvBjCzJkCfEnAfJzEbGsIjWRf^_DzEsNbBSnFkCz@g@zTwG~CnAjMcBn_@fJ~p@f@be@?rX_Dz@~C~a@sDbBwBbQjCbL_DjMz@rDkCbBbBfOgE~MzJbG_DbGjCzOgEjRvB~CoArI","_`bbFz{ecSwBbGz@vGvBf@oFjHbBjCoAbBjWnbAwBfTbBfO~CrDg@bGzEfE~CjRvGjH?nPrD~RfEnF{@bLbG~HRnFvB?cBfEfEfEcBfYvBbLgEbL{@zOrDbGwBbBfErIoAfEvGrD_DvLrDvQg@~RzEzOg@bGjH~CgE~HvBnF{@nFrDbLrDRnFzJjCg@g@zErIfTg@vBbBz@jCkC~C~MwBz@~CjCzJjf@wB~HrD~RoFfJjCrIkCjMjCvLsDzJjCfEsDbBSvGz@zOfEzJwB~CbBnF_DbBzEjCkCvGfEvBoAzJjCvBgErDcBvL~CfEcBrDSfYvBbBoAfE~CvGsDbBRjH_DzEf@vGzESsD~HzEnKg@rIfEfJg@nFnKjHjCbLg@nFbGzJkCzEjCvBfEjW{@~CgEnA~C~H{ErNzErIwBnFrDzOfEf@","ce|aFj`hdS_I~Rg@jR"]
+},
+{
+  id:"cunninghamcreekdeltaco2", name:"Cunningham Creek (Delta County)", color:"#2f7f8f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Cunningham Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 6.1 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["ooamFrobpSrv@Rrl@cQzY{r@rIk\\~H{Jz@{OfJcQvVsSvVka@vQoFj\\g@bG{E"]
+},
+{
+  id:"cunninghamcreekpitkinco2", name:"Cunningham Creek (Pitkin County)", color:"#6f7f7f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Cunningham Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 8.5 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["kk`oFbldiSgTb[{E~RjCvG{OrXkHv`@fTbt@g@ns@gJni@jCbo@vGja@g@zTwGzO{TnUoP~HoAnF{JwBkMrD","gg~nFvgdiSoFg@gJsIgm@jM"]
+},
+{
+  id:"deepcreeklaplataco2", name:"Deep Creek (La Plata County)", color:"#1f6f8b",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Deep Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to the USFS boundary:</b><br>• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 10.5 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["gsfcFz~arSnFoAnAoFzO_NjWfEvVkCbGnA~M_NfOoFzh@RfYgTnZfEjCfEfTrD~RwLbLgObQcG~HvBjHkCzE~CnF{@vBoFvQkCrSnAvQ_DrN_IvVbLjHrIvLjCrDbGfm@rNvLjHjM?~H{J"]
+},
+{
+  id:"deepcreeksanmiguelco2", name:"Deep Creek (San Miguel County)", color:"#8a6a2f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Deep Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 9.9 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["knbgFb`sqSfT~HvQcG~H{JzEoAjHvGfOnA~RgEfEbB~HzOvVnF~MRjRsDni@jHfY{On_@s]fT~Cfm@oA~MbG~\\nZrXrq@nAnPve@vo@rIzE"]
+},
+{
+  id:"deerbeavercreekco2", name:"Deer Beaver Creek", color:"#3f7f9f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Deer Beaver Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 8.0 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["_rphFnkjkS_Df^{JrNoKrDgY~WoK~R_Dz|@oKrXkC~WoZbG{YnZcQoAkHbBkMnK{ErXoKzO_b@vQs]oKc[rN"]
+},
+{
+  id:"disappointmentcreekco2", name:"Disappointment Creek", color:"#6e8c3a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Disappointment Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to USFS boundary:</b><br>• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 99.3 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["w{bfFjyrsSnAzJzJfJbBrIg@vGnd@zTzEja@nZve@f@zE{Ev[~\\~p@oA~RvBrNf^vBfJjHzEfJbBzc@~\\r`Ag@fErDzEf@rIoFfTf@bGoFjM?nKz^f|@{@zc@~C~Cz@nKS~f@nKf^kHzE?vQcGnFsDvLgOfTsInFwBfJjCzJwB~HsNfE{EnFcGbVoF~CgEfO_DbB{E_DkMvBcGzJoUfOnAja@{EbBvBrD_DnPz@bBgEvBg@nF_DS~HzJoAfJnAjCoAg@SvBbBbLvB?{@zJfJvG{@nAzEfJoFvGbB~CgEfEwBnKf@zEcBnAbBnKkCnFgES~Hv[_IvQnAjCgEnFnAbG{@~H_DRz@zEf@_D~Cg@vGfJvBz@nAkCz@vGgErNrDR_SjW{ESnAvGkCvGnAvBoA~CjCnAkCf@f@jWrDvBf@fEnF?{@rDzE?kCzObBnFcBrDvB~WwB??rDoAcBg@fJgEnAoAvGbB~CcBf@{@bLrIvBf@fEgErD?zEkCz@gEnKrDzJgEbGjCbBsDnAzEvBSvGcBSnArDoFRnAfEwGrIz@fE{ErIvBjCoAvGvBg@bBrDkHvLnAnA_D?vBzEsDRz@nA_DbGvBvGkCbBz@rDkCcB{@vB{@wBkCnK_DoA{@rInAnAkCfEbBbBsDzJbBSnAjMvBz@_D~C~CjCcBbBbBjCkCjMjCfEfE{@{@fEnFvBSrDjCg@{E~HbBjMvB{@vBvBcBvBbBz@oAbBvBRwBjCnAbGcBnAnArIjC?nAjHzERoAnFgEbBnFf@sDfEnAzEkCnAfOz@g@bGnF?SzErDbBoF~MRnK{ESnA~CoFz@rDfJgEnFR~H_DnA~CrD_Df@jCfOgEkCg@rDcBwB?fEkC{@~CvG~CSgEnFgJoAbBnUwBbB?rIbBbGgERgEjMjHwBnFnF_DvGcB{EwBf@cBnFnFbGSvGgE~Hz@nFcG?bBfJcGbGnFbBcLzE?jCnAkCvBjCz@jM{@fEcG_DoAbLfEzEg@bLvBrD_DR~CbLkC~H{E?g@bL_IrIkM?f@vGwL~RjCzEwBrD?vQ_DwBgEjCcGsNsDoAcGjM~HbVvBz@vGsDnFrSoAbLnFf@z@bLjCf@SrI~CfOkCrNkCRrIrNoKzTjCfO{@jCgEoAwGbBsDzEoFoAwL~RsN~C{JjM{Jg@{OzJwGoAg@~CrDzJ{@bLgE{@gJfEkHgJkMvBsD{EkCvBfJzO_Dg@_NnK_IoAcBrDbGjCf@bGjM_DfErDsDnFcB{@?fEsDg@f@vLwBz@?jM_D{@z@vGkH~CRfE_I~HRjH_Dz@fEvL_Ng@f@oFgEwBg@vG_DnAgJgO_DnFbGjHwBjCR~CoKg@{ErDcBrIcLz@SrDkCf@z@zE_D~CbBfE_DRz@rIgESoA{Eg@jHkCwGwB?zEbL{E~CnAnF{E{@oAnF_Df@?bGsInFbBfEwLrIRfEsIcBbBrDsDjC{@rIcLoKzJjR_Dg@g@rD{EsI?zEvGbL_DfEwG?fE~CwBrD?fJkC~CgJRSnF_Df@?bG_IbGnA~C{EfJjCjCoArD~C?f@jC_DnASnFjCjCgEbBjCvBwBnFnArDcBzJ_IvLoA_DrDsDcGbBcBnK_IwBRnF{JzTcB{JcB?RzE_DjCg@bGjC~RsD{EoAjM{E{@?fEwGRcGjM_D{@RjC_DSwBzJwBcBkC~C_D_Df@nKcG{@oAvGzE{@jCjMoPvB~CfE~HgEg@jRwLSS~CrDjCoArIcGrDkCkCoAjCz@nFgJz@zErIoFbBzE~H_DjCSzEkCcBkCwLoAzE{EvBjCvBg@jM{EwGoFg@{@fEwGz@~CzEcBzE{EgES~HcBf@_DwGcBf@z@~H_DfEjCfEg@zE_D?g@{JkC~C{@rIf@fEvGnF?rDcLjCg@oKkC~HwGoAwBbGrDzE{@fJcBz@oAgEcLg@SnFgErDrDnAwBvGfEz@wGvG?wG_DS_DnKf@nFsIgEzEgJkCoFcGzOwBkCcBvBoA_I{ERwG~MgEcBwBjCzEzEwLR{@vGcBsIsDg@rDnP_NsDg@fEsD?{EnFrDjCf@fJsN{@f@bGsDcBcBnF_DgJkCS?vVsD{@gJnF{@fEjCvBwGrDRvGoFsDsDzErIfEwBvGvBbBwBfOoKkMbBjH{@zEkCz@kCsD{E~RoFzERjMcGbBnFnA?~M{Ez@bGjMjCRg@zEkRf@nAvBg@~HbQRg@zE~CbBgTrDbBfErDf@sInAnAzEnFRsDfE~CfJkHnAg@vBfE?wGrIoF?_DoFkCvGz@rD_DbB~CrDgEz@{EsIwBnAf@bGfEbBoFbQfEz@sDjCvBzEsDjHfEjC_D~CbB~C~CkCjCrNcB~CcBcGoAvGjCvBcL~CwGjMnAfEkCbLnFrDcGrIcBbLvLvBrDrNkCnA{@~HfErNzEfEwGfJf@fE"]
+},
+{
+  id:"dougcreekco2", name:"Doug Creek", color:"#a8552a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Doug Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 12.3 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["wq}jFr~znSgEn_@sIjHcBvLsD~CvBn_@sDnn@bBvGwLfTvBfYgJ~MkH~CkCzOf@rI_IfE{Ozc@b[zaAoFn_@~MbVfEvVvQrIzJRfJrI~Mb`@ja@zm@RfTjHvLvBvy@{@bQ~CbGjC~Wg@zJkWf^RnP"]
+},
+{
+  id:"duckcreekclearcreekco2", name:"Duck Creek (Clear Creek County)", color:"#4f8f6f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Duck Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to Duck Lake:</b><br>• Artificial flies and lures only.<br>• Trout must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 6.4 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["{`qpFrphdSfT~HbVkHzJfE~\\_XnPcGvG{@bBbBjW_IfTbBfc@gEfYrIjHjHjMzc@{@zJnFzE~HRvVcGzOvBfEnF"]
+},
+{
+  id:"eastpasscreekco2", name:"East Pass Creek", color:"#7b2d8e",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"East Pass Creek|East Fork Pass Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 10.0 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["gcdhF~hiiSzJsDrDwVz^os@?gc@kCgJg@_XjMgr@fTcj@bGon@wB{JjCgc@vGw[bGoKvG_DzY{h@~RsS~MoZbQkp@nUsSnF_XbQ~HzE{@"]
+},
+{
+  id:"elkcreekgarfieldco2", name:"Elk Creek (Garfield County)", color:"#a07d2a",
+  state:"CO", region:"colorado", gauges:["elkcreekgarfNewCastle"], primaryGauge:"elkcreekgarfNewCastle", minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Elk Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the confluence with the Colorado River upstream to the U.S. 6 bridge in New Castle:</b><br>• Fishing prohibited March 15–May 31 and from Oct. 1–Nov. 30.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 6.5 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["_ivpFrysoSfEg@g@_IrIvBfEwGg@_NjCf@nAwGzJkCvG{^?wLvQwQbGkRzOkMbQ_DzOoPnAkH~CwBvBgOcBkCrDgEf@sIzJ{TzJgE?cLjMkHvL_SnKgEvQbB"]
+},
+{
+  id:"elkcreeksanmiguelco2", name:"Elk Creek (San Miguel County)", color:"#2a6e7d",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Elk Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 10.2 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["ofbfFv|hrScV{@{^~CoF~CkR_N{YnKon@kH_uCjCwQ{E{JRw[_NkRSsIcGgEgJgJg@cQf^gh@~\\{@zOgOv[_Db["]
+},
+{
+  id:"northforkescalantecreekco2", name:"North Fork Escalante Creek", color:"#5f6f9f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"North Fork Escalante Creek|North Escalante Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to USFS boundary:</b><br>• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 27.0 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["ochjFvaavSsDsIk\\oPsNwV_N{EgJ_SkWwVka@oF_I_IcVgJ{OwVgT{@kHgEkMwQnA{YoAsg@cLcj@zOw[z@_I{Ogh@wGwe@kRka@oAwV{J{m@kCsD{@cQwt@oqAkCod@bBcLf@{c@kCcLvBsb@ScGkCg@fEwQ?sIgEwe@{EkMf@kWcBsIkCg@oPgr@vBsSg@wLgEgJnAwL{EwLbB{JsDoAkC_N_IoAg@sIkHgE{@cQsIgEf@sD_DwB{EcQsDkCwBnA{@_IoFoF_DbBoAoAf@gO{E{@wBwQ{E{Eg@cGsDoASoPsIk\\kC{@SgJwL{OoPkCwGwQf@oK_IoZvB_Ng@wLrDkCcB_]nF{ERcQbGkCf@_g@bG{T?cQgE_NbGcQ"]
+},
+{
+  id:"fallcreekmineralco2", name:"Fall Creek (Mineral County)", color:"#8f6f4f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Fall Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to Wolf Creek:</b><br>• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 6.0 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["{wscF~c`kSjCfOv[nPzJj\\zOzY?vGjMrb@f@nbArD~HSfT~CrNbVjHjH~HbBja@~CnPwBve@"]
+},
+{
+  id:"fallcreeksanmiguelco2", name:"Fall Creek (San Miguel County)", color:"#3a8c5b",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Fall Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to Woods Lake:</b><br>• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 19.8 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["on~eFrnurS_l@kW{Jf@{E{J_XoKoUsDoKf@oi@cQ{TcB_NjC_N_NoPc[vBgOwGoUcBoUbBkRkHgJsXoKsDg@kMvGoKg@sI{E{h@vGoFzERjMcBfJ{JfJoK~C_DcGoUwGoUoPct@{w@sb@wQwQkRgOcB_ScL_b@oAsXjM{Tz@_XvGw`@gT_q@oK_IcLsIkCwBf@oF_DgEvBwQgOsD?gE{E{JRgTcGwB_DgOgEoF_IsIg@cGfE"]
+},
+{
+  id:"fawncreekrioblancoco2", name:"Fawn Creek (Rio Blanco County)", color:"#7f6f5f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"nhd",   // NHD flowlines (OSM has no line under this name), clipped to the state with park water removed — don't re-snap
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 12.0 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["sovqF~qotSgE{@oAwLs]cQ_DcGkM?wQsX{OwBoUwVkWcG_g@w`@wQnAs]_g@gTwBsIwQkHcBcGsIgYsDkCsIcQcQ_IwBcG{Jo_@oZcBwG_]oZgOgYgJ{J_IwBw`@ce@k\\{OkMoPoU{E"]
+},
+{
+  id:"fishcreekrouttco2", name:"Fish Creek (Routt County)", color:"#5b8c2a",
+  state:"CO", region:"colorado", gauges:["fishcreekrouUpperSta"], primaryGauge:"fishcreekrouUpperSta", minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Fish Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the confluence with the Yampa River upstream for 0.4 miles to the Rollingstone Drive bridge:</b><br>• Fishing prohibited Oct. 1–Nov. 15.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 16.3 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["_{avFnl_jSrIz^RvQcGzOSvQnKb`@~HfEnFve@sDf^kCvBbBjHoAf@bBnA{@rDfEf@bGnP~Cz@bBrNnF~HnAzJsDrS?bV{E~HvBrNoFzT~CbQg@bQsInPnAv[kC~RrDv[vLfT_Db`@zEbB?~M{Ofm@sIvLkHzh@cG~RnAzJbGz@rDbQvVb[SnUrDbQ~CrDjHfm@z@fOkCjMbGbVg@bGvQfYg@jHrDfE?nFjHrDjH~W_I~WRv[wBnF"]
+},
+{
+  id:"floridariverco2", name:"Florida River", color:"#2f7f8f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Florida River",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to Lemon Reservoir:</b><br>• Snagging kokanee permitted Sept. 1–Dec. 31.<br><b>From the U.S. 160 bridge east of Durango downstream to the confluence with the Animas River:</b><br>• No bag or possession limit for channel catfish, largemouth bass, smallmouth bass, northern pike, walleye, green sunfish, bluegill, bullhead, yellow perch or crappie.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 98.2 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["sujdF~juoSnAcBrg@fEja@{@vGfE~HRfEbGjWSbj@{TrD_D?kHvG_DjM{@zOzEz@jMbGjC~C~MvQzT~HbVbLnPf@bVnFfOS~HfEbGvGSSrSbLg@RbL~CkCbBvBg@jHfE_DnArDjHwBf@~CfOrDjC~RzEfErD_Dg@rDjCz@fErXnFbBbBzEvG~a@jMbGzJrN?rDjWv[RzEvVbVbG~WzJvBsDbQvL{EfOnFoA~CvGnFjRSjHjHvG?bGfErIvQjC{@jHrDrS_D~HbBfEjCoArDnAz@fEwBrDrDrDS~MbLfESRfEnFSvVnZbe@fJz@rDrDf@SfErIR~HvGjHRzTsIfEnFbe@jHjHkHjHcBjCcGfEvBbQ{@bLsNnPg@nA_DjMkC~CcGfT{EfEkHfJSfJ_I~H{@bGgJzr@cVzh@wBv~@gYfc@oFjMf@fEzT","c{ccFbwbpSvGwB~MjCvLrIzO?vBjHvLfEnZoAnFbLjHnAfE~M~H~Cg@zJnFzJ~WfY~C{@?jMjHjM?vLvLzTfEv[~CvBz@~HbQnKfEbLoA~\\kCzEzEnZ?fOnFfEvBnKfEbBjHnU~RrSnUSbBbLfJrDjCfOrIjMwGv`@nAfO_DfJzEnPfEbBRzErDnArD~MnFfEsD~\\sD~HrDjWnFnKvVbBjCrNrSfJjCzEcBvBbGz@nPjW~CjMvGvBbGrISnFzO{EfOjHfEnU~CnAbBcBbLnZ_DfE~C~CrDjRnK{Ej\\bVnU?~CvLzOzJfJg@nK{YvGnAvB{EbLf@oAcGvGwLvBRRjHzJ{EzJvB~CsXzE{@?nFvQoAf@gEnFSnFcV~C_DnUcBfE{OjMoAnFkRvQ_DvLoPvGnAzJwVbGfEjCcGwBcBRsDvLwB~CoFjHcBrDwLbGg@jCkMfEg@fEcGnKoArD_IoAwGrIf@ScLbBSnArD~C{ErInA~HgTvLvG~MoA{@kHzJ?R~HzE~CrDwGnA~CvB{@f@oPfJgE~CvBrNsDvBfEvBcLrDf@vB_DnP~\\bGvBrIcGvBrDnA{@~Cw[vBf@z@jHnFnA{@~CvGnPfJkC?kHfEnFzEf@rNgJnFjCrIwG{@rIfJ{@nKjMrI{EbBbGfOvGbGrInKgJfEvBbGbQ~MwGvGzOnFSzErIbGRg@oFbB_DbGjCfJcBvGrI~C{J~CvBsDrDnAnF~MbGjCnFzEsI~C~H~CcGbBvBf@jMfJz@R{EvBvBvLkCnF~HrNfJ~Mg@{@zJvBrIkCRRrIfJRzEjH{@nFfEwBrIrI_DrIzJf@fJvGSjH_I_Dz@bLvLfEbGnK~C{@f@bGjHzJzE_DzEvGfE{E?vGkCz@RvLzEvBnAjM~CrDcBbGwGwB?vGjCz@z@bL{JsD~HzJ{EjH_DsIcBvLwGSzEbLcQcGwBz@g@fJsDz@g@~Cz@~HvBf@SrDsDfEnFjHwB~Cf@rDbL?SfObG{@jHbGkHzEz@zJvQwB{@~MvB~C_Nz@nFnF{@jC{ESzEzEvBwG~CRbBzTkCfJnF{@nArDkH~CoAfErDnAnAjHnF_DkCrI~CrD~CcBcB~MrI?cBzJbBjMrIcGfEfEoFzEfJg@~HfEwBzEnAzErI_InFbGwBf@f@jCbVnAz@fJrD?zJwQrDrIwBvLvGRf@vBkCbBrD~CvBcBvQfYrIbBfJ{EjHnFrDcLrNf@vGfEz@_DvGzErDcBzJ~CrIg@jCbGfESSfEbGbBrIsIfObBvBbB_DnFnFnAjCcGjHrNoAzEvBvBf@{ErDrD{@zEzJ_DzE~CvG?rNoFcBzJ~C~CfEkCnAbBRjCsDrD~WnA~CvGzERSvGnZ_Df@oFzEjR~HnKjM{ErSrNzO?"]
+},
+{
+  id:"fourmilecreekco2", name:"Fourmile Creek", color:"#6f7f7f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Fourmile Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"From the confluence with the Roaring Fork River upstream for<br>• 5 miles:<br>• Fishing prohibited March 15–May 31 and Oct. 1–Nov. 30.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 22.9 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["s`koFbdrnScGoi@{JgToKwe@f@cL_IcLcL{EcGf@gJ_IgEgYwLgJwBwGsNgEgJkR~CoKwB{E~CsIkC_Xz@sIcGc[cB_b@fJgc@wB{OnAg^~RseAsD{YSw`@wBcLsNkR{@gJnAwLsDsS{h@gc@wQvBcVwGcQnFkR?_InF{c@Rw[rNcLnKwGR_DzE{JvBsI~MgJjCoUjRovAn_@_b@{ToKf@wGkHkRgEcBkCk\\oF_NvG{JwB{@{EcG?wG_NSgJsD_IfJcGS{YzERbB{E","ouioFrvtnSkf@ox@RkMwB{E"]
+},
+{
+  id:"frasercreekco2", name:"Fraser Creek", color:"#1f6f8b",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Fraser Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From Trappers Lake upstream for 0.5 miles:</b><br>• Fishing prohibited.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 4.8 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["_{xrFbhhmSkCwB{YvQ{JnPwGrXkMScLjHcVb[sDvQcGzEcBfJwVbGcL~RcG~C{E~WsIvGwLoA"]
+},
+{
+  id:"frenchgulchco2", name:"French Gulch", color:"#8a6a2f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"French Gulch",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 4.7 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["_i}oFf{ueScG~M?zE{EbBkCjMgTzTgJb`@nAnK{EjRsDjk@bLj_A_Dbj@nFr]"]
+},
+{
+  id:"georgecreekco2", name:"George Creek", color:"#3f7f9f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"nhd",   // NHD flowlines (OSM has no line under this name), clipped to the state with park water removed — don't re-snap
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• All trout must be returned to water immediately.<br><b>From the confluence with Cornelius Creek downstream to the confluence with Sheep Creek:</b><br>• Fishing prohibited.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 14.3 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["kfqxFfredSkCoPf@oUjHkHnAoi@_IoZf@_I_I{JwB_NrDc[sDkR?o}@{JkMcBwVoPcQwB_XsN{c@jC{^wGod@R_NwBg@SwGwLw[_NcLcLgpA?{TnPk\\nF_DfEoKjHkCrD{OnP_SnAwLrSo_@oAs]~R_SsDcQnAoUvB{JvG{ER_N{@cG{OgOkCsI"]
+},
+{
+  id:"goatcreeksanmiguelco2", name:"Goat Creek (San Miguel County)", color:"#6e8c3a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Goat Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 9.9 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["wehfFf}qsSsDcQwGwB{Y_XwVRsyAgYwe@_`AwBsNcGoFgh@_N_SvQwe@rD{w@_]gw@oK_XkH_XgO{OnA"]
+},
+{
+  id:"grassycreekco2", name:"Grassy Creek", color:"#a8552a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Grassy Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 4.0 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["_yaeFr`oqSvQfTr]zO?~RzEvLbQnAjHzYbVbQ~CbLnAnZ{Ev`@bBnF"]
+},
+{
+  id:"greenrivermoffatco2", name:"Green River (Moffat County)", color:"#4f8f6f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Green River",
+  parkRegsSrc:"colorado",
+  parkRegs:"• No bag or possession limit for channel catfish, largemouth bass, smallmouth bass, northern pike, walleye, green sunfish, bluegill, bullhead, yellow perch or crappie.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 70.6 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["{efxFjcdxSzEgYfOwL","cudxFvkbxSj\\wLfEkR","_uexFnmcxSnU_]","g`axFnyxwSvLwGrDoK","s{bxFzm`xSrIkM{@gO","_nfxFjqqxS~WccAfJwLbBk\\zOkp@zEos@kCwVcL{JsDkMoUgfA{@kWsN{c@{@oK~H{TjMgOfJ{Yb[gOnn@co@zJgYbBoi@jH{ObVgJb[vBfY~MvL_IbB{YgJgm@wVkHoPoKkHkMf@sg@fJ_]rDsDf^_DjH~CvVcBvV~Cb[{JzEwGbGcVfEod@zOc`@rD{TrDwGrIsDzOfE~C~H~Cve@jH~Crb@cGfh@s]vQoAvBoUkC_D_b@sDgE{EoAgJf@{JbLg^jMkCve@zTf^gEn_@oPrXoAzY~Hr]zc@r]f@bQrSrISzO_NjHnArIzOjMf@zJzJve@jMbj@vVrX?bGbGvLg@fTjHvV{EbQ~CzO{@f^_IfTvGbBj\\vGzJ{@~HfJjRvQnPzJjW?~HbGjH~MnFz@zE~MnAjRv`@be@f@zYzEvGjHg@rNbBnFvGzEfYRfTjRja@bBrNjMnFz@nPkCvGvBrIoFvLRve@jW~CrNrI~CnZn_@jCnKvLzEvBvGcBb`@_DvGoAjk@jHrXjRr]zOnAnPoK~RRvLkMbe@cQ~CoKnF?vVgOzJ_XzJoKzTcG~\\{Yjk@nKrb@~a@vBjWwB~p@jMnU~MrD~W_Ib`@nFn_@SbLzEbGvQcLfYsDnAk\\cQkWwGwLvB{OrS_SnAgE~RSz^wLvQ{EvQnAzOnKzTfc@f^zJzTcBzOvBv`@kMbt@nAnKoPnPoAzEz@rX","wnivF~nfxSc`@R","_m_xFvw|wSf@kRkHwL"]
+},
+{
+  id:"grimescreekco2", name:"Grimes Creek", color:"#7b2d8e",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Grimes Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the bureau of reclamation property downstream to the standing water line of Vallecito Reservoir:</b><br>• Fishing is prohibited from Sept. 1–Nov. 14.<br>• Snagging kokanee permitted Nov. 15–Dec. 31.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 10.3 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["khwcFrjxoSzJbBv[oFf@sIrIwVf@kRnUk}AfOkWSoi@nF_XjHkMbGsXvQce@~R{@jHsNbe@_IrIvG~Mz@bBgJzOwLbLgErN~CbB_I~CoAjC~CzJwBnKbBnKfO~C?rI_b@"]
+},
+{
+  id:"grizzlycreekco2", name:"Grizzly Creek", color:"#a07d2a",
+  state:"CO", region:"colorado", gauges:["grizzlycreekGrizzlyLake"], primaryGauge:"grizzlycreekGrizzlyLake", minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Grizzly Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the confluence with the Colorado River upstream for 0.5 miles:</b><br>• Fishing prohibited March 15–May 31 and Oct. 1–Nov. 30.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 25.9 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["kjiqF~f`nScGf@sDsDoAbBwBoK_DvB{@wQsInAkCoAkMzE_D~H?nK_N{@kCgE","gflqFzc`nSkC{@{@{h@nFkMjC{m@cGcLz@_XwGsXbGsIf@cGjMsIrq@{aAnFcBjHcQrD_]bL{OrN_N~a@cQnKwBnAbGjCS~MwL~a@gJrIwGbGf@jWcLjW_Df@sDjW_Sb[sIzJsInF_NnPcLvG{@nA~CzEkCnKf@fY_SzJjCvBzEvG?zJzJ~C{@~H~HbBrNvLbBv[fc@nFz@n_@~u@zJ?be@zYvQjCzTnUzOR~HrDrIoArNgJjWsb@zYcLrISvBgEjRRfO_DrSsNvGoK~\\kMfpAgOzJcGrI~H"]
+},
+{
+  id:"groundhogcreekco2", name:"Groundhog Creek", color:"#2a6e7d",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Groundhog Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From Groundhog Reservoir upstream for 0.5 miles:</b><br>• Fishing prohibited April 15–July 15.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 16.3 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["gmteFjk~sSrSk\\SoF~H{ErDwVjCwBrD{OvLcGjCkHjMgJ~CsNnFz@fEcLzOcBrDvBfTg@jMoKfJs]rI{J~R_SzY_NfE_IvQcGfJ?jW{TfJ{@~MsIrI{JvBz@zTkMrDjHjCkCfEnAnK{J","_~zeFr{osS_Dr]jCnd@zTbV~Mjp@rN~a@oAbGjCv[cBfYnFbQ~\\~WfTnFfTwBfJbGnKrSfEzTz@fc@vQjf@"]
+},
+{
+  id:"northforkgunnisonriverco2", name:"North Fork Gunnison River", color:"#5f6f9f",
+  state:"CO", region:"colorado", gauges:["northforkgunSomerset","northforkgunPaonia","gunnisongorgMouthLazear"], primaryGauge:"northforkgunPaonia",
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"North Fork Gunnison River|North Gunnison River",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the confluence with Anthracite Creek downstream to the confluence with the Gunnison River:</b><br>• No bag or possession limit for channel catfish, largemouth bass, smallmouth bass, northern pike, walleye, green sunfish, bluegill, bullhead, yellow perch or crappie.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 56.2 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["gytlFfufnSnK~WsDb`@z@jMvLfOzEr]kCbj@fErNnAfYfOvy@~CvGz@b[vLvVgEnUrDnbAnKjH?jM_DjHnPjWbBrIoAzT_IjHoAvGg@~a@jCbQwGj\\bGrXSvy@fJjC~HbQwBzOkMvLvBjMg@bLfJfJjMb[zY~a@kCjWfEfr@_InAz@fTsSve@{Jrl@vGvLrDzYnK~MvBnn@r]r]~CnPRjRvLjHfEzT~HbG?~RjHfJzJoAf@jMfOfEfJwB~HzEvLvj@nUrb@zr@fm@bGzJnFbVrSnKzEfOfJfJnAfJzEnA~C~HvVzTzJvQfJv[nPrXnA~HzOfJvBf^jWrNbLnAjCzEoAvQfJbBvBzTbGjCRnKnFvGwGvLbLnPcBnKvBbQbB~CvLg@vB~HcBjMjRnFvBzJvVzO{@rNvLrDbBjHsDbQnK~CzJnKrDvQz^~RfEf^bLgEnFnUvLz@nAjMcGjRfOnF~C~WrXzJ~CbLzTbQnKrSzTcBnFrDjMgE~CfERfJ~MjCRr]nFzEnAfJbLjHnFrN{@fY~C~M{@fOnFvLg@j\\fJjMoF~Mz@fJfJjC~\\n_@rInAbGgEjRbBfJrIvB~HbGvBvGkHzEjWzOrDjCfOsIzc@oFzr@oAv`@nAb[{Ej\\Sj\\kCfOnFnP?vGgJnU_D~W_SfJwLvLjHrl@gEvLoAzO_IvB_IsIoFfTgJvGf@zJsI~\\?jMzTbVfEvL"]
+},
+{
+  id:"hahncreekco2", name:"Hahn Creek", color:"#8f6f4f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"nhd",   // NHD flowlines (OSM has no line under this name), clipped to the state with park water removed — don't re-snap
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 7.3 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["{u|sFblgoSvGoUrNsIjMrDrIkCzEbGzJc[~RcBfT{JvVg^fO_g@bVw[fE{OrIkHvBsNgEoPnA{J_IkWvBkR{@wy@jCsb@"]
+},
+{
+  id:"hamiltoncreekco2", name:"Hamilton Creek", color:"#3a8c5b",
+  state:"CO", region:"colorado", gauges:["hamiltoncreeTabernash"], primaryGauge:"hamiltoncreeTabernash", minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Hamilton Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 9.0 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["_kesF~|ddS_SvVg@nKbLnbAfJrNf@r]b`@bVrIRj\\nx@{@~f@vBv[gE~M{@jRrDvLbGbGvGja@_DfTz@nP{Jrb@rNni@oUbt@"]
+},
+{
+  id:"hatcreekeagleco2", name:"Hat Creek (Eagle County)", color:"#7f6f5f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Hat Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 7.3 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["g}{oFvy~iSz@ngAcL~f@_NbQgJjCoPcBwLgJ{fA{@_b@b`@kCvGku@rb@wLwBkR_NoZ?wBkC"]
+},
+{
+  id:"headachecreekco2", name:"Headache Creek", color:"#5b8c2a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Headache Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 6.4 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["s~iaFz|yiSfEjMfTzEnPrX?rDoAbLsIbQcGb`@Sb`@cLjW_NzJ{Jz@?jHcGbQvBrIjHvGnKrq@fJnP~MjHfEf^fJfE"]
+},
+{
+  id:"hermangulchco2", name:"Herman Gulch", color:"#2f7f8f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Herman Gulch",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to I-70:</b><br>• Fishing prohibited.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 4.9 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["{imqFfuieSbVcGwGgm@vBwy@~a@{kArg@wo@bLkCrDbBfYgJ"]
+},
+{
+  id:"hermosacreekco2", name:"Hermosa Creek", color:"#6f7f7f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Hermosa Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to the confluence with East Cross Creek (except 100 feet upstream and downstream of the artificial waterfall [fish barrier] located 0.1 miles below the East Fork of Hermosa Creek confluence):</b><br>• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately. 100 feet upstream and downstream of the artificial waterfall (fish barrier) located 0.1 miles below the East Fork of Hermosa Creek confluence:<br>• Fishing is prohibited.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 8.0 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["_beeFzhnqSg@~WsDzJrDfc@ns@r]zTnZ~Mj\\rb@v`@jp@fYjRz@bLgErIjHzEnPjRvGrDzEnZjC~RbLrXRnFzE"]
+},
+{
+  id:"eastforkhermosacreekco2", name:"East Fork Hermosa Creek", color:"#1f6f8b",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"East Fork Hermosa Creek|East Hermosa Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 10.7 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["kfvdFvzaqSRnUcG~R?zJnPvo@vBnUnKjHjCvVwBb`@{EfJbG~RbGfEoAjCrInKf@bGzEjC{EfT~CnK?~MgErDz@nF_DfTnAbG{E~MRnK~H~WoFjWwGzJbBvVoAvQzJfT{EnPnAvBcBfTvBnAwBfTjHnZf@nUrIjHfEg@jCfJ~Cg@fJrIRzE"]
+},
+{
+  id:"himescreekco2", name:"Himes Creek", color:"#8a6a2f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Himes Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 4.5 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["{omcF~_vkSbQgaAvLg^vB{TfEsDbBoK{EsIvB_SwG_g@rDwV?oU_DoKnPcV"]
+},
+{
+  id:"mainhubbardcreekco2", name:"Main Hubbard Creek", color:"#3f7f9f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Main Hubbard Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to Overland Ditch:</b><br>• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 10.0 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["_shmF~xbpSoK_SoFf@_DbGkH_DcG_]rDoUkHwVkCkWrDcV{@oK{Oo_@_NoFcGkM_SgOf@wVcL_l@f@_I{EcL{@sSoPkMoPg@wLsSjCgOvQ{^z@wQ~C_NrDSrDwGnArDzEz@nKcLzYwLnFkHnPoA"]
+},
+{
+  id:"middlehubbardcreekco2", name:"Middle Hubbard Creek", color:"#6e8c3a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Middle Hubbard Creek|Middle Fork Hubbard Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to Overland Ditch:</b><br>• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 7.5 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["ocgmFbtapSoKgOgEgOvBcQ{@oPgOkWz@gEoK{T_NcLg@_I_Xkp@Sg^~Mg^~Hc`@nAgm@jHc[wBsIo_@sSgE{JcBcQcL{T?sI"]
+},
+{
+  id:"huerfanoriverco2", name:"Huerfano River", color:"#a8552a",
+  state:"CO", region:"colorado", gauges:["huerfanoriveBoone"], primaryGauge:"huerfanoriveBoone",
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Huerfano River",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to the USfs boundary:</b><br>• Artificial flies and lures only.<br>• Bag and possession limit for trout is 2.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 182.6 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["stmdFvkzbSz@gJzTod@cB{TwGkHc[cGsDrDkMcGoFbB_DgEoZoA{c@sNkWvG_SoA?_DwVSoK_Igm@nFsN{E_]f@_b@_Sw[wB_IwG_NRkR_NkMgYoFg@RsDoFcBcBcGwQ_DcGkRwB_b@sDgEf@wLcG_SS{uA{EkWkM_SoK{c@f@sNgOsIwBwGgJgEkWwV_NcGwG_S_IcGoAcLsIwB_D{TkHwBcGoUgJgEsD_I{JcGoF?oFcLgJcGg@oFgEoAkWsg@kM_DkMsSwV_IsDkH?cGsS?cB{OsIcGwLkWoK_D{EgJ{J?oAsIsDkCz@_IcG_IcBoKbGsXwBsIbBc`@vBkCsDoFrDsD?_IwBoArDwGoA?f@sDkC?zEoF{@sDfE_DnAsN{@oA~CkH_DgJf@{TcBcLbBwBwB{E~Hgc@SgYsDcGrDgOjHcL~CkWgJ_]nAsIkCoPzE{OkHgO{EoAwBcG{@kH~CcGSwGsIkWcG_IRgJoKgEkCkMcQkRoFg@cG_]wBf@oF{EbBoF{@gE_]wQ_DgOgJgOSkMc[kRoFw`@{OwGcBcGkHg@_NwQ{E_NbB{OgEwQsNoFoA_NbB_IcBnAoF_DSgJ{EoARsN_D{@oFkMz@wQkMsDz@_IwB?vBwBSgEwBjCoAcGcBSnAcBcB{EzEc`@oFS?{JsD{@bBcBgEwBz@wBkC{JcBz@sDsIzEcBjCcG{@wBnA{@gJsDbGoKwB{E{EnASkHkH_IbB_IkCoFvBcG?wLkCcGRgJkCoPfE{@cBwGrDwGwB?SkHfJnAfEjHg@wLbBbBz@sDfJnAwBsDvB_InFoAz@{EfEzErDcBkCoA{@kHfOsD_D_IzJcLvBgJwBsIfEvBfJgJbGSjCgE_D_DrIwB_D{JnFf@jHcL~C~CvB_DcGkM?{EnFwB?oPzEwBfE_b@~MgJ{@gTjCgERcVf@kCfES{EwL~HcG_DkHnAsN~CsDfJRsDcLnAz@vBoFvGSRsN_IgOfEwBwBwBfEkCwBoFvGsI?gEgE{@f@_DrDnA{@_DnF_DkC_NnU_g@fToUvGsSvLgJSoFjC_I_DgJbBcB_DgER{YrIoKrDo_@kCo_@~H{@jCkp@~HgJvBcQzEwBoA_DbBwQvBcGnF?rIo_@rD?cBkHbB_D{EwBvG_]f@sNgO_`AvB_N{JgYvBgJ~C{@cGkMzOcLoF{^sIwLRcGgEoKf@kHsIwL?sIjCoFwGwj@cL{YRcGcGoAz@_IcBwGkMgJnAkRgE{E{JwBgEgJnAoFzEcB?gE~CcBoKwVrDoUcGoPRgYzE{Jg@cGjCg@nAsIsDRbB{OcGoFvB{EsDoFR_IkHcVwBgYnAkM{JwBgEwGfEwLcG_NbGgTS{OfEcGvBgO{E{JS_]_IsD{EkMz@wGfJwBz@sIoFcG~CcLcBkCkCjCoFcBnFkMkCkHcGjCcGkCnAs]oFg@g@kMjCoZsIcLf@gY_DwGR_I{EkCsDoUnFkHnA{^_DkHcGvBoFsDjCsN{E_DkC_IgESwGgJbBwQsDkHoPgJ?cLoFwBbB_IoFcGbBgJ{ESR{YkCoF_I~HS{TwGsIwBs]sDf@gEoFoKbBgEkMjCcGwB_IgE{EcQRwBgYoFkCnAsNoPkMwBwLfJ_]sXwQkCsD{@cLsDsD{EoA_IjH_IoAgEcGg@gO_NgOf@kHkH{ER{YgJgJ{@oFvBgEg@_NcL{TjCoKgJkHkMzEcGwB_NrNc[~CsNcBkMoKgJS{JcLkRzJsD~H_Iz@_NgJwB{^gJgOcGcBkCbB{J_Io_@gEsIcLoA{JnAoPkCoAoAjCsDsDf@kHcLkRwLoAoPwLnAkWrDcGjC_SoF_N{TcGbBoP{@_NkCsDwG?{@cLgEoKoKSkCgO_S{@kH_IkCcVrI_IwBcGgO{@oZbGsb@oUwG_IjCoUkW?{JkW{OR_DgJ?_]oPoF?oK_NcBoKw`@~HcVwLcGcBfJwBf@gOwLbBcGoFsIkCkRvBk\\cB_b@sN{OoAkHrDcL_DoF{@{JnAcLjCkCoA{O{J{T{@oK_DsDgEsXkM{JgTgh@{@gh@wLsD?s]_I_Ig@{OoK{OrNcL{@kH~CoPnAk\\sD{J~MoAS_IkHcLg@gJwGkHvG_ScLgTwBoUbB_b@sDwLvBoK{Jod@bGwLbV{JcLcQRgm@oU{@gEgEoFf@sg@sXoAoFnAwQcQoZgTnK{J{@cGoFoFrD{J{@gJfEkH_DkCnAcBnKsD~CkHsDkMnAsD~H_Iz@cGkCwLnF{EjH{EwBcBsIsIbBsDcBwGvGwBjMkH{@wLsIwGvLkHf@kHsNsNwLnAcGrIsIg@kHgOwLcBoKcGoFcBsI{O_DwGoU{O{EkMcVScGoPc[{EwBz@{J{OwVkHkC{OkWkHnAkHoFkCce@sl@ka@g^o_@{JwBwQ_NkCwQs]kCkCw[kHoPkk@we@cGjCoAbGgJkCkC_]_b@bB{JgJ_D{@wBjC{Js]wGkHgOoFSgYzEwB?cG_l@gr@oPRwGnKoFz@_IcGcBcLgJ_Dg@gE~C{EcGoKoKkHRkRkC_SkMkW_NsIvQwo@wB{O_XcG{Jf@{EnFvBfJgJzEcLkCoFvBsNg@kRkHsDsI?kH~HsIoAgEoPwG{T~CcGgE{@sIoFcB{JbB{@gJcLwGcQwB{J~Cg^oP{OnAoKsD_XrN{J{@_I{Y~C_I_NwG{Og@sDkMwG~CgEcBf@_NcVwe@sD_DsNbB_IwBoFkMsDwVgOcBgE{Jg@kMsIsNcL{@{EjH{JwBwBkCSwL{Of@oAgJwBcBsDzEwBg@sX_l@sD_g@{E{J_D{@sD~HcG_IwBjCsIoAwGvBkM_N_DkMsI{@_InFoFoAcBgEkCz@oAsDnAsIgO_IkCkR_I{@kMnFcQnA_DsDvBoKwBsD_IoAgEfJsDS_DoFwBbGoKsDvBs]wBkC_Dg^kMcVkHcG{OSSgEzEg@?wGsI{OoUcQjCoK_N{JgJcQ_]gT{@sNkRsNoF_N_NsNoK_IwBbG_DwBSgJgJgJ"]
+},
+{
+  id:"illinoisriverjacksonco2", name:"Illinois River (Jackson County)", color:"#4f8f6f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Illinois River",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>Within Diamond J and Yarmony Ranch State Wildlife Areas:</b><br>• Artificial flies and lures only.<br>• Bag and possession limit for trout is 2.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 19.8 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["cvhwFzmngSgEjCsD_IoP{EcGbGwBwBoAvGkCcBg@zEoAgJsDjHoA{EgE{@oAfJ_DwBR{JoF~Cf@_IcG?SjH{E{EwBjHzEvB_D~HkC?z@bLoFwBcGvBRvGrD?cGzJ?nKoFoK_D~HzERRjCcBrDkCS{@jH_D_DRwBgE?z@rNrDbBoKf@?nFbGbB_DfEjCjC{@vGsDvG_DoArDjHcBnAwBcBgEjHnKfEkCnAcBkCwLfE~CnFrD{@{@jMgJRSsDSrIcGz@rInAbBrN_DnAnFvBoKzOg@gEkHoAz@rNoFg@bBrI_Dg@RwLwBcBgEzERnF{Ef@jHfE_XnKwGrIwBg@z@sIsDRR~McBnAwQSkC_DsIfEsSSf@~CwBbBkC_DcG~Hz@oF_SjCz@jHkCjCgJoF_DnFjC~CoAfEcGbB~CzEcLjHvGbBz@~HkCz@oAkC_DrI{EoF_DvGkCg@R~C_DjC_Dg@{@sI_If@SrDnFSnAfJcBbG{@kCoFz@z@wG_ISf@wG_DvBRbL{E_NwBbGkHcG"]
+},
+{
+  id:"jimcreekco2", name:"Jim Creek", color:"#7b2d8e",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Jim Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 9.9 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["wwvbFnxqhSoA_InFcVnP_NrSgYf|@nAbVsNrNgOv`@cLnKoKbGoPzO{EjCc[~HoP~f@oUzJka@b[{c@vBoPnPkWR_XvLwQzEcQkHsSbB{T"]
+},
+{
+  id:"joewrightcreekco2", name:"Joe Wright Creek", color:"#a07d2a",
+  state:"CO", region:"colorado", gauges:["joewrightcreJoeWright"], primaryGauge:"joewrightcreJoeWright", minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Joe Wright Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the confluence with Joe Wright Reservoir upstream to Colo. 14:</b><br>• Artificial flies and lures only.<br>• Fishing prohibited Jan. 1–July 31.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 17.3 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["_fivFnbieS_XcBgOvBcL{Jc[kM{TwVsNoFoKwVcQ_Ns~Ac`@oA{YwG{T{T_S{OwBcLz@gEjHsD?gJ{EoPkWwGnAsDgE{JoAsDoFgE?oAkH_I{EoU~CsIoA_DfEwLf@cGsDkHzEw`@SgJ{r@vBgOrNgYkCgJsI?oFoFsNz@cBkH_SgJkWw[{@kWoPsN{@oFwQwGoKwL{J~CgTgE{EcQc[{YkHoAkMcL"]
+},
+{
+  id:"kaufmancreekco2", name:"Kaufman Creek", color:"#2a6e7d",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Kaufman Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 8.1 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["wajkFnj}mSsSja@cVzTwLrDwo@bGsb@nKsDbGgYfEsNf@{TsIgJRkMoFc[ka@cGon@RgJgJ{^kHgJ{J_g@_]cQ"]
+},
+{
+  id:"kelsocreekco2", name:"Kelso Creek", color:"#5f6f9f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Kelso Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 23.0 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["kaejFj}{uSwe@{w@~Csq@kC{Of@kR{Jod@{OgO_IgT_]cV{OgTw`@{JkMkHkR{^sXoP_DkR_NsXkCwQoZ{aArDo_@oFo_@kM{Y_SwVoUgc@oPc`@kCgOoAsb@~Rw~@bB{YsDgJz@oFrDcBwBsSvB_DcBwQbB_Dg@_IgEsDbB_SkR_]_IcBsDkHnAoAg@_DsXgh@gE{@f@{E_SkRsIsN_I{EcBoFwQ_IsDcGkCoP_Dg@g@cG{EsDSkHkRsN?gOkCoFf@wLcBS?{EkCSbBkH_DgTbBwBgEoFzEkH_D{EcBkRkH_IfEsb@kCoF"]
+},
+{
+  id:"laplatariverco2", name:"La Plata River", color:"#8f6f4f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"La Plata River",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the U.S. 160 bridge downstream to the state line:</b><br>• No bag or possession limit for channel catfish, largemouth bass, smallmouth bass, northern pike, walleye, green sunfish, bluegill, bullhead, yellow perch or crappie.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 71.8 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["_nrcF~tjrSzOg@nP~CvGgJbQwBfYzTvt@bVvVr]fc@rSrD~MnFfEj\\zJbB~CvLg@rNrIjC~HnZvGoAjMbBnF~RfEnFzJ~MrDzJrXzO?SrIfE?rD~HvV~MSrIfEfOvQoAnKvGfc@wGfTbGvLoAzJvGjRoFjMvGnKz@~H_DzErD~McGbGjC~\\wQbBbBbGwLfEnAjHwLnKcBrI{JnA_IfO{J~M_XjR{EjC~Cz@cBzYoAnFoFrDbBnKkWbQcBrIwVbQRzEwGrg@oAzJ{Ez@kHvGoAnA_DbGz@vBwBbGjCfEwG~MRrIoF~Mg@bQsNzEnAzJgEfJvG~CwGbGkCrIf@vB_NnPf@jRcL{@_DnKoAvBcG~RRjCsIbL_D~Hz@bGrIrDoAg@_DbBoAvGfJjC_DnFf@nAsD~Cg@jCnFjCoAzOnKvBkCfJ~CjCcGvBfEfT{@~CrDjMwGjHrDfJ{@vQjHRrIbGbGSrD~CwBjCzEbBwBf@fEzESvG~HzEwBf@rDfER?jHbLbLoAbGvBbGzE??vGfE?{@vGrDoAjHzJzEg@SjMbQrIoAjCjC~HnAwBjCbBg@rDzEcBnAfEvL~CvBzEzE{@oA~CbB~CfE{@vBfEoAzEjH~CvBwBz@nFnK?fJbGf@nFrDRnFjHbBnKvLbQwBfErIfEvLfY?zEfErDvBz@bBwBnFzEvB_Dz@rDfYvLfERf@_DjC~CvBgE~CjCzESnAnKbLbQf@fOfERSfJwBRfEjMSzE~HrNzEf@fErI~H~C{@nFbGSrDfJcBbBnAbGjHf@SzEzE{@fEnKzJz@z@f^bBg@nAfEf@rScBfErDjHoArD~CzEcBnFrDrDSjHvBSnAjCg@vLvGRfEnKbLrDf@zOfEg@~HzTrSjMz@bGbLjMz@rIrInAnFbGvBcBrDrN~MvGjCoAf@fEvLSSvGnFvBcBnAbBnASnF~CvBfE~MnFbBnFoAnArDnKoAf@nFja@vLf@rNfJkCbLbe@nKfEjCvGfEr]rDvBRnFrNbQcBv[jHbQf@rNvBSrD~Mz@bVfO{@SzJbGbBjCbGzEz@vBkCzJbBjWkR~CfE~Cg@z@bGbGbBnF{EcBgJbGf@jCcLjCSnAgEjMg@jH_IbLgErN{^fEf@RvBrN{@nAsDfJRzEkHvGf@nAfEfEf@vBsIfErDfEcBbGbBrD_IjH~Cg@cGzEkCzErDfEgJvGwBjCcGjCz@vBcQbQnAbB~HnFcB~CwG~MRjCnKjC_DvBrDnA{EjHbBfEwGbGnF~WgE~CbG~HSrDbG~HkCrD~HvLSfEoFSrIvGrIrIoA~CcGfE{@jCvGbLcBjHnFbLcBfJzEvGkCzJnAvG_Df@~CzJrDSvBfJ{E{@rDfE~C?_IrIz@wB~CjHR~RgJnAfJ~HkCrIrDzEcBrDkH~M~RnPcL"]
+},
+{
+  id:"laramieriverlarimerco2", name:"Laramie River (Larimer County)", color:"#3a8c5b",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Laramie River",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>Within Hohnholz State Wildlife Area:</b><br>• Artificial flies and lures only.<br>• Bag and possession limit for trout is 2.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 64.7 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["{z{vF~mbeSka@f@sXgO{OrDgJzJgJjC{^gEoKbB_NkMgO~Cw[RwQsDoKbL{EcB_IvBgJkCgEvB{@wBwGz@SrD_IoAwB~C{@cGgJwBwQ~HcL_IwB~H_D_IgTwQ{EbBoFcBgEjHgE_D?~C{Ef@?jCwB{@wBrDwGoASgEwGz@cLoF_NnAsDnPgEfEsIoA_XfOgEg@_DsI{EcB{Jf@kMbLsD{@{@nF_DkCSrDgE_Df@{EsDjCcL{EsDbGnAf@wBjMcB{@oFrDoAcGoKf@cLvLoAsDgE~CkCcGgEfEwBwB{@~CkC_DgJfE_DoAwGjMoAcB{@nFcB_DsDvBf@nF_DbBjCnAcG~C_DvLcBwB{@zEkCoARrDwGvB?jC_DoA{@bGwGjC?sDwBg@g@zEwBwBgJnAwL_IoAbLgJzEcBgE{EzTgEsDg@bGcBwBgJfEnAoF{E_D_DnFgJSf@vG_DsDwGbG_DSkCfO_DkCSzE{EoAg@{Eg@jC_IcBsDvGg@{EwBrDg@gEwBSg@rD_NfEwL{EsD~C?sDgES?rIsDg@SjC_D_IkCrDSsDkHS{@fEwGcGoAzEsI~Cg@zEkHf@_DcBRwGgEcBsNzEkM_D{@gJwBbBgE{@f@wGcGR_N_NgJzEwLoA_Iw`@{c@fOoFsD{O~H{EkCoKzJsI??bQ{EbBvBjCoUfYgE?S_IoUfOoAzE_X?oKcLwVrIsNnPjCzEkCvGz@zJkC{@oFbGf@zEsNfTsNrDwG_D_IvGz@sI_DcBgJ~H_DkCoFzEoFgE{E~HsD??sDsDnAf@vBkWg@cBzEgEz@S_IkHbGcBgJkC~H{EsI{EjCgE_NkCrN{EkC{EvGkCoF_Df@?~CsDbBvBjHwGSvBzE_IwGkHbL~CrD_DnFoFg@SzE{ERbBjC{OnFvBrDwGjHrDnFsDR{@vLsDbBnFvBoFrDnAzEcBfEoFf@rDjW{EnA?zEkCwBoFnAz@zJcQbLz@fJ{EjCsD_D{EjRg@kHgEz@sDgE_DbGgEf@z@bGwGnAnAjHgEoA_DrDoKoAoFfEkW_NkCnKsD{Jk\\cB{JrI{@cGwLf@~CvGkCvGsDf@z@oFkCcB{EnFsN{@oAvGcGkCkMbBz@jHoFnA?fEcGbG~CzE{@nA_Nf@sDvL{EnA{@~HcGg@gEfJnF~CoFjHSzEsI?gJzEcG~HfEnA{@jCsNbBcBvLwLrIoFrXkC{@cBvBg@jR_Ig@g@rIoF~HwL{@SzJcQfJnF~H{ErDkHgEkHvBkCcB{E~HgEcBsDvGcBkC{ErXgJbBSjMgErIRvG{@bBkHoAgEfJcBsDwBvBbBnKsDnAoAcGoFbLgJcBkCrDjCfE{@jCwGoFgE~HgOsDgJvGgJRS~McGwBcGjCgEcB{@zJ_D_D_Dz@{@vLwBSwBsDRgE_DwBkp@jRwBzJoFcG_IScBvBbB~C_IcBsIrDRfJgE?SjH","{fayFrm~eSgJf@cBjC","wj`yFjg~eS{E?g@zE","ktoxF~hqeSsIrI","_lxwF~|geSoA_D{ER{@fE","ouzxFneyeS?fE_D?{@gE"]
+},
+{
+  id:"lestercreekco2", name:"Lester Creek", color:"#7f6f5f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Lester Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>For 0.25 miles upstream and 0.25 miles downstream from Pearl Lake:</b><br>• Artificial flies and lures only.<br>• Bag, possession and min. size for trout is 2, 18 inches long.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 2.5 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["cs{wFbykkSfOrDfc@{JfJrIrDkCvGzOvB~RnFrDfJ_DbBnP"]
+},
+{
+  id:"lonepinecreekco2", name:"Lone Pine Creek", color:"#5b8c2a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Lone Pine Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From Parvin Lake upstream to Larimer Cr 74E (Red Feather Lakes Road):</b><br>• Fishing prohibited as posted.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 21.5 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["gm}wF~`qbS~HgY_IkCvBcj@rI?f@kCkM{OjMcG~C~CbGkCf@rXjC?rNwLnF{OvQgJrDsIwBgEjM{^~Ck\\nFoKg@kHvLkHbBsSbL_b@cBsSnFkWg@sSbBgEoFkWfEoUgEgEwGz@oA_Dz@{JnUwLbB{EwB_I{JgEwGkMbBsSgJ{J?wLkHsDSoPsDwBS_NkM{@z@wQ_IzE{Ok\\{JsDRkMsDwL_IkCkCwo@kCsIfEkRgOw`@wLcL{Ewe@gJoFcGc[sIgJnAgYwBoKoFcGg@wV{EoKrDkCrD_Sg@{JnAcBwBwBfEwB_DsSsDsDjHgEkCwG~CoFf@k\\wBkHwGoAScGjC{@gEoAbBcGsD_Iz@gJwL{ObBg@g@gEbB?{@kC"]
+},
+{
+  id:"lospinoscreekco2", name:"Los Pinos Creek", color:"#2f7f8f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Los Pinos Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>Within Cochetopa State Wildlife Area (Snyder Ranch):</b><br>• Artificial flies and lures only.<br>• All trout must be returned to the water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 13.0 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["_wrgFrdtkSkMwLwVod@wt@cB_]kM","stqgF~aukSoF{J_S_N","kt}gFrogkS_S_NcVoZoFz@cB_Dg^oK{T_NcV?sX{YkWoPcGkR","sc|gFvnikSsI{c@","gn|gFzdhkScLwL{ER","wxigFvixkSk\\oAgTfEwQvL_NzToFvBw[oA{J_N","gqxgFnkokS_DwBcG_b@sNgYgm@wt@"]
+},
+{
+  id:"losttrailcreekco2", name:"Lost Trail Creek", color:"#6f7f7f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Lost Trail Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 5.9 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["grnmFrpvlSrDrIwBvQkRfTgJrb@wBf|@bBnKf@zc@~WziB?zJnFzE{@jHjHnUSrInP~W"]
+},
+{
+  id:"mancosriverco2", name:"Mancos River", color:"#1f6f8b",
+  state:"CO", region:"colorado", gauges:["mancosriverTowaoc"], primaryGauge:"mancosriverTowaoc",
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Mancos River",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the U.S. 160 bridge in Mancos downstream to the state line:</b><br>• No bag or possession limit for channel catfish, largemouth bass, smallmouth bass, northern pike, walleye, green sunfish, bluegill, bullhead, yellow perch or crappie.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 115.1 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["wj_cFbpvsSrSnU~C~\\~CrDbGj\\vG~H{@~HbVrb@fEfOf@b`@vBvGg@bLfJn_@g@zOnKnUoAzJfEnKoFrS~CrNoAfEzEnFRbGnFvB?rD~MfErIjRbGfYzc@ja@jWrIg@rIb[zJbBvGbLfEj\\jk@fJzc@nPnPnAvQfJvBbB~HjHbBfJvVnUfJnFkCbGz@jCfJbVnArNgEjHvGjHsNjMf@~CrDbG_NzJnAbG{JjH~CnF{@bLkMrIjCvBfEbLR","_wcbFnfgtSfOf@bB_IvBnASnFvB{@nA~CzJoF{@zObQgJf@vB_DnAbBzJjHkMvLbGrDoAf@jHzJsNjCzE~CsDrIz@nArDwBbBnAbBzEwBzErIzJ{EzEzOzOjMvGS~MrSjCb[v[rS~CzTjHbGf@nFwBbBzEvVnAbVjH~C~Hnd@jHvGf@nKfEjCS~HrIzEf@zJbQjCjHfTbBz@jCkC~HjHvBfJzEsDnAfEnKzEnF_DrInKfEf@{@rNnK?~CnKjCcBz@fJbGvBkCbLzEvG{@jH~CfJnUjR~H?jCbGfO~H~H~RgEfJzEbLkCrDz@fEzE?nAfTbLjCf@zJjHz@oAbGnAnFnKoAg@nKzJjRcBj\\rDbBnFrSbLvQnFwBbGvBbBnFrDnA{@rDjHjCjMg@nFrDbGoArD~M~Hf@z@fEbG{@zEvB?~CoF~Cf@vB~Rz@fErNnFnAfJoAvLzJzEsDzOzEnAcGzEfEjCwBz@rNrDrDz@sI~CRRrNvL~CwBjMbG{EnF?~HnKfER~CfJkCfOfOfORvGjHRnAjCSfOfJkHbGbBnFfOSvGrDfER~HfEf@cBvLvG??rDwBg@?jC~Cz@nPsDvBjH~C_DnAbQf@z@jCsDjCzOrIfOR~CsDbBfJ?g@vGnFg@vBfEcBjHoFSfOfO_DvQjCvB_Dz@S~C~CfEkHoA{@rDrD~CzEoAcBzJ_DsD{@jCvBrIfJS{ErSjCjMcGzEf@nKvG~Cf@vGg@~C_IS{@jCvG~CrSzh@z@sDnAnAbBr]oA~C~HbBoFrDSrDgEsD?~CgEz@rDbQkMjMRvQfO~u@jHjHnAjRnFcB~HbLwBjHvBbLsIfOzEvGrDjRjCoA~CfEcGvBRfEsDnFfEzJsDrNbB~C{@vB{E{@cBbBoAjMjCzEkCfEbBz@{EnAfEnFkC~HbG~CgEzEz@jH_IbLz@zE{EnKnFR_DjHz@bGgEvBjCbLcVfJrD~RsDfE_D{J_Dz@jCzEg@~C~Cf@{JrI?vLcG_D?jHbGjC{@zJbGjCSbGkC?f@~CzEfEfJ??fJzE~C_DfEvGvBgErNfEjRgEf@gE~MnAbB?gEjH{@jCnFwGrDz@~CoAvBjHbGwLzEnArI~CcB~CbGsDbGzEvQoFrDjHvBg@sDbBSjCzEnAwGvBSz@bLjCSvBnFSrNwLbV?zEvGvLgJRfEbG?vGrDf@kCnKbGSjCvBcGrNjCf@jCoFoAnPnArDrIoF~CfOoFnFjHfJkCfJzEoAvBnFoAnFrDf@jCbGbBoFjH{@S~WnF_DjCrI~C?nArIwGvBsDrIz@bBjC_DfEf@wBbLrDzEf@_DnAnA?rI_DnFzEz@cBrInFg@?{EjC{@bBnF?jH{JrSzE?zEjRnFrIz@fOsDnPrDfE{@zEfEz@SnF~HjCoAzEfTbLRvQ{EfEbGfEwGvGnAjCnA_DrDjCkCnUbGSfJfTjH?jMrIfEzOg@nKrDjHzE{@nAfTrDfErIsN{@nPkH~H~CnA?vBbLnAjMf^g@n_@bBfEwBjHbGz@_DnFf@vGvG_DrIvLkH~HS~H{E?cBfEvBnFfE_DbBjCg@vG{EfEnFnFoA~CsDRf@nKzE{@oA~RfE_DrDvB_IrInKjMf@rDsD~Cg@gEcGoAS~HkCfEwL~CwBzEwG{@nKvVcGbG_DvL{J?cB~C~HvL~CsDrIzEf@nKoFvL?bGzEz@f@cGrDoA~Cf@~CvGfEsDz@fOwB~RjHoARnKwG~RnKjCz@rIrDwBbBbBnA~HwGbBcB~H~Cz@z@bGrIbBrD~H?jCcG~CrDbGkCvGrIrDRnFjCvB{@fE_I??~\\{JoFsI~CvBzOfEbBf@bLkH~MvGbBf@nF_DvL{EwBcGnF~CbGzEg@nF~MoPrIrDvLcG{@{@zEjH~WkHf@?zE{E~HfJrNzTvGjCfO~HcBrIjHRbG{EfJbBnFjCcBbBjCf@~HsDbLzE~CkHfO~CjCcBfEw[rNf@vGfOz@?zErDvGwBvBkH{@nAzOcLbBzEfOsIfE~CvQcGzEg@fJgE_DRfJfERRjCcLnUjHfEoAnFvLfOgEbLvGf@?fJbBnAzEwGrIzOSvQrIkMz@rb@jCg@zEkMbBz@nAjRwBrIgJrInFbBSbGnPvLjCfJzJSnArIoAfOjHR"]
+},
+{
+  id:"maycreekco2", name:"May Creek", color:"#8a6a2f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"May Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to the confluence with the Poudre River:</b><br>• Artificial flies and lures only.<br>• All trout must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 6.0 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["c~uvF~ujdS{JrDoKfT{h@fc@?b[c[~{BsXby@oKrSfEzc@wGzh@"]
+},
+{
+  id:"mcelmocreekco2", name:"McElmo Creek", color:"#3f7f9f",
+  state:"CO", region:"colorado", gauges:["mcelmocreekTrailCanyon","mcelmocreekColoradoUtah"], primaryGauge:"mcelmocreekTrailCanyon", minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"McElmo Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the U.S. 160 bridge east of Cortez downstream to the state line:</b><br>• No bag or possession limit for channel catfish, largemouth bass, smallmouth bass, northern pike, walleye, green sunfish, bluegill, bullhead, yellow perch or crappie.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 83.1 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["op~bFn~cuSvLz@f@fE~CwBvB~HSzJjCRcBfEfE{@f@fc@zEnFsDvQrDjCg@zEvBvBkCvGvGrDoAfErDzEoAzOvBrDwBR~CbGcBg@z@bGcBfE~HzEsDbLnAfE{Eg@RzEoAf@zEjCcGf@vB~CcBrDbBz@SbGjHrIgEbBS~HoFnArD~C_DbGkCcBS~CsD?nA~HwL~Cf@jHvBbBwBb`@sDcBbBzEkCf@R~CjHg@g@vBjCoAbGrDf@jMrIrDcBzEjCg@RbGrDcGvGf@g@zE_DSbBbLjC{@bBbGrDgEnF~M?nFoARrDrD{EbBzEjCnA_DnAf@zEfTzEjC?fOwBvGrDf@nA_DoAvGz@rIvBnAcGf@?rDcGvGfEvBg@nFvGwBvB~C_D{@?fEvGRgEvB{@zErIwGvBnA_DnFbBvBsI~H~CSf@zJzEvBg@bB_DcBjCjHbBsDnAz@wBzJwBnAnFfEf@fE~Cg@f@nFvLnAvB~CbBcBfEvLbLnFsDvB?bLoAoA{@jCbB~CoFvBz@rDwB??vBjCRg@~CnASf@jCwBRfJfEf@_DbBvBvBsDz@jCjCwBSkCrD{@RjC~CSRfEnKSrD~HgEf@vB~MgErDoAoAbBrIgEjCwBkHkC~CnAnFrDS~C~C{Eg@sDrD?rDbG_DRfJ{EnAkCbGfEbL_DvQ~Cz@zJcGnArIsDRRrIwBjCoFsDwBjCgJoAcBjHoFf@f@~CwBrDfEnFg@jCkRrDwBfJ~MbQ_Df@RjC~C~CnA_D?jH~CnAwGzEkCcBoAvGwBgJ{Eg@wBzOsDgJf@vB{E~H{@zTkCnAz@~CvGSbBvBnF_Dz@{EnFoAf@jHjHR?zEjM~HcGvBwBrIgEbBz@zJwBfJ~CbQ{@jCrDfERnF~CRoAfEvBnK_DvG~CjCvBzOcBfJjCbGR_DrDnA?~H_Dz@g@fErDRwBjRfEzJ{E~HjCvLjCbBf@zJgEnKsDf@jC~MsNjHz@rDvGoFg@bLcLg@~CjH~H{@oAfJkCz@g@cG{EnAcBkC~CzJsIvGbBvLjHg@jCgEz@vGvGoAwBrNwBsDwBrDvBfEg@vGcLvG{@kCcGzEz@fEjC{EbGnFz@oAzEvGoArD{JjC~CjCkHzT~Cz@g@vBoF_DoAbBnAnFkCf@{@~HbBz@g@vGjC{@cB~C~CcBg@jCoFz@f@fEsD_DbBbG{JbBf@zOvBvB_DbBjC?nAfE{ERsD~H{@cBsDjCcB_DbBrN_Dz@nAfJ{JjCjCvGnAoA~CfEsDrIcGf@zEj\\{JrI_D~k@nAnPwGvQnArIzEcBRsIbBvB_Iv[?zc@zERnAzJwGoAbBzJvBf@g@vQgEvLbGbB{@rIjHzJoAz@~C~RoAvBrDnKwB~HwGRf@rSwGzOvBjCrDcBbBjCSbGgEg@cBjCnFb`@cBf@oFkH?f^cL~\\bBrIjMrIoAfYbBg@rD~MnKnK?bL_NbQ~Mf@fJnKz@bGkMve@bBrNbGzE{@jCbBbGgEg@oAcGwBnASzEbGvBkC?g@rD~MbLoAbBkCgEg@fJvBRcB~CbBjHnFcBf@bGnF~CcBnF~CbB?vGoFrNzErDnAoA~CfEoA~Rf@nUjCrDoKzTrD~HfJwBwBrXvBr]cBfEz@zJ{EfJvGrXcBjHfJzJ~C~M?zO~HjCwBjMjHrNgEzJnAbLnU~RcBrDoKbBjCjCkHbVbB~CzEg@cGrD?nFsDjCz@nFjRvVf@~C_D~CvGzJsIzJgEsDcLnAcBrNwGzEbGzOsIzOrDzc@cGz^oKvGfE~CRbGvGgJfEjC_Iz^bBbQ_Nz@bG~MbBbLcVjCwBvGbBfJrIbGwBfEvGzEwLzYfEnFSbGnFrInAbL_DnFvBfJsDz@vBfJcB~HcB{@sIzEz@nZkCfYkCbGbBnAg@fE~CnA?bGbGjR~M~Mf@{EzEjWg@fYfEnFSzEjCjHbBRz@nFfE?S~HvB~CSzYkHnFwBoA{@~CnFfO?rIkCfEbLfJg@~C_IfEnA~H_DzEnA~CcGbQ~CzOjMrIoKjM","kcybFf_qxSkC_D_D~C"]
+},
+{
+  id:"meadowcreekeagleco2", name:"Meadow Creek (Eagle County)", color:"#6e8c3a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Meadow Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 6.6 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["kkuqFnlmhS?~WsDjRbBrDve@j\\bQvB~WbVzYjf@f@fTfOfOzJnZf^zYjHvBz^fh@SrX~Cz^"]
+},
+{
+  id:"eastmeadowcreekco2", name:"East Meadow Creek", color:"#a8552a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"East Meadow Creek|East Fork Meadow Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 7.1 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["kjsqF~{ihSfTwBvVfJ~HfJzYzEjHzEnFzOjC~f@{@rSnKvLrSzc@{@~u@~Cz^Rvj@~RbcAoAvQ{JnP"]
+},
+{
+  id:"eastmiddlecreekco2", name:"East Middle Creek", color:"#4f8f6f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"East Middle Creek|East Fork Middle Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to the waterfall approximately 2.5 miles upstream from the confluence with Middle Creek:</b><br>• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 7.5 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["kp}hFf~mgSSzOzJ~\\fE~a@fJrX?fc@bQja@r]~Rz@fYzJjMf@vG~HzJvQrIrl@fm@rv@r]zOzOrNnA"]
+},
+{
+  id:"southforkminnesotacreekco2", name:"South Fork Minnesota Creek", color:"#7b2d8e",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"South Fork Minnesota Creek|South Minnesota Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 8.0 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["cxukFn|wnS_S?_IfEgErSwLfJ{JjRwQvL_IjRcLf@sNvGoKrIcGvLgOfEcG{@wLbGoUvVcLoAod@jMoArNsSrS_Nz@oUzJwLoAwLjCwL_D{Y~H"]
+},
+{
+  id:"mitchellcreekco2", name:"Mitchell Creek", color:"#a07d2a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Mitchell Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to the upper boundary of the Glenwood Springs Fish Hatchery:</b><br>• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 9.9 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["ss{pFzdbnSjWzTvLfEfc@oAjRjHzOcBrSfEnUkHvV{@be@rSrD~HbB~\\vGjMjCfYrSb`@f@~MrS~WnPbGrXv`@f|@bBzOvGbVoZzTg@"]
+},
+{
+  id:"natecreekco2", name:"Nate Creek", color:"#2a6e7d",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Nate Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 9.0 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["g~~gFjhqoSsIni@{EfJSzJ_IvL_In_@_Sz^f@nFnKfJRbGcGjMkCzYwGvLf@jk@oPf^_DnP_IjHwGzORzJkHfJ?jRoKnd@z@r]nFzJfJbGjMrl@rSv`@"]
+},
+{
+  id:"navajoriverco2", name:"Navajo River", color:"#5f6f9f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Navajo River",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to Bridal Veil Falls:</b><br>• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><b>From Oso Diversion Dam downstream to the state line:</b><br>• No bag or possession limit for channel catfish, largemouth bass, smallmouth bass, northern pike, walleye, green sunfish, bluegill, bullhead, yellow perch or crappie.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 58.8 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["sqy`F~tvlSkCnAkM{OgERwLbL{Jf@oKoKwG{@{@zJcLbGfEnZ_DrIcBbBwGwB{T~HgJnPrDnUSjHoKnPsIcBnAvGoKnAnAvLvGnAbLbVcLzTbBvLfEfEf@~HoKb`@z@bLkCvQvBbQoA~H","{~jbFvd|iSjMkC~HnAfJkM~RSzh@cQ~f@g@vQbGbLfOnKz@rl@zTvQ~WnFnPb`@~WvGbL~MvG~H~MnPz@zOzTvLkCzJnFrSwGnZfOfEzJvGRnAzErNbLbBfJvQ{Jn_@nKjH~HrXcBzJfEvGvLz@bLrIvGnKjRja@{@jCvBbG{EjHbBbLkCjR~CvVkHb[bGbGoAvBzErIfEfOoA?vGvGcBrDwLfJnAzJoKnA_Ir]RjHcLrNSbVvGvG{EfOjCvLnKvL?jCvGzJbG~W~CnKvGz@~CvVz@nUwGn_@vVfJwBnAoKnFoFvVvLnPwBrIrDbGwGrN~HrSwBzJnPrIoAvBbG~HcBnAbLzESnFvGrDoAwBnFnAvGrIsDzJjHfJgEvB~RfErDrNRbB~RjRzJ?nFbGrIwBv[nKbGSnUjH~H_IbGjMvGrDbLjCjW{@fJbLzJRr]vBvGnA~a@vGjHsDnKfEzESrD_NnKz@~WrDbBSvGgEvGz@~MoF~C{@rSgJbLbGbQbBrSkMnKf@fOwGzEzEjMcBzEz@b`@cGfEbBjz@gJrN~CnPgJj\\RnPfEzTwBbLf@fc@wGbQzJ~p@kHbL~H~CzJ~MbBnPrI~CvGjHjCfJSfJjMvGzJwBjMzOjRvo@kCvBf@fJnPb`@{@zTwBrDbGnKvBjWjCbGjMvGg@rNjMjMbGf@nFnFrDfOvLnPoA~RrXrq@zEj\\vGnA_DzEf@bGnF~C"]
+},
+{
+  id:"newlincreekco2", name:"Newlin Creek", color:"#8f6f4f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"nhd",   // NHD flowlines (OSM has no line under this name), clipped to the state with park water removed — don't re-snap
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to the USFS boundary:</b><br>• Fishing prohibited.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 20.7 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["{~rhF~pkaSvBkCjRz@jHwLScLvLsb@nAoUzEgOrIoKf@wLbG_IfE{r@fEkCz@cGnPg@nFsN{@{J~CgESkRjC_DrDnArDgJ{@sIoFgE?{JcG_S?gOoPcBgEoKgT_N_D{ToPgOwG_Ngc@cVoAoKgEoAoFwQsSsSgEcQc`@o_@_Nod@w`@oi@oKgJwGw`@sSkWgJ{@gOwV_NgaAjCcL_DcLbGoKsNoPS{E_DsDg@wLwGcGcG{YoAf@z@{JoAkH~CgEoAkHgJ_IScQwG{EwBoPoKoPoFbBSwGkHkRoK?{JgToPcGkCkH"]
+},
+{
+  id:"nickelsoncreekco2", name:"Nickelson Creek", color:"#3a8c5b",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Nickelson Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 5.7 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["wqfnFvlmlSgJoAoPrD{JcLoKsDwQSoFkC{JjCsb@gJoKz@{^oP{Y?_D_I{Y_SkW{c@{OfE_NoF"]
+},
+{
+  id:"nolancreekco2", name:"Nolan Creek", color:"#7f6f5f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Nolan Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 8.3 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["g}`pFfcyiSoPbGwLrSsD~Hf@jMoFbGkCjRwLsDsDbBoKrXnAfJsb@bV_Db[kMnKgOjW_IRoFbj@zEfYcBjHvBzTcQvQoAvQ_Nb[f@z^","cf`pF~jwiSfErDf@~HkHvQ_I~H"]
+},
+{
+  id:"northforknorthplatteriverco2", name:"North Fork North Platte River", color:"#5b8c2a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"North Fork North Platte River|North North Platte River",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Bag and possession limit for trout is 2.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 44.5 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["o}qxFfaziS_DkW{JwVbBsIvVgTwB{YgE{O~CwV~C_IoA_]nAoF{O_v@kC_DnF{O~Cc[g@wL_DoFg@{c@jH_Sg@_NrIgTvGoF{@gJzE{EcB_DnAwBbBbB?{E~MkMoAgEvBcBg@{JzJ{JbBoFoAoAnKgTSgEnPf@~CsDrDrDrIgErDrDnKgEz@rIbGgEjCjC~HcG~C~CbQgJfEvB~H_IvBvB~Hg@z@jCrDsD~H~CnAgEz@jCnAgErIoAf@kCzOwBR~CjCRzEsDnF~CnKoAvB_DjHz@z@vBvBwBbBfJf@_DnA~CjCsDbGrDvG{EzEzEfEoFbB~CvBoFjCzEvB_InA~CjCbBbBwBz@~CnF{JjCjC?_DvGSR{EbBvBjCsDvB~CfEkHR~CnAoAnAvBjC_IzE~C{@oAbB?vBkHnFvB?jCzEcG~CjCf@cG~CnF{@bB~Cz@nKgJzEvBvBgJbGz@nAgEf@jCnAkCjCbB?jCjCoF~CzEjC{@nAfEfE?{@wGrD?RvBrDoF~CzE~CoAfEfJ~Cg@g@zEjCwB","{mswFjaqhSbBrDvBoAg@cGfE~CvBwBg@wBrD{@oA_IvBkC","siwwFnqaiSvBRf@{JvBoAf@vBbG_NbBz@wBkHfJoARsDjCbBf@kHvGoASoFjHg@oAcGfEf@g@oF~HcBvB{EbBrDjCgEbBz@{@sDrDwBwBsDvBf@vBsDwBoAnFoFfER{@cBfE{EwBkCvGwGSsScBcBrDoKwG?wBgEg@vBcBgE_ScGwB_N{EoA{@sDkCfEkM{ToAS?nFcBoKgEbGwBgJcLgE~C{EcB{EcBRf@sDsDRbBoFgER?oF{Ef@~CwBoAgEoKnA{@_I_DjCkC{EsIgc@gESwBgEnAwQwGnASwBjCgE{@sIsDg@z@_DbBnAzJwBg@cGbBoA{@_DsDg@z@gEcB_InAkCjHvBS_IjH{@?{ErDnAbGsDnAjHnFoASgErDcGrDnFbBg@cBgJfEcBoAkC~H{@_DbGzE?wBrDbBbB~CoPjCnFrDgEfErDvG{JbBvGjCgJvGnKg@cLjC~CrD{@wB{Ez@sDnFjCz@kHbBnAf@_D~CrDg@sIvBkHzE~C{@oFzEvBg@cGrIg@wB_NnFoFg@sDzEcBg@sDfEz@g@{JjCf@z@sDz@jCjCSg@wGfE~C{@cGjC?RsDrD~C{@_DfEoAoAcBvBgEsDg@fE{@cBkCjCwBg@gEvB~CzTwe@kC{EzEg@","grswFnsqhSrD_DsD_D","w}vwFbbzhSkCkHwGf@cBkCjCkCsDgEkCbBoFkC?oFgEoFvBwB{EcBR{E"]
+},
+{
+  id:"northtaylorcreekco2", name:"North Taylor Creek", color:"#2f7f8f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"North Taylor Creek|North Fork Taylor Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 12.8 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["ogqgF~{xcSnAsIcQwL{Es]gO{Yw[kMoK{J?cQfJwQsDwj@kH_NkC{TkH_I{Osb@{JcLkCkR_]{r@_Ngc@Sgc@~Rgc@RkRzEoP{@kMzE_b@~CoPfJoPz@wV~H_]{@sSbGc[wBoKbB_SoFgORcG","_vpgFfozcSoU_]"]
+},
+{
+  id:"northwatercreekco2", name:"Northwater Creek", color:"#6f7f7f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Northwater Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 10.4 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["_yxpFndsqSzJoAnAbBzYr`Af@zJ{@jdAsS~p@SvQsD~MjCbV{E~RRv[zE~HzJfc@nKbLbBbVzOja@_DzJnAfOgJb[jCzJ_DzEgEvj@cLnP?~HwGjWcVvj@oKnFwLcB"]
+},
+{
+  id:"osiercreekco2", name:"Osier Creek", color:"#1f6f8b",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Osier Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 6.4 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["__baFz}dhSz@kp@sS?g@gYnKoUz^{^zEkRrIkC~CkHjH_Dv`@{@vQoFrNbBrSkMbGS~CnF~HbBbGfObGzEnKoAbLrD"]
+},
+{
+  id:"eastforkparachutecreekco2", name:"East Fork Parachute Creek", color:"#8a6a2f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"East Fork Parachute Creek|East Parachute Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 22.6 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["gevpFftrqSnF{OvQ_NnAwG~W{@jHja@jMb[~HnKv[~Rzh@fzAbLzOz@bQrNja@zJ~R~k@nn@rN~W~RvcAzE~f@zOve@~CzYwBzOg@zzAsDbL{TzYcBvLoFjC{Oni@cGnKsSnP_D~H_N~HoK~RoU~RgEfJgY~MoPvQ{Tjk@wBvVRfh@rIbQz@~f@bGb`@cBbLrIbQrIfm@RjR~HnFjHfkAbQnn@"]
+},
+{
+  id:"eastmiddleforkparachutecreekco2", name:"East Middle Fork Parachute Creek", color:"#3f7f9f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"East Middle Fork Parachute Creek|East Fork Middle Fork Parachute Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 8.8 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["wuypFfcgrS{@nFvG~RRzYjCbB{@~a@_DvGfEvLkC~HfEv[vBjCoA~M~HjRcGjMzEvGcBbBg@bVvB~C{@~HjC?jHv[kCf^vGjk@z@f^fJb[z@vVbGfY~Mbe@~C~CnA~Mn_@rb@"]
+},
+{
+  id:"passcreekco2", name:"Pass Creek", color:"#6e8c3a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Pass Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 16.4 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["cdqcFznjjSjM_]g@{E{JoA_IzEgr@jHg^~R_IzTsN~HkRSkC_Dc[rDoAbQ_IfTnAzY{@fOoFbL{@vVoFbQkCjW_b@b`@oAzJgJrNoAnPsDvGwLvB{EsDoPrD_I_DkHfOsIjCoAfJ{OfJf@jH{ErDsIRkRoFg@~CgEoAoFjCwB_DcQ{@_NcLsSnFoPcLkRrIoAvGkRbBoF~CcVkC{TrNoK{EgYS_NfOka@nK"]
+},
+{
+  id:"pasturecreekco2", name:"Pasture Creek", color:"#a8552a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Pasture Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 3.5 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["sb{dFzvgqSzm@{Tb[oAvVrD~a@oPvGz@jH_DnPRfOnP"]
+},
+{
+  id:"pettycreeksanjuanco2", name:"Petty Creek (San Juan County)", color:"#4f8f6f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Petty Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 3.6 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["{}}dFby}qSrDgTnA{^~Roi@z@c[jRoPjMsXbQoPnFc`@"]
+},
+{
+  id:"eastforkpiedrariverco2", name:"East Fork Piedra River", color:"#7b2d8e",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"East Fork Piedra River|East Piedra River",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 24.4 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["{_idFvzalSv[bGr]fYrX~a@vBfObV~RjCnPvLz@~HrSfJ?bGzJbB{@SzJzObGbBbQrDz@bBvQvG~HbQns@jHvLrNrI~Cv[~HnPbBjRzTbe@vVfJvQcGjRnAvQzYfOzEnKnPjRfJbGg@fJrDzTj\\vBrNzYnFbG~HnKRz@vGfEg@rNrIzJfJzJ~RfJjHfEbQ~MrNnFRjHnFjCbLnFvGz@jHbLbG~HnZSbG~HrIrDzOcBvGfEjWvGvGSjCzOvVjCvLzTnPbBzJcBvGz@jHjHrDvGjRzE?jC~HnFjCRzObGg@jCvBwBvQbQzE?nP~CnP~HfJf@jM~HfYvGnFg@fJfEg@vBrDrDRoAnKjMfE{@zY"]
+},
+{
+  id:"pointscreekco2", name:"Points Creek", color:"#a07d2a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Points Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 5.4 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["otgjFrf}uSoUod@kRcG_NkRkHkCk\\we@cLsD_SoZs]{TcLgT{EcB_]bB_]wQ"]
+},
+{
+  id:"poosecreekco2", name:"Poose Creek", color:"#2a6e7d",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"nhd",   // NHD flowlines (OSM has no line under this name), clipped to the state with park water removed — don't re-snap
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 15.5 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["_v{sFzm{mSnZcGjHf@bGwGvBcQsIwVoUsSkHcQoA{YkM{^?gTgJ{T?cL{TwQoKwQ_DgO_X_D{OkRkMoFcLcQ{EkRkMcLsXbGwe@nUsDvGsIvBsDfJsXbGc[_DwGsNkRkCsNbBsjAbo@wQzTgh@jWkHrI_NrDwLoAoKzJoUg@sXoZgEf@"]
+},
+{
+  id:"northforkpoudreriverco2", name:"North Fork Poudre River", color:"#5f6f9f",
+  state:"CO", region:"colorado", gauges:["northforkpouVaDale","northforkpouHalliganRes"], primaryGauge:"northforkpouVaDale",
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"North Fork Cache la Poudre River|North Fork Poudre River",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the confluence with Divide Creek downstream to Bull Creek (above Halligan Reservoir):</b><br>• Artificial flies and lures only.<br>• Trout must be returned to water immediately.<br><b>From Milton Seaman Reservoir downstream to the confluence with the Poudre River:</b><br>• Artificial flies and lures only.<br>• Trout must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 45.5 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["_foxFrw|aSjMvGvQ{JvGz@rD{JzOoKbGvB~HoFSgJjCsDzOcB?_I~H{Jg@_DwGg@cBgEfEcL{@gh@~HoAnFjMbL_N{OkHf@gEnF{EnPSfJwGvQnAjHcLrIvBz@{JkHsS~HcQ","_{gxFb}ycSnA_D{EoFS_N_D_IRwLkCoAnAcBkH_Dz@oAcB{E_XwGgJkWRgh@kHoKz@sDwBsDz@wQsD_Sf@oPoF{^fEwQnA_XcQ{J{EfEg@gJvBgEoUs]oUwB_NzEwLwV{JoFSoFcGoAwBwGnA_DvBnAvG_D{@sDoKcG{Ef@cLoKwGc`@wGgEsD{T_I_D{Tc`@oF?kHkWsIsIgEzEsSoA~CoKS_IzEsDwBoKvBkHoAkHz@cL_DsDf@gOwBsSfOoZcBwG~C_IcL{ER_NfEoFkCwGf@{^gEwGbG_{@kHoK?oK~CkHvGRbQ{JnAcL{JcGgEsNgOf@vBwVfOsN_DgJsN_IbB{TgE_Dg@wGwQgOkHg@_IsSRoKrIoPwBoAf@wBcL{EwQfEoFcLf@{JnFcBrDkMrN_DvGvBbBwBcB{J_NsIcGjC_DoAbGs]vLsDbBgEcGoARsDcVgOS_IjCg@SsIzE_ScL{JSsDnAcLjHoK_DwBRsDnFkCR{E{EoKcLfJ_IsDbBoKnK_IRwGoKgEwLsXkMnFcBg^{J_Sz@oPgOwBvLkMz@oUjH{JfEsXfToFz@kMjHsD{@_S~R_]~CgJoAkCnA{E~MwQ~C_l@zEwGzE?jCka@nFgOnF~CrIoFbBgJbGSg@vVsDfERjRjCrDzOoFzEkM"]
+},
+{
+  id:"southforkpoudreriverco2", name:"South Fork Poudre River", color:"#8f6f4f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"South Fork Cache la Poudre River|South Fork Poudre River",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the Rocky Mountain National Park boundary downstream for 1 mile:</b><br>• Artificial flies and lures only.<br>• Trout must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 33.3 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["k}lvFfdscS_IcLoUsIoPkW_XgJcBjC{E_IoFg@oAgJcGwGRkC_D?cBgJcG{EsDnAkCkH{@bBRsD{EwBvB_DoFgEoUsDcGwQ{Eg@wBjCgEoKoASSnFkCRkRgJsIcVf@sNwGwVz@gOvGsDnAsNsIkMkHw[_IoFS{YwL_DgE_IgJoFRcG_DgEz@_IoZo_@sDwLsDwBkHrIkCoAoA{JgJwLoAoPwL_IwBwLcLSsN_N{JjRsSsDcBkHnAoKgE{EwGfOoFbBg@sSrDkHwBkCg@cLoFoF{EkMoKrNsIoA{EvBcGgJcLf@cBkHwBz@{@kR{ObBg@sDcGwBnF{ORoKgEgJbBwG_DkMoFcBcBkM{E{JcLbBsIoU{Eg@bBcLSgTjC_IwB{EgO?cG_DoKrDwL{@sDvGgJcB{E~HSoPfJwVbBwBfJf@gY{c@nAwLgE_DgOnAkCoK{EkCwBcL_DrIwGbBoAvVwGjCRjHkC~C_IoAcGoU{OrIf@k\\~C?jCkM~HrDf@oAsIcVgE?wB~H{EoFjCgJ?gJkHkMfEsD_DoK~CkRwGgEgEg^cGkHz@_DzERS{EgOg@kCwGkMSgEzE{E_IkHz@oA_NfEcLkf@_SoF~MfErIkCvGgJbGoKf@"]
+},
+{
+  id:"pryorcreekco2", name:"Pryor Creek", color:"#3a8c5b",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Pryor Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to USFS boundary:</b><br>• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 6.0 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["oawhFz~urS_]_SwGsI_DkWsSoPcj@kCgaAcj@cLjMk\\zJ{TkC","cfuhFbovrSwLgE{^SgJcG"]
+},
+{
+  id:"middleforkpurgatoireriverco2", name:"Middle Fork Purgatoire River", color:"#7f6f5f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Middle Fork Purgatoire River|Middle Purgatoire River",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>Within Bosque del Oso State Wildlife Area:</b><br>• Artificial flies and lures only.<br>• All fish must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 7.1 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["ghwaFz~}_SnA_NsDg@g@kCjC_X{EsNkCc[bBgJoA_IrDcG?gJoFsb@_DwhAwLo}@cL_b@f@cGkC{ObBcLkCkf@rIc[z@gTjC{@g@oF"]
+},
+{
+  id:"southforkpurgatoireriverco2", name:"South Fork Purgatoire River", color:"#5b8c2a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"South Fork Purgatoire River|South Purgatoire River",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>Within Bosque del Oso State Wildlife Area:</b><br>• Artificial flies and lures only.<br>• All fish must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 31.1 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["{ygaFzsj`SrDoFfJf@zEkMz@f@vBoKSgOfEkCRcLfEcL_DSoAgOwBwB~CgEf@gJ_DwL{ERgJsNcGwBcBoPcL{OgJgEcGwL{@{OjCkCwB{@f@gJwB_DcBkMnAkCkCwGbBsNwBsIjC_DkCwQzEsIScGjCkC~Cf@nFc`@~Hg@zEsIvGwB~MoZnFcBnAgJzJwBf@wB~Cf@{@gEjH{JrInAcBcGjHRjCkMnAz@rNkMR{EzEcBnFsXz@sX_]ka@wB{Ef@sI_SwBsD{E{@gc@gJsNg@sSkCcBjCoZwBoUvBoFS{TwBoFz@kM_DsDnA_DwBwGjCkCg@{EvBwGkCgTf@sDkHkRbBcGoFgJ~CcQfJ{Jz@oPoKcQbBoFcGkR?wQsDwLgEwBf@wGkCsDjC{@kCwBg@oK{@wBgEvBkCcGRgJ_IcBR_NkHcQf@wLwG{@f@cG{EoK_N{@z@wB{JsNRgEcGgEwBoUoK{EwB_NkCvBoFgEwBoKwGoAkCvB_IcGcB{JgJRwG_InAwGgJkHoFvBsD_]cQcGkCcGoKjCoAwGkCnAcGcG_D~C{EsDRsDgJf@cBwBrDcBg@_DwG{@gEoKgEjC_DcBcBgJwV{JwLkMwGnAf@wGwGwBwBgJkHf@f@wGkCwQgJkHsDcLoFg@"]
+},
+{
+  id:"northforkranchcreekco2", name:"North Fork Ranch Creek", color:"#2f7f8f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"North Fork Ranch Creek|North Ranch Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 5.4 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["od}rFz}bdSnn@zc@Sni@jHrXoAnZvBzw@nK~\\rNrIzOjRbVf^nFfOjM~M"]
+},
+{
+  id:"relaycreekco2", name:"Relay Creek", color:"#6f7f7f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Relay Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 5.2 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["kg}dFvroqSjHrNzc@nP~iAjHfYwGjRRrNnF~\\v[r]jC~MsNzEz@z@zE"]
+},
+{
+  id:"ritohondocreekco2", name:"Rito Hondo Creek", color:"#1f6f8b",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Rito Hondo Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• All trout must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 7.8 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["olnfF~yemSf^wBfc@nA~\\oUnUoFnKjCfJ_InPoAjHsIjR_I~WcBzOgJrInAzO_N?cLfEoPrD{@fErDbLwG","caofFbrhmSSkRgJ{h@?{OfJsIfO~C","cwdfFzcbmSrDrN"]
+},
+{
+  id:"roadbeavercreekco2", name:"Road Beaver Creek", color:"#8a6a2f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Road Beaver Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 13.2 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["ophhFnp~kSfJnFfOkC~MbBrS~f@fc@nF?v[rSb`@bVnUf@rNcBzOjHvQbBrNcV~f@oZrNcVrDgYf@sIwBcLfJsSf@gO~MsS?kMnFsg@~Hgm@b`@wLfc@rDv`@kCfEf@vGoFjWf@bVgEfc@oFbLz@~M"]
+},
+{
+  id:"roaringcreekco2", name:"Roaring Creek", color:"#3f7f9f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Roaring Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 7.5 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["oxxwFvhpdSnFnFjM{@ja@bLrXvVrXSfJnFrNoFzOgTjH?bGwQjHsDvLcQfE_IRgJbGsI?sIzJ{Oz@gOzOkH~CsIfJcBjRoZnKgE~HgTrSz@nFcG"]
+},
+{
+  id:"roaringforkofthenorthplatteco2", name:"Roaring Fork of the North Platte", color:"#6e8c3a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Roaring Fork of the North Platte River|Roaring Fork North Platte River|Roaring Fork",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>Within Manville State Wildlife Area:</b><br>• Artificial flies and lures only.<br>• Bag and possession limit for trout is 2.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 30.3 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["ozrwFnj`jSbQ{c@zTcQgEc`@nKcBcBkMjCoAvBwQgEgJbG_N{T_XvBsIrI_IbG_]g@wGwGsD~H{h@bLwLcB{^{EcGf@c[~CcLbGkHzTg@zOsNR_IjM{TnFco@cBs]jHsDg@gJvLf@vBgJ~CzEzJnAz@{EjH_DnAcGkCoF~Cz@fE_SzEg@g@gEvBbBg@sDbG{@bBjHnAoAg@{EnAoAnA~Cz@cBcBwGvGg@jCoK~CS?vBrIgEkCkCkCvB?_XzEoAg@sDnFSz@gE~CbBnAkMzEjCoA{EjCRbB_IvGwBnAgO~CsDg@kHzEwBfEkM{JcQoA_XcGkMnA{EvGrDbBcLbB?vBsN~CcBcBw`@~HS~CoFwBwBjCwBwBoAvB_Dg@cGcBg@bB_IkCsDfEgEsDnAcBcGfJwGwBkC~CsDgEwBvB{E_Dz@RwBzJgEoAwBbBgEkC{@nAcG_DsS_D{@kCoP{E{EfEoFg@wBcBz@oAcGvG?g@wGrDRkC{ERkCfEoAcB_NrD{@g@wGnAjCvBwBcBkCfEg@sDcBnAkCcB_DjC_DsDwBvG{@wBcGvBoAcBsDbBwBS_NrNwGwGsDf@oFkHwGjCwB_DoF~C{@g@sDbBsDgEwBjCg@?_DcGoAz@sD~CR_DwGz@cBwBgE_DRf@{ErDg@R{EcBwB~CcBgESz@sDkC_D~CwB{EkHbB_D_D{@vBgJwB_D~Cg@nAjCrDsDcBgJbB_Dz@rDnA_IvBf@wB{E{ERnA_DnFf@{@gEcBz@oAkCfE_Df@oKrD~CoAcGrDkC"]
+},
+{
+  id:"roaringforkmineralco2", name:"Roaring Fork (Mineral County)", color:"#a8552a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Roaring Fork",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to the confluence with Goose Creek, including unnamed tributary streams:</b><br>• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 6.8 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["wvzdFbwqkSoZ{YsNs`AwGg@kMsNgJsDcGRkRkH_Nf@wGgOjCsXbG{O{@sSfJoZ~Cs]vLsNrDwVSoKjCwGg@oKsD{JvBgJ{@gE"]
+},
+{
+  id:"roaringforkscreekco2", name:"Roaring Forks Creek", color:"#4f8f6f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Roaring Forks Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 8.9 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["owedFftkrSkRrb@kMn}@wVrl@Sn_@sS~\\cBzJsNnPkRvLgEfT_IjMwGvGoF{@wLnPwLve@gOfTwBvLcBRcLjWcQbQkCrNoKrDgYrX_DzJwB?"]
+},
+{
+  id:"robinsoncreekgunnisonco2", name:"Robinson Creek (Gunnison County)", color:"#7b2d8e",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Robinson Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 12.3 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["cglkFz`zmSwGwLcBwQ_Xo_@gT{E_XjCoPcBo_@_b@kWRoKrIkCvGkWoAcQrDwVnUoArNcLjMkHzTsIjCoKsDkHR_Nk\\sIkCgOoA_l@jHoAkCsNbBwG_D_DnAcB~MgJfOgEjRsSjHoAzT_NjMkCnPf@vLsDfEkCvVwL~\\"]
+},
+{
+  id:"rockcreeklakeco2", name:"Rock Creek (Lake County)", color:"#a07d2a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Rock Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 9.2 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["wjlnFvtqhSrD_N?{JjHsIfOka@jCce@oA{EjCgO~Rod@f@wLfEkCjCoP_D{Jf@gEkH_N","s}knFrtwhSf@kRzJ{JnF_XcBoP_Nw`@wLcLz@k\\wB_NnAwL","kzlnFrv{hSzJoP","spjnFzxihSbLcG","oilnFftzhS~R_NbB_NkMkf@g@{T","gxinFnjihSzE_D{@cQnFoF"]
+},
+{
+  id:"rockcreekparkco2", name:"Rock Creek (Park County)", color:"#2a6e7d",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Rock Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 8.1 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["c_roFzk|cSrSkH~p@bLf^fTnUnZnn@jMjMvLnZjHnFzE~C{@r]fYrIg@rb@nUfOsD~H~CjM{TnFcVbLoPnP{JzJbB"]
+},
+{
+  id:"littlerockcreekco2", name:"Little Rock Creek", color:"#5f6f9f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Little Rock Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 5.9 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["w}~nFfo}nSrDfOnKnKrSfJr]wLfJvL~MwBvGsD~HwQrNfJfO~CfEoAbLbGj\\gJnKj\\vy@n}@"]
+},
+{
+  id:"middleforksaguachecreekco2", name:"Middle Fork Saguache Creek", color:"#8f6f4f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Middle Fork Saguache Creek|Middle Saguache Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to the confluence with the South Fork of Saguache Creek:</b><br>• Artificial flies and lures only.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 21.1 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["kmqfFvefkS_N{c@cBoi@zE_q@fEoKzEwBvG_XoA_SjHoi@_DsXvBkH{EccAcBgJoFwBgE_X{EgJ{@kR_IoUce@k\\cG{@_IsS_ScQ","kvtfFzovjSoKg^~CwQsIod@bBoKoF{YSgTwLoKo_@gm@cVgEgE{E{^cBwGvB{OgEsNo_@bBwG_D{TgJ_I?sD_NcB_DgJ?cLoFcBwBsIgTgJS{EkC?sD{J_IcBwBwG{Ez@_DkMoPwQoAsSwQgY_NwLkCRgJoPgEcQwBSz@{JgEoAg@cL{EsDbBoFwBcGvBwLwBoFbBoAkCwGz@kCgEwBRkHwBS?kM"]
+},
+{
+  id:"southforksaguachecreekco2", name:"South Fork Saguache Creek", color:"#3a8c5b",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"South Fork Saguache Creek|South Saguache Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to the confluence with the Middle Fork of Saguache Creek:</b><br>• Artificial flies and lures only.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 18.6 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["_xlfFzijjScQ_S_IwQwQ{JgEnAoFoF_X_v@","cdpfFv_fjSkHkHz@oA_Dg@bBwBg@cGkHsD?{EsDoFcVcLsIcLoKwB","onrfFvtcjSoF_IwQ?ce@kWcGvG_N_I{@vGcB?oKc[sDz@sIcG?cQ{EoAkCcG_NwBoPjHoFcGcGg@kC{JwLbBoPkHoPgJsDgJgJ?wLsN_X{EwBbBsIkC{@_D{JnAcVwGgr@sI","w{gfFz}tjSgJgJcGwQnAwLcBcLjHsN~CsXwGgO_I_v@bBoKwB_IoP{Tw[cQcQ_XgJkCwQwQoKoZcLoKgEwL"]
+},
+{
+  id:"schwachheimcreekco2", name:"Schwachheim Creek", color:"#7f6f5f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"nhd",   // NHD flowlines (OSM has no line under this name), clipped to the state with park water removed — don't re-snap
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>Within Lake Dorothey State Wildlife Area:</b><br>• Artificial flies and lures only.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 8.9 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["wbbaF~_l|R{@{TzYod@~W{|@jRsDfO{YfTsNrNvBbLkHzT{ErN{YzJkHz@wQvGsIvGc`@z@gOcBoUrSw`@nF{Yfh@kWjRsDfJjC"]
+},
+{
+  id:"secondcreekdeltaco2", name:"Second Creek (Delta County)", color:"#5b8c2a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Second Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 5.4 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["{askFnq_oSfTnU~WvLvQnZni@jWbGvLjf@fc@vt@b`@bQfEvVzY"]
+},
+{
+  id:"severycreekco2", name:"Severy Creek", color:"#2f7f8f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Severy Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to the USFS boundary:</b><br>• Fishing prohibited.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 7.9 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["s`glFjhg`ScQsg@nAce@cLoPoFgc@fEwVnA_X_Ik\\g@kRwGkRkCgc@sI{JkHRgEsDcGkMSoP{J{^os@kz@cL{^bBwV"]
+},
+{
+  id:"sheepcreekconejosco2", name:"Sheep Creek (Conejos County)", color:"#6f7f7f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Sheep Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to the Conejos River:</b><br>• Artificial flies and lures only.<br>• Bag and possession limit for trout is 2.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 6.9 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["wtcaFraehSfOgYoKoPkCkWbBod@_IcLsN{@","gudaFnfahSwLsI","ojeaFnw`hSkMkC{OkMg@wGwLoU_DkRkR{c@f@oK{EoUwe@s{@RkWsNwG"]
+},
+{
+  id:"eastforksheepcreekco2", name:"East Fork Sheep Creek", color:"#1f6f8b",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"East Fork Sheep Creek|East Sheep Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 5.9 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["sr|vFvicdScGfh@sl@jz@k\\zw@kR~HwGj\\c[fO{J~MoKz@cGvG{ErIcBzOcBg@_I~H?nKgEbBg@jHsD~C"]
+},
+{
+  id:"westforksheepcreekco2", name:"West Fork Sheep Creek", color:"#8a6a2f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"West Fork Sheep Creek|West Sheep Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 7.4 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["{lxvFbdhdSsSwLgOnKwV~HgEvGkHf@oFkCwLvB{@~R{EjMwG~CS~H_SzYsIf@{TbV{YfJkMjMsSRkHfE{O{EwLnAsIrNgYfJ_SsNwBoFkCjC{EkC"]
+},
+{
+  id:"sigcreekco2", name:"Sig Creek", color:"#3f7f9f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Sig Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 4.7 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["ch|dFnmlqSnAwGfJRnZfJrIvGbQcB~f@nAzTzJnKoAbLgJrIRzTnKnPzYr]~H"]
+},
+{
+  id:"eastforksigcreekco2", name:"East Fork Sig Creek", color:"#6e8c3a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"East Fork Sig Creek|East Sig Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 3.7 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["s{{dFzwiqS~HsD~M?bQnKrIvQfJnFrS?rNzEzT~MjHfOnKwB~CnAfTb`@"]
+},
+{
+  id:"slatecreekco2", name:"Slate Creek", color:"#a8552a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Slate Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 6.2 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["gi{eFnh`rSjp@od@rNwB~M{JrXz@vQ{ErIkM~u@{^jR{@zOnPnU~CfY_IfY{^rIwB"]
+},
+{
+  id:"southforkslatercreekco2", name:"South Fork Slater Creek", color:"#4f8f6f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"nhd",   // NHD flowlines (OSM has no line under this name), clipped to the state with park water removed — don't re-snap
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 10.2 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["smzwFft_nSw[g@cVcQsI{OgYgYgTgOka@gJwL_b@{T{OoKkWgh@gTsX{@oPzE_NvGgJvLsIz@{J~M{JRkRnPgJnA{|@gJwGoFsDbB_SsSw[sN"]
+},
+{
+  id:"snellcreekco2", name:"Snell Creek", color:"#7b2d8e",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"nhd",   // NHD flowlines (OSM has no line under this name), clipped to the state with park water removed — don't re-snap
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 8.5 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["_~|sFnobnSzJ{OrN_DjHgObVcLzT_XrIS~f@gYbe@cGjHbLvQvGvGzh@rDfJzc@rSnFbGbBrIzm@bVbGzTjWrSbLr]zOjR"]
+},
+{
+  id:"springcreekdoloresco2", name:"Spring Creek (Dolores County)", color:"#a07d2a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Spring Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 7.2 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["_g{dFn`bsS_DfYnFfObB~f@bLnd@g@z^wGbG{c@nKoPvLwGfTg@fTjHv`@?vLwBbGRfOcGrSkCrb@wo@v~@"]
+},
+{
+  id:"steelmancreekco2", name:"Steelman Creek", color:"#2a6e7d",
+  state:"CO", region:"colorado", gauges:["williamsforkSteelmanCreek"], primaryGauge:"williamsforkSteelmanCreek", minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Steelman Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to the Denver Water Board Diversion:</b><br>• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 6.9 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["o~mqFbkteS_XvBcLwB{O_Xkk@oUcGf@sSsSwQoAgEsI_SwGo_@k\\kMk\\wQkRoAwGoPwG_N?s]nKgObGsInK"]
+},
+{
+  id:"westforksteubencreekco2", name:"West Fork Steuben Creek", color:"#5f6f9f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"West Fork Steuben Creek|West Steuben Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 8.5 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["os~jF~eemSz|@fEjMwG~k@bBnK_InFsSve@kk@jRsl@nFwj@~H{Tv~@kiAzY{r@nPwo@"]
+},
+{
+  id:"swanriversummitco2", name:"Swan River (Summit County)", color:"#8f6f4f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Swan River",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Bag, possession and min. size for trout is 2, 16 inches long.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 11.6 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["keapFbmseSkMRsNjHw`@S","wdfpFrsveSkWv~@bGni@RbQ_D~RkMf^oKrNcBrNsIbBsDjH","oxcpFfuseScQvB?fE{EjCwLbVoKjC{JnPgJf^","w`hpFnv}eSoFz@sDfJ?vGbBf@{@nAvBvBoAvBjCrDf@r]rDzEvBnZ{@zOvBrXkCj\\z@fO{ErD_DfO_SfOo}@fT"]
+},
+{
+  id:"northforkswanriverco2", name:"North Fork Swan River", color:"#3a8c5b",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"North Fork Swan River|North Swan River",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 7.1 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["{qkpFvcieSzTsSnPsDrInAvL~MrNzYfc@vrAzEfJnUfObLbVvLzm@fOjWvQnPfOzm@bGbt@"]
+},
+{
+  id:"littletaylorcreekco2", name:"Little Taylor Creek", color:"#7f6f5f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Little Taylor Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 6.2 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["ojsdFrjfsSnPrSrIz^rIvLnU?bVfJvVkCrSnFjHwBnPbBve@jR~C~Rz@fr@fJf^SfT_IzT"]
+},
+{
+  id:"tenmilecreeksummitco2", name:"Tenmile Creek (Summit County)", color:"#5b8c2a",
+  state:"CO", region:"colorado", gauges:["tenmilecreekNorthTenmile"], primaryGauge:"tenmilecreekNorthTenmile", minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Tenmile Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the confluence of West Tenmile Creek near Copper Mountain downstream to Dillon Reservoir:</b><br>• All brown trout over 14 inches in length must be returned to water immediately.<br>• Fishing prohibited from Sept. 15–Dec. 1.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 28.1 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["ocroFnacgSoKkC{J{JgEz@cG{EwBvB{EgE_~AgnBsD_b@{E_N{JwGku@kiAkW_XsNkHsI{JSgE_NkHgJoUwe@cQcLbG_jAnFcQ~M{YSc[rNkHvL{EbB{w@jMgJgEoZzY_S{EsNoZcVsNgTz@{^zToPvBcQ_I_IoKgTf@{TkRwQoFoFoK_SwLcj@{JkRc`@{@oPkR{^cLkH{J{O_NgEzEs]cLkf@kHgOoF_yAk\\_b@wt@oFg^olA_q@ct@"]
+},
+{
+  id:"eastforkterrorcreekco2", name:"East Fork Terror Creek", color:"#2f7f8f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"East Fork Terror Creek|East Terror Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>from the headwaters downstream to the confluence with Terror Creek (including the unnamed tributary below Terror Creek Reservoir):</b><br>• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 7.8 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["wkamFjmvoSrb@wj@fOs]rIkCbL_Sv[oKjHgOjH{Ef@kHrl@ce@rXS~HzEbG?ja@_XbG{@fTbVve@bVrl@bB"]
+},
+{
+  id:"westforkterrorcreekco2", name:"West Fork Terror Creek", color:"#6f7f7f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"West Fork Terror Creek|West Terror Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 9.2 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["w~zlFrpdpSrD_IScLnK{c@Rsb@_Ig^vGsNz@cLrNoUzEcQbG{c@z@o_@nFoUbQoZvGcy@~Mcj@vB_g@kC{Of@gJnd@wcAbGg^nFwGnAsI"]
+},
+{
+  id:"threelickscreekco2", name:"Three Licks Creek", color:"#1f6f8b",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Three Licks Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 4.9 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["oi_rFni{hS{TgJ","cc`rFj|zhScG_I_NkCgE_IcBwQ","{darFzlyhSsDgEnAcGgJ_N_DkMkxAco@s]RsSzJ_IS"]
+},
+{
+  id:"threemilecreekco2", name:"Threemile Creek", color:"#8a6a2f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Threemile Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"From the confluence with the Roaring Fork River upstream for<br>• 5 miles:<br>• Fishing prohibited March 15–May 31 and Oct. 1–Nov. 30.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 11.6 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["oguoFfvhnSod@kHc[w`@sI_DwQzEs]bBkHzOwL~C_IsDsInA_I{EgOjCkHoFcQoAwGsD{J~C","{y}oFjqgnSs]vGoFkCsXbL_NcL_DkRzE_SkCkC{Ec[kHgJcVgEsI_ScQ_NgJw`@gOw[RkMjHs]oUc[{OvBoFsDwGz@"]
+},
+{
+  id:"torsidocreekco2", name:"Torsido Creek", color:"#3f7f9f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Torsido Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 9.7 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["_{zbFbqphSbVod@SsIoK{Yg@sS{E{J?wQfOsl@~C_b@vG_Sv[oZrXsNnF_In_@wLjRjCfT_IfYg@rNoK~HoAjMsNbG_N~CoZjCsDbGs]fEcG?oKjCsIbL_DnAwL"]
+},
+{
+  id:"trappercreekco2", name:"Trapper Creek", color:"#6e8c3a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Trapper Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 9.4 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["wc}pFbkuqSgYbj@sSfJ_SjCf@b`@fTjp@bLrNbLroA~HvLvL~k@fTfh@?jMjCnKvLbL~Hbe@zEjCrInZzO~k@bGni@zJbVR~H"]
+},
+{
+  id:"troutcreekrioblancoco2", name:"Trout Creek (Rio Blanco County)", color:"#a8552a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Trout Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to, but not including, Sheriff Reservoir:</b><br>• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 27.5 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["cbguFjv|kSoKkCSrDgE{E_IvGcG{EkCzE_DsDS~CwBwBcBnA{@_D{EzEgEg@R_DkCjC?_DwBvB_DcB?vBcBkC{@fEoAgEsI~CkHwGgEvB{@sDwBvBkMkC_DzE_I_DjCSoAkCkH?S_DcB~Cg@wBoFbBz@~CsIg@g@sD{EvBkM{EwBkHcGSkHwVz@cBcGSwB{J_DRnAcBwBgEsXg@z@sDwG?oFsIg@rDwG{ESgEgEg@f@vB{ErD?wBsI?oAgE_IvB?kCwGkC?nFkC_D_DnF_DoA_DnK~C~C_D{@oAbBvBbG_Dg@?zEkCvBbBfEwBg@z@fEkCvGbBz@cBRSvGwBjCoAkCg@~C_DS_IjRoKvBsDvGoAwGkH{Ef@kCkCRRgEcGSgErDRgEcBSvBkCgE~C?gEsDg@?kCoK{@bBwBoAwB{JvBkCnFwBsDSjHwLnF{@vGkCnAcBcBR~HsDS?rDoAoAf@jCwBSf@jHcBnAjC~CoA~CzEkCRnKkC??zEkCf@S~CwBoFwGbBwLjMcG{E?gT{O{JcBvBjCzEsInA?~CjCR{EfJwB??sDcB?cBvGoAcLcQ~CwBcBRsD_Ng@_Db[gEvBwLoAcGbGSrDkCScBoKkCnAoAkCkHrNkHScBsIf@gJ_DwG_SfJsD~McQrIsI?kWcLR~RwBjH_DR{@~HjCzEsD?kHnUjCfJkCjC~CbBkCnAzE?wBnU~Cf@vBrNoA~MrDjHbBbQ{JfTSbLkR~HoFfJ"]
+},
+{
+  id:"tuttlecreekco2", name:"Tuttle Creek", color:"#4f8f6f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Tuttle Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 5.7 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["_oohFjxegSzEvGfJzc@fE~u@~\\vpBrSzYv`@fT~MjCbVoAfc@rI"]
+},
+{
+  id:"northtwincreekco2", name:"North Twin Creek", color:"#7b2d8e",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"North Twin Creek|North Fork Twin Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 3.7 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["c_jnFfmonSnArS_I~u@kCvGjH~M_DbQ~CfEr]jMrIbLnPzEjRrXbBzJ"]
+},
+{
+  id:"southtwincreekco2", name:"South Twin Creek", color:"#a07d2a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"South Twin Creek|South Fork Twin Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 4.3 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["svgnFnjlnSnKzOvBv[{@zYzJ~u@g@fYfEbo@gEvVcLzTsDzm@"]
+},
+{
+  id:"vallecitocreekco2", name:"Vallecito Creek", color:"#2a6e7d",
+  state:"CO", region:"colorado", gauges:["vallecitocreBayfield"], primaryGauge:"vallecitocreBayfield", minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Vallecito Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to the southern boundary of the Weminuche Wilderness:</b><br>• Artificial flies and lures only.<br>• Bag and possession limit for trout is 2.<br><b>From the southern boundary of the Weminuche Wilderness downstream to the standing water line of Vallecito Reservoir:</b><br>• All kokanee must be returned to water from Sept. 1–Nov. 14.<br>• Snagging kokanee permitted Nov. 15– Dec. 31.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 36.6 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["{wncFbxkoSoAgEnAoAjRvBv`@cLnF~CbLzT","ktceFjljoS~\\kWnKjCvG~H~W_Iv[?~\\{c@nU{@jRwGjHz@rDgJrDbBnFoFzOgEbQg@jWsNju@vGrIvGf@zEnFvGzJbB~CvLf^vQrN~WvVjHrIoAnArD~HRvGnKzEsDfYfEbLoFvQ?nP~CnKgJjC~C~MR~a@gEvLfEjRoFvLbBnPsNvLzJfTwL~CkHnFnA~MwBvVwLzJSfJgJfTsDjC_Ini@g^vQbBjf@oUfc@bBfJgE~RbGbV_DfOrDzfAju@zJvBnArDvLRnAzJzOjH~Mz@~C_DzOSzJbGnKg@bLzJ~MjCn_@?~HfEvGsDrDvBnUSja@fJr]oAb`@fEj\\zJ~Mz^zJRf^fObVSjWbG~CzEbQf@rDkCnFvBzOoFrIz@zOsDbLcLnFnAfE{EjMf@rI_InZoFjRrNvBwGrIkCnKS~WnF"]
+},
+{
+  id:"littlevasquezcreekco2", name:"Little Vasquez Creek", color:"#5f6f9f",
+  state:"CO", region:"colorado", gauges:["littlevasqueWinterPark"], primaryGauge:"littlevasqueWinterPark", minor:true,
+  geom:"nhd",   // NHD flowlines (OSM has no line under this name), clipped to the state with park water removed — don't re-snap
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to the Denver Water Board Diversion:</b><br>• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 8.3 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["w`drF~gvdScLwGwQzEoZkMon@S_X{OkWsDoKbBk\\rg@oU~CwLf@sb@kRsD{E{TbGsXg@kHzEsXcB{TjCkRwBsb@jC"]
+},
+{
+  id:"westcreekmesaco2", name:"West Creek (Mesa County)", color:"#8f6f4f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"West Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the Colo. 141 Bridge downstream 5 miles to the confluence of Ute Creek:</b><br>• Bag and possession limit for trout is 2.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 9.0 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["g}jkFn|twSnPv[nAfJoAnZfEjCf@rInFnFnArIb[nU~CzTvLvGnKzT~WjWvBfOvGnFfYnn@~Mg@vL~HvLb`@be@rg@nFv[fOrNf@bGb`@vj@~MjM"]
+},
+{
+  id:"westcrosscreekco2", name:"West Cross Creek", color:"#3a8c5b",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"West Cross Creek|West Fork Cross Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 7.6 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["wjtoFbtjiSrDwB?cLvGoAnKsIcBkHbBoUcBoF_IgEjCoKcBgE{TkCkMvLwL{E_DsIcLsIsNRwGgE","czvoF~xfiS?_DcV_SkCR_I_Ss]kWs]g|@_g@{w@kM{E"]
+},
+{
+  id:"northforkwhiteriverco2", name:"North Fork White River", color:"#7f6f5f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"North Fork White River|North White River",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to the confluence with the South Fork of the White River:</b><br>• Bag and possession limit for trout is 2.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 45.2 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["wtbsFfnnmS_NnF_SkCwGfJsXnPkMg@kHnKka@~RSvQfJbGoArNoZrq@oFfEwBbQoKfTnA~HoFfJkHbB_IjM{@nFrDfJwLb`@cGrDgOv[sDf@{EzJbB~HcBrSkHzOgEvVoPfYsDnAgErX{E?R~C_I~CcG~M?zE{r@~a@g@bLsNvQkMfc@_SjMcLzOkCv`@{E~HsNj_A_DbBcBrIcGrDoAnFbGfO?bVfJzw@f@~RoAnKvGvGoAni@sDjH?jRnFzOg@~WfEbLfE~CoAfJzEfOf@b`@cBf@rDnKbBzm@bGnKfEnUoA~HjHzOvBzObLvLcBjHvGjMoAbGjCbGwB~CbBjHkC~HfEvBSrN~CbGf@vLkCjCnK~\\g@~HzTn_@vGf^cBfOfE~C?nFnFzJnF~Cz@nKbGf@bBjHoAvBjCvBg@nFrIbGg@jWnFvB_DzEvBbQsDzJRnF{EbGnAjHsDjMjCjWrSvQnF~f@rNbQnF~W{@r]vLrNjRju@nKrIf@zJzJvBnAfJnFbGbBzTnFzEbQv`@z@zTjW~CnKzObQjHrIv[nFnFjCnKoAzJfTjMjCnFrDrNSnPnFrIg@bL~CfJRfJnPvVz@jMgEvGz@nKnFrNjHrl@jMnARrDgEnFjCrDbG{@bBnZv[bVvGjWbLfJ?fJnFrIg@zEfEbBnK~RfE~Rzc@rg@"]
+},
+{
+  id:"southforkwhiteriverco2", name:"South Fork White River", color:"#5b8c2a",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"South Fork White River|South White River",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From the headwaters downstream to the confluence with the North Fork of the White River:</b><br>• Bag and possession limit for trout is 2.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 60.7 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["owvrFj}hmSjCvB?bGzOjW~HzErDnKvVfJR~R~Hve@?jMbL~RRrb@~HnU?jMfE~CbBvVbBg@f@jHvGzE{@~CvBjHvQf^~CRRfJfJ~CjWzh@b`@nKrNrN?jM~Rb[bBjR~HzJnFvV?fOjMja@{@rI~CjCg@fc@vG~\\cB~\\z@bLvQf^~MnKvBnFnFz@rDzJz^bG~WnPzTgErD{Ev[rDzJwBzOz@jH{E~RfEnFoAnArDb[f@nKfOjHf@fEjMg@vLwLzTgOfw@RbGjHnKSnFsD~CfEbQwBbLnFvGkCjHRfJrDzE?~M{EzO~Rr]bGrSjC?jCzTnPzJzJzYrDjR{@jHvBja@rDjMoAjCnFrI{EzJ_IrDwBvGgJ~HwBfJwVoAcGjHsXfJ_IvGsNrv@cBjf@_Snd@sDjRwG~H~CjRgEvLnAnFoAzJcV~MRfw@cBbGrDjp@g@bLrInZcBvLjHbo@wBja@z@zTbBnUrIrb@oAb[zEbj@sIv`@?jR~CnAkCvVgEvBcLvVoAoAnAsDcBg@_Ifc@cV~RcVbBwBfEkWoAcBrIcQrNoK~C{EcBsNjHg@fEsIz@{EnFgEgOwGsDc[{@cBwGcGf@gJgJ{ERcGvL_DsIkHnAwG_DwVbL{@zTcLwB~CcGoAwBcQzOwG{EcGfJkHnAnAjRzEcLvGSfEzEoA~CwGoA{EnFnAnKoAfEsD_NkHbGRrIcBnA_DwB{EjCwVsScGfE{E{@cGj\\{EzEvGnKoAfJ_IsDgJ~H_I{@cLfEkH{JcBzEkR?kMbG{EjH_IsDkHrDcBbQ_]f^SvLcLjW{EnUoKbLgJrS_NzJgOve@gJ{@kCjWcLfEgJnZcG~CcVnd@?vQsIjRg@~MvGzT?j\\jC~Cf@fTrIfOwBvV"]
+},
+{
+  id:"wildcatcreekco2", name:"Wildcat Creek", color:"#2f7f8f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Wildcat Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 7.6 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["gl~dFv`vrSvGfEr]z@jR{JrNsSvV_D~RjCfJsSfTbLvGwGrDRnKwQzm@fE~HkCbGsNj\\wBnPvBz^sDnPkHrNw[fJsDrDsI"]
+},
+{
+  id:"willowcreekmoffatco2", name:"Willow Creek (Moffat County)", color:"#6f7f7f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"nhd",   // NHD flowlines (OSM has no line under this name), clipped to the state with park water removed — don't re-snap
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 34.1 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["siaxF~uonScj@w[_ScBkM~MgOzEwBbG_SjHo_@Rce@vL{J~HkRj\\w[vVsI~R{^~WoFfY{EfEsIb[gJrNcQfaAoUzh@_DnUwLv[cVjWgOz@wGnFcLwB_SnAwBbBSbL_I~MoPjCkC~H~CvQ{@~RrDbVRrSwGnKoArNsIrN{@fOwLz^oAnPgE~HwBnKvBjC{@~HsDvB~CzEkRzEbBnFsDbBoPkC{Ez@cBvGoPRsDkC?vBoZjHf@rDkMvL?nFwBSoA~CsDwBwBnKkHcBcBfEkCoAsIrI{@zJsDoAgEvBoA~MwB_DkHrNgEf@RjCoKf@?wBgEnAg@zE_DSoF~\\{ER?cBkCrDwBsDsDzEgEwBwV~MoKz@sDg@g@_D~C{E{EkC{JjHwBg@oAnFSwBgEnAkHgEg@vB_Dg@?jCgEoKgE~CsD{@RvBcGkCgEbG{@sDkCnA{@{E{ESkCf@f@rDkH~CwLkMf@kHsDbGoK_DgOgJsDwGwBvBwGoAz@fEsD_DRcLwBbBkCwBwBvBnAvBoAbBcB{EoPoARsD_D?oAfEcBgEcBrDoAcG?vBkMkCvBsD_DR{@{JkCrDrDzJgJcGgEbBSsDgEcBkCbGwBSjCnFkCS?bGgJkMcB?nArDoAvBoF{@wBoF{EfJkCRoFsDcLRwBoFcLSsIfEwBcG_DfEz@zEwBkC_IbB?bQkCz@"]
+},
+{
+  id:"wolfcreekconejosco2", name:"Wolf Creek (Conejos County)", color:"#1f6f8b",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Wolf Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"• Artificial flies and lures only.<br>• Cutthroat must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 8.1 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["w{}`Fz`zhSvBsXnKsNfJsXbLwGvVSjWfJbG~HrNbe@vBfYrNjWjMbGnZf^rDjM","o|aaFv{_iSvLcQbVsNbLkWrI_b@zJkMvLf@jCgO","wy~`Frl{hSzEsIvLgE"]
+},
+{
+  id:"wolfcreekmineralco2", name:"Wolf Creek (Mineral County)", color:"#8a6a2f",
+  state:"CO", region:"colorado", gauges:[], primaryGauge:null, minor:true,
+  geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
+  osmName:"Wolf Creek",
+  parkRegsSrc:"colorado",
+  parkRegs:"<b>From headwaters downstream to USFS 725:</b><br>• Artificial flies and lures only.<br>• All trout must be returned to water immediately.<br><br><b>Colorado statewide limits</b> — trout, arctic char, grayling, salmon and mountain whitefish (except kokanee), in aggregate: 4 daily bag, 8 possession; trout include brook, brown, cutbow, cutthroat, golden, lake, rainbow, splake and tiger trout. Brook trout 8 inches long or less: 10 daily, 10 possession, in addition to the trout limit. Greenback cutthroat trout may not be taken and must be returned to the water immediately.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"About 13.2 km of water mapped in Colorado.",
+  fish:"Fished under Colorado Parks &amp; Wildlife rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
+  cz:["s|ucFjf|jS{T_D_NjCgJcQgEoA{^~z@wB~W?j\\vQfr@cBfJz@nKzEvLRzJ_DfErXvo@fEf^rSv[nFvBg@bGnAnA_D~Hf@nZrIjMrI{@zOnKb[ja@nKfE~a@~f@j_AoAjRnKfOnPrNvGfEnP~CsDbBnFbL{@SkCbQzE"]
+},
 /* <<< western rulebook streams */
 ];
 
@@ -17159,7 +19348,7 @@ const FLOW_REV = {
   namekagonriver:"0",
   nbranchroot:"0",
   nemadji:"0",
-  newfork:"0000000",
+  newfork:"00000??",
   nezpercecreek:"1",
   nfclearwater:"0",
   nfpayette:"00",
@@ -18176,6 +20365,187 @@ const FLOW_REV = {
   mariasrivermt2:"001???????????",
   musselshellrivermt2:"0??",
   tonguerivermontanamt2:"00",
+  abramscreekco2:"0",
+  westantelopecreekco2:"0",
+  northforkanthracitecreekco2:"0",
+  arapahocreekco2:"0",
+  archuletacreekco2:"00",
+  middleforksoutharkansasriverco2:"0",
+  augustoracreekco2:"0",
+  bardcreekco2:"0",
+  basincreekgunnisonco2:"0",
+  bearcreekconejosco2:"00",
+  bearcreekelpasoco2:"00",
+  bearcreekjeffersonco2:"0000",
+  bearcreekmontezumaco2:"0",
+  beavercreekgarfieldco2:"0",
+  beavercreekmineralco2:"0",
+  westbeavercreekco2:"0",
+  beaverdamscreekco2:"0",
+  bigbendcreekco2:"0",
+  bigholecreekco2:"0",
+  bobtailcreekco2:"0",
+  bouldercreekboulderco2:"0?",
+  brushcreekeagleco2:"00",
+  westbrushcreekco2:"00",
+  cabincreekgarfieldco2:"0",
+  canyoncreekgarfieldco2:"000",
+  middlecarnerocreekco2:"0",
+  northcarnerocreekco2:"00",
+  southcarnerocreekco2:"0",
+  cartercreekco2:"000",
+  cascadecreekconejosco2:"0",
+  cascadecreekhuerfanoco2:"0",
+  castlecreeklaplataco2:"0",
+  catcreekco2:"00",
+  northforkcatcreekco2:"0",
+  southforkcatcreekco2:"0",
+  cataractcreekco2:"000000000",
+  chaircreekco2:"00",
+  chalkcreekchaffeeco2:"0",
+  northcheyennecreekco2:"0",
+  clearcreekchaffeeco2:"00",
+  clearcreeklaplataco2:"0",
+  westforkclearcreekco2:"00",
+  clearforkofmuddycreekco2:"01",
+  cliffcreekgunnisonco2:"0",
+  corneliuscreekco2:"0",
+  corralcreeksanjuanco2:"0",
+  corralcreeksummitco2:"0",
+  littlecottonwoodcreekmoffatco2:"0",
+  culebracreekco2:"000",
+  cunninghamcreekdeltaco2:"0",
+  cunninghamcreekpitkinco2:"00",
+  deepcreeklaplataco2:"0",
+  deepcreeksanmiguelco2:"0",
+  deerbeavercreekco2:"0",
+  disappointmentcreekco2:"0",
+  dougcreekco2:"0",
+  duckcreekclearcreekco2:"0",
+  eastpasscreekco2:"0",
+  elkcreekgarfieldco2:"0",
+  elkcreeksanmiguelco2:"0",
+  northforkescalantecreekco2:"0",
+  fallcreekmineralco2:"0",
+  fallcreeksanmiguelco2:"0",
+  fawncreekrioblancoco2:"0",
+  fishcreekrouttco2:"0",
+  floridariverco2:"00",
+  fourmilecreekco2:"00",
+  frasercreekco2:"0",
+  frenchgulchco2:"0",
+  georgecreekco2:"0",
+  goatcreeksanmiguelco2:"0",
+  grassycreekco2:"0",
+  greenrivermoffatco2:"?????0??",
+  grimescreekco2:"0",
+  grizzlycreekco2:"00",
+  groundhogcreekco2:"00",
+  northforkgunnisonriverco2:"0",
+  hahncreekco2:"0",
+  hamiltoncreekco2:"0",
+  hatcreekeagleco2:"0",
+  headachecreekco2:"0",
+  hermangulchco2:"0",
+  hermosacreekco2:"0",
+  eastforkhermosacreekco2:"0",
+  himescreekco2:"0",
+  mainhubbardcreekco2:"0",
+  middlehubbardcreekco2:"0",
+  huerfanoriverco2:"0",
+  illinoisriverjacksonco2:"0",
+  jimcreekco2:"0",
+  joewrightcreekco2:"0",
+  kaufmancreekco2:"0",
+  kelsocreekco2:"0",
+  laplatariverco2:"0",
+  laramieriverlarimerco2:"0?????",
+  lestercreekco2:"0",
+  lonepinecreekco2:"0",
+  lospinoscreekco2:"0000000",
+  losttrailcreekco2:"0",
+  mancosriverco2:"00",
+  maycreekco2:"0",
+  mcelmocreekco2:"00",
+  meadowcreekeagleco2:"0",
+  eastmeadowcreekco2:"0",
+  eastmiddlecreekco2:"0",
+  southforkminnesotacreekco2:"0",
+  mitchellcreekco2:"0",
+  natecreekco2:"0",
+  navajoriverco2:"00",
+  newlincreekco2:"0",
+  nickelsoncreekco2:"0",
+  nolancreekco2:"00",
+  northforknorthplatteriverco2:"00000",
+  northtaylorcreekco2:"00",
+  northwatercreekco2:"0",
+  osiercreekco2:"0",
+  eastforkparachutecreekco2:"0",
+  eastmiddleforkparachutecreekco2:"0",
+  passcreekco2:"0",
+  pasturecreekco2:"0",
+  pettycreeksanjuanco2:"0",
+  eastforkpiedrariverco2:"0",
+  pointscreekco2:"0",
+  poosecreekco2:"0",
+  northforkpoudreriverco2:"00",
+  southforkpoudreriverco2:"0",
+  pryorcreekco2:"00",
+  middleforkpurgatoireriverco2:"0",
+  southforkpurgatoireriverco2:"0",
+  northforkranchcreekco2:"0",
+  relaycreekco2:"0",
+  ritohondocreekco2:"000",
+  roadbeavercreekco2:"0",
+  roaringcreekco2:"0",
+  roaringforkofthenorthplatteco2:"0",
+  roaringforkmineralco2:"0",
+  roaringforkscreekco2:"0",
+  robinsoncreekgunnisonco2:"0",
+  rockcreeklakeco2:"000000",
+  rockcreekparkco2:"0",
+  littlerockcreekco2:"0",
+  middleforksaguachecreekco2:"00",
+  southforksaguachecreekco2:"0000",
+  schwachheimcreekco2:"0",
+  secondcreekdeltaco2:"0",
+  severycreekco2:"0",
+  sheepcreekconejosco2:"000",
+  eastforksheepcreekco2:"0",
+  westforksheepcreekco2:"0",
+  sigcreekco2:"0",
+  eastforksigcreekco2:"0",
+  slatecreekco2:"0",
+  southforkslatercreekco2:"0",
+  snellcreekco2:"0",
+  springcreekdoloresco2:"0",
+  steelmancreekco2:"0",
+  westforksteubencreekco2:"0",
+  swanriversummitco2:"0000",
+  northforkswanriverco2:"0",
+  littletaylorcreekco2:"0",
+  tenmilecreeksummitco2:"0",
+  eastforkterrorcreekco2:"0",
+  westforkterrorcreekco2:"0",
+  threelickscreekco2:"000",
+  threemilecreekco2:"00",
+  torsidocreekco2:"0",
+  trappercreekco2:"0",
+  troutcreekrioblancoco2:"0",
+  tuttlecreekco2:"0",
+  northtwincreekco2:"0",
+  southtwincreekco2:"0",
+  vallecitocreekco2:"00",
+  littlevasquezcreekco2:"0",
+  westcreekmesaco2:"0",
+  westcrosscreekco2:"00",
+  northforkwhiteriverco2:"0",
+  southforkwhiteriverco2:"0",
+  wildcatcreekco2:"0",
+  willowcreekmoffatco2:"0",
+  wolfcreekconejosco2:"000",
+  wolfcreekmineralco2:"0",
 /* <<< western rulebook streams */
 };
 

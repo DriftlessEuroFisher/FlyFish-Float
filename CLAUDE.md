@@ -1165,10 +1165,40 @@ only state-specific file; see `west2/README.md`.
 - Zone `count` for the state must be bumped by hand in `zones.js` (MT 38 → 131).
 - **`mfsalmon` FLOW_REV is pinned to "0000000000".** A full `flowdir.py`
   run recomputes it to a mixed pattern. Restore it after any flowdir run.
-- Next states: Colorado (163 unmapped rulebook streams in
-  `rockies/regs/co_entries.json`, with county), Utah (~30, `ut_entries.json`),
-  then California, Oregon and Washington, whose full heading lists still need
-  parsing from their booklets.
+- **Colorado done (2026-10-06): 181 streams** (ids ending `co2`) from CPW's
+  2026 Special Regulations. Namesakes are resolved by **county**: a run must
+  lie ≥50% inside the entry's county, using cached Census county polygons.
+  45 entries were skipped, not guessed: no line, ambiguous inside the county,
+  or park-only. Colorado zone count 43 → 224. Reasons are in `west2/build_co.log`.
+- **`apply.py` now writes one fence for every state: run `python3 apply.py mt co`**
+  (plus each new state). Running it with one state drops the others' rivers.
+- Next states: Utah (~30, `ut_entries.json`), then California, Oregon and
+  Washington, whose full heading lists still need parsing from their booklets.
+- **Helpers must never disable the sandbox.** The Montana run did, to reach
+  Overpass mirrors. If a network endpoint is blocked, stop and report.
+
+### Official designations — `js/designations.js`
+`DESIGNATIONS[riverOrLakeId] = {src, reach}` with `DESIG_SRC` naming the
+agency, shown as the top row of the rules card and the lake sheet. 46 waters:
+CPW Gold Medal (from the 2026 booklet's flags, so it can tag a river whose
+own text lost the marker), Utah DWR Blue Ribbon, WGFD Blue Ribbon (>600 lb
+trout/mile), and Montana's twelve statutory "blue ribbon" Murphy Right
+streams. `reach` is the agency's own wording. It is a separate thing from
+this app's Gold tier.
+
+### Parking, campsites, trailheads (`data/poi/`)
+OSM places near mapped rivers (parking ≤300 m, camp/trailhead ≤1.5 km), built
+by `~/.cache/flyfish-osm/poi/`. Three layers share one cell cache
+(`tileJSON`, `makeTiledLayer({filter})`), off by default, from zoom 11.
+
+### More than one session can work here at once
+On 2026-10-06 a second session (Float Mode, `js/float.js`) committed while
+this one had uncommitted work. Its commit swept up this session's
+`app.js`/`index.html`/`sw.js` edits but not the new untracked
+`js/designations.js`, so the live site briefly referenced a missing script.
+It was harmless only because `desigHTML` checks `typeof DESIGNATIONS`.
+**Before committing, check `git status` for untracked files your edits
+depend on.** Guard any new global the same way.
 
 ### Float Mode — `js/float.js` (2026-10-06)
 Personal, on-phone only. A section card's **🛶 Start float** opens a planner
