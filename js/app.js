@@ -880,7 +880,8 @@ function openLake(id){
     `</div>` +
     `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Lake outline: ${k.src==="osm" ? "OpenStreetMap" : "USGS NHD waterbodies"}. Verify regulations with ${pk ? pk.regBody : grte
       ? "WY Game &amp; Fish and the park — Grand Teton takes a <b>Wyoming licence</b>, unlike Yellowstone"
-      : "the National Park Service (a state fishing licence is <b>not</b> valid in the park)"}.</p>`;
+      : "the National Park Service (a state fishing licence is <b>not</b> valid in the park)"}.</p>` +
+    `<div class="rp-wrap"><button type="button" class="rp-link" data-report="${fbEsc(k.id)}">Report an issue with this lake</button></div>`;
 }
 
 /* ============================================================
@@ -2742,7 +2743,8 @@ function renderSheet(r){
     h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">⚠ Central Iowa rivers have low-head dams — the "drowning machine" recirculating hydraulic at the base is dangerous at almost any flow. Scout unfamiliar stretches and check <a href="https://www.iowawhitewater.org/lhd/LHDrivers.html" target="_blank" rel="noopener">Iowa Whitewater's low-head dam list</a> before you put in.</p>`;
   }
   body.innerHTML = rulesCardHTML(r) +
-    (full ? `<details class="rulesfull"><summary>Full regulations — tap to read</summary>${full}</details>` : "") + h;
+    (full ? `<details class="rulesfull"><summary>Full regulations — tap to read</summary>${full}</details>` : "") + h +
+    `<div class="rp-wrap"><button type="button" class="rp-link" data-report="${fbEsc(r.id)}">Report an issue with this river</button></div>`;
 
   body.querySelectorAll("[data-zoom]").forEach(el=>el.addEventListener("click",()=>{
     const s = SECTIONS.find(x=>x.id===el.dataset.zoom);
@@ -3260,6 +3262,97 @@ function closeBook(){ bookEl.classList.remove("show"); }
 $("#btn-book").addEventListener("click", openBook);
 $("#book-x").addEventListener("click", closeBook);
 window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classList.contains("show")) closeBook(); });
+
+/* ---------- Report an issue ----------
+   Sends river, issue text, optional email and the app version to Supabase
+   (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
+const APP_VERSION = "flyroutes-v6";
+const reportEl = $("#report"), rpForm = $("#report-form");
+let rpRiverId = null;
+function rpNames(){
+  const m = new Map();
+  RIVERS.forEach(r => m.set(r.name.toLowerCase(), {id:r.id, name:r.name}));
+  (typeof LAKES==="undefined" ? [] : LAKES).forEach(k => { if(!m.has(k.name.toLowerCase())) m.set(k.name.toLowerCase(), {id:k.id, name:k.name}); });
+  return m;
+}
+let rpMap = null;
+function rpOn(){ return typeof SUPABASE !== "undefined" && !!SUPABASE.url && !!SUPABASE.anonKey; }
+function rpEmailOk(v){ return !v || /@.+\./.test(v); }
+function rpIssueOk(){ return $("#rp-issue").value.replace(/\s/g,"").length >= 3; }
+function rpSync(){
+  const on = rpOn();
+  $("#rp-send").hidden = !on; $("#rp-off").hidden = on;
+  $("#rp-send").disabled = !rpIssueOk();
+}
+function rpSaveDraft(){
+  try{ localStorage.setItem("reportDraft", JSON.stringify({river:$("#rp-river").value, issue:$("#rp-issue").value, email:$("#rp-email").value})); }catch(e){}
+}
+function rpClearDraft(){ try{ localStorage.removeItem("reportDraft"); }catch(e){} }
+function openReport(riverId){
+  if(!rpMap){
+    rpMap = rpNames();
+    $("#rp-list").innerHTML = [...rpMap.values()].map(v => `<option value="${fbEsc(v.name)}"></option>`).join("");
+  }
+  rpForm.hidden = false; $("#rp-done").hidden = true; $("#rp-msg").textContent = "";
+  $("#rp-send").textContent = "Send";
+  let d = {};
+  try{ d = JSON.parse(localStorage.getItem("reportDraft") || "{}") || {}; }catch(e){}
+  const ctx = riverId ? (RIVERS.find(r => r.id===riverId) || (typeof LAKES==="undefined" ? null : LAKES.find(k => k.id===riverId))) : null;
+  if(ctx){
+    rpRiverId = ctx.id; $("#rp-river").value = ctx.name;
+    $("#rp-issue").value = d.issue || ""; $("#rp-email").value = d.email || "";
+  } else {
+    rpRiverId = null;
+    $("#rp-river").value = d.river || ""; $("#rp-issue").value = d.issue || ""; $("#rp-email").value = d.email || "";
+    const hit = rpMap.get($("#rp-river").value.trim().toLowerCase()); rpRiverId = hit ? hit.id : null;
+  }
+  $("#rp-web").value = "";
+  rpSync();
+  closeLegend();
+  reportEl.classList.add("show");
+  setTimeout(() => { try{ $("#rp-issue").focus({preventScroll:true}); }catch(e){} }, 50);
+}
+function closeReport(){ reportEl.classList.remove("show"); }
+$("#report-x").addEventListener("click", closeReport);
+window.addEventListener("keydown", e => { if(e.key==="Escape" && reportEl.classList.contains("show")) closeReport(); });
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-report]"); if(b) openReport(b.dataset.report || null);
+});
+$("#rp-river").addEventListener("input", () => {
+  const hit = rpMap && rpMap.get($("#rp-river").value.trim().toLowerCase());
+  rpRiverId = hit ? hit.id : null; rpSaveDraft();
+});
+$("#rp-issue").addEventListener("input", () => { rpSync(); rpSaveDraft(); });
+$("#rp-email").addEventListener("input", rpSaveDraft);
+rpForm.addEventListener("submit", async e => {
+  e.preventDefault();
+  if(!rpOn() || !rpIssueOk()) return;
+  const msg = $("#rp-msg"), btn = $("#rp-send");
+  const email = $("#rp-email").value.trim(), issue = $("#rp-issue").value.trim();
+  if(!rpEmailOk(email)){ msg.textContent = "That email doesn't look right — fix it or clear it."; return; }
+  const done = () => {
+    rpClearDraft(); rpForm.hidden = true;
+    const dn = $("#rp-done");
+    dn.innerHTML = `<p><b>Thanks — report sent.</b>${email ? `<br>We'll reply to ${fbEsc(email)}` : ""}</p><button type="button" class="rp-close" id="rp-close">Close</button>`;
+    dn.hidden = false;
+    $("#rp-close").addEventListener("click", closeReport);
+  };
+  if($("#rp-web").value){ done(); return; }          // honeypot: pretend success, send nothing
+  msg.textContent = ""; btn.disabled = true; btn.textContent = "Sending…";
+  const name = $("#rp-river").value.trim();
+  try{
+    const res = await fetch(`${SUPABASE.url}/rest/v1/reports`, {method:"POST",
+      headers:Object.assign({apikey:SUPABASE.anonKey, "Content-Type":"application/json", Prefer:"return=minimal"},
+        // a legacy anon key is a JWT and goes in Authorization too; a new sb_publishable_ key must not
+        SUPABASE.anonKey.startsWith("sb_") ? {} : {Authorization:`Bearer ${SUPABASE.anonKey}`}),
+      body:JSON.stringify({river_id:rpRiverId, river_name:name || null, issue, email:email || null, app_version:APP_VERSION})});
+    if(!res.ok) throw new Error(res.status);
+    done();
+  }catch(err){
+    msg.textContent = "Couldn't send — check your signal and try again.";
+    btn.textContent = "Send"; btn.disabled = !rpIssueOk();
+  }
+});
 $("#book-tabs").addEventListener("click", e => { const b = e.target.closest("button[data-tab]"); if(b) showBookTab(b.dataset.tab); });
 bookBody.addEventListener("click", e => {
   const b = e.target.closest("[data-fbopen]"); if(!b) return;

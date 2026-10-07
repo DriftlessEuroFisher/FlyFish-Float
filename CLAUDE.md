@@ -1191,6 +1191,24 @@ OSM places near mapped rivers (parking ≤300 m, camp/trailhead ≤1.5 km), buil
 by `~/.cache/flyfish-osm/poi/`. Three layers share one cell cache
 (`tileJSON`, `makeTiledLayer({filter})`), off by default, from zoom 11.
 
+### Report an issue — `#report` (2026-10-07)
+A form with three fields: river (optional, autocomplete), issue (required) and
+email (optional, for a reply). It opens from the bottom of every river and
+lake sheet, prefilled, and from the ? legend.
+- Reports go to the Supabase table in **`supabase/reports.sql`**. Its RLS
+  policy is insert-only, so the public key can never read reports back and
+  reporters' emails stay private. Read reports in the Supabase dashboard.
+- **`js/config.js`** holds `SUPABASE = {url, anonKey}`. While `url` is
+  empty, the form opens but says reporting isn't switched on. Since
+  2026-10-07 the config is set to project `kbdrxtyacmihabwadzzz`, using a
+  `sb_publishable_` key. That key goes in `apikey` only, **not** in
+  `Authorization` (it isn't a JWT). The project doesn't grant table access
+  by default, so every table needs an explicit `grant` (see the SQL file).
+- **Never put the service_role key in the app.**
+- An unsent draft is kept in `localStorage.reportDraft`. A hidden honeypot
+  field drops bot posts.
+- **`APP_VERSION` in `app.js` must be bumped alongside `VERSION` in `sw.js`.**
+
 ### More than one session can work here at once
 On 2026-10-06 a second session (Float Mode, `js/float.js`) committed while
 this one had uncommitted work. Its commit swept up this session's
@@ -1250,6 +1268,14 @@ heavy use; `fetch.py` resumes from saved tiles, so just re-run it later.
   before calling it done. Most of the bugs this project has had looked fine
   in the diff.
 - **Commit and push only when asked.**
+- **Pilot regions (decided 2026-10-07).** New data-driven features are built
+  and refined in a test region first, then rolled out a step at a time:
+  - **Float features:** Jackson, Pinedale and Victor (the Snake in Jackson
+    Hole, the Green and New Fork, the Teton, the South Fork).
+  - **National-park features:** Grand Teton and Yellowstone.
+
+  Expand once a week of real use turns up nothing wrong. Pure UI changes,
+  which run the same code on every river, ship everywhere at once.
 - **One feature per session.** Finish it, update this file and `IDEAS.md`,
   push, start fresh. A long session re-reads its whole history on every
   reply. This file is what carries the context forward.

@@ -693,3 +693,27 @@ details.rulesfull>summary{cursor:pointer;font-size:12px;font-weight:600;color:va
 .fl-row .bk-main{gap:3px}
 .fl-del{flex:0 0 auto;width:44px;height:44px;margin:-6px -8px -6px 0;border-radius:9px;font-size:24px;line-height:1;color:var(--txt-dim)}
 .fl-del:active{background:#f0dcda;color:#8a2a24}
+
+/* ---------- Report an issue ---------- */
+#report{position:fixed;z-index:1700;left:50%;top:max(10px,env(safe-area-inset-top));transform:translateX(-50%);display:none;flex-direction:column;
+  width:min(94vw,440px);max-height:calc(100vh - 20px);max-height:calc(100dvh - 20px);background:var(--paper);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+#report.show{display:flex}
+#report-head{display:flex;align-items:center;gap:10px;padding:12px 14px 10px;background:var(--ink);color:#e8efe9;flex:0 0 auto}
+#report-head h2{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:22px;text-transform:uppercase;letter-spacing:.04em}
+#report-head .x{margin-left:auto;width:40px;height:40px;border-radius:9px;background:var(--ink-2);border:1px solid #3a4f43;color:#dfe9e1;font-size:16px}
+#report-body{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px calc(16px + env(safe-area-inset-bottom))}
+#report label{display:block;font-size:12px;font-weight:700;color:var(--txt-dim);margin:10px 0 4px}
+#report input[type=text],#report input[type=email],#report textarea{width:100%;font:inherit;font-size:16px;color:var(--txt);background:var(--paper-2);
+  border:1px solid var(--line);border-radius:var(--radius);padding:10px 12px;min-height:44px}
+#report textarea{resize:vertical;min-height:110px}
+.rp-note{font-size:11px;color:var(--txt-dim);margin-top:4px}
+.rp-hp{position:absolute!important;left:-9999px;width:1px;height:1px;opacity:0}
+#rp-msg{font-size:12.5px;color:var(--st-vhigh);margin-top:10px;min-height:0}
+#rp-actions{margin-top:12px}
+#rp-send,.rp-close{width:100%;min-height:46px;border-radius:var(--radius);background:var(--river);color:#fff;font-size:15px;font-weight:700}
+#rp-send:disabled{background:#9fb2a6}
+#rp-off{font-size:12.5px;color:var(--txt-dim);text-align:center}
+#rp-done p{font-size:15px;margin:6px 0 14px;overflow-wrap:anywhere}
+.rp-link,.rp-open{min-height:40px;padding:0 4px;background:none;color:var(--river);font-size:12.5px;font-weight:600;text-decoration:underline}
+.rp-open{display:block;margin:0 0 6px}
+.rp-wrap{margin-top:12px;text-align:center}

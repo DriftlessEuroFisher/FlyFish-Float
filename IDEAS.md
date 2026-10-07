@@ -10,11 +10,49 @@ Status: `new` → `refining` → `ready` (agreed spec) → `building` → `done`
 
 ## Ideas
 
+**Pilot regions:** float features start around Jackson, Pinedale and Victor.
+National-park features start in Grand Teton and Yellowstone. Expand only
+after they've been used for real there. (See CLAUDE.md, "How we work".)
+
 ### Rulebook streams, every western state — `building`
 Every stream with its own entry in the state's 2026 regulations, one state
 per session (CLAUDE.md, "Rulebook streams"). Montana done (93, 7d267c5).
 Next: Colorado (163), Utah (~30), then California, Oregon, Washington, and
 New Mexico, Arizona, Nevada, Idaho and Wyoming.
+
+### Float leaderboards — `ready` (decided 2026-10-07; build in a fresh session)
+- **Problem:** make floating fun: who has floated the most miles on each river
+  around Jackson, Pinedale and Swan Valley, and overall. To be expanded later.
+- **Decisions (2026-10-07):** this takes the server branch of *The fork in the
+  road*. **Supabase** holds the boards (free tier; the app calls it directly
+  from the browser, no build step). Sign-in is an **email magic link**, so
+  miles follow you to a new phone. Only a display name is ever shown. The
+  "no backend" rule in CLAUDE.md gets rewritten when this ships: the app
+  stays static and only the leaderboard talks to a server.
+- **Boards:** one per Float Mode river (Snake in Jackson Hole, Teton, South
+  Fork, Green; the New Fork once it has sections), plus overall. "This season"
+  and "all time".
+- **Verified = recorded live in Float Mode.** Before posting, the phone checks
+  that the float:
+  - started near the put-in;
+  - reached at least 90% of the section (`completed`);
+  - had no long GPS gaps;
+  - had a believable pace.
+  Floats saved before this ships carry none of these checks, so they don't count.
+- **No coordinates leave the phone.** A post is section, miles, season and
+  user. The board never shows dates or times, so it can't tell anyone when
+  you're away from home. Posting is opt-in and off by default.
+- **Server rules** (Supabase row-level security): you can only write your
+  own rows. Also enforce one post per section per day and a cap on miles
+  per day.
+- **Known limit:** someone who edits the app's code can fake a float. Catching
+  that would need GPS tracks on the server, which breaks the location promise.
+  That's accepted for a friendly local board.
+- **Needs from Matt:** create the Supabase project (about 10 minutes, walked
+  through). Only the project URL and the public "anon" key go in the app,
+  which is safe because row-level security does the protecting.
+- **Caveat:** free Supabase projects pause after 7 days with no traffic
+  (off-season) and need a click in the dashboard to wake.
 
 ### Regulations first in the river panel — `done` (2026-10-02)
 - **Source:** our own discussion, 2026-10-02.

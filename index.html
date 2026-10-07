@@ -65,10 +65,31 @@
   </div>
 </section>
 
+<section id="report" role="dialog" aria-label="Report an issue">
+  <div id="report-head"><h2>Report an issue</h2><button class="x" id="report-x" type="button" aria-label="Close">✕</button></div>
+  <div id="report-body">
+    <form id="report-form" novalidate autocomplete="off">
+      <label for="rp-river">River or lake</label>
+      <input id="rp-river" type="text" list="rp-list" placeholder="River or lake (optional)" maxlength="120" autocomplete="off" autocapitalize="words">
+      <datalist id="rp-list"></datalist>
+      <label for="rp-issue">What's wrong?</label>
+      <textarea id="rp-issue" rows="5" maxlength="2000" required placeholder="What's wrong? e.g. wrong regulation, line in the wrong place, gauge not updating, access point closed"></textarea>
+      <label for="rp-email">Email</label>
+      <input id="rp-email" type="email" inputmode="email" autocomplete="email" maxlength="200" placeholder="you@example.com (optional)">
+      <p class="rp-note">Optional — only if you'd like a reply. Used for nothing else.</p>
+      <input id="rp-web" class="rp-hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <p id="rp-msg" role="status" aria-live="polite"></p>
+      <div id="rp-actions"><button type="submit" id="rp-send" disabled>Send</button><p id="rp-off" hidden>Reporting isn't switched on yet.</p></div>
+    </form>
+    <div id="rp-done" hidden></div>
+  </div>
+</section>
+
 <div id="scrim"></div>
 <div id="legend" role="dialog" aria-label="Legend">
   <button class="x" id="legend-x" aria-label="Close legend">✕</button>
   <h2>Legend &amp; how to read this map</h2>
+  <button type="button" class="rp-open" data-report="">Report an issue</button>
   <div class="lg-row"><span class="ap launch" style="position:relative"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.4 L16.6 11.4 L14.2 15 L6.3 15 Z" fill="#fff" stroke="none"/><path d="M8.2 11.4 L9.5 8.9 L12.2 8.9 L12.4 11.4" fill="#fff" stroke="none"/><path d="M2.6 18.2 q2 -1.7 4 0 t4 0 t4 0 t2.8 0"/><path d="M2.6 21 q2 -1.7 4 0 t4 0 t4 0 t2.8 0"/></svg></span> Put-in / boat launch <span style="color:var(--txt-dim);font-size:11px">(green corner dot)</span></div>
   <div class="lg-row"><span class="ap takeout" style="position:relative"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.4 L16.6 11.4 L14.2 15 L6.3 15 Z" fill="#fff" stroke="none"/><path d="M8.2 11.4 L9.5 8.9 L12.2 8.9 L12.4 11.4" fill="#fff" stroke="none"/><path d="M2.6 18.2 q2 -1.7 4 0 t4 0 t4 0 t2.8 0"/><path d="M2.6 21 q2 -1.7 4 0 t4 0 t4 0 t2.8 0"/></svg></span> Take-out / boat ramp <span style="color:var(--txt-dim);font-size:11px">(orange corner dot)</span></div>
   <div class="lg-row"><span class="ap both" style="position:static"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.4 L16.6 11.4 L14.2 15 L6.3 15 Z" fill="#fff" stroke="none"/><path d="M8.2 11.4 L9.5 8.9 L12.2 8.9 L12.4 11.4" fill="#fff" stroke="none"/><path d="M2.6 18.2 q2 -1.7 4 0 t4 0 t4 0 t2.8 0"/><path d="M2.6 21 q2 -1.7 4 0 t4 0 t4 0 t2.8 0"/></svg></span> Ramp used as both put-in &amp; take-out</div>
@@ -150,6 +171,7 @@
 <script src="js/zones.js"></script>
 <script src="js/access-laws.js"></script>
 <script src="js/designations.js"></script>
+<script src="js/config.js"></script>
 <script src="js/app.js"></script>
 <script src="js/float.js"></script>
 
