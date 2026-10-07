@@ -525,7 +525,7 @@ const ZONES = [
     ]
   },
   {
-    id:"wy", kind:"state", count:20,
+    id:"wy", kind:"state", count:47,
     label:"Wyoming", short:"Wyoming", sub:"Snake, Green, Wind, North Platte, Bighorn",
     bounds:[[40.948,-111.9216],[45.0792,-105.0889]],
     rings:[
@@ -538,7 +538,7 @@ const ZONES = [
     ]
   },
   {
-    id:"grte", kind:"park", count:20,
+    id:"grte", kind:"park", count:24,
     label:"Grand Teton National Park", short:"Grand Teton", sub:"Its own regulations, inside Wyoming",
     bounds:[[43.5379,-110.9483],[44.0839,-110.4228]],
     rings:[

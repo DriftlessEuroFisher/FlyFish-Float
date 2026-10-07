@@ -396,9 +396,32 @@ async function verifyGaugesBatch(keys){
 function dayOfYear(d){ return Math.floor((d - new Date(d.getFullYear(),0,0))/864e5); }
 
 /* ---------- flow interpretation ---------- */
+/* A reading the API hands back is not necessarily today's. A gauge USGS has
+   stopped keeps answering with its last value: the Raccoon at Walnut Woods
+   stopped on 2026-09-15 at 1,320 CFS and the app showed that as the current
+   level, badge and map colour included, while the river ran ~8,700. Past
+   READING_MAX_AGE_MS a reading gets its own status with ratio:null, so
+   everything keyed off the ratio (dot colour, flow speed, float estimate,
+   good-flow badge) treats it as no data, and every place that prints the
+   number labels it as the last reading. "Not reporting" is the API saying
+   so; "Out of date" is this phone's saved copy when the API couldn't be
+   reached (f.stale), which says nothing about the gauge itself. */
+const READING_MAX_AGE_MS = 24*60*60*1000;
+function readingIsOld(f){
+  const t = f && f.time ? new Date(f.time).getTime() : NaN;
+  return isFinite(t) && Date.now() - t > READING_MAX_AGE_MS;
+}
+function readingWhen(time){
+  const d = new Date(time);
+  if(isNaN(d)) return "";
+  const o = {month:"short", day:"numeric", hour:"numeric", minute:"2-digit"};
+  if(d.getFullYear() !== new Date().getFullYear()) o.year = "numeric";
+  return d.toLocaleString([], o);
+}
 function statusOf(key){
   const f = flows[key], s = stats[key];
   if(!f || f.cfs==null) return {cls:"na", label:"No data", color:"var(--st-na)", ratio:null};
+  if(readingIsOld(f)) return {cls:"old", label:f.stale ? "Out of date" : "Not reporting", color:"var(--st-na)", ratio:null};
   if(!s) return {cls:"na", label:"Live", color:"var(--st-na)", ratio:null};
   const r = f.cfs / s.median;
   if(r < 0.40) return {cls:"vlow",  label:"Very low",        color:"var(--st-vlow)",  ratio:r};
@@ -410,6 +433,9 @@ function statusOf(key){
 
 function plainLanguage(key, riverId){
   const st = statusOf(key), f = flows[key], s = stats[key];
+  if(st.cls==="old") return f.stale
+    ? `The newest reading this phone has is from ${readingWhen(f.time)}, and it couldn't reach ${isDWR(key)?"Colorado DWR":"USGS"} for a newer one — so there's no current level here. Don't read the last number as today's.`
+    : `This gauge hasn't reported since ${readingWhen(f.time)}. It may be shut down for the season or out of service, so there's no current level here — don't read the last number as today's. Another gauge on this water, or a local shop, is the better read.`;
   if(st.ratio==null) return "No comparison available yet — use the raw CFS and ask a local shop how it fishes at this level.";
   const pct = Math.round(Math.abs(st.ratio-1)*100);
   const tail = riverId==="southfork" ? " (Remember: this is dam-controlled — the number can step up or down with releases.)" : "";
@@ -878,7 +904,7 @@ function openLake(id){
         ? `From the National Park Service's Grand Teton fishing information, which follows <b>Wyoming Game &amp; Fish</b> regulations. Bait is allowed on park lakes that aren't otherwise restricted — the artificial-only rule covers the streams. Seasons and limits are re-issued every year; check the current Wyoming regulations and carry a Wyoming licence.`
         : `From the park's <b>2026</b> fishing regulations. A park permit is required at 16 and over and a state licence is not valid; tackle is lead-free artificial lures or flies, barbless. Attractors such as dodgers and lake trolls may be used <b>in lakes only</b>. Re-issued every year — read the current edition before you fish.`}</div>` +
     `</div>` +
-    `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Lake outline: ${k.src==="osm" ? "OpenStreetMap" : "USGS NHD waterbodies"}. Verify regulations with ${pk ? pk.regBody : grte
+    `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Lake outline: ${k.src==="osm" ? "OpenStreetMap" : k.src==="wgfd" ? "Wyoming Game &amp; Fish's lakes map (NHDPlus HR)" : "USGS NHD waterbodies"}. Verify regulations with ${pk ? pk.regBody : grte
       ? "WY Game &amp; Fish and the park — Grand Teton takes a <b>Wyoming licence</b>, unlike Yellowstone"
       : "the National Park Service (a state fishing licence is <b>not</b> valid in the park)"}.</p>` +
     `<div class="rp-wrap"><button type="button" class="rp-link" data-report="${fbEsc(k.id)}">Report an issue with this lake</button></div>`;
@@ -1526,6 +1552,31 @@ Object.assign(PARK_INFO, {
     ungauged:"No live gauge on this river. The nearest gauged water in Washington is the read on regional conditions — the west side runs on rain, the east side and the Cascades on snowmelt."},
 });
 
+/* Wyoming Area 1 (the Snake River drainage), for the streams drawn from Wyoming
+   Game & Fish's own Fishing Guide map. Wyoming rivers carry no `region` (the
+   region drives request bucketing and other behaviour), so this row is found
+   through `parkRegsSrc:"wgfd"` instead -- and it has no `zone`, because
+   refreshZoneCounts() would otherwise count it as Wyoming's set. Soda Lake
+   reads it through its `park` field like the other state lakes. */
+Object.assign(PARK_INFO, {
+  wgfd: {sub:"", heading:"Regulations", labelZoom:8, badge:"WGFD · Chapter 46 · 2026",
+    note:`From the Wyoming Game and Fish Commission's <b>Chapter 46, Fishing Regulations</b>, effective January 1, 2026 — Area 1, the Snake River drainage: this water's own entry where it has one, then the rules for every stream and water in Area 1, word for word. Wyoming re-issues Chapter 46; check the current regulations at wgfd.wyo.gov before you fish.`,
+    licence:`<b>Wyoming fishing licence</b> — on request, anyone who has been fishing must produce “a valid license and conservation stamp, if required” (Ch. 46 §15)`,
+    regBody:"Wyoming Game &amp; Fish",
+    footer:`🎣 <b>Wyoming, Area 1</b> — the Snake, Salt, Greys, Hoback, Gros Ventre and Buffalo Fork drainages and everything west of the Teton and Snake River Ranges. Chapter 46 (effective January 1, 2026): “Fishing is permitted year-round twenty-four (24) hours a day in any waters of this state except as otherwise provided by Commission regulation for specific areas, streams, lakes, or portions thereof”, and “The use or possession of live baitfish in Area 1 is prohibited.” Stream class and species are from WGFD's Fishing Guide map.`,
+    ungauged:"No live gauge on this stream, and the app won't put a number on it that isn't measured. The nearest gauged water below is the read on how runoff and rain have the region."},
+});
+/* Rivers that run through Grand Teton but carry no region of their own: the
+   three Jackson Hole rivers, the park creeks WGFD's line carries on past the
+   boundary, and the two WGFD streams that rise inside it. Each carries a
+   Grand Teton note (parkRegsSrc "grte"); the Parkway's Snake and Polecat do
+   too but are not in the park. refreshZoneCounts() counts these with the
+   park's own region; keep in step with zones.js grte `count`. Declared up
+   here, above anything that can run at startup. */
+const GRTE_SHARED = ["snake","buffalofork","grosventre",
+  "pacificcreek","ditchcreek","spreadcreek","lakecreekgt","granitecreekgt","pilgrimcreek","arizonacreek",
+  "wg_fishcreekwilson","wg_springcreekjackson"];
+
 
 const riverLayers = {}, rampMarkers = {}, gaugeDots = {};
 let highlight = null;
@@ -1575,7 +1626,8 @@ const RAMP_MIN_ZOOM = 8, WADE_MIN_ZOOM = 9;
 
 RAMPS.forEach(p=>{
   const m = L.marker(p.pos,{icon:apIcon(p,"")});
-  m.bindPopup(`<b>${p.name}</b><br><span style="font-size:11px">${roleWord(p.role)} · ${p.note}</span>`);
+  m.bindPopup(`<b>${p.name}</b><br><span style="font-size:11px">${roleWord(p.role)} · ${p.note}</span>`+
+    (p.src ? `<br><span style="font-size:10.5px;color:var(--txt-dim)">Source: ${p.src}</span>` : ""));
   m.on("click",()=>{ openRiver(p.river); });
   rampMarkers[p.id]=m;
 });
@@ -1882,14 +1934,18 @@ function agClear(){ allGaugeLayer.clearLayers(); agMarkers.clear(); }
 function agPopupHTML(f, key){
   const name = agNames[f.id];
   const t = new Date(f.time);
-  const when = isNaN(t) ? "" : "read " + t.toLocaleTimeString([], {hour:"numeric", minute:"2-digit"});
   const st = statusOf(key), s = stats[key];
-  const line = s ? `<span class="badge" style="background:${st.color}">${st.label}</span>`
+  const cfs = f.cfs >= 100 ? Math.round(f.cfs) : +f.cfs.toFixed(1);
+  /* latest-continuous by bbox also returns sites that stopped long ago, with
+     their last value: that one is a dated last reading, not the big number */
+  const old = st.cls === "old";
+  const when = isNaN(t) ? "" : old ? `last reading <b>${cfs.toLocaleString()} cfs</b> · ${readingWhen(f.time)}`
+             : "read " + t.toLocaleTimeString([], {hour:"numeric", minute:"2-digit"});
+  const line = s || old ? `<span class="badge" style="background:${st.color}">${st.label}</span>`
              : s === null ? `<span class="ag-note">No history to compare</span>`
              : `<span class="ag-note">Comparing with the last 7 years…</span>`;
-  const cfs = f.cfs >= 100 ? Math.round(f.cfs) : +f.cfs.toFixed(1);
   return `<div class="ag-pop"><div class="gname">USGS ${agEsc(name || f.id)}</div>`+
-    `<div class="flowrow"><span class="cfs">${cfs.toLocaleString()} <small>cfs</small></span>${line}</div>`+
+    `<div class="flowrow"><span class="cfs">${old ? "—" : cfs.toLocaleString()} <small>cfs</small></span>${line}</div>`+
     `<div class="ag-note">${when}</div>`+
     `<a href="https://waterdata.usgs.gov/monitoring-location/${agBare(f.id)}/" target="_blank" rel="noopener">USGS station page</a></div>`;
 }
@@ -1916,7 +1972,8 @@ function agOpen(m){
       }).catch(()=>{});
     }
   }
-  if(stats[key] === undefined && !apiPaused()){
+  // a site that stopped reporting has no reading to compare, so don't spend requests on its history
+  if(stats[key] === undefined && !apiPaused() && !readingIsOld(f)){
     const hide = {value:undefined, enumerable:false, configurable:true, writable:true};
     Object.defineProperty(GAUGES, key, {...hide, value:{site:f.id, label:f.id}});
     KEY_BY_SITE[f.id] = key;
@@ -2097,15 +2154,19 @@ function hazardIcon(type){
   return L.divIcon({className:"hz-icon", html:svg, iconSize:[18,18], iconAnchor:[9,9], popupAnchor:[0,-9]});
 }
 function hazardPopupHTML(row){
-  const [, , type, name] = row;
+  const [, , type, name, x] = row;       // x (optional): {s source, k DNR dam type, h height ft, p portage, r river, l location}
   const say = type === "rapids"
     ? "Rapids — difficulty changes with flow. Scout first."
     : "Scout before you float — portage if in doubt. Low-head dams are deadly at almost any flow.";
+  const facts = x ? [x.k ? fbEsc(x.k) : "", x.h ? "about " + fbEsc(x.h) + " ft high" : ""].filter(Boolean).join(" · ") : "";
   return `<div class="ag-pop tl-pop">`+
     `<div class="tl-title">${HZ_LABEL[type] || "Hazard"}</div>`+
     (name ? `<div>${fbEsc(name)}</div>` : "")+
+    (x && (x.r || x.l) ? `<div class="ag-note">${[x.r, x.l].filter(Boolean).map(fbEsc).join(" — ")}</div>` : "")+
+    (facts ? `<div>${facts}</div>` : "")+
+    (x && x.p ? `<div><b>Portage:</b> ${fbEsc(x.p.charAt(0).toLowerCase() + x.p.slice(1))}</div>` : "")+
     `<div class="tl-warn">${say}</div>`+
-    `<div class="ag-note">Source: USGS National Hydrography Dataset.</div></div>`;
+    `<div class="ag-note">Source: ${x && x.s ? "Iowa DNR Paddling Hazards (Dams) layer" : "USGS National Hydrography Dataset"}.</div></div>`;
 }
 const hazardLayer = makeTiledLayer({
   dir:"data/hazards", minZoom:10, maxCells:9, pane:"hazardPane",
@@ -2317,7 +2378,7 @@ let geomSweeps = 0;
 
    Two guards on what may be refined:
 
-   * `iadnr` / `widnr` rivers are never touched. Those lines are the state
+   * `iadnr` / `widnr` / `midnr` / `wgfd` rivers are never touched. Those lines are the state
      fisheries agency's own drawing of the reach that is *designated trout
      water*, which is a different claim from "where the channel runs", and
      NHD would happily replace it with the whole creek or the wrong Bear
@@ -2398,11 +2459,14 @@ async function refineRiver(r){
   if(!layer || layer.refined || layer.refining) return;
   /* Agency geometry is left alone: for iadnr/widnr the line IS the
      designated trout reach, and NHD would replace it with the whole creek.
+     wgfd is Wyoming Game & Fish's own line for the water it rates, and a
+     Grand Teton creek extended past the park on it must not be clipped back
+     to the park by a cached NHD refinement.
      OSM rivers are refined from OSM itself, never from NHD -- mixing two
      sources along one channel fragments the line wherever they disagree by
      more than REFINE_BUFFER_KM. The baked OSM line is simplified (40 m, 80 m
      in Alaska); the refinement is the same ways at full resolution. */
-  if(r.geom === "iadnr" || r.geom === "widnr" || r.geom === "midnr"){ layer.refined = true; return; }
+  if(r.geom === "iadnr" || r.geom === "widnr" || r.geom === "midnr" || r.geom === "wgfd"){ layer.refined = true; return; }
   layer.refining = true;
   const ck = "nhdfine:" + r.id;
   const cached = store.get(ck);
@@ -2604,7 +2668,11 @@ function rulesCardHTML(r){
     else { head = "No season on file"; sub = `Check ${regBodyFor(r)}`; }
   }
 
-  let lic = PARK_INFO[r.region] && PARK_INFO[r.region].licence;
+  /* A river with no region (Wyoming's WGFD streams) finds its row through
+     parkRegsSrc. Every existing parkRegsSrc that names a PARK_INFO row
+     equals the river's own region, so this changes nothing for them. */
+  const piRow = PARK_INFO[r.region] || PARK_INFO[r.parkRegsSrc];
+  let lic = piRow && piRow.licence;
   const src = r.parkRegsSrc || (r.region==="yellowstone" ? "yell" : "");
   if(!lic){
     if(r.region==="yellowstone") lic = "Yellowstone park fishing permit — a state licence is <b>not</b> valid";
@@ -2728,13 +2796,14 @@ function renderSheet(r){
     h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🐟 <b>Idaho's cutthroat programme runs both these valleys.</b> On the Teton and the South Fork and their tributaries there is <b>no harvest of cutthroat trout</b> and <b>no limit at all on rainbow trout or hybrids</b> — non-native rainbows displace and interbreed with the native Yellowstone cutthroat, so the state protects one and turns the other loose. The <b>tributaries close June 1–30</b> for the spawning run while the mainstems stay open; Upper Snake water is otherwise open all year. Brook trout are limited to 25 and bull trout are catch-and-release region-wide. ${r.region==="tetonvalley" ? "The Teton Range canyons cross into <b>Wyoming</b> part-way up and a Wyoming licence is needed above the line — which is where this zone ends." : "Palisades Reservoir and its tributaries sit at the top of the valley; Big Elk Creek's drainage reaches into Wyoming."}</p>`;
   }
   if(r.region==="grandteton"){
-    h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🏔 <b>Grand Teton is not Yellowstone.</b> It takes a <b>Wyoming fishing licence</b> and is fished under <b>Wyoming regulations</b>, not a park permit of its own. The rule that shapes a season here: <b>park streams are closed December 1 – July 31</b>, so most of this water opens <b>August 1</b> — the exceptions the park names are the <b>Snake, Buffalo Fork, Pacific Creek, Gros Ventre and Polecat Creek</b>. Streams are <b>artificial flies or lures only</b> apart from those same five, the stream creel is three trout with no more than one over sixteen inches, and the lakes are six trout of which at most three may be cutthroat. Lakes are open year-round except Jackson Lake, which closes October 1–31. Check the current Wyoming Game &amp; Fish regulations before you go.</p>`;
+    h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🏔 <b>Grand Teton is not Yellowstone.</b> It takes a <b>Wyoming fishing licence</b> and is fished under <b>Wyoming regulations</b>, not a park permit of its own. The rule that shapes a season here: <b>park streams are closed December 1 – July 31</b>, so most of this water opens <b>August 1</b> — the exceptions the park names are the <b>Snake, Buffalo Fork, Pacific Creek, Gros Ventre and Polecat Creek</b>. Streams are <b>artificial flies or lures only</b> apart from those same five, the stream creel is three trout with no more than one over sixteen inches and no more than one cutthroat over twelve inches, and the lakes are six trout of which at most three may be cutthroat. Lakes are open year-round except Jackson Lake, which closes October 1–31. Check the current Wyoming Game &amp; Fish regulations before you go.</p>`;
   }
   if(r.region==="yellowstone"){
     h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🏞 <b>Yellowstone runs its own fishery.</b> A <b>park fishing permit</b> is required at 16 and over and a state licence is not valid — $40 for three days, $55 for seven, $75 for the season, through Recreation.gov. The standard season is the <b>Saturday of Memorial Day weekend through October 31</b>; the Firehole, the Gibbon below the bridge and the Madison above the state line open <b>May 1</b>, and the Madison below the state line and the Gardner from Osprey Falls down are <b>open year-round</b>. Tackle is <b>lead-free artificial lures or flies only, barbless or barbs pinched</b> — no bait — and up to two flies on a leader; the Firehole, Madison and lower Gibbon are <b>fly fishing only</b>. <b>All native fish go back unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. In the <b>Lamar drainage</b> every rainbow, brook trout and cutthroat/rainbow hybrid <b>must be killed</b>, as must every lake trout from Yellowstone Lake. Closures and opening dates move year to year — check the park's current fishing regulations before you go.</p>`;
   }
-  if(PARK_INFO[r.region]){
-    h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">${PARK_INFO[r.region].footer}</p>`;
+  const piFoot = PARK_INFO[r.region] || PARK_INFO[r.parkRegsSrc];      // region-less WGFD streams: by parkRegsSrc
+  if(piFoot){
+    h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">${piFoot.footer}</p>`;
   }
   if(r.region==="doorcounty"){
     h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🌊 Door County has <b>no USGS gauge anywhere in the county</b> — every stream here is ungauged on purpose, and the nearest gauged water is a long way off. These creeks are small and rain-driven: judge them on the water. Almost all of them are <b>Great Lakes tributary</b> water, which carries its own season, a 10" minimum, a hook-gap limit and a <b>night-fishing closure</b> from September 15 — read the current Wisconsin regs before you go. Access is county park, state park and land-trust ground rather than DNR easement; there are no angling easements on the peninsula.</p>`;
@@ -2764,12 +2833,14 @@ function flowCardHTML(key, riverId){
   // optional per-river "good fishing flow" range (see rivers-data.js goodFlow field)
   const riverObj = RIVERS.find(r=>r.id===riverId);
   const gf = riverObj && riverObj.goodFlow;
-  const inGoodFlow = (gf && f && f.cfs!=null && key===riverObj.primaryGauge)
+  // a reading over a day old is not today's level: no big number, no good-flow verdict
+  const old = st.cls === "old";
+  const inGoodFlow = (!old && gf && f && f.cfs!=null && key===riverObj.primaryGauge)
     ? (f.cfs>=gf.min && f.cfs<=gf.max) : null;
   const loading = !f;
   const cfsTxt = loading ? `<span class="skel">0000</span>` :
-    (f.cfs==null ? "—" : Math.round(f.cfs).toLocaleString());
-  const when = f&&f.time ? new Date(f.time).toLocaleString([], {month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}) : "";
+    (f.cfs==null || old ? "—" : Math.round(f.cfs).toLocaleString());
+  const when = f&&f.time ? readingWhen(f.time) : "";
   // staff-gauge position: log scale around median, median pinned at 45%
   let curLeft=null;
   if(st.ratio!=null){
@@ -2785,7 +2856,7 @@ function flowCardHTML(key, riverId){
     ${curLeft!=null?`<div class="staff"><div class="bar"></div><div class="tick" style="left:45%"></div><div class="cur" style="left:${curLeft}%"></div></div>`:""}
     <div class="flowmeta">
       ${s?`<span>median <b>${Math.round(s.median).toLocaleString()}</b></span><span>range <b>${Math.round(s.min)}–${Math.round(s.max).toLocaleString()}</b></span><span>${STAT_YEARS}-yr, ±${STAT_WINDOW}d</span>`:`<span>${loading?"loading history…":"history unavailable"}</span>`}
-      ${when?`<span>read <b>${when}</b></span>`:""}
+      ${!when ? "" : old ? `<span>last reading <b>${Math.round(f.cfs).toLocaleString()} CFS</b> · <b>${when}</b></span>` : `<span>read <b>${when}</b></span>`}
     </div>
     ${isDWR(key)?`<div class="flowsrc">Colorado Division of Water Resources gauge</div>`:""}
     <div class="plain">${plainLanguage(key, riverId)}</div>
@@ -2832,18 +2903,25 @@ function noGaugeHTML(r){
     const badge = showClass
       ? ` <span class="badge" style="background:${st.color};vertical-align:middle">${st.label}</span>`
       : "";
-    proxy = `<div class="plain" style="margin-top:8px">Nearest gauged water is the <b>${near.name}</b>, currently <b>${cfs}</b>${badge}.
-      That's a <i>different stream</i> — treat it only as a rough read on how wet the region is, not as this creek's flow.
+    /* A reading over a day old is no read on today's region at all, so it is
+       given as the last reading with its date, never as "currently". */
+    const said = st.cls === "old"
+      ? `Nearest gauged water is the <b>${near.name}</b>, but ${f.stale ? "the newest reading this phone has from it is" : "its gauge has stopped reporting — the last reading was"} <b>${cfs}</b> on <b>${readingWhen(f.time)}</b>${badge}.
+      That's a <i>different stream</i>, and an old number isn't a read on how wet the region is today either.`
+      : `Nearest gauged water is the <b>${near.name}</b>, currently <b>${cfs}</b>${badge}.
+      That's a <i>different stream</i> — treat it only as a rough read on how wet the region is, not as this creek's flow.`;
+    proxy = `<div class="plain" style="margin-top:8px">${said}
       <button class="zoom" data-river="${near.id}" style="margin-top:8px">Open ${near.name.split("—")[0].trim()} →</button></div>`;
   }
   /* Door County has no gauge at all — not on these creeks, not anywhere in
      the county — and nearestGaugedRiver() stays inside a region, so there is
      deliberately no proxy reading offered here. The note says so rather than
      leaving an empty card that looks like a loading failure. */
-  const ungaugedNote = PARK_INFO[r.region] ? PARK_INFO[r.region].ungauged
+  const piUng = PARK_INFO[r.region] || PARK_INFO[r.parkRegsSrc];      // region-less WGFD streams: by parkRegsSrc
+  const ungaugedNote = piUng ? piUng.ungauged
     : (r.region==="tetonvalley" || r.region==="swanvalley")
     ? "No gauge on this creek — in these two valleys the gauges are on the mainstems, and that is the right place to look anyway. Both rivers run through irrigated valleys, so late summer flow here is as much about diversions as about snowpack, and the tributaries drop and warm well before the river does. The nearest gauged water below is the useful read; remember the <b>June 1–30 closure</b> on the tributaries as well as the level."
-    : r.region==="grandteton"
+    : (r.region==="grandteton" || r.parkRegsSrc==="grte")      // incl. park creeks extended past the boundary
     ? "Only three gauges bear on Grand Teton's own water and none of them is on this one. Several of these creeks <i>have</i> USGS site numbers — Spread, Cottonwood, Ditch, Taggart, Pilgrim, Lake Creek — and not one has reported discharge since the 1990s or 2010, so there is nothing live to show. The nearest gauged water below is the useful read: these streams share one snowpack off the same range and rise and fall together. Remember the season here as well as the level — most park streams are shut until <b>August 1</b>."
     : r.region==="yellowstone"
     ? "Nine gauges cover the park's main rivers and none of them is on this one — most Yellowstone water is backcountry and ungauged, and the app won't put a number on it that isn't measured. The nearest gauged river below is the useful read: on this plateau the whole park rises and falls together with snowmelt, so a neighbouring drainage tracks this one far more closely than it would in farm country. Runoff usually has the park high and off-colour into late June, and the backcountry streams come into shape as it drops."
@@ -3266,7 +3344,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v8";
+const APP_VERSION = "flyroutes-v11";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){
@@ -3930,7 +4008,7 @@ let refreshMenuCounts = () => {};      // set by tierCtl once its buttons exist
 function syncTierChips(){
   TIER_KEYS.forEach(k => {
     const b = document.querySelector('#tierchips [data-tier="'+k+'"]');
-    if(b) b.classList.toggle("on", !!tierFilter[k]);
+    if(b){ b.classList.toggle("on", !!tierFilter[k]); b.setAttribute("aria-pressed", String(!!tierFilter[k])); }
   });
   refreshMenuCounts();
 }
@@ -4011,9 +4089,15 @@ tierCtl.onAdd = function(){
     menus[1].querySelector(".mcount").textContent = "\u00B7 " + nl;
   };
   d.querySelectorAll("[data-tier]").forEach(b => b.addEventListener("click", ()=>{
-    const g = tierGroups[b.dataset.tier];
-    if(map.hasLayer(g)) map.removeLayer(g); else map.addLayer(g);
-    b.setAttribute("aria-pressed", String(!!tierFilter[b.dataset.tier]));
+    const k = b.dataset.tier, g = tierGroups[k];
+    if(map.hasLayer(g)) map.removeLayer(g);          // turning a class off never touches the others
+    else{
+      /* "All" means all: turning Class 3 on also turns Gold, Class 1 and Class 2 on, so the count
+         reads 4. They go first, while Class 3 is still off, so each repaint is the cheap one. */
+      if(k === "3") TIER_KEYS.forEach(o => { if(o !== "3" && !map.hasLayer(tierGroups[o])) map.addLayer(tierGroups[o]); });
+      map.addLayer(g);
+    }
+    syncTierChips();                                 // aria-pressed on every chip, not just this one
   }));
   LAYER_CHIPS.forEach(([id,,g]) => {
     const b = d.querySelector('[data-layer="'+id+'"]');
@@ -4250,7 +4334,7 @@ document.getElementById("la-no").addEventListener("click", () => { locAsk.classL
    clutter this exists to remove. */
 function refreshZoneCounts(){
   const sets = {yell: r => r.region==="yellowstone",
-                grte: r => r.region==="grandteton" || ["snake","buffalofork","grosventre"].includes(r.id)};
+                grte: r => r.region==="grandteton" || GRTE_SHARED.includes(r.id)};
   Object.entries(PARK_INFO).forEach(([reg, p]) => { sets[p.zone] = r => r.region === reg; });
   document.querySelectorAll(".zone-card .zc-count[data-zone]").forEach(el => {
     const f = sets[el.dataset.zone]; if(!f) return;

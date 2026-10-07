@@ -184,6 +184,39 @@ paddling system rather than trout wade-fishing — same data model, different
 character. They carry a low-head-dam safety note in the UI (a real,
 documented hazard on these rivers) that no other region needs.
 
+### Des Moines pilot: DNR access, gauges and dams (2026-10-07)
+Pilot Central water. `raccoon` and `beavercreek` are now Class 2, so they
+show by default.
+- **Ramps come from the Iowa DNR's Paddling Access Sites**
+  (`programs.iowadnr.gov/geospatial/…/Recreation/Recreation/MapServer`
+  layer 4). The layer has **no river field**, so a site is matched by
+  distance (≤300 m) to the drawn line. Boat ramps and paddling accesses
+  are role `both`; fishing accesses are `wade`. They carry `src`, and the
+  ramp popup now shows it. Script: `~/.cache/flyfish-osm/iowa/apply.py`
+  (fence "central iowa dnr access"). **The server 403s Python's default
+  User-Agent**, so send one.
+- **Four hand pins were 0.65–5 km off the water** (Cottonwood, Yellow
+  Banks, Walnut Woods, Lew Clarkson). They were moved onto the same-named
+  agency site, keeping their ids. The old positions are in the build
+  report.
+- **Beaver Creek has no DNR site.** Its two accesses are OSM slipways.
+- **Gauges:** added Raccoon at 63rd St (05484650, now the primary) and at
+  Fleur Drive (05484900). **Walnut Woods (05484600) stopped reporting on
+  2026-09-15**, and the app showed its last 1,320 CFS as today's level
+  while the river ran about 8,700. That is why a reading older than 24 h
+  now reads "Not reporting".
+- **Low-head dams:** 25 records from the DNR's Paddling Hazards (Dams)
+  layer are in `data/hazards/`, built by
+  `~/.cache/flyfish-osm/hazards/iowa_dams.py`, which `build.py` calls at
+  the end. The popup gives the portage side and the source. Heights are
+  in feet, inferred because the layer states no unit.
+- **Open:**
+  - `riverwalk` ("Principal Riverwalk / Water Works Park") is still
+    1.64 km off the Des Moines line and could be any of three DNR sites.
+  - `rc2`'s stated 14 mi measures 17.6 along the line.
+  - The North Raccoon's `booneville` pin sits ~25 km from the real
+    Booneville Access, which is on the Raccoon.
+
 ### Northeast Iowa comes from the Iowa DNR, not NHD
 
 The NE Iowa trout streams were rebuilt from the **Iowa DNR Fishing Atlas**
@@ -698,6 +731,53 @@ so a disjoint second ring would have rendered as a hole punched in the park.
 stands on its own: the Parkway is a separate NPS unit under its own rules.)
 It falls in the Wyoming zone, which is correct — it is outside both parks.
 Polecat Creek is in the Parkway for the same reason and is left off.
+
+## Jackson-area streams from Wyoming Game & Fish (2026-10-07)
+
+**31 streams, Soda Lake, and seven Grand Teton creeks drawn past the park
+boundary**, all from WGFD's own data. Pipeline: `~/.cache/flyfish-osm/wy/`
+(`specs.py` holds the list, each decision and the verbatim rules; `apply.py`
+gives the run order). Fenced in the data files as "wyoming wgfd streams".
+
+- **Which water: WGFD's Fishing Guide map**
+  (`services6.arcgis.com/cWzdqIyxbijuhPLw/…/Streams_FishingGuide_PublicView`).
+  Every Area 1 (Snake drainage) stream near Jackson that WGFD rates
+  **Yellow Ribbon or better** (≥50 lb of trout a mile), **whether or not it
+  crosses private land**. The owner wants them all: public land is shaded,
+  and the Wyoming wading row says you may float private water but not wade
+  it. `LengthKM` in that layer is *not* the stream length; the geometry is
+  the whole stream. Same-name streams are separate features, so pick one by
+  location.
+- **Rules: WGFD Chapter 46, effective January 1, 2026**, Area 1 (§16–17),
+  verbatim. That's the stream's own entry where it has one (Nowlin Creek,
+  the Salt tributaries above the Upper Narrows Bridge), then §17(a)/(b).
+  Region-less Wyoming streams reach the `PARK_INFO.wgfd` row through
+  `parkRegsSrc:"wgfd"`; the rules card, footer and ungauged copy fall back
+  to `PARK_INFO[r.parkRegsSrc]`. **Don't give these streams a `region`**:
+  region drives request bucketing.
+- **Grand Teton creeks run as far as the trout do.** Pacific, Spread,
+  Ditch, Lake, Granite, Pilgrim and Arizona continue on WGFD's line where
+  WGFD rates the outside water as trout water. They are modelled like the
+  Gros Ventre: no region, `parkRegsSrc:"grte"`, and `parkRegs` = "In Grand
+  Teton: …" plus the Area 1 rules for the rest. **A `closed` window in
+  tiers.js covers a whole river**, so an extended creek must not carry the
+  park's December–July closure. The park text says it instead.
+  `GRTE_SHARED` in app.js lists the region-less rivers the Grand Teton
+  card counts. Keep it in step with the `grte` zone `count`.
+- `geom:"wgfd"` is never snapped or refined, like `iadnr`.
+- **The Gros Ventre, Flat Creek (renamed "Flat Creek (Jackson)") and the
+  Hoback now run on WGFD's full lines** (lifted into the fence via
+  `wy/remap_originals.json`). The Gros Ventre gaps at both Slide Lakes, and
+  Flat Creek carries §17(c)/(d) (Elk Refuge) first. **Open:**
+  - The `hoback` gauge (13019300) has never measured discharge; 13019500
+    (Hoback near Jackson) is live.
+  - The `hobw` and `fcref` pins sit 1.4 and 1.1 km off the line.
+  - Labels sit at a line's midpoint, so the Gros Ventre's moved to the upper
+    valley.
+  - `tv_trailcreek` stops 1.3 km short of the Idaho line.
+- **Gauges:** Crow Creek near Fairview and Fish Creek at Wilson are live.
+  About twenty other USGS site numbers on these creeks are dead, and the
+  list is in the build report. Don't add them.
 
 ## Western national parks
 

@@ -539,7 +539,9 @@ function flEnd(stale){
     totalMin:Math.round((end-base)/60000), movingMin:Math.round(st.movMs/60000),
     stoppedMin:Math.round(Math.max(0, end-base-st.movMs)/60000),
     milesDone:Math.round(Math.max(a, flRoute ? flAlong/flRoute.len : 0)*s.miles*10)/10,
-    cfs:f && f.cfs != null ? f.cfs : null, ratio:ratio != null ? Math.round(ratio*100)/100 : null,
+    // a reading over a day old isn't the flow you floated on (statusOf gives it no ratio either)
+    cfs:f && f.cfs != null && !(typeof readingIsOld === "function" && readingIsOld(f)) ? f.cfs : null,
+    ratio:ratio != null ? Math.round(ratio*100)/100 : null,
     completed:Math.max(a, flRoute ? flAlong/flRoute.len : 0) >= 0.9,
   };
   if(!Array.isArray(fbState.floats)) fbState.floats = [];
