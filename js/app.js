@@ -1581,18 +1581,68 @@ const GRTE_SHARED = ["snake","buffalofork","grosventre",
 const riverLayers = {}, rampMarkers = {}, gaugeDots = {};
 let highlight = null;
 
+/* Per-reach colours. The Iowa DNR designates a stream reach by reach -- a
+   catch-and-release stretch inside catchable water -- and `reachClass` gives
+   one class per piece of `coords`. The river's own line keeps the colour of
+   its longest class and stays the one layer everything else works with (flow
+   animation, Float Mode routing, refinement); each piece of another class gets
+   an overlay in its own colour, drawn over the line in the same pane and
+   style, so the creek reads as one stream that changes colour where its
+   designation does. Only those few pieces get a layer. applyFilters() shows,
+   hides and greys them with the line. If the line is ever redrawn from other
+   geometry the overlays no longer describe it, so they go. */
+function reachOverlays(r, line){
+  const out = [];
+  if(!r.reachClass || !isMulti(r.coords)) return out;
+  r.coords.forEach((run, i) => {
+    const cls = r.reachClass[i], tc = TROUT_CLASS[cls];
+    if(!tc || cls === r.troutClass || run.length < 2) return;
+    const o = L.polyline(run, {color:tc.color, weight:tierWeight(r), opacity:.92,
+      lineCap:"round", lineJoin:"round", smoothFactor:1.2, pane:"riversPane"}).addTo(map);
+    o.reachColor = tc.color;
+    onTap(o, ()=>openRiver(r.id));
+    out.push(o);
+  });
+  if(out.length){
+    const set = line.setLatLngs;
+    line.setLatLngs = function(ll){
+      out.forEach(o => map.removeLayer(o)); out.length = 0;
+      return set.call(this, ll);
+    };
+  }
+  return out;
+}
+/* [[class, miles], ...] longest first, measured along the drawn pieces; a
+   river with one class gets [[class, null]]. */
+function reachMiles(r){
+  if(!r.reachClass || !isMulti(r.coords)) return [[r.troutClass, null]];
+  const mi = {};
+  r.coords.forEach((run, i) => {
+    let km = 0;
+    for(let j = 1; j < run.length; j++) km += distKm(run[j-1], run[j]);
+    mi[r.reachClass[i]] = (mi[r.reachClass[i]] || 0) + km / 1.609344;
+  });
+  return Object.entries(mi).sort((a, b) => b[1] - a[1]);
+}
+
 RIVERS.forEach(r=>{
   const line = L.polyline(r.coords,{color:riverColor(r), weight:tierWeight(r), opacity:.92,
     lineCap:"round", lineJoin:"round", smoothFactor:1.2, pane:"riversPane"}).addTo(map);
   onTap(line, ()=>openRiver(r.id));
   const mid = midCoord(r.coords);
   const lbl = L.marker(mid,{interactive:false,icon:L.divIcon({className:"riv-label",html:r.name.split("—")[0].split("(")[0].trim(),iconSize:null})}).addTo(map);
-  riverLayers[r.id]={line,lbl,river:r};
+  riverLayers[r.id]={line,lbl,river:r,reaches:reachOverlays(r, line)};
 });
 syncLabels();
 
 /* boat-ramp logo for launches/take-outs; fish for wade access */
-function apGlyph(role){
+function apGlyph(p){
+  const role = p.role;
+  // a DNR parking lot is a P, drawn as a path so iOS renders it like every other glyph
+  if(role==="wade" && p.kind==="parking"){
+    return '<svg viewBox="0 0 24 24" aria-hidden="true">'+
+      '<path fill="#fff" fill-rule="evenodd" d="M8.2 5 H13.2 A4.3 4.3 0 0 1 13.2 13.6 H11.2 V19 H8.2 Z M11.2 7.5 V11.1 H13 A1.8 1.8 0 0 0 13 7.5 Z"/></svg>';
+  }
   if(role==="wade"){
     return '<svg viewBox="0 0 24 24" aria-hidden="true">'+
       '<ellipse cx="10.5" cy="12" rx="7" ry="3.1" fill="#fff"/>'+
@@ -1626,7 +1676,7 @@ const RAMP_MIN_ZOOM = 8, WADE_MIN_ZOOM = 9;
 
 RAMPS.forEach(p=>{
   const m = L.marker(p.pos,{icon:apIcon(p,"")});
-  m.bindPopup(`<b>${p.name}</b><br><span style="font-size:11px">${roleWord(p.role)} · ${p.note}</span>`+
+  m.bindPopup(`<b>${p.name}</b><br><span style="font-size:11px">${p.kind==="parking" ? "Parking" : roleWord(p.role)} · ${p.note}</span>`+
     (p.src ? `<br><span style="font-size:10.5px;color:var(--txt-dim)">Source: ${p.src}</span>` : ""));
   m.on("click",()=>{ openRiver(p.river); });
   rampMarkers[p.id]=m;
@@ -1647,7 +1697,7 @@ function syncMarkers(){
   });
 }
 map.on("zoomend", syncMarkers);
-function apIcon(p, sel){ return L.divIcon({className:"", html:`<div class="ap ${p.role} ${sel}">${apGlyph(p.role)}</div>`, iconSize:[28,28], iconAnchor:[14,14]}); }
+function apIcon(p, sel){ return L.divIcon({className:"", html:`<div class="ap ${p.role} ${sel}">${apGlyph(p)}</div>`, iconSize:[28,28], iconAnchor:[14,14]}); }
 function roleWord(r){ return {launch:"Put-in (boat launch)", takeout:"Take-out (boat ramp)", both:"Put-in & take-out ramp", wade:"Wade-fishing access"}[r]; }
 
 Object.keys(GAUGE_POS).forEach(key=>{
@@ -2708,12 +2758,15 @@ function rulesCardHTML(r){
   ];
   const noArt = txt.replace(/artificial (flies|lures)( (and|or) (flies|lures))? only/gi, "");   // "artificial flies only" is Artificial only, not Fly fishing only
   const tags = TAGS.filter(([re]) => re.test(re.source.startsWith("fly") ? noArt : txt)).map(t => t[1]);
+  /* On an Iowa stream designated reach by reach, the special rules are the
+     restrictive reach's, not the whole stream's -- so the chip says so. */
+  const part = r.reachClass && r.reachClass.includes("restrictive") && r.reachClass.some(c => c !== "restrictive");
 
   return `<div class="rulescard">${desigHTML(r.id)}<div class="rc-status"><span class="rc-dot" style="background:${dot}"></span>`+
     `<div><div class="rc-head">${head}</div>${sub ? `<div class="rc-sub">${sub}</div>` : ""}</div></div>`+
     `<div class="rc-lic">${lic}</div>`+
     accessLawHTML(r)+
-    (tags.length ? `<div class="rc-tags"><span class="rc-lab">Named in this river's rules:</span>${tags.map(t=>`<span class="tierbadge" style="--tc:#5a6f66">${t.replace("&","&amp;")}</span>`).join("")}</div>` : "")+
+    (tags.length ? `<div class="rc-tags"><span class="rc-lab">Named in this river's rules:</span>${tags.map(t=>`<span class="tierbadge" style="--tc:#5a6f66">${t.replace("&","&amp;")}${part ? " · part of stream" : ""}</span>`).join("")}</div>` : "")+
     `</div>`;
 }
 
@@ -2736,13 +2789,22 @@ function renderSheet(r){
      paraphrased — on a catch-and-release or artificial-only stretch the
      exact wording is the thing that keeps you legal. */
   if(r.troutClass){
-    const tc = TROUT_CLASS[r.troutClass];
     const src = TROUT_SOURCE[r.troutSource || "iadnr"];
+    /* A stream the DNR designates reach by reach gets one badge per class with
+       its miles along the drawn line, longest first -- the colours it wears on
+       the map. Reach-by-reach rule text starts with its own bold labels, so it
+       starts on a line of its own. */
+    const reaches = reachMiles(r);
+    const badges = reaches.map(([cls, mi]) => `<span class="badge" style="background:${TROUT_CLASS[cls].color}">`+
+      `${TROUT_CLASS[cls].label}${mi != null ? " · " + mi.toFixed(1) + " mi" : ""}</span>`).join(" ");
+    const page = r.dnrCode
+      ? ` <a href="https://programs.iowadnr.gov/lakemanagement/FishIowa/TroutStreamDetails/${encodeURIComponent(r.dnrCode)}" target="_blank" rel="noopener">Iowa DNR stream page</a>`
+      : "";
     full += `<div class="secthead">Trout class &amp; regulations</div><div class="fishnote">`+
-      `<span class="badge" style="background:${tc.color}">${tc.label}</span>`+
-      (r.wildTrout ? ` <span style="font-size:11.5px">Wild trout present: <b>${r.wildTrout}</b></span>` : "")+
-      (r.troutRegs ? `<div style="margin-top:8px"><b>Regulations:</b> ${r.troutRegs}</div>` : "")+
-      `<div style="font-size:10.5px;color:var(--txt-dim);margin-top:8px">Classification and any special-regulation wording come from the ${src.agency} ${src.what}. Regulations change — confirm against the current ${src.regs} before you fish.</div>`+
+      (reaches.length > 1 ? `<div style="display:flex;flex-wrap:wrap;gap:6px">${badges}</div>` : badges)+
+      (r.wildTrout ? `${reaches.length > 1 ? `<div style="margin-top:6px">` : " "}<span style="font-size:11.5px">Wild trout present: <b>${r.wildTrout}</b></span>${reaches.length > 1 ? "</div>" : ""}` : "")+
+      (r.troutRegs ? `<div style="margin-top:8px"><b>Regulations:</b>${/^<b>/.test(r.troutRegs) ? "<br>" : " "}${r.troutRegs}</div>` : "")+
+      `<div style="font-size:10.5px;color:var(--txt-dim);margin-top:8px">Classification and any special-regulation wording come from the ${src.agency} ${src.what}. Regulations change — confirm against the current ${src.regs} before you fish.${page}</div>`+
       `</div>`;
   }
 
@@ -3003,12 +3065,19 @@ function applyFilters(){
     if(!tierShown(r)){                       // hidden by class: off the map, not dimmed
       if(map.hasLayer(L_.line)) map.removeLayer(L_.line);
       if(map.hasLayer(L_.lbl))  map.removeLayer(L_.lbl);
+      L_.reaches.forEach(o => { if(map.hasLayer(o)) map.removeLayer(o); });
       return;
     }
-    if(!map.hasLayer(L_.line)) L_.line.addTo(map);
+    const readd = !map.hasLayer(L_.line);
+    if(readd) L_.line.addTo(map);
     if(!map.hasLayer(L_.lbl))  L_.lbl.addTo(map);
     const on = riverVisible(r);
     L_.line.setStyle({color:on?riverColor(r):"#9aa49b", opacity:on?0.92:0.35, weight:on?tierWeight(r):3});
+    // per-reach overlays follow their line: shown, greyed and weighted with it, and kept on top of it
+    L_.reaches.forEach(o => {
+      if(!map.hasLayer(o)) o.addTo(map); else if(readd) o.bringToFront();
+      o.setStyle({color:on?o.reachColor:"#9aa49b", opacity:on?0.92:0.35, weight:on?tierWeight(r):3});
+    });
   });
   syncGaugeDots(); syncLabels(); syncFlow(); refreshZoneCounts();
   syncMarkers();

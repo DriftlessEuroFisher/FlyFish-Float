@@ -162,7 +162,7 @@ like an app, not a browser tab.
 
 ## Rivers covered
 
-1,084 rivers and 31 lakes. Full list and gauge IDs live in `js/rivers-data.js`; this file
+1,095 rivers and 31 lakes. Full list and gauge IDs live in `js/rivers-data.js`; this file
 doesn't duplicate it since the code is the source of truth. Rivers carry a
 `region` field — `"driftless"` and `"northshore"` on the two small-stream
 sub-regions, absent on the original western rivers *and* on the two
@@ -221,8 +221,9 @@ show by default.
 
 The NE Iowa trout streams were rebuilt from the **Iowa DNR Fishing Atlas**
 (`programs.iowadnr.gov/geospatial/…/Recreation/fishing/MapServer` layer 4,
-"Trout Streams"). 65 streams now, up from 20 — the app was missing about
-two thirds of the designated trout water in those counties.
+"Trout Streams"). 65 streams, up from 20 — the app was missing about
+two thirds of the designated trout water in those counties. 76 since the
+Trout Stream Search pass below.
 
 Use the DNR layer rather than NHD for this region, for three reasons:
 
@@ -259,7 +260,56 @@ near Elkader as its blurb claimed. **Village Creek** is kept but is *not*
 on the DNR's designated trout list, and now says so rather than implying
 trout water.
 
-**Driftless (117).** 65 IA (see above), 21 MN, 30 WI, 1 IL. Spring-fed limestone trout
+### Trout Stream Search pass (2026-10-08)
+Every NE Iowa trout stream now answers to the DNR's **Trout Stream Search**
+(`programs.iowadnr.gov/lakemanagement/FishIowa/TroutStreamDetails/<CODE>`),
+whose page code is the trout layer's `lakeCode`. Pipeline in
+`~/.cache/flyfish-osm/iowa/`. Run order: `dnr_trout.py [--refetch]`, then
+(only if it reports changed geometry) `../flowdir.py --epqs --only <ids>`
+and `dnr_trout.py` again, then `driftless_parking.py`, then
+`../encode_coords.py`. A second run is byte-identical. Fetches are cached in
+`dnr_trout/`, and contact names, phones and emails are never parsed.
+- **`dnrCode`** on each river was matched by *geometry*, never by name. One
+  code can sit on two app rivers: TSB96 is `southbear` and `iaBearCreek`.
+- **Geometry** is the code's layer-4 features as pieces: Douglas-Peucker
+  at 10 m, welded only between same-class ends ≤30 m apart. The old lines
+  were 70 evenly spaced vertices, up to ~200 m off.
+- **`reachClass`** holds one class per piece. `troutClass` is the class
+  with the most length. `reachOverlays()` in app.js draws only the pieces
+  that differ from it, on top of the line, and `applyFilters()` hides,
+  greys and re-raises them with it. 10 rivers mix classes.
+- **`troutRegs`** is per reach, with each SR_INFO verbatim and labelled.
+  The page's own trout lines follow where they differ from the statewide
+  rule. Rules-card tags gain "· part of stream" on mixed rivers.
+- **Blurbs** are rewritten from the page's facts (location, miles,
+  stocking, survey counts, private-land and camping notes) and dated to the
+  page's "last updated". The old texts are in `iowa/old_blurbs.json`.
+  `upperiowa` and `volgariver` kept theirs plus one DNR sentence.
+  `villagecreek` is not on the DNR list and is untouched.
+- **11 streams added** (`ia_*`, fence "ne iowa dnr trout streams", Class 2
+  in tiers.js, Iowa zone count 72 → 83). That includes McLoud Run (Cedar
+  Rapids) and three Mitchell County streams, which are tagged `driftless`
+  though they sit outside it. 15 DNR pages have no layer-4 line and aren't
+  drawn. The list is in `dnr_trout.log`.
+- **Page "Coordinates" are not authoritative.** Hickory Creek's is 26.8 km
+  from its stream. The page's location sentence and the layer-4 line agree,
+  so the line wins.
+
+**Access points** (`driftless_parking.py`, fence "ne iowa dnr parking"):
+every Fishing Atlas amenity (layer 3) within 300 m of the nearest Driftless
+IA line. Parking and Fishing Access become `wade` pins, and boat ramps
+become `both`. Parking pins carry `kind:"parking"` and draw a **P** instead
+of the fish.
+- **Use the feature geometry, not the `lat`/`long` attributes**, which are
+  sometimes 0 and sometimes ~100 m off.
+- A hand pin within 300 m of a DNR point is moved onto it (watcr1, nbear1,
+  uibluff, bloody1). Ones over 2 km from their line were deleted (sbear1/2,
+  trupper, coldw1, canoe1, french1, clearia1, snymag1, bigspr1, grannis1).
+- `KEEP_FAR` keeps turkey1/turkey2: the drawn `turkeyriver` is the DNR's
+  1-mile hatchery reach, but the entry describes the mainstem.
+- Flagged, not moved: paint2, yellow1, otteria1, backbone1 (1–1.6 km off).
+
+**Driftless (128).** 76 IA (see above), 21 MN, 30 WI, 1 IL. Spring-fed limestone trout
 streams across the unglaciated region: the Upper Iowa and the Allamakee /
 Clayton county creeks, the Root River system and the Whitewater in SE
 Minnesota, Vernon County's coulees and the Kickapoo watershed, the Grant
@@ -329,10 +379,9 @@ re-projected onto the corrected channel. Each was confirmed twice: NHD
 returns that exact GNIS name there, *and* the town named in the river's own
 blurb sits on it.
 
-Three stay hand-drawn because NHD has no flowline under that name at that
-location: **Coldwater Creek** (IA — the only NHD "Coldwater Creek" in range
-is in Franklin County, ~60 mi from the Winneshiek County creek the blurb
-describes, so there's nothing safe to snap to), **Spring Coulee Creek** and
+Two stay hand-drawn because NHD has no flowline under that name at that
+location (Coldwater Creek, IA, once a third, is now the DNR's line):
+**Spring Coulee Creek** and
 **Bohemian Valley Creek** (both local Coon Valley-area names). Bohemian
 Valley's coords are already correct near Chaseburg; Spring Coulee's are
 still approximate.

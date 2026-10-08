@@ -234,7 +234,7 @@ const ZONES = [
     ]
   },
   {
-    id:"ia", kind:"state", count:72,
+    id:"ia", kind:"state", count:83,
     label:"Iowa", short:"Iowa", sub:"Driftless trout streams & the Des Moines water trails",
     bounds:[[41.48,-95.0183],[43.505,-90.9467]],
     rings:[

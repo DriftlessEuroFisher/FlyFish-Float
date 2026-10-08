@@ -1687,89 +1687,89 @@ cz:["{`z}F~gw{Pfw@knAjHwGzc@{|@cBkRkCwBbBoKfEoAfJnAfEcGwBwGkHcBcGwGf@{EsDgJrDgE_
   id:"upperiowa", name:"Upper Iowa River", color:"#2f7d5b",
   state:"IA", region:"driftless", gauges:["uiBluffton","uiDecorah","uiDorchester"], primaryGauge:"uiDecorah",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"The backbone of Iowa's Driftless: a bluff-lined river running from Lime Springs past Bluffton and Decorah out to the Mississippi at New Albin. Trout water up high where the springs come in, smallmouth water as it warms downstream — and the only stream here that's genuinely floatable, with limestone palisades most people don't expect in Iowa.",
+  blurb:"The backbone of Iowa's Driftless: a bluff-lined river running from Lime Springs past Bluffton and Decorah out to the Mississippi at New Albin. Trout water up high where the springs come in, smallmouth water as it warms downstream — and the only stream here that's genuinely floatable, with limestone palisades most people don't expect in Iowa. The Iowa DNR does not list the Upper Iowa itself as trout water; among the designated trout streams that run into it are Coldwater Creek, Coon Creek, Pine Creek and Trout Run.",
   fish:"The cold upper reaches near Bluffton and Kendallville hold trout; from Decorah down it becomes an excellent smallmouth river. Canoe-and-fish the Bluffton-to-Decorah stretch. Trout fishing is better in the spring-fed tributaries (Trout Run, Coldwater, Canoe, Bear) than in the mainstem itself.",
   cz:"wvjhGh~prPt[ay@zn@ykBtPmMup@ex@qDa|AaRceA|Wo~@yM_Lcp@ic@{KfAx[yk@gXyWef@{m@wBsmBap@yH~YmrAy]uaA{JwTxW{`AvD{^}@qV{Hcm@us@suA`r@km@pC_o@{GyWwa@ahAkKaiBj_@gd@cEyz@hw@et@jy@fHvkAqyA_TmxBtH{[bsAuMf`A~bAnh@my@p{@nNdQ_GmYm}C_Dk^lWyz@gDi{BrmAucBnv@`Lu`A{vCahAdG~pBy}AhP{pAbVaxAwNkq@xvBeUhWmlEnnAhExUjDljAyf@[ej@phBxg@xFquAlKc_Af_Abz@rsAog@aGgwAp|@_^~]saA_{@_xB`c@mn@nq@aS~WcL`F_j@ih@_Z{aAezA}b@mIef@{eAmt@i}AfKsbChq@bE~AkpB}UoWmr@x@sd@onBsVyu@_AaVoYeGg^iiB{i@yeCskAv`AqnAk{B`|AwgBqwApRifBwrCae@d~Aaw@kTlv@{jCox@epBcv@eoBsd@u^`l@kdBqVcgBvJanBl@q{AsRsb@cMopEkq@ibAf^omCslDu}EakB_}El`AexJ"
 },
 {
   id:"waterloocreek", name:"Waterloo Creek", color:"#1d7a6e",
   state:"IA", region:"driftless", gauges:["waterlooCr"], primaryGauge:"waterlooCr",
-  troutClass:"restrictive", geom:"iadnr", wildTrout:"Brown",
-  troutRegs:"Continuous open season; Artificial lures only; Catch-and-release all trout Continuous open season; No length limit; 5 trout daily bag, possession 10.",
+  troutClass:"stocked", reachClass:["wild","stocked","stocked","stocked","restrictive"], geom:"iadnr", dnrCode:"TWA03", wildTrout:"Brown",
+  troutRegs:"<b>Restrictive reach:</b> Continuous open season; Artificial lures only; Catch-and-release all trout<br><b>Rest of the stream:</b> Continuous open season; No length limit; 5 trout daily bag, possession 10.<br><b>On the DNR stream page:</b> Brown Trout — Other: Catch and release where posted. Artificial lures only in posted areas. Artificial lure means lures that do not contain or have applied to them any natural or human-made substance designed to attract fish by the sense of taste or smell. · Rainbow Trout — Other: Catch and release only. Artificial lures only in posted areas. Artificial lure means lures that do not contain or have applied to them any natural or human-made substance designed to attract fish by the sense of taste or smell.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"A cold, fast limestone creek dropping out of Minnesota into Allamakee County at Dorchester — one of the very few small Iowa trout streams with its own live USGS discharge gauge, which makes it the best single read on how wet the northeast corner is right now.",
-  fish:"Wild brown trout with stocked rainbows layered in. Tight quarters and heavy bank cover — short rod, roll casts, and a willingness to crawl. Fishes well after the water drops and clears post-rain.",
-  cz:["wwhhGtynmP`LcPjJyOjJ_A`L|ClM|DtOdE`KhDVbHpBzIvIrAdHZtE~BdDtBfFlChEZjEk@`F~BX~GxCnHhFx@fF{@zEGfAt@bClBlEgAjAP`C`A~BxBpApDx@fDT|Cb@jCyDfD~Bt@j@rGjGlJ","cbmhGhjzmPpCd@|DoGjEcR~AaJEeOcB{IzDyIfAwKeC}BqAdC{A_HTgFeCcJfCgEhHeBnHGUrCnFqC|D_J","e`ohG||{mPxQ~@hMwMpB_HBaD`IyCtAeDtGgE","ypjhGfyqmPxIfG~MuAxKcP`FwV"]
+  blurb:"Waterloo Creek runs through Dorchester in northern Allamakee County, along Waterloo Creek Drive and Highway 76; the DNR lists 10.5 miles of trout water. Above Dorchester parts of it are stocked weekly with catchable rainbows from April through October, wild browns live throughout (a 2010 DNR survey estimated 685 per mile, with fish to 23 inches), and below Highway 76 it is posted catch-and-release for all trout, artificial lures only. There are many access points, on public land and on private land open to fishing only, and primitive camping is allowed on the Waterloo Creek Wildlife Management Area. Source: the Iowa DNR's Waterloo Creek page (summary updated Feb 4, 2022).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 10,385 catchable rainbow trout (Apr–Oct), 25 broodstock rainbow trout and 6,716 brook trout fingerlings.",
+  cz:["wwhhGtynmPlAyBpBiHbByAzCw@nEsEdBcHvEaCjDp@rEtBrG^nM|EtDVdPfGfAOjB`FF|AYf@o@GGl@bA|FbB~@lAa@pA|Ax@D","ypjhGfyqmPvGvCxC`GbBCdFyCnDaEVkBjBeE|BgAhByB|CoT","cbmhGhjzmPz@o@n@pAd@B`FyHfBoGdBmOx@}Ba@aEV_LkBsEjByBfAoFdBgE?kEkA{D{@Oa@xCs@f@mB{Jb@aEcDaLpEuBdDUlBqAdE[fAN^|@Gp@o@IB`A`BCdCmBlCaE`AwD","e`ohG||{mPdGvDpBaAn@aB`Eh@`GkIdDuCvA?v@}BF{B{A[Mw@jGaIfCqAD~Cx@h@p@sAKmDfCd@dCkE","wnehGfbomPlHGxArAhDx@h@~BbD`@hApBhDv@zCF`@oAjBbA`Cw@rD|C\\nAk@tAXdBrAdBNvDrAjA|EAl@b@tAuBfDf@z@y@`ANXvBxBaAj@fCbB{BjBz@NsAf@Sp@bCdA}@n@dB|BZPx@[|B|AnAiA`C~Cp@s@pBZd@tBc@}AdFmBRm@~AAfBx@XfAkAb@Nd@`B]`DpBpAxCzG"]
 },
 {
   id:"troutrunia", name:"Trout Run Creek — Decorah", color:"#3a8c4a",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"stocked", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TRU96", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Decorah's home water, running past the Decorah Fish Hatchery to the Upper Iowa on the edge of town. Heavily stocked, very accessible, and paralleled by the Trout Run Trail bike path — the easiest place in Iowa to get a fly in trout water without a long drive or a long walk.",
-  fish:"Stocked rainbows and browns plus holdovers; expect company on weekends and stocking days. Good for a first Driftless outing or an after-work hour. The hatchery stretch is pure put-and-take; walk away from the parking lots for better fish.",
-  cz:"yrbgG`|doPaAkAwAyAcAoAXcCDmA@oAgAq@gA[iAcAcAi@eA_@a@ROVSo@]`@m@Fq@c@eAo@}@_AwAy@{BcAwBcAoAw@aBoDwBoAkB~@kBfBaBYkByBaBeCR{Au@yBcBoAqAsCwAWoB}@kBcA`AsB_@oCy@iBcBq@g@qBfAsBo@sB`AiADuBcBeAYqC[_Bg@rA{AH_@uCp@]f@yBcAEsAeByAsC]sEPiClAf@o@aBeAeAwAkAyAp@YxAs@BwBiA}Aq@gCq@"
+  blurb:"Trout Run flows along the south side of Decorah off Trout Run Road, starting beside the Decorah Fish Hatchery; the DNR lists 2.2 miles. It is stocked weekly with catchable rainbows from April through October and holds a few stream-reared French Creek-strain browns. A multi-use trail runs along it, with easy and accessible bank fishing, picnic areas and modern restrooms. Source: the Iowa DNR's Trout Run page (summary updated Oct 15, 2025).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 16,078 catchable rainbow trout (Mar–Oct) and 38 broodstock rainbow trout.",
+  cz:"wrbgG`|doP_FuFr@gGaAeAqBe@gA{AmBm@aAh@a@m@o@p@{LaIcA_@s@TwDsI_ElAaBbBaBYoCyC}@wADwDcCqBi@iBcJmEBu@|@}@@{@{A}DwAg@w@wAJy@`Ay@q@qDhA{@LaAUs@qASa@aF]u@]DMlAcB?Y{Bn@Yf@yDo@MMr@o@AsB_Ee@_KZW`Aj@?mAmEgDiAPw@bCcKsD"
 },
 {
   id:"coldwaterIA", name:"Coldwater Creek", color:"#2a6e8c",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"wild", geom:"iadnr", wildTrout:"Brown, Rainbow",
+  troutClass:"stocked", reachClass:["wild","stocked"], geom:"iadnr", dnrCode:"TCO96", wildTrout:"Brown, Rainbow",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"A Winneshiek County spring creek fed by the Coldwater Cave system — one of the coldest, most stable flows in the state, which is why it holds trout through summers that shut other streams down.",
-  fish:"Wild browns in the upper spring reaches, stocked fish lower. Cold and clear enough that the fish see you first — approach low and fish upstream. A strong hot-weather fallback when the rest of the region gets warm.",
-  cz:["yuchGpcgpPLvBx@lD|AxChBjBjAx@rBr@`E~AtCKvApBxBq@bBmBdA{Bq@Sy@\\NkAj@iAjAyAlAiAbBBv@LzAsAvA}BbAqDWkDmBkB}AeCoBo@}@hAy@wAb@cBBcAeAo@s@n@q@u@HmD^oBx@qCs@eAbBu@`Aq@l@eAz@i@F_BfAq@","ubbhGvwdpP~@uCzBOvCfBr@xB|@~@jAb@`A`@pAXxAj@f@[AeBv@q@rAbArAX_@{Aj@y@jBDe@iAw@G{@_BvA{@tAqBgBm@_BcA"]
+  blurb:"Coldwater Creek is about 3 miles northwest of Bluffton off Coldwater Creek Road, with 4 miles of DNR trout water. It gets catchable rainbows weekly from April through October and has wild browns (about 1,593 per mile, fish to 19 inches, in a 2011 DNR survey), plus rainbows that sometimes reproduce. Its spring source is on public land, and primitive camping is allowed on the Coldwater Creek Wildlife Management Area. Source: the Iowa DNR's Coldwater Creek page (summary updated Feb 8, 2022).",
+  fish:"Wild brown and rainbow trout are present. In 2025 the DNR stocked 9,106 catchable rainbow trout (Apr–Oct) and 19 broodstock rainbow trout.",
+  cz:["ubbhGvwdpP~@uC|A]bCx@rBxE~AfAl@QvF~BFiDl@_@xCxBb@}@q@u@Fe@vCIH_@a@g@_AP_AmCdCq@d@iBgEqB","yuchGpcgpPLvBjArE~DjFjJ|D`CSxAb@^xAbD{AxBmCG_AqAZa@_@fBeDtBwBdAWnA`AjDsDdB}Fk@qDaBoAs@mBgCoAk@jA_AGa@eCx@yAcAeAyAz@[}@DeGp@[p@cDy@o@Bg@xCQPkBxAOTaD~@Q"]
 },
 {
   id:"southbear", name:"South Bear Creek", color:"#6e8c2a",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"stocked", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TSB96", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"The Highlandville classic — a small, beautiful coulee creek in northern Winneshiek County with a long history of habitat work and one of Iowa's better wild brown trout populations.",
-  fish:"Wild browns that are genuinely wild-fish spooky. Terrestrials in late summer, small nymphs the rest of the year. Special regulations apply on parts of this stream — read the current Iowa DNR trout regs before you fish it.",
-  cz:"{ndhGfcsnP~@{IpCcMpAmAhAYAyGoAmFfCmDxAoFxB}JpFmGlHi@l@sHwBaHeDgKeEkKTwHhC?nAwAnA_Ef@{HBcEzB{AS}JoD{LvAe[zCoDvCgFhBe@SwK}FaJmDyGqAyDTeGlEaMhBuI`BkCnEa@n@sLA_Ki@mH_DiFsBkHo@_KWeDlC{IxBaEk@wFiDkFcCa@KiFqC{CgCLu@yFmD{BaBRoBoCsCwCcBb@c@XmBm@gCbAeB]{CcBu@{CmAoAuAw@cAoC?sDy@cb@"
+  blurb:"South Bear Creek runs through Highlandville in northern Winneshiek County, with 5.2 miles of DNR trout water. It is stocked weekly with catchable rainbows from April through October and keeps a wild brown trout population: 872 per mile, with fish to 16 inches, in the DNR's 2009 survey. Some segments cross private land where only fishing is allowed; primitive camping is permitted on the South Bear Wildlife Management Area, and Highlandville has a private campground and store. Source: the Iowa DNR's South Bear Creek page (summary updated Feb 4, 2022).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 13,640 catchable rainbow trout (Apr–Oct), 74 broodstock rainbow trout and 5,983 brook trout fingerlings.",
+  cz:"{ndhGfcsnPfAuKbCsJXsDf@Jd@|C\\BNm@VaIUqBkAmAHwC~AoCr@lA\\GLyE|@aFtCeKxEaBfC}BlAN^jAr@_@LoIk@?cBsGuByEE_BgE_I[qDt@uHhBGNhBz@@BkBfA}A~@wJk@qEjAo@f@j@ZQJcE^mA_CkOwCqF}CeJtCuGfDaDdB_Dx@WvA_Fb@Qf@~@t@At@aDBcBqAgHgCuE_DsBwE_OhD{LfEoKOyA|@gDfFpAfAwK?oPk@kGoD_GoBeHW{Lg@cAbEsNhAaA{@wGqBeE{BDcAy@DyEuBkA{@wBo@Q}@bAq@iCMsDu@{@_BGKvAuAm@aAgCuAWkA}By@SkA`@[v@Wu@uCs@u@RcAnBq@{@mAE{B{Bg@iB\\k@[kAaBl@s@q@H}@mA[h@kEmAcCUuUb@aFc@cB"
 },
 {
   id:"northbear", name:"North Bear Creek", color:"#8c8c2a",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"stocked", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TNB96", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"South Bear's quieter twin, joining it near Highlandville. Smaller, brushier, and less trafficked — the kind of creek where you fish a quarter-mile in three hours and don't mind.",
-  fish:"Wild brown trout in tight water. Bring a short rod and expect to lose flies in the canopy. Best in spring before the bankside growth closes in, and again in October.",
-  cz:["qknhG~`lnPf@kE|@{LdDiEt@cIvAsBaAeCwAyC|DyDdDsFbDqEfFyDjD{B~AqFpHaDxHW~DeBzFiCjDyA~EiCNmBxC}AtCjC|CGfD_DcC}BbCi@vEn@rFxCvD`IzBxGNjNoAxO`CfHhKTfHeArFgG~EmF`D_DdF_FxEaGvFh@fGYbHr@fCwM|AmHdEN|FgE`EoBxEcDlKHbHjIdHeArHx@lBcJmAqMqB}MqBoMlEoHfG_BnC{J}IW}CwP`E{NxEmD","}cnhGvpjnPf@iFk@kDFuE|AwI","ulnhG~yknPhAqA"]
+  blurb:"North Bear Creek is about 2.5 miles northeast of Highlandville, with 6 miles of DNR trout water. Catchable rainbows are stocked weekly from April through October, and its browns reproduce naturally (526 per mile, fish to 20 inches, in a 2009 DNR survey). Parts cross private land that is open to public fishing, and primitive camping is allowed on the North Bear Wildlife Management Area. Source: the Iowa DNR's North Bear Creek page (summary updated Feb 4, 2022).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 14,880 catchable rainbow trout (Apr–Oct), 32 broodstock rainbow trout and 7,871 brook trout fingerlings.",
+  cz:["qknhG~`lnPjCmX~Bc@`AeGYuAhB}@[w@yAZ@iAt@aBqBFLyBzBP`AiDJiCx@]XkBj@[vAn@j@{DtGyB\\{@QuB`@k@tB^bCeDQoBV[tE{@hAsAxBHpCq@xAh@pAuBjHkBXiAv@e@tFa@bBgC`AICo@i@JQ{@|@eCj@Cx@v@nAC`AnC`BcBf@BZh@SrAb@^`@Op@_DhB_Ci@g@yBR[u@Jk@l@@Zx@`Bi@jB|ArAi@lG~DhCtE@hAbBpBT~BRpNc@nMm@bAAx@vAfFvAz@vNT~EwC`CuD|A@fEaJlAAdCcEtCeBvCwFhHn@xA{@lA?zCz@pGPlAcLf@eAb@B\\}AZaFhAa@jBtAbBOdD}BKaBjCwA`BR~CaD~EaAtGfBbCpA`@bEZThBDvDmAbHzAdBsDj@uIqCoR}DeQfBsFhB{BlEuBpARlC{@|@cDcA_DiDHeIkAg@oCv@}F[aEbB}HtBaE`EgB","ulnhG~yknPjAqA","}cnhGvpjnPc@cBjAmCe@s@AmCe@iAf@}ACgCl@[t@cE"]
 },
 {
   id:"canoecreek", name:"Canoe Creek", color:"#5b8c6e",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"wild", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"wild", geom:"iadnr", dnrCode:"TCA96", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"A Winneshiek County tributary of the Upper Iowa northeast of Decorah, running through steep pasture and timber. Close to town, far less pressured than Trout Run.",
-  fish:"Stocked and holdover trout with wild fish in the spring-fed upper reaches. Small water — a 7½-foot rod and a box of attractors covers it.",
-  cz:["wfugGfsdnPUzBTdD|@`FlBnDnCfAdDc@zDeArAi@vAO|@DJdDCxAN|DNnAKfBGpDRlC`@lEPnB|AdGpBd@dB~AbBdBfCo@xBOdCt@hD`BbClFOhDo@pB{@nAqA\\sCu@eAaAy@LyAOmDE{@oA{B]kB]yDv@iCh@qBbB","ymtgGz~gnPbC_@hE_@`CfAR`BVdBMpAn@Qb@H]`HWxBHtB[pEi@nA]nAGrA~A`DfAhC","o_xgGjucoPEoBVqAbB}@r@n@h@t@j@~@f@Yp@wA"]
+  blurb:"This stretch of Canoe Creek is in the Canoe Creek Wildlife Management Area on Ferris Mills Road and flows into the Upper Iowa River; the DNR lists 1.8 miles. The upper watershed, with North Canoe, West Canoe and Pine Spring Creeks, has been stocked with all three trout species over the years, and the DNR reports browns of 4 to 18 inches and rainbows of 10 to 15 inches. Smallmouth bass come up from the Upper Iowa. Source: the Iowa DNR's Canoe Creek page (summary updated Feb 8, 2022).",
+  fish:"Wild brown trout are present; the DNR also lists smallmouth bass. In 2025 the DNR stocked 4,000 brook trout fingerlings.",
+  cz:["wfugGfsdnPStEt@~EhC|FnCfA`Fm@jGuBjBZXtNOlJjAvMtAfDpBd@hEdEjE_AvBHlFnChAnAx@zCFnAg@xCaCzCeCU_C}AaIG{@oAiHeAaGlBqB`B","ymtgGz~gnP`Ag@jGWnA^`ApAZ|CMpArAGu@zKHhGcB|EGrAfDjH","o_xgGjucoPM_DbC_BhCdDxAqB"]
 },
 {
   id:"frenchcreek", name:"French Creek", color:"#1d8c7d",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"restrictive", geom:"iadnr", wildTrout:"Brown, Brook",
-  troutRegs:"Continuous open season; Artificial lures only; Catch and release all Brown Trout; All other trout no length limit, 5 daily bag, 10 possession limit",
+  troutClass:"restrictive", geom:"iadnr", dnrCode:"TFR03", wildTrout:"Brown, Brook",
+  troutRegs:"Continuous open season; Artificial lures only; Catch and release all Brown Trout; All other trout no length limit, 5 daily bag, 10 possession limit<br><b>On the DNR stream page:</b> Brook Trout — Other: Artificial lures only in posted areas. Artificial lure means lures that do not contain or have applied to them any natural or human-made substance designed to attract fish by the sense of taste or smell. · Brown Trout — Other: Catch and release only. Artificial lures only in posted areas. Artificial lure means lures that do not contain or have applied to them any natural or human-made substance designed to attract fish by the sense of taste or smell.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Allamakee County's wild-trout showpiece, protected in the French Creek Wildlife Area northwest of Lansing. Managed for a self-sustaining wild brown trout population rather than a stocking truck — and it shows.",
-  fish:"Wild browns, no stocking. Special catch-and-release / artificial-only regulations have historically applied here — check the current Iowa DNR trout regulations before fishing. Stealth matters more than fly choice.",
-  cz:["}uxgG~q{lPcAjJLlKMdHkIpDaIg@oAwTaC{G|AgEN}FkKiKqJbGqHrJ{DtGeF\\j@lDiCbGkEyJoDMiEmGoHh@l@yJwE_EsQqEoLoMi@sMoHCyCwD}CjG_EuFoETsPkDoKeQsF@","mxugGtdulPoAzJhDpDl@|BfDIh@fFwBnIkAdGe@fIMzCOvGcCfDf@jB_CJyHbAuB|CwAvB`AzCl@`EMpDsAnFGzDqA~Dw@`DoBtCmGnHmGlFpAxCiCzD}G|J}DjCqFzH","q`xgGlz{lPpE|IjEnHxDdJ"]
+  blurb:"French Creek is about 6 miles northeast of Waukon, on the French Creek Wildlife Management Area and private land; the DNR lists 5.6 miles. Its browns reproduce naturally (about 2,100 per mile, fish to 20 inches, in 2011), and above the West Branch there are also wild South Pine-strain brook trout (220 per mile, to 11 inches, in 2017). The DNR's rules here are catch-and-release for brown trout and artificial lures only; private stretches are open to fishing only, and primitive camping is allowed on the wildlife area. Source: the Iowa DNR's French Creek page (summary updated Feb 8, 2022).",
+  fish:"Wild brown and brook trout are present. In 2025 the DNR stocked 1,535 brook trout fingerlings.",
+  cz:["}uxgG~q{lPaAfFCxCB`E`@p@WxEL|@f@NI~@wG|EkDPkAdBiD}B_AkBeAeIJaCl@}@S}COq@qBA?mDd@y@p@?`@oEU_AZw@_AuFaBmBmG_B{EfCwCvCcBfDwClBqCrJcBm@eBxAcBa@aAtBj@jAjAONbAuBlEu@UoCoDk@_BU{DcAMs@rBo@e@_AcDcCaB{BYw@zBmE}BEcA`Ak@xA{FO[}FwBsKKsBmAa@cBeIiCuB}DJkFa@q@ScEPuE}AmAmBu@iBj@]~ARfAl@^]b@aBu@q@kE{@bA]nCoAz@g@e@C}C_AeAiAGgAbCsAuBgAd@uAWgA|@gDByEyD{EuLkA}AaB]}@qBiCA[bAk@@","mxugGtdulPz@lDcChCCrAjDxBC|Ch@FbA}@`BTx@~GaChIgAzAg@bQgAzDd@dCEdByBd@GrAp@\\Er@oJXqDtBMjA^v@aB`@e@fArCjD?nAw@`BZ|@WtDaAfAWvCLhByAhE?tBkBZo@bEi@v@{GzFmE~B?rAbBh@Av@cGvHoAnDoEhF{BXw@vCyCxC","q`xgGlz{lPdDhFpBpGfDzDn@`DfBxC"]
 },
 {
   id:"paintcreek", name:"Paint Creek", color:"#8c5b2a",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"wild", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"stocked", reachClass:["stocked","stocked","stocked","stocked","stocked","stocked","stocked","wild","wild"], geom:"iadnr", dnrCode:"TPN03", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"The trout stream running through Yellow River State Forest between Waterville and Harpers Ferry — big timber, steep ridges, campgrounds, and miles of public bank. The most 'away from it all' feeling trout water in Iowa.",
-  fish:"Stocked rainbows and browns with wild fish in the colder upper reaches. Combine it with a camp night in the state forest; the walk-in stretches away from the road crossings fish best.",
-  cz:["mtqfGzzdlPbFgIjG|A`G{DxNwIt@wSb@kOb@eP~EyOnA{TuDcVxPsShIuMmBgPuBiLaAeU`LkThFqNpJeQoGgXoIqN}HyQ{@wLL{IOcT~HiUjD{NjCsFjDwC","umufGnhelP|NmCuN{LeFoHfJgHnHb@rI`IlLcBxMcKzJpKd@rPbCjTxNwDnLqM","gbnfGptvkPxL{AvJ`JbHXjSwGlHsQ|SuJ~G_QcAk^","{~wfG`vklPmGwH_FmGu@aQ~C_ErBsR","awxfGndrlPmHoE~Ma[hEu@dHI","sswfGhyhlPlIcKrMqN|Jw@","gvufGhdglPeAeg@","_xufGzqelPiA_I"]
+  blurb:"Paint Creek runs through Yellow River State Forest about 3 miles west of Harpers Ferry, off State Forest Road (CR B25); the DNR lists 11 miles of trout water. Catchable rainbows go in weekly from April through October, and there are wild browns (136 French Creek-strain fish per mile, to 19 inches, in 2009). Kolsrud Park on the west edge of Waterville has universally accessible bank fishing, Farm 55 south of Waterville has easy access and a picnic shelter, and the state forest has non-electric campsites, restrooms and trails. Source: the Iowa DNR's Paint Creek page (summary updated Feb 8, 2022).",
+  fish:"Wild brown trout are present; the DNR also lists smallmouth bass. In 2025 the DNR stocked 12,624 catchable rainbow trout (Mar–Oct) and 21 broodstock rainbow trout.",
+  cz:["ooofGxy_lPfBQ|A}AH{GcCuNt@{IEmBi@Q_AhAc@]IeDXaCs@cC{AUA{DlAgFzA_DtBkDpCeBdAuFpEmDFqAcAw@Cu@dBoCHiCzFeGvBuHmC{E{F{OoDoAmAyFkE_EkAmCw@sDAsFaAe@UsCn@iD]aAdA{CyBqJx@oEFcDa@kBzBgIlCqEhCuBL_AiAsAAy@pC}FrAYXu@aAaBKmA`@YvEj@Ri@o@iA|Au@","umufGnhelPfAZxI_@zAoBiA{CgT}M`@qDnCuGdASPlBj@Pj@Qn@qBhAk@|AzAdAWzDrEbCXfAvCrCbCpBeA`EkE`GyCrC}DzGcAj@nArAvIn@zNIdBq@dALvKZbCfAhApDkAdGW|GaGdAGjBgBd@iCbAw@","{~wfG`vklPcCyGaBBiCy@KuBmBmBkAqDDwJbA{B?kCnAi@VfAbAoHdAcBPsBg@kB","awxfGndrlPm@tBm@JmE}@}@qA`@aDrBmDHqA|DqJTiBhCaErBVb@_DtAHMvC^~@vBF~@cDrAA","sswfGhyhlPEkEzB}Dp@MZv@fEi@~CqFf@}BdCuCnBj@tAiDpBhAlCT","gvufGhdglPhAeRIu@qA{@SgCgA_Ef@eF","_xufGzqelPDw@gA{CGkB","ooofGxy_lP_EZmBxAkC@yDjDqAtCNpEm@|CrAdCjCrMJdJmAhIm@@e@}Au@NsBnIPhJo@t@OrBm@`ADtBfAtCInGu@|Aj@nHcA|McHvGg@dBoAtA{CgDgA[iDbAMz@r@pCiBfAmAGFgBk@s@uEZ}@hH","gbnfGptvkP~A[lDsEf@Ej@jBvAl@d@jDzA~@|@vBlE?v@{@b@oBp@J`@jBIxCb@`@hBkDnBgAtIQ~BgA`@iAYeBPk@pDu@`BcCd@iEOiCb@w@`NuBzFyClFc@`AmBLkBwBsGh@mGqByJz@sGw@oA"]
 },
 {
   id:"villagecreek", name:"Village Creek", color:"#6e5b8c",
@@ -1782,100 +1782,100 @@ cz:["{`z}F~gw{Pfw@knAjHwGzc@{|@cBkRkCwBbBoKfEoAfJnAfEcGwBwGkHcBcGwGf@{EsDgJrDgE_
 {
   id:"clearcreekia", name:"Clear Creek — Allamakee", color:"#3a6e5b",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"stocked", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TCL03", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"A spring-fed Allamakee County creek in the bluffs behind Lansing — named for exactly the reason you'd guess, and technical because of it.",
-  fish:"Clear, cold, and unforgiving of a heavy approach. Wild browns plus stockers. Best on overcast days or in the low light at either end of the day.",
-  cz:["uitgG`g`lP|@Dv@{Dh@eAN_@p@iBAeBs@g@q@q@m@Y_@s@J_A^yAd@GDPN}@VW^f@@d@Hv@h@]JeALaCO_BeAm@Bq@~@qAx@iBCaCTsA@uAZyBpAq@r@F^gAbAEdAJrBuAbBKd@mD^cCMoA_BiAiBuAqAuCiAqAq@O","mjsgGrczkP@}AXaAPsBMeCq@_Ek@sAwAkC{Aq@w@FiAH}Aw@cAi@","kosgGxv{kPQkBCuB]mAQwAHgBKoBSyBMmBOcD"]
+  blurb:"This Clear Creek runs beside Highway 9 through Lansing, with public access at the county park off South Road Drive; the DNR lists 2 miles. It is stocked weekly with catchable rainbows and has naturally reproducing wild browns (1,083 per mile, fish to 17 inches, when last surveyed in 2012). The park has easy bank fishing; some segments are on private land where only fishing is allowed. Source: the Iowa DNR's Clear Creek (Lansing) page (summary updated Feb 9, 2021).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 2,404 catchable rainbow trout (Apr–Oct) and 7 broodstock rainbow trout.",
+  cz:["mjsgGrczkP?mBj@_AEkEsBmJqCgCuDP_C}A","kosgGzv{kPUoFo@aDPmAeAmO","uitgG`g`lPhABd@u@JgDv@k@l@_CAeBgDwBKaATgBd@s@h@XJuAl@d@JbBz@m@F}F{AgBl@sArAo@G{Eb@yA@_DvAkAhAB\\gAbCHzAwApB?nA{HYcB}DkCaAcBUyAuBy@"]
 },
 {
   id:"yellowriver", name:"Yellow River", color:"#a07d2a",
   state:"IA", region:"driftless", gauges:["yellowIon"], primaryGauge:"yellowIon",
-  troutClass:"wild", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"wild", geom:"iadnr", dnrCode:"TYR03", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Runs from the Castalia/Volney farm country down through deep timber to the Mississippi at Effigy Mounds. The upper reaches and coldwater tributaries hold trout; the lower river is smallmouth water through a genuinely wild-feeling valley.",
-  fish:"Trout in the spring-fed upper sections and side creeks; smallmouth bass below. The Ion gauge is a good general read on how much water the Allamakee/Clayton County trout creeks are carrying.",
-  cz:["}ohfGznenPIvG?lGd@bI|@tHkAtBNjDcArAr@hBFhB[zAj@jBiBnBr@\\BzBPvAD~Cz@zAdAhBCvBs@@z@`D_A\\_@fALpDSpAm@sAQl@SdB^tBdAnDZx@r@vFz@jDGdEcA[oCbAqBvBBzC_AP","qfcfG|l|kPlIya@kLc^mQeRoGkRdIs@hAsL~E|C|A~LbIhCfGtDxGi@lCmIyMoF~AcFfOdAjD{QkAmW_DkKhHsAtKwCxLzCtIlFbBxSpClV","chkfGrgpmPyAyCuAaDgC~D","_yffGf_vlP]sL"]
+  blurb:"Runs from the Castalia/Volney farm country down through deep timber to the Mississippi at Effigy Mounds. The upper reaches and coldwater tributaries hold trout; the lower river is smallmouth water through a genuinely wild-feeling valley. The Iowa DNR designates 25 miles of the Yellow River as trout water, from below Livingood Springs east of Old Stage Road down through Effigy Mounds; its browns reproduce in the wild and rainbow fingerlings are stocked each year. On most of that water a canoe or kayak is the only way to fish without a landowner's permission; bank access is at Stonebrook Park, Forest Mills Road and the Volney canoe access. Source: the Iowa DNR's Yellow River (Trout Section) page (summary updated Feb 8, 2022).",
+  fish:"Trout in the spring-fed upper sections and side creeks; smallmouth bass below. The Ion gauge is a good general read on how much water the Allamakee/Clayton County trout creeks are carrying. On the DNR trout water: the most recent stocking on the DNR's page is from 2024: 22,585 rainbow trout fingerlings.",
+  cz:["qfcfG|l|kPjEyInBmKNqJa@oH}@{EiIwMwCsGeFqEoE_C}DiE_BuEIyB~@kDnCQzAzAp@c@b@qAg@iGZ{@|AYrCnA`@jACzExC~Iv@^zHEz@V`CpDp@F~AaAjDc@p@u@^mBGuCq@uAgLyC_@mCRk@jBi@rD`@~CpArDm@vDoBHuJi@_I`@wIYwB_AsB_EuE_@aBT_Ah@SdCn@nIuHz@MdF^pAxAxP~C|C~IFtVxChM","_yffGf_vlPi@iHJiC","chkfGrgpmPcEqIsBtE","}ohfGznenPj@~Du@vAk@~Cv@lD[^`@rEpAd@PfAYzFcApAVfBOxBaAv@~@bB]fEn@tAqBzBfA`@QjAv@zA}@pB`AtCfBxBRtAW`@k@YIl@n@bAJnB_@l@g@w@]b@d@jGw@d@m@yA[b@f@\\k@t@`BnHfAj@Y`At@tE|@rAKx@d@|Am@vCq@EQq@qBr@]`A{A~@A`Ds@QSl@","wigfGzuhnP{@OyAr@s@eAs@I}@~@gCeAkFi@iG_CEjBi@qBa@b@N\\mAI^_@]_A"]
 },
 {
   id:"bloodyrun", name:"Bloody Run Creek", color:"#8c2a3a",
   state:"IA", region:"driftless", gauges:["bloodyRun"], primaryGauge:"bloodyRun",
-  troutClass:"restrictive", geom:"iadnr", wildTrout:"Brown",
-  troutRegs:"Continuous open season; Artificial lures only; 14-inch minimum length on Brown Trout; All other trout no length limit; 5 daily bag, 10 possession limit all trout. Continuous open season; No length limit; 5 trout daily bag, possession 10.",
+  troutClass:"restrictive", reachClass:["stocked","stocked","stocked","stocked","stocked","restrictive","restrictive","restrictive"], geom:"iadnr", dnrCode:"TBR22", wildTrout:"Brown",
+  troutRegs:"<b>Restrictive reaches:</b> Continuous open season; Artificial lures only; 14-inch minimum length on Brown Trout; All other trout no length limit; 5 daily bag, 10 possession limit all trout.<br><b>Rest of the stream:</b> Continuous open season; No length limit; 5 trout daily bag, possession 10.<br><b>On the DNR stream page:</b> Brown Trout — Length Limit: 14-inch minimum where posted; Other: Artificial lures only in posted areas. Artificial lure means lures that do not contain or have applied to them any natural or human-made substance designed to attract fish by the sense of taste or smell. · Rainbow Trout — Other: Artificial lures only in posted areas. Artificial lure means lures that do not contain or have applied to them any natural or human-made substance designed to attract fish by the sense of taste or smell.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"An Outstanding Iowa Water running through Bloody Run County Park near Marquette — cold, spring-fed, and one of the most celebrated (and most fought-over) trout streams in the state. It carries its own live USGS discharge gauge, which for a creek this size is rare and very useful.",
-  fish:"Wild browns plus stocked fish, in water cold enough to fish through the hottest part of summer. County park access with parking right on the creek; walk upstream from the campground for the better fish.",
-  cz:["w_ueGpx~kP{BeEm@oEJsCsBoEzAgHdCyDzEDxBiDv@cEiEmCmFQqDsFcCwJ\\{GwBmH_@eFfEm@|DfCbHdA|FwBbDLpDnFjAvCnGmCpAqCgBaEmDiDqCyGnBqDxItGlLvH","ktseGpazkPsD`EyHcHqB}JkAcFeCuQ{C}HjFeCfB_JpAkK}GcFqEJgEdAeEfBkAaFh@yIxAmF`AiH{CuEsBkEOuAyDEoCbB","scveG~lukP`GoInJ]|FdAh@oHyBqF","wzseGdlhlPxEaDfCyMpKcH","iaseGjaglP_MwD","}jteGpq`lPqEkM","ylseGplzkPHnO"]
+  blurb:"Bloody Run Creek is about 2 miles west of Marquette off Highway 18, with 6.5 miles of DNR trout water. It is stocked weekly with catchable rainbows from April through October and keeps a wild brown trout population; in the posted segment upstream of the county park, browns have a 14-inch minimum and only artificial lures are allowed. There is a universally accessible site, non-electric campsites in the county's Bloody Run Park and primitive camping on the Bloody Run Wildlife Management Area; some segments are private land where only fishing is allowed. Source: the Iowa DNR's Bloody Run Creek page (summary updated Feb 4, 2022).",
+  fish:"Wild brown trout are present; the DNR also lists smallmouth bass. In 2025 the DNR stocked 11,641 catchable rainbow trout (Mar–Oct) and 19 broodstock rainbow trout.",
+  cz:["scveG~lukPdBqD~E}EvG\\hFhAzBe@N}@k@yDoA{Ai@x@u@Sh@mE","ahteG|~wkPf@gAr@sGy@yA_AQaBoBgDq@sGdAkF`Cq@a@_AaIb@{CrBeEhAqLeCgDyA_@q@iDv@{@Eo@o@CkAvAu@Fw@a@Ms@}AHs@xA","wzseGdlhlPP_AbBAzAeAzCoObGkHhAKv@n@","}jteGpq`lPmAyMoAk@s@x@","iaseGjaglPmBk@iAr@}@mCiEo@","w_ueGpx~kPgBaB]iGw@y@l@q@MyAe@gB}@e@QmCvAoCV}ClCwBxDl@^kCfAw@vAR`@kBc@_BuABcBmCaEBmEuAq@wFuBuF?aAlAgAm@mBLsD}DgHT_DvBkCdCtChALhAhAfJ~AfFiFhDrDx@bDvAKd@rC~@JfG_D`@oBGs@qAy@i@{DsCwAQsAcCmEZ{Cn@QvAXpIdHjBxGhBsAnDjA","ktseGpazkPg@rAaCrBcIiHuBoG@qGqAqAa@eGuByKo@cBqAs@RsBjDo@rCgCByG","ylseGplzkPmAp@iA|FTrElCL"]
 },
 {
   id:"snymagill", name:"Sny Magill Creek", color:"#2a8c6e",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"stocked", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TSM22", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"A Clayton County spring creek running to the Mississippi below McGregor, past the Sny Magill Mound Group. Consistently cold, heavily worked on for habitat, and a long-standing favorite of Iowa trout anglers.",
-  fish:"Wild brown trout with stocking support. A good hot-weather stream — the springs keep it fishable when other creeks go warm and lethargic.",
-  cz:"abjeGtw{kPpDcE|EaCxDgH|CsFbCcGj@eDxCFWgArBuCjDaAxD{AjBdAzBx@|B@fAfBnDw@fD{ElCaCx@uAlBUPeFbDjAdDcCgEb@wCoEzEwI|DiAlBiEGwI{@gBkA_EkAaHGsJxCqAHoF`Cy@l@eHxEDhFuDRqEnBy@MuHxBlCdAqBx@}F|Df@dB]t@uIoAcAZaGjCOjCsH`AsCzAeC~BcOj@{H|BiL~CmHrFgEnG}AlEgCpEu@lGCx@yExDm@pAiHZuKPqLMyN"
+  blurb:"Sny Magill Creek runs through the Sny Magill Wildlife Management Area, about 3 miles southwest of McGregor along Keystone Road; the DNR lists 5 miles. Catchable rainbows are stocked weekly from April through October, and wild French Creek-strain browns are present (722 per mile, fish to 16 inches, in the 2010 survey that found the first natural reproduction). Habitat work has added an accessible bank and many easy access points, and primitive camping is allowed on the wildlife area. Source: the Iowa DNR's Sny Magill Creek page (summary updated Feb 4, 2022).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 11,626 catchable rainbow trout (Apr–Oct) and 18 broodstock rainbow trout.",
+  cz:"abjeGtw{kPdBmAhAuB~D_BrCsDdAuCl@]`@gC|@g@p@oCfBkBUyA^uBpAl@tBk@N]y@k@r@s@RmArMeErAZc@hBrA]~@fAVo@hAXAzBTPnAiAlA\\fC}AZmDt@Ol@`@r@k@LcAn@e@k@mA^w@rC|BZONkA}@aAbAkDfCbBhAq@h@NhAeAGgA}As@mAbBo@DOgAkBoB|FoKFaBbAArAz@bDuAo@q@_@mDKiDd@uA]sBo@^yAkCf@mBeAsBeAcIf@cDZ_@zBZVeCw@o@EgArB_C~@Dz@k@[_CTcC~DiA`@ZKtAd@@~DoEA{@eA_AJq@lAe@vBl@KaCm@i@UwAVwBjA_@h@|CfBCTaAi@oCx@_@P{BbBkBr@Dh@~@EbCdBe@`ByKmBK?{Ah@cBWgBp@kB|@rAn@OlAgD?}AnAw@DgClAv@f@]ZcHvAsIbAeBOgFt@_Ab@uFlAmD@qA~AqC|DoCf@aA|IyBfCgCzC^|@sAjDnAnAmBz@`A^GXs@OyEd@_Bj@U|@bBx@Sz@sFTiDO}@^wBc@iInA}BaCeHrAwG"
 },
 {
   id:"turkeyriver", name:"Turkey River", color:"#8c6e3a",
   state:"IA", region:"driftless", gauges:["turkeySpillville","turkeyEldorado","turkeyElkader"], primaryGauge:"turkeyEldorado",
-  troutClass:"stocked", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TTR22", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"The big river of the Iowa Driftless, running from Cresco and Spillville through Eldorado and Elkader to the Mississippi at Garber. Too warm for trout on the mainstem, but it drains the whole trout-country plateau — and it's a first-rate smallmouth float in its own right.",
-  fish:"Smallmouth bass, walleye, and catfish on the mainstem; the trout are in the spring-fed tributaries feeding it. Use the three gauges as a wetness gradient across Winneshiek, Fayette, and Clayton counties.",
-  cz:"ye|dGxzjmPYWg@w@Sq@Ey@B{@JcAT}@^y@T]f@w@l@eAz@{A~@sBf@oA\\wAXkBf@}C`@_Cj@aC^cBRuAPaBHmCGgBEkABqAFeCGmBA_BHqBV{B^eCRu@XgAPq@Lm@Jy@PeAXk@\\i@p@u@z@cAtA{AhAm@xA{@dAe@"
+  blurb:"The big river of the Iowa Driftless, running from Cresco and Spillville through Eldorado and Elkader to the Mississippi at Garber. Too warm for trout on the mainstem, but it drains the whole trout-country plateau — and it's a first-rate smallmouth float in its own right. The Iowa DNR's trout water on the Turkey is a 1-mile stretch at Big Spring Hatchery, about 6 miles northwest of Elkader, and that stretch is the line drawn here: it is stocked with catchable rainbows from April through October, access has been improved, and there is a small non-electric campground near the hatchery. Source: the Iowa DNR's Turkey River page (summary updated Feb 8, 2022).",
+  fish:"Smallmouth bass, walleye, and catfish on the mainstem; the trout are in the spring-fed tributaries feeding it. Use the three gauges as a wetness gradient across Winneshiek, Fayette, and Clayton counties. On the DNR trout water: in 2025 the DNR stocked 7,877 catchable rainbow trout (Apr–Oct).",
+  cz:"ye|dGxzjmPuAaCHyDdIsPlEgUn@eIAkUbD_RzFkHhFoC"
 },
 {
   id:"volgariver", name:"Volga River", color:"#5b6e8c",
   state:"IA", region:"driftless", gauges:["volgaLittleport"], primaryGauge:"volgaLittleport",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"A Fayette and Clayton County river running past the Volga River State Recreation Area to join the Turkey at Littleport. Coldwater tributaries feed trout into the upper valley; the mainstem is smallmouth water.",
+  blurb:"A Fayette and Clayton County river running past the Volga River State Recreation Area to join the Turkey at Littleport. Coldwater tributaries feed trout into the upper valley; the mainstem is smallmouth water. The Iowa DNR does not list the Volga itself as trout water; Grannis Creek is designated, and the DNR's list also names five small spring tributaries of the Volga and Volga Lake (off Emblem Road, 190th Street, H Avenue, Imperial Road and Jasper Road) that its atlas does not map.",
   fish:"Smallmouth on the river itself, trout in the feeder creeks (Grannis, Otter, and the spring branches). The state recreation area has good public bank and camping.",
   cz:"qsydG~yopPrq@kSbg@mS|^ub@h]ma@p_As[rh@gd@pSc`@|Ec\\dZoPq@wv@da@{uAoAem@|h@kw@lg@sl@vE{b@gFe^da@ue@pd@cu@cIks@ww@m\\_[k]xAurA]}eAiWeq@d{@im@eZasA}gA~MiNqlB|^chCqj@{]uZrt@gDqyAxTiGg}@vR`Fut@}fA{o@zQ}RtMw|ApCqhAfaAqKj\\}YzRi]fx@GlKiq@pG_vD}Nk|@}D{OcAqhB`Iyq@wPo{A]khArBesAbRg\\pc@om@fPxIhEoDjEw`@hQkMmHyVuGiNgGkHjCyMxNqDsAqh@yKob@hRqOfKgX~IcQlWuEdBzPxFtFrLbFnUuFeJcm@~TyL~T_G}AyQoKeUkKkMw@ad@tOgRtNk@dSqOrEaj@|Aif@tIieAbMai@}Gqx@pcAsz@wk@kjA{@ejApjAgj@`k@`R`j@eVmLiZnOeqAiIeGvb@}W|NaYic@eaAmGcn@rQiZvw@{McOetB}@grAnl@{^McxBnUi_@vb@csA"
 },
 {
   id:"springbranchia", name:"Spring Branch Creek — Manchester", color:"#2a8c8c",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"restrictive", geom:"iadnr", wildTrout:"Brown",
-  troutRegs:"Continuous open season; Artificial lures only; 14-inch minimum length limit on all trout; 5 trout daily bag, possession 10",
+  troutClass:"restrictive", geom:"iadnr", dnrCode:"TSB28", wildTrout:"Brown",
+  troutRegs:"Continuous open season; Artificial lures only; 14-inch minimum length limit on all trout; 5 trout daily bag, possession 10<br><b>On the DNR stream page:</b> Brook Trout, Brown Trout, Rainbow Trout — Length Limit: 14-inch minimum from the spring source to County Highway D5X as posted; Other: Artificial lures only in posted areas. Artificial lure means lures that do not contain or have applied to them any natural or human-made substance designed to attract fish by the sense of taste or smell.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"A Delaware County spring creek near Manchester, at the southern edge of the Driftless trout country and one of the closest restrictive-regulation streams to eastern Iowa. Cold and steady because it runs straight out of the limestone.",
-  fish:"Stocked trout in quantity near the hatchery, with better fish the further you walk. Very stable flows make this a dependable pick when rain has blown out the freestone-ier creeks.",
-  cz:"sgfbGhszlPrBHlDc@dAiA~@\\pA^fAHjCcB~DmEh@aDdAu@DmAr@o@lBoAvCdA|ARbAp@jAvA|@b@t@\\l@At@AhAF`@kAfAeBbBaA|A~A`@j@b@x@^^f@hAGdBg@bCDzB?jFBhAH|DHfDb@j@nBMt@c@xC@vAv@bCc@z@]rA?rBYn@`@nBn@zBN~@FfAz@pBf@b@h@`@Xz@LVr@x@`Ah@\\f@r@X`@`@Hn@A`@?^f@f@bAHbBg@`Cy@Uc@v@"
+  blurb:"Spring Branch is about 3 miles east-southeast of Manchester in Delaware County, off 205th Avenue, with parking near the Highway 20 overpass and the Manchester Fish Hatchery; the DNR lists 2.2 miles. It is a special-regulation stream (14-inch minimum, artificial lures only) running mostly through private land, with some state land and permanent public fishing easements. A 2025 DNR survey found a high-density population of resident browns with fish to 24 inches, and only a few brook or rainbow trout over 14 inches. Source: the Iowa DNR's Spring Branch page (summary updated Feb 10, 2026).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 713 catchable rainbow trout (Apr–Oct), 59 broodstock rainbow trout and 2,000 brook trout fingerlings.",
+  cz:"sgfbGhszlPhGCfBaBtAr@bDR`HoHb@}CjAy@J{ArBwBzHhBxBlCdCz@zCG`BmDz@{@x@CxElHq@fGb@dWhAj@tEkArDhAtAWp@w@~BLdAe@bFjBtCF~@z@dCh@t@~@t@@fEvFhCPp@xAH~DeAt@q@_@Mz@"
 },
 {
   id:"grannis", name:"Grannis Creek", color:"#6e8c5b",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"stocked", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TGR33", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"A small Fayette County trout creek near West Union, in the gentler western edge of the Driftless where the bluffs give way to rolling farm ground.",
-  fish:"Stocked trout with some holdover browns. Short season of prime water — it fishes best in spring and fall when flows are up and temperatures are down.",
-  cz:["cckdG|gynPy@m@o@]aAkBs@F{@mB_@wEo@aEqB}Ay@SsA{@_Ea@oCLqCc@m@n@eAw@v@{@MsAgBaARi@v@s@jAi@Sy@qAE_@@uAk@BwB`@@VwAQYeAAe@TWmAGqA]g@a@lAaAJ@wBr@sA@{@J_AQsAm@d@c@J_@w@k@WCYn@@|@cANkAuBa@w@p@{@_@}@BeAQaBLZgA`A@l@W?sA}A{CgC{CcAE","aekdG|tznPgDxAeB|@MeCdB}DlAyAVkC"]
+  blurb:"Grannis Creek is in the Grannis Creek Wildlife Management Area, 3.5 miles southeast of Fayette off Grannis Road; the DNR lists 1.5 miles. Catchable rainbows are stocked weekly from April through October, and wild French Creek-strain browns are present (559 per mile, fish to 14 inches, in 2013). The upstream parking lot has a small paved area for universal access; part of the stream is private land where only fishing is allowed. Source: the Iowa DNR's Grannis Creek page (summary updated Feb 17, 2021).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 8,039 catchable rainbow trout (Apr–Oct) and 14 broodstock rainbow trout.",
+  cz:["cckdG|gynPeBcAe@iByAE}@wB_@iHw@yB}Ao@Cs@cAH{@w@}Ei@uBT{Cg@a@n@kAQJ_Bl@G@g@{@}AeAYb@aAhAUt@eA{Ec@g@aC~@?ZeC{BVs@kEe@jAwADR}Ct@i@FuDu@G[n@mBcBfBk@\\{BqBYeAp@}@{@s@^aDCVgAjBHTaBsFiIcAE","aekdG|tznP_Bd@cCvBeAi@ZqCzBoEbA_@AcC"]
 },
 {
   id:"ottercreekia", name:"Otter Creek — Fayette County", color:"#8c7d5b",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"wild", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"stocked", reachClass:["stocked","stocked","stocked","stocked","wild","wild"], geom:"iadnr", dnrCode:"TOT33", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"A Fayette County trout stream near Elgin, feeding the Turkey River — quiet, rural water that rarely sees a crowd.",
-  fish:"Stocked rainbows and browns. Pair it with Grannis Creek and the Volga for a day of small-water hopping through Fayette County.",
-  cz:["kr_eGtbunPTcDxByD_@{DcBeHgEkCkBgBmCQkDEyCcB_CiCeAkEcE{CgBoAaBfB{EgAoFyFGaIT_FMeE@yDr@uCaAgFjA_Dn@qHkCcIaCcDsDgFcCc@}CoHc@oG}Cm@kD{@yAaI]eGzIoZ","uibeGd`doPaF_@_E`HsLoA^aK`EgE~AkHcFsQwGiGqKuOdKoOrG{P","_|beGnzeoP}BZkBzB_CxFAxCL`BPhD\\~A^hDBxAw@f@J~@","{l`eG`_xnPiY_B_N}Cn@lOqL`[","w_beGxjnnPiIggAyb@uq@","}lceGvf`oP{FwP"]
+  blurb:"Otter Creek is about 3 miles southeast of West Union, partly inside Echo Valley State Park; the DNR lists 2.5 miles. It is stocked weekly with catchable rainbows in April, May, June, September and October. The DNR says the reach from Hornet Road to Echo Valley Park holds trout year-round, while the lower creek along Echo Valley Road gets too warm for trout most summers; walking trails are plentiful. Source: the Iowa DNR's Otter Creek page (summary updated Feb 7, 2022).",
+  fish:"Wild brown trout are present. The DNR's page gives no stocking figures.",
+  cz:["kr_eGtbunPBiClB_C\\kBI}ByC}JwAiAwCw@}@sA_BI}Af@_Cg@iGuF}@mEq@}@_GcDgBxBmALkFiEuC{DNqK`@cD]cBB}Et@wBcAeGjCcJ_@aDuCaIcDgDkBmD}Du@s@{@aBiLKuD}@SiC|BmA]uAyDeAaJPiFYqCrBoAtDVAmLx@eC","uibeGb`doPcBuBkAR_EdIuCrAkFYcBiBq@cCFmE\\i@dBGfCeEvAm@\\uEgBsDyAaIoBuF_FyCcEi@m@VuAaBgAkDAuFbBkIhF}EpAl@~@e@B_Dv@cA|A]l@gBRoCa@o@","_|beGnzeoPuCp@mElIMzBf@`JlAnHkAx@Pz@","}lceGvf`oPwEaEi@}EDwC","{l`eG`_xnPeK\\{Bj@}CQkB{@yBkEwBJeAcAuEIgDnAg@`ETtBr@zAdD|@zApHmBzJmEjDsEf@","w_beGxjnnPHoGd@oChCsE@kB}AyReB}JcGcJcAmH_AkB_ByHeGgEgH{IkEyHyEoF"]
 },
 {
   id:"richmondsprings", name:"Richmond Springs — Backbone", color:"#4a7d8c",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"stocked", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TRS28", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"The spring-fed trout stretch inside Backbone State Park — Iowa's oldest state park — where Richmond Springs feeds cold water into the Maquoketa River in Delaware County. The southern anchor of Iowa trout country.",
-  fish:"Stocked trout in a park setting with excellent, easy access and facilities. Family-friendly rather than technical; the Maquoketa below the springs warms quickly downstream.",
-  cz:"wvfcGfmymPd@Z\\Jd@L^\\VHd@Jd@Bb@j@Ht@j@^hAIXB`@IdATVz@b@p@`@`AIpAe@Xi@PG`@O\\Kp@a@~Aq@j@s@XOrATnAz@Jd@Fr@@bBQbBi@~Ao@~AIz@Gx@Fb@j@ATCXMb@C`AUt@QbAWx@IlAd@r@Xt@~@p@t@?z@Lz@Hn@ZZK\\Jp@`AXf@XvAHnBYjBo@hAEn@DlAXlA^dAp@bAv@Pp@M^I"
+  blurb:"Richmond Springs lies entirely within Backbone State Park, about 3 miles south of Strawberry Point and closest to the north park gate; the DNR lists 1.4 miles. It is stocked twice a week from April through October with catchable rainbows and also holds a moderate-density population of wild browns. Access is easy, and the park has cabins and primitive, electric and non-electric campsites. Source: the Iowa DNR's Richmond Springs page (summary updated Feb 10, 2026).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 15,923 catchable rainbow trout (Mar–Oct) and 70 broodstock rainbow trout.",
+  cz:"wvfcGfmymPlFlBjA|BxEHxA|CGbBkAd@gAvEeBdAOhBb@dAjFGzFcBdCIv@j@}A`LxAjCjGfAb@UrAnBj@rEsAdEJ~BfBdEdATbA["
 },
 
 /* ---- Northeast Iowa trout streams added from the Iowa DNR Fishing Atlas.
@@ -1885,451 +1885,451 @@ cz:["{`z}F~gw{Pfw@knAjHwGzc@{|@cBkRkCwBbBoKfEoAfJnAfEcGwBwGkHcBcGwGf@{EsDgJrDgE_
 {
   id:"iaBaileySFord", name:"Bailey's Ford", color:"#a8552a",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"stocked", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TBF28", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as catchable trout water.",
-  fish:"Wild brown trout present. Stocked with catchable-size trout through the season, so expect company on stocking days.",
-  cz:"cxabG`o|lPD@H@FGJIJ?R?RDNHNNB\\@THPRLPPNNJBJD@FBLBPFZX\\^^Xb@PV?TCV@PHZNNPLVH\\BPCLOFMJ?HKFSLKFOHMPU`@e@h@m@TWJCN?RMRUVWHGTK\\KX_@NWXKr@Q\\GTERGRFRPBd@Ht@`@v@RVVLd@B"
+  blurb:"Bailey's Ford is inside Baileys Ford County Park, about 3 miles southeast of Manchester (follow the signs from Jefferson Road); the DNR lists 0.6 miles. It is stocked with catchable rainbows from April through October, and wild browns that reproduce farther up Spring Branch Creek are here too. Shore fishing is good, and the park has primitive, electric and non-electric campsites. Source: the Iowa DNR's Baileys Ford page (summary updated Feb 10, 2026).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 15,493 catchable rainbow trout (Apr–Oct) and 71 broodstock rainbow trout.",
+  cz:"cxabG`o|lPnBFPfArA`ApBpDLfBx@f@vA_@vC_EjEaDlCq@n@Vx@`DfAX"
 },
 {
   id:"iaBankstonCreek", name:"Bankston Creek", color:"#a8552a",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"stocked", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TBA31", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as catchable trout water. Access is at least partly by public fishing easement across private land — fish and walk the stream corridor, don't leave it.",
-  fish:"Wild brown trout present. Stocked with catchable-size trout through the season, so expect company on stocking days.",
-  cz:"qewbGdxcjPHKDGXUTYDEPGTENGHKRWPe@DOFk@J_@JIVSRe@DY?IEOEQCIAWAIAEEGMOGKM]GWGc@CQKm@AgA?WIe@e@gAMQKWOc@Wa@SSq@q@_@a@QWo@{@c@c@[Mk@S]_@MUOw@M_ACe@BOLe@Na@@MLa@JQBGHWLWR]DMFa@Ce@CQ?e@"
+  blurb:"Bankston Creek, the Middle Fork of the Little Maquoketa River, runs through Bankston County Park just south of Park Hollow Road, 3 miles north of Bankston; the DNR lists 0.6 miles. It is stocked with catchable rainbows from April through October and has wild browns from natural reproduction in the watershed. Most of the county ground is easy to reach, and primitive camping is available. Source: the Iowa DNR's Bankston Creek page (summary updated Feb 10, 2026).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 7,384 catchable rainbow trout (Mar–Oct), 35 broodstock rainbow trout and 500 brook trout fingerlings.",
+  cz:"qewbGdxcjPrCuBpBwFgAmD]wE_ByD{IcJOqCnBmF?_C"
 },
 {
   id:"iaBearCreek", name:"Bear Creek", color:"#0e6f7d",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"wild", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"wild", geom:"iadnr", dnrCode:"TSB96", wildTrout:"Brown",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as fingerling-stocked or natural reproduction. Access is at least partly by public fishing easement across private land — fish and walk the stream corridor, don't leave it.",
-  fish:"Wild brown trout present. Put-and-grow or naturally reproducing rather than catchable-stocked — better fish, fewer of them, and more of a hunt.",
-  cz:"ccehGvtcnPGuACqANi@Fg@Fe@HeAPsALgAPgADsAFcAOuA]k@We@I]Ww@SiA[e@Wa@[g@W_@U]_@G"
+  blurb:"This short reach of Bear Creek, just below where North and South Bear come together near Highlandville, is part of the water the DNR lists under South Bear Creek. The DNR classes it as fingerling-stocked or natural reproduction rather than catchable water, and the wild browns of the Bear Creek system live here. Source: the Iowa DNR's South Bear Creek page (summary updated Feb 4, 2022).",
+  fish:"Wild brown trout are present. The catchable rainbows on the DNR's South Bear Creek listing are stocked on the catchable water upstream; this reach is classed for natural reproduction.",
+  cz:"ccehGvtcnPKgDhByP{BgI}CuD"
 },
 {
   id:"iaBearCreekAllamakee", name:"Bear Creek (Allamakee)", color:"#0e6f7d",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"wild", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"wild", geom:"iadnr", dnrCode:"TBC03", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as fingerling-stocked or natural reproduction.",
-  fish:"Wild brown trout present. Put-and-grow or naturally reproducing rather than catchable-stocked — better fish, fewer of them, and more of a hunt.",
-  cz:"gbbhGl}zmP{@rCo@rB{@dB{@nBaA`@eADaA?{@n@{@n@gAd@k@Jq@NcD`@wABiAB{AMM?i@S]O_@A{@u@MqAIuAIiAQoA[eAQcAW}@Uq@O_@"
+  blurb:"This Bear Creek is in northern Allamakee County: from Waukon take Highway 76 north 13 miles, County Road A26 (Bear Creek Drive) west 2.5 miles, then Washington Road north and Tahigwa Drive; the DNR lists 0.75 miles under statewide trout rules. A 2017 DNR survey at two sites found excellent natural reproduction of brown trout, about 1,273 per mile from young-of-year to 18 inches, plus a few catchable rainbows that had come down from the stocked water on North and South Bear. Source: the Iowa DNR's Bear Creek page (summary updated Feb 4, 2021).",
+  fish:"Wild brown trout are present. The most recent stocking on the DNR's page is from 2023: 10,928 rainbow trout fingerlings.",
+  cz:"gbbhGl}zmPcF|MiEf@_EdCcLbAsEq@y@u@s@_IkB{G"
 },
 {
   id:"iaBearCreekClayton", name:"Bear Creek (Clayton)", color:"#0e6f7d",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"wild", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"wild", geom:"iadnr", dnrCode:"TBE22", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as fingerling-stocked or natural reproduction.",
-  fish:"Wild brown trout present. Put-and-grow or naturally reproducing rather than catchable-stocked — better fish, fewer of them, and more of a hunt.",
-  cz:"s}mcG|uzlP?Y?MBe@BK?I?CBI?E?K?EBK@E@MFMBMBU@IFY@K@QCKOKGCMIEEGOCGGGCG?C?IACEICCKKCEAI?E@O@I@YBSBM@WBMFKDEFMDEFKBEJODCJEFENIJQ?G@]BGNi@LU\\k@LQR_@HMTWFIFQ"
+  blurb:"This Bear Creek runs through Bixby State Preserve, 2 miles north of Edgewood just east of Fortune Road; the DNR lists 0.5 miles. It holds a low-density, self-sustaining wild brown trout population in the preserve and on some neighbouring private land, where fishing needs the landowner's permission. The DNR has stopped stocking it. Source: the Iowa DNR's Bear Creek (Bixby) page (summary updated Feb 10, 2026).",
+  fish:"Wild brown trout are present. The most recent stocking on the DNR's page is from 2019: 1,004 brown trout fingerlings.",
+  cz:"s}mcG|uzlPp@}GeBkCNyBhByBX}A|BuD"
 },
 {
   id:"iaBearCreekFayette", name:"Bear Creek (Fayette)", color:"#a8552a",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"stocked", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TBE33",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as catchable trout water.",
-  fish:"Wild brown trout present. Stocked with catchable-size trout through the season, so expect company on stocking days.",
-  cz:"uggdGbhunPMoAScCBkBSs@c@Ic@Ga@Qw@~@kApBq@~@aBPwBt@_CGs@Ya@eA@gBj@_Ad@@n@Kb@m@GuAGi@X]d@A`@Ih@[x@w@jCo@fDs@zA@n@E|CeBrBkBPWZg@n@g@E{@EoAy@kAgBcBqAmA{@Qa@Eo@[Mw@DkAIkAJm@d@u@Po@r@o@XsARu@BmADk@j@uAf@[TsBTyALuAn@g@v@`@f@Nn@Tt@WJ_AKiB`As@TcA"
+  blurb:"This Bear Creek is about 6 miles southeast of Fayette off Kornhill Road (CR C24), reached from the end of 128th Street by a half-mile trail; the DNR lists 1.2 miles. It is stocked weekly with catchable rainbows in April, May, June, September and October, but it is not a coldwater stream and doesn't hold trout through most summers. It is on private land where only fishing is allowed. Source: the Iowa DNR's Bear Creek page (summary updated Feb 4, 2021).",
+  fish:"The DNR also lists smallmouth bass and rock bass. In 2025 the DNR stocked 2,075 catchable rainbow trout (Apr–Jun, Sep–Oct) and 7 broodstock rainbow trout.",
+  cz:"uggdGbhunPYsHk@mAaBOsAzA_AhCoFlAgDUm@sA@eBb@{@zB_@KsC\\e@xAQtBcBlGmAzBDvFiDfCyCKkCeBgCuC}BmCo@IuEdDiHJ_D|AaCx@kHrDbAt@W?iDhAw@L_A"
 },
 {
   id:"iaBigalkCreek", name:"Bigalk Creek", color:"#a8552a",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"stocked", geom:"iadnr", wildTrout:"Rainbow",
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TBI45", wildTrout:"Rainbow",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as catchable trout water. Access is at least partly by public fishing easement across private land — fish and walk the stream corridor, don't leave it.",
-  fish:"Wild rainbow trout present. Stocked with catchable-size trout through the season, so expect company on stocking days.",
-  cz:"qijhGrz`qPEc@Da@@[Ho@\\m@`@o@Ze@d@e@h@g@f@If@?Je@@aA^KXK`@M`@Od@]h@g@h@]`@Gd@g@r@m@f@SZg@Jo@Pk@Bg@C_@?q@Qi@WcAK{@Gc@[Yi@c@m@DWZ_@WE_@HYDa@D_@Ie@Ik@[G[FY\\U?Kc@Gc@Qg@[q@]sAMo@Ac@S]I_@]_@YEM_@Gm@QWQ_@C}@AyABy@AqADo@"
+  blurb:"Bigalk Creek is about 7 miles northeast of Cresco in Howard County; the DNR lists 0.6 miles. It is stocked weekly with catchable rainbows from April through October, and limited natural reproduction of rainbows has been documented (168 fish per mile, 6 to 12 inches, in 2012). Access is easy, with an accessible site downstream; some segments are private land where only fishing is allowed. Source: the Iowa DNR's Bigalk Creek page (summary updated Feb 8, 2022).",
+  fish:"Wild rainbow trout are present. In 2025 the DNR stocked 4,650 catchable rainbow trout (Mar–Oct), 9 broodstock rainbow trout and 2,000 brook trout fingerlings.",
+  cz:"qijhGrz`qPJqCrA}BbB}AnAEFkBnBc@lHcFt@{CaAiH}@{@gBPIwEeB`@oBkIoCuE?iJ"
 },
 {
   id:"iaBohemianCreek", name:"Bohemian Creek", color:"#a8552a",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"stocked", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TBO96", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as catchable trout water. Access is at least partly by public fishing easement across private land — fish and walk the stream corridor, don't leave it.",
-  fish:"Wild brown trout present. Stocked with catchable-size trout through the season, so expect company on stocking days.",
-  cz:"ccwfG`m|pP@UBKD_@AEBWEGAa@?KIQEUCMDSAGGGEEIUCGIUCQGWMYCMCUGUQ]EKOWCEQu@O}@GYKa@IGQSKG[QG?Q@GDQ^OVI@[KQKG_@?OMWEOEa@Ie@GIGm@Bw@F}@@MBe@@[Be@BUFYJe@@OJu@BQFk@DSLo@F[Ly@"
+  blurb:"Bohemian Creek is about 1.5 miles east of Protivin; the DNR lists 0.3 miles. Catchable rainbows are stocked weekly from April through October, and stream-reared French Creek-strain browns are present (132 per mile, fish to 20 inches, in 2011). Bank access is easy; one segment is private land where only fishing is allowed. Source: the Iowa DNR's Bohemian Creek page (summary updated Feb 8, 2022).",
+  fish:"Wild brown trout are present; the DNR also lists rock bass. In 2025 the DNR stocked 5,115 catchable rainbow trout (Mar–Oct) and 15 broodstock rainbow trout.",
+  cz:"ccwfG`m|pPIgFqDwLyAw@m@`Aw@Uy@cET_GzAsJ"
 },
 {
   id:"iaBrushCreekFayette", name:"Brush Creek (Fayette)", color:"#0e6f7d",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"wild", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"wild", geom:"iadnr", dnrCode:"TBR33", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as fingerling-stocked or natural reproduction.",
-  fish:"Wild brown trout present. Put-and-grow or naturally reproducing rather than catchable-stocked — better fish, fewer of them, and more of a hunt.",
-  cz:"ajadGtpqnPCFA`@CbAHzAJZ\\dAYhAgAjA}AQeAgA_B{@oAMGd@Ap@Ef@b@lDr@bC^xAa@xAsAxAkAdAyBt@mCDmAXu@f@KtAXpAQnAOj@{@`@{@n@}@t@kBh@mAJs@Pm@oASyA_@gBa@i@i@c@a@UOCG@G?MJOLw@l@gA`Bm@?mAYkAi@mBQw@k@u@LIp@ItAEfDV`CT|AVhCo@nCmAbAi@K}@Q{@y@eAk@i@a@y@y@{@oA"
+  blurb:"This Brush Creek runs through Brush Creek Canyon State Preserve, 1.5 miles north of Arlington off CR C2W (90th Street); the DNR lists 1.6 miles. It holds stream-reared brown trout from young-of-year up to 17 inches. Getting to it is hard work: the creek lies at the bottom of a steep valley. Source: the Iowa DNR's Brush Creek page (summary updated Feb 5, 2021).",
+  fish:"Wild brown trout are present. The most recent stocking on the DNR's page is from 2024: 18 catchable rainbow trout (Apr–Oct, Dec).",
+  cz:"ajadGtpqnP?rEh@vA_BtC{Ba@sDuCe@ROjCx@lF|@|BO~AsEfEuGb@{AfATvDUxAyDlCuFjAw@_Bi@qD}BgB{DrD{JqC_@j@SxGjAnIeAbE}@h@_BQcD}BeC_D"
 },
 {
   id:"iaBuckCreek", name:"Buck Creek", color:"#0e6f7d",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"wild", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"stocked", reachClass:["wild","wild","stocked","stocked"], geom:"iadnr", dnrCode:"TBU22", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as fingerling-stocked or natural reproduction. Access is at least partly by public fishing easement across private land — fish and walk the stream corridor, don't leave it.",
-  fish:"Wild brown trout present. Put-and-grow or naturally reproducing rather than catchable-stocked — better fish, fewer of them, and more of a hunt.",
-  cz:["ojudGd}skP|ByChAoFhC}EdCeLdA_BtAzAhClA~@xAHrBDdCShDObG`@rClDhBpC{EpAoCbB}HbDyCh@{CPkErDg@pDu@tCw@dDgACuGA{D^sDbAeGlA?nAl@rBjBn@zC`@vDx@zGF~A`@z@xCHl@mA_A_CZkCrBkDfA_@j@_BDaCqA_C","{ywdGjctkPvDv@xCpApBe@tB|@vCNzEx@xB~@a@|@q@z@pAXr@aAfAr@nAzAlAqBz@@RuB}BeBrCYrB_C","qmmdG|_jkPrD_EnDkC","onodGrzmkPhCcD"]
+  blurb:"Buck Creek is about 3 miles northeast of Garnavillo in Clayton County; the DNR lists 1.7 miles. Catchable rainbows are stocked in April, May, June, September and October, and a 2018 sample found a low population of wild browns from 2 to 19 inches. Access is easy, Buck Creek Area Park has non-electric camping, and some segments are private land where only fishing is allowed. Source: the Iowa DNR's Buck Creek page (summary updated Feb 5, 2021).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 5,720 catchable rainbow trout (Apr–Jun, Sep–Oct) and 15 broodstock rainbow trout.",
+  cz:["qmmdG|_jkPl@aBtHkF","onodGrzmkPhCcD","qjudGd}skPt@[pBsDd@iEvAyAlDmK@{EVi@|An@vB`DvAKz@pBm@nUtApCxD\\fBwGv@YjCeMxBs@n@eAOsGtBcA`B@dNeDNqAa@gI|@gCGmC`AkFnDn@~B|Cv@rF?~BjAfFKhBlAdAbDe@AgAiAo@O}DlBcBt@yClBGT_EmAe@OiB","{ywdGjctkP|@U`HhDnAw@nCjAnAM`KnB`@bBeBAOt@`Dh@A}Ap@MVdDl@Z`@_@LsBb@Iz@hA|@wAg@_CmBGBk@h@[vAZrBmAPkA"]
 },
 {
   id:"iaCaseySprings", name:"Casey Springs", color:"#7b2d8e",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"restrictive", geom:"iadnr", wildTrout:"Brown, Brook",
+  troutClass:"restrictive", geom:"iadnr", dnrCode:"TCS96", wildTrout:"Brown, Brook",
   troutRegs:"Continuous open season; Artificial lures only; Catch and release all Brook Trout; All other trout no length limit, 5 daily bag, 10 possession limit.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as restrictive-regulation stream.",
-  fish:"A restrictive-regulation stream: special rules apply and they are stricter than the statewide trout regs. Wild brown, brook trout present. Read the current Iowa DNR trout regulations before you fish it.",
-  cz:"agsgG`gvoP?WEc@CQFk@F_@JkADIFID?BK?MGYEKEGKDEHMHEEAWHYb@WJBX@JFPZTFZEBW@SL?HIB]BINTHLV@H?Da@@Ma@_A[g@Ws@Mk@A[Bg@DUBc@EKSOKKA]IEQDIPEb@SXKPSRK?YAECCQHMBe@AWOc@E]Me@EO"
+  blurb:"Casey Springs is west of Decorah: take Pole Line Road 2.2 miles west from Highway 52, then Bluffton Road north 2.3 miles to the Winneshiek County Conservation Board's Sindelar Wildlife Access, the one stretch open to public fishing; the rest is private and closed without the landowner's permission. The DNR lists 0.5 miles. A 2017 survey found about 398 brown trout per mile (2 to 15 inches) and 234 brook trout per mile (3 to 12 inches). Source: the Iowa DNR's Casey Springs page (summary updated Feb 8, 2022).",
+  fish:"Wild brown and brook trout are present. In 2025 the DNR stocked 2,000 brook trout fingerlings.",
+  cz:"agsgG`gvoPK_Bt@aES_@e@RFq@hAQfAf@l@_Bz@d@Fo@uA{CAiDg@eA[?cAtBk@EF{Ai@yB"
 },
 {
   id:"iaChihakCreek", name:"Chihak Creek", color:"#0e6f7d",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"wild", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"wild", geom:"iadnr", dnrCode:"TCC45", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as fingerling-stocked or natural reproduction.",
-  fish:"Wild brown trout present. Put-and-grow or naturally reproducing rather than catchable-stocked — better fish, fewer of them, and more of a hunt.",
-  cz:["_{mgGd_`qPGNE\\GFC?EBGXGP?F?HI@EIEIE@ETAHFFJB@B?FED[ZILODIGMCG@GJCFSRWZGNW^C?GBCDUNSBOHMHi@XKBI@E@OEME","ogpgGbbaqPNCVMDIHGJCV?LEFALIXF@P@LJFHKBUDKNSj@_@LIDINYRa@@K"]
+  blurb:"Chihak Creek is south of Cresco in Howard County; the DNR lists 0.3 miles. Public access is on the lower creek, at the Howard County Conservation Board's Cleghorn Wildlife Area (Highway 9 south, then 345th Avenue) and the DNR's Turkey River Wildlife Management Area (Willow Avenue south, then King's Road); the rest needs landowner permission. Its browns reproduce naturally and are not stocked: 252 per mile, 2 to 13 inches, in 2019. Source: the Iowa DNR's Chihak Creek page (summary updated Feb 9, 2021).",
+  fish:"Wild brown trout are present. The DNR's page gives no stocking figures.",
+  cz:["_{mgGd_`qPiBnEo@C}BlCuCl@","ogpgGbbaqP~By@h@n@hC}D"]
 },
 {
   id:"iaClearCreekNewAlbin", name:"Clear Creek (New Albin)", color:"#0e6f7d",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"wild", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"wild", geom:"iadnr", dnrCode:"TC203", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as fingerling-stocked or natural reproduction.",
-  fish:"Wild brown trout present. Put-and-grow or naturally reproducing rather than catchable-stocked — better fish, fewer of them, and more of a hunt.",
-  cz:["uhihGhy|lPRfGhBlBl@bAnB|@DlBLzChAgDnBpA`AYl@hCvA~E~AwBpBr@l@pBlBcDzAvBZxBlCxAjAy@ApDtB`DdDAlBtBt@l@lAt@xBz@rBvEOjD|AjDvCm@xBhEz@fCpCp@xALxBmCpAWT^fBXfDc@dCOhEy@|A{@~AgErA}A|AiEbAsHrB|AnECp@gCx@bA~@Es@{DD_GlAaAdD_B","cyjhG`i}lP`DWdA{@Vs@vAmBxAs@vCg@xCoEdAyCt@sBnBoA|BnDxCh@`ClA"]
+  blurb:"This Clear Creek is on the Clear Creek Wildlife Management Area, 4 miles east of Dorchester along Sleepy Hollow Drive; the DNR lists 3.4 miles. A 2012 survey estimated 478 brown trout per mile with fish to 13 inches, and natural reproduction was first found in 2010. Brush along the banks limits access to much of it; primitive camping is allowed on the area. Source: the Iowa DNR's Clear Creek (New Albin) page (summary updated Feb 8, 2022).",
+  fish:"Wild brown trout are present. The most recent stocking on the DNR's page is from 2022: 2,932 brook trout fingerlings.",
+  cz:["uhihGhy|lPTlHbBPDzBbC^`AlA}@jBb@fBf@Bv@mDtB`CT@C_Ap@Fh@lHf@d@jAGf@eBzA]^XCzA`@rA|@_@p@kCdA^h@fA]ZFdAzAlAb@jA`AY\\eA^H^pBi@dBvAlChB}AjAtAp@[lAx@Vj@Op@`An@nAh@^_@rDrGJhBc@t@TzArAnBt@TpA_Bp@pBtAnAOnB`BvAxBD\\r@fAMd@k@D{@pC_ApAtAdCkB~Cv@|HcBlA_B`A_D`DoCAiLvAS^|@nFtC`AeAW{@TsBh@MdA|At@FUeDqAwBr@yAC}F~@d@`AxBlBoD","cyjhG`i}lPtARtAo@d@aA|@T[}BlJ}CxDsGVsB~@iBnAi@rDfFbCOjBnA"]
 },
 {
   id:"iaCoonCreek", name:"Coon Creek", color:"#a8552a",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"stocked", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TCN96", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as catchable trout water.",
-  fish:"Wild brown trout present. Stocked with catchable-size trout through the season, so expect company on stocking days.",
-  cz:"g{jgGbhgnPw@fAk@fAk@bAgAhDmBjA_AdAs@z@BlByAk@eBvBmBsC}Cf@aCrD{@~DwBU_AG}AMoAc@mC]mBa@iAb@oAz@g@eBgCeB]uBiBjA{BvB_Bl@qAz@yABaApCc@vCxAVUhCgBLiAPj@~AgBn@dAtCe@vB{@TeBRoBf@cBxBy@bCoBo@{@nBf@zAaB{@kBp@w@hBTbDrAhBq@~AuB^gBLiAjCoAKy@dBcB~@qAB}Ac@eBYkBk@cCP}@JmAlAqC}BcEuC"
+  blurb:"Coon Creek is in the Coon Creek Wildlife Management Area, 7 miles northeast of Decorah, in a remote valley with one parking area close to the stream; the DNR lists 2.6 miles. Catchable rainbows are stocked twice a month from April through October, and stream-reared French Creek-strain browns are present (736 per mile, 3 to 13 inches, in 2018). Primitive camping is allowed on the wildlife area. Source: the Iowa DNR's Coon Creek page (summary updated Feb 7, 2022).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 2,775 catchable rainbow trout (Apr–Oct) and 8 broodstock rainbow trout.",
+  cz:"g{jgGbhgnPuCzEoAxD_Br@c@tAkAg@?rEoAaAcBbCyB{CkCJu@jBwAfAF~B{@tAoG_@{@k@cCDgBsA}B@DnB_B?S_BsCcB^_B]i@cDbB{@vBgAe@yBdCeBQyBxGPl@`Ac@RjDeAh@yBc@Q`An@dAgBn@@bBjAx@IpA{EfBwBNaAdBg@xCcBqAyAn@CvA|@f@Wx@}CkA}AtAIbFvAx@L|BqDjAgASaBlDiBKcAlCmCReHkBgE\\_@dAy@DiIqG"
 },
 {
   id:"iaDunningSSpring", name:"Dunning's Spring", color:"#0e6f7d",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"wild", geom:"iadnr",
+  troutClass:"wild", geom:"iadnr", dnrCode:"TDS96",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as fingerling-stocked or natural reproduction. Access is at least partly by public fishing easement across private land — fish and walk the stream corridor, don't leave it.",
-  fish:"Put-and-grow or naturally reproducing rather than catchable-stocked — better fish, fewer of them, and more of a hunt.",
-  cz:["cijgGtwfoP?HCJAL@DDF@BAF?BBLBB@@BB@DAN@FBBBD?NAL?PBJ@N@LDFLDF@DBFBDBDDDCBFDHDB@CHBBDB?B@B?D?FB@?BD@@@ABC@BB??AB?B?BF?BBFBB@BFJBFB?B@BBBDBPDFBA","o{igGfbgoP`@GLA"]
+  blurb:"Dunning's Spring is a very small stream in Dunning's Spring Park, a Decorah city park on the north side of town off Ice Cave Road, with a waterfall that runs year-round; the DNR lists 0.2 miles. The DNR stocks it with trout fingerlings. Source: the Iowa DNR's Dunning's Spring page (summary updated Feb 8, 2022).",
+  fish:"In 2025 the DNR stocked 250 brook trout fingerlings.",
+  cz:["cijgGtwfoP^zEpCbAv@rA","o{igGfbgoPn@I"]
 },
 {
   id:"iaDuttonSpringCreek", name:"Dutton Spring Creek", color:"#0e6f7d",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"wild", geom:"iadnr", wildTrout:"Brown, Brook",
+  troutClass:"wild", geom:"iadnr", dnrCode:"TDS33", wildTrout:"Brook",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as fingerling-stocked or natural reproduction. Access is at least partly by public fishing easement across private land — fish and walk the stream corridor, don't leave it.",
-  fish:"Wild brook, brown trout present. Put-and-grow or naturally reproducing rather than catchable-stocked — better fish, fewer of them, and more of a hunt.",
-  cz:"mdmeGnaboPLVDNNNHDLFBHBDDFFDJBF@HFLHJHHHHHHJLLLJJJLJFHP\\FLDJ?BBRJ@D?FBBF@B?NDHBHBHAPIJGLCJDLH@NJLDBHDD?BCF?DDPFL@JDZ?N?JDTBf@?XB^?X?B@VDTBX@d@@b@"
+  blurb:"Dutton Spring rises in Dutton's Cave Park, a county park about 3 miles northeast of West Union; the DNR lists 0.27 miles. South Pine-strain brook trout fingerlings have been stocked in several years since 2000, with only spotty natural reproduction. Bank access in the park is easy; the private land beyond it needs the landowner's permission. Source: the Iowa DNR's Dutton Spring page (summary updated Feb 15, 2021).",
+  fish:"Wild brook trout are present. The most recent stocking on the DNR's page is from 2023: 2,300 brook trout fingerlings.",
+  cz:"mdmeGnaboPfH~HNp@Wv@v@p@n@|K"
 },
 {
   id:"iaEnsignHollowCreek", name:"Ensign Hollow Creek", color:"#7b2d8e",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"restrictive", geom:"iadnr", wildTrout:"Brown",
-  troutRegs:"Continuous open season, Artificial lures only; catch-and-release all trout.",
+  troutClass:"restrictive", geom:"iadnr", dnrCode:"TEH22", wildTrout:"Brown",
+  troutRegs:"Continuous open season, Artificial lures only; catch-and-release all trout.<br><b>On the DNR stream page:</b> Brown Trout — Other: Catch and release only. Artificial lures only in posted areas. Artificial lure means lures that do not contain or have applied to them any natural or human-made substance designed to attract fish by the sense of taste or smell.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as restrictive-regulation stream.",
-  fish:"A restrictive-regulation stream: special rules apply and they are stricter than the statewide trout regs. Wild brown trout present. Read the current Iowa DNR trout regulations before you fish it.",
-  cz:"qd}cGfb{mPiEq@aA@_@Ia@Jc@SUo@g@Ok@xAeAn@]NWD[]U]WIMo@QUYi@WCg@w@QeA\\I\\VNe@NYM]O_@YNMe@Fg@Mu@TqAJo@Es@Ok@Em@g@EQYBmAZ}@LZXVv@[CW[OYiAq@f@e@oB}@{A^e@^y@eAOe@_@FgAS{AbAs@l@sAo@gAV_@o@q@o@{@XyBh@USkAa@iAP{@c@W_@eAn@}Bz@kF"
+  blurb:"Hewett Creek, also called Ensign Hollow, is on the Ensign Hollow Wildlife Management Area about 5 miles north of Strawberry Point, with access on the north side of 322nd Street; the DNR lists 1.3 miles. It is a catch-and-release, artificial-lures-only stream whose moderate-density brown trout population sustains itself: stocking was suspended in 2011, and a 2025 survey found browns mostly 8 to 13 inches, some to 15. Primitive camping is allowed. Source: the Iowa DNR's Hewett and Ensign Creeks (Ensign Hollow) page (summary updated Feb 10, 2026).",
+  fish:"Wild brown trout are present. The DNR's page gives no stocking figures.",
+  cz:"qd}cGfb{mP{Cu@aEHaA}AoApBuBr@gEyGJm@r@ZZ{@Y{@i@AG_C`@uC[mBw@ICkA\\sAr@t@r@m@_@QOqA_Af@k@sCw@w@Fm@x@@As@kBo@KcD|A{@RaBo@s@Xy@UYcAD@eDt@QBwAu@gAXm@k@q@A}@m@g@~@}Az@kF"
 },
 {
   id:"iaFalconSpringBranch", name:"Falcon Spring Branch", color:"#7b2d8e",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"restrictive", geom:"iadnr", wildTrout:"Brook",
+  troutClass:"restrictive", geom:"iadnr", dnrCode:"TFS96", wildTrout:"Brook",
   troutRegs:"Continuous open season; Artificial lures only; Catch and release all Brook Trout; All other trout no length limit, 5 daily bag, 10 possession limit.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as restrictive-regulation stream.",
-  fish:"A restrictive-regulation stream: special rules apply and they are stricter than the statewide trout regs. Wild brook trout present. Read the current Iowa DNR trout regulations before you fish it.",
-  cz:"kurgG|fvoPFn@Xl@R`@^l@^p@RPTDTNLb@Bd@AX?@R`ATJPb@JV"
+  blurb:"Falcon Spring is a short spring run that comes out of the base of a limestone cliff and joins Casey Springs, on the Falcon Spring Wildlife Management Area about 6 miles west of Decorah off Pole Line Road; it is a hike of about 1.25 miles. The DNR lists 0.2 miles. Brook trout must be released and only artificial lures are allowed; some segments are private land where only fishing is allowed. Source: the Iowa DNR's Falcon Spring page (summary updated Feb 15, 2021).",
+  fish:"Wild brook trout are present. In 2025 the DNR stocked 1,000 brook trout fingerlings.",
+  cz:"kurgG|fvoPtB~E~@f@b@fDr@fA"
 },
 {
   id:"iaFountainSprings", name:"Fountain Springs", color:"#a8552a",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"stocked", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TFS28", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as catchable trout water. Access is at least partly by public fishing easement across private land — fish and walk the stream corridor, don't leave it.",
-  fish:"Wild brown trout present. Stocked with catchable-size trout through the season, so expect company on stocking days.",
-  cz:"e`acGd{ilPeAPmAFoBuAsAmA_AaBw@wAg@kA@q@T]o@qBoBeAWlCe@J[i@s@`Au@Bc@Y[y@MaD`AeBScBOcCiBcBcB`AoA`C{@pBwADyAd@cAKwB{A_AeAb@k@_@k@qAiAS{AH}Br@_DbBeCfBu@QcA@cA?cAc@Is@HoAl@{@CmAu@iA}EBqANkBKaB_@_Bd@eBp@UNn@x@VpAs@jBmBzA[T]Kg@s@y@Zy@r@Wf@aA@uDi@sCq@oAqBwA"
+  blurb:"Fountain Springs is 2.5 miles northeast of Greeley along Oak Road, mostly inside Fountain Springs County Park; the DNR lists 2.3 miles. Catchable rainbows are stocked from April through October, with a chance at wild browns and possibly brook trout. Most of it is county or state land with good access, but parts of the upper and lower creek are private and need permission; primitive camping is available. Source: the Iowa DNR's Fountain Springs page (summary updated Feb 10, 2026).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 6,984 catchable rainbow trout (Mar–Oct), 34 broodstock rainbow trout and 500 brook trout fingerlings.",
+  cz:"e`acGd{ilPsCXuEsDqC}FZaAYyAyAeB}@\\GvBi@BUg@yAjAw@c@e@wEbA}Bi@_FgAoAwBp@mCxFkEz@oEcCYm@`@{@kCgCJqDnA}EtA}A|A]EmE}@WwCbAmBqA{@cDPoGo@uDN}@z@e@d@bAvAB~ByCdCg@E{@w@oAlBmALiFaAmEkCmB"
 },
 {
   id:"iaGloversCreek", name:"Glovers Creek", color:"#a8552a",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"stocked", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TGL33", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as catchable trout water. Access is at least partly by public fishing easement across private land — fish and walk the stream corridor, don't leave it.",
-  fish:"Wild brown trout present. Stocked with catchable-size trout through the season, so expect company on stocking days.",
-  cz:"ssdeGtwcoPRUHQPm@|@{@d@C^N\\Rx@r@VXTF`@Nv@PVDLFZ?XO\\Lj@RXDN@PBVATAP@NDLKPIVk@`@KXW\\Yt@Sp@c@d@Gp@PbAz@j@nAJ|@NNR@~@`@b@CfA[ROTWj@{AFsBYuA_@kAk@s@[_@KiAF_AIkAB_ATk@Tm@b@O~@?l@CTCR]Ce@Ak@G}@Hi@JW@SA["
+  blurb:"Glovers Creek is reached through Echo Valley State Park, about 3 miles southeast of West Union; the DNR lists 0.8 miles. Catchable rainbows are stocked weekly from April through October; French Creek-strain brown fingerlings were last stocked in 2017, and a 2013 survey estimated 288 browns per mile with fish to 20 inches, though natural reproduction has not been documented. There are many easy access points. Source: the Iowa DNR's Glovers Creek page (summary updated Feb 17, 2021).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 8,101 catchable rainbow trout (Apr–Oct) and 15 broodstock rainbow trout.",
+  cz:"ssdeGtwcoPfC}ChEpCnJ`AtGeEbCrAfA|CjBd@pBu@dAsE_AqDmAcBGwFz@qBjDUJwG"
 },
 {
   id:"iaHickoryCreek", name:"Hickory Creek", color:"#a8552a",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"stocked", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"stocked", geom:"iadnr", dnrCode:"THI03", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as catchable trout water.",
-  fish:"Wild brown trout present. Stocked with catchable-size trout through the season, so expect company on stocking days.",
-  cz:"uicfGpm~lPQ}@g@eBa@{AWkAWu@u@{Am@qAg@m@[cAWeB[_C]uASmB_@qBWs@[oAS_B[kBIm@Gc@Eq@A_AKmAc@cAk@_Bc@}@]m@s@}@q@kAm@{ASg@]o@o@i@s@o@a@y@Wo@e@iAE_ACq@_@Wg@JaAb@O@GI]o@e@YMPOj@INQZg@RIYA_ACkAIa@OcAGkACmA?qAGeAAk@@i@Oy@KeA@e@N}CGgAEu@@}@"
+  blurb:"Hickory Creek is about a mile southwest of Volney off Hickory Creek Road; the DNR lists 1.5 miles. Catchable rainbows are stocked from April through October, and wild French Creek-strain browns are present (652 per mile, fish to 17 inches, in 2016). The whole stream is on private land where only fishing is allowed. Source: the Iowa DNR's Hickory Creek page (summary updated Feb 8, 2022).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 2,515 catchable rainbow trout (Apr–Oct) and 7 broodstock rainbow trout.",
+  cz:"uicfGpm~lP{BgJcE}IoFi[KwDwA{DgGiLmBiBkAeCSoCg@WqBp@kAsAy@hBm@HsAiWD_K"
 },
 {
   id:"iaJoySprings", name:"Joy Springs", color:"#a8552a",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"stocked", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TJS22", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as catchable trout water.",
-  fish:"Wild brown trout present. Stocked with catchable-size trout through the season, so expect company on stocking days.",
-  cz:"wyncGpwbnPDk@BwAHu@HaALw@?e@@o@Cw@Qi@A_@Tk@ZML_@Hs@Tg@d@Mb@WTGTOPUh@ER[Jm@Pg@VKR[PKRUHGd@BNTR^R\\^Nt@Hf@UBu@Ey@?q@Gs@KIIFIRODWGO[A{@RyAb@gAXSXWDg@Om@GUHSFe@\\Yf@A`@NTP`@CVi@Ds@?]Eg@WY?a@NWXK"
+  blurb:"Joy Springs is in Joy Springs County Park, off Highway 3 about 3 miles west of Strawberry Point (south on Alpha Avenue), on the upper Maquoketa; the DNR lists 0.8 miles. Catchable rainbows are stocked from April through October, and stream-reared browns are present: a 20-inch brown turned up in a 2024 survey. A habitat project was finished in late 2021, and the park allows primitive camping and has a picnic shelter. Source: the Iowa DNR's Joy Springs page (summary updated Feb 10, 2026).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 7,851 catchable rainbow trout (Apr–Oct) and 30 broodstock rainbow trout.",
+  cz:"wyncGpwbnPj@sHQgFp@o@h@uBxD_B`@aBbB{ArBbB`BB?sEqAECkCbBqCSkB\\gAnAIn@`@h@_@HoBa@iAj@q@"
 },
 {
   id:"iaLansingWildlifeAreaCreek", name:"Lansing Wildlife Area Creek", color:"#0e6f7d",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"wild", geom:"iadnr", wildTrout:"Brook",
+  troutClass:"wild", geom:"iadnr", dnrCode:"TLW03", wildTrout:"Brook",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as fingerling-stocked or natural reproduction.",
-  fish:"Wild brook trout present. Put-and-grow or naturally reproducing rather than catchable-stocked — better fish, fewer of them, and more of a hunt.",
-  cz:"ua}gG|q_lPBf@`@dAx@XhAnAh@z@VXX`BTt@Nr@bAXb@Tn@hBDzA@`BLtBX|@b@VPtAJfB\\@^eA@g@d@kAt@l@f@rAd@nA_@`@Wh@M`Ao@Ri@b@VlAZp@bAQn@s@r@JDr@]pAPjBV~@h@L~@l@r@p@f@jBGhA`@pANpAf@^\\f@y@`Cr@j@rAv@JhBHxBx@fCLbAPbAFnB`@NDv@[p@b@LXnAN|AV~AhA`@d@n@n@jAQlA"
+  blurb:"This small, remote creek is in the Lansing Wildlife Management Area, and the DNR says access is challenging; it lists 1.68 miles. Sampling in 2017 found a viable brook trout population genetically close to its South Pine parent stock, and the DNR manages it as a brook-trout-only stream. Source: the Iowa DNR's Lansing Wildlife Area Creek page (summary updated Jan 5, 2026).",
+  fish:"Wild brook trout are present. In 2025 the DNR stocked 519 brook trout fingerlings.",
+  cz:"ua}gG|q_lPNfBnA^hCzC`AtE|BrAl@jCUr@VpEjAnAV~D|AkEbC|Dy@hASfBiAJEz@bAfBjB{Ah@XWtCRnB`EnD|@vHjArAy@`CfCbBTbFhA`DZpCExAr@Xe@pAx@`@\\jFhDlCMjB"
 },
 {
   id:"iaLittlePaintCreek", name:"Little Paint Creek", color:"#a8552a",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"stocked", geom:"iadnr", wildTrout:"Brown, Brook",
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TLP03", wildTrout:"Brown, Brook",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as catchable trout water.",
-  fish:"Wild brook, brown trout present. Stocked with catchable-size trout through the season, so expect company on stocking days.",
-  cz:["yrofGzgykPZhCaBJuBgAiA_@iBOmAp@mAnA}@nCwAbA[p@s@jB{BtDiAhAiAtCwCfHeAbDmBIo@~By@`CuBe@q@iDsAiAgBaDwA]aA{AuBKiFfDkCjBgBxAgCr@_ClAeEdDiBrD}B`@yD?}BtC{CrBeBAy@l@iACxBfBCpEuAlCuAEcB}@V`EuBTsBv@iA?q@t@J~BiBbCcBf@uBZ{@LwBbCsAw@yBcDw@_BoA}AaA_@gAeAgBZmAEoAGmPtS","uxufGl}{kPbIZnGfD"]
+  blurb:"Little Paint Creek is in Yellow River State Forest, about 3 miles west of Harpers Ferry just off State Forest Road (CR B25); the DNR lists 3 miles. Catchable rainbows are stocked weekly from April through October; there are wild browns (160 per mile, to 12 inches, after the June 2013 floods) and, above the last camping area, South Pine-strain brook trout (122 per mile, to 13 inches, in 2018). Bank access is easy, with a small paved accessible area, and the forest has non-electric campsites, restrooms and trails. Source: the Iowa DNR's Little Paint page (summary updated Feb 17, 2021).",
+  fish:"Wild brown and brook trout are present. In 2025 the DNR stocked 14,463 catchable rainbow trout (Mar–Oct) and 21 broodstock rainbow trout.",
+  cz:["kmsfG`n{kPk@I`@hArAXZ`Cw@xDoBnBo@wBoAM^hCe@zAmCKoAfAcBIMf@f@zAgDjFsCPoA]YjAkC~BmB_EyEoGiBqAgBhAi@cBy@p@uBMuAl@eDbFu@bCkEbG","mmsfG`n{kPvEo@jGcGtFVhAaAdAuCzGiGrBb@rCsDf@BzKgHpAd@x@tA`Bd@zAjDrAl@^~CfC~@@aB~@g@X}BfAn@r@IpBeHzCoFb@}Br@WdAeDvA}@lAmDfA_@rAkDxDyBdHpDv@aAa@yB","uxufGl}{kPvAa@T_AhA?xAnBbBv@dAGvCdC"]
 },
 {
   id:"iaLittleTurkeyRiver", name:"Little Turkey River", color:"#a8552a",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"stocked", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TLT28", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as catchable trout water.",
-  fish:"Wild brown trout present. Stocked with catchable-size trout through the season, so expect company on stocking days.",
-  cz:"mkecGnrkkPOB]MO?s@UOWUm@IUCk@FQNMHEAWOW]u@SWM]CM[BWXYZMHOOI[@W?g@GOM[EMSOKAKQIc@EaA@m@Eq@Ii@?oABm@Dm@A[Kc@Q[g@c@i@ASVMPQDWGGMJa@NUNm@Ia@SOOMKOBONGPS@QKAOEEI]K[@[Ba@HWREF"
+  blurb:"The Little Turkey River trout water is in the Hoffman Wildlife Management Area, 3 miles east of Colesburg off Hubbard Road; the DNR lists 1.2 miles. Rainbows are stocked from April through October, and stream-reared and wild browns are present. Recent floods have shifted the channel above the parking lot; primitive camping is allowed on the state land. Source: the Iowa DNR's Little Turkey River page (summary updated Feb 10, 2026).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 4,687 catchable rainbow trout (Mar–Oct), 24 broodstock rainbow trout and 1,000 brook trout fingerlings.",
+  cz:"mkecGnrkkPaCw@c@aBb@aAwA{CkBr@GyAqAcCWwLqAcA{@n@i@Sj@eBy@yAf@s@kB[kAh@"
 },
 {
   id:"iaMaquoketaRiver", name:"Maquoketa River", color:"#0e6f7d",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"wild", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"wild", reachClass:["stocked","wild"], geom:"iadnr", dnrCode:"TMR22", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as fingerling-stocked or natural reproduction.",
-  fish:"Wild brown trout present. Put-and-grow or naturally reproducing rather than catchable-stocked — better fish, fewer of them, and more of a hunt.",
-  cz:["s~mcGx~`nPjE_DjD`AvGAzCeFdFeBzB`CjCj@dDlGhCxFxD@hD^bCdDrCsCVsEaBoAkCs@pBkD}CgE~Bu@fDiDbC_BrCUj@oFCsFZaGbB_JlDrAlDEnCgExHbBbDO|DVvCgAP_HcBuFhGyB|DPrBaCjEyB|ByDlDx@jBiC[}FzCmCtG\\zDM`DYbFq@hEl@|C`BvCiHnCuErDjA","umfcG`d}mPjFaPvIyC~Em@`LgOrRs_@bL|UxTsL~OcA`Ek_@vM|AdSsDfSrI|OmTs[kDy]qB"]
+  blurb:"The upper Maquoketa holds trout year-round from Joy Springs down to Backbone Lake, 8 miles on the DNR's list, and is stocked with catchable rainbows from April through October around the area 3 miles southwest of Strawberry Point off 400th Street. It also has naturally reproducing browns. The corridor is a mix of state land, trout-stream easements open to public fishing and private land, so follow the posted signs. Source: the Iowa DNR's Maquoketa River (trout portion) page (summary updated Feb 10, 2026).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 4,947 catchable rainbow trout (Mar–Oct) and 23 broodstock rainbow trout.",
+  cz:["u~mcGx~`nPdDuCjBk@lClCdECbAaBvAo@t@cCbDc@tBmApAfAAtBhAS|Ad@bBhFtBrBr@nDdB_@`Dr@~@QN|ArDtAb@aBpAmARsAWcA\\sBgB]i@vAgByAQq@ToAhAS^cA{BoAk@_EdAUv@~@h@GrBeBZuCvCBr@bAx@IVyDOcBzAeBkA{IfA{BTsFlB}Bf@Sr@`@x@zC|Cm@pB_EnB?zE~AvAu@|DrAjAUx@kAlAPr@y@b@_Dk@kA}BqANkDh@yAtAk@bIb@jBeCjAJtAcCzBGXeCd@u@xAD~@x@hBs@RcAw@}ErCsDrDg@~FnBn@]p@uBdBx@pGw@bCxAl@i@z@P`BnAr@{BhAy@n@gEdAYz@oBtBAt@tA","umfcG`d}mPKgB`@uFfAeEfA_AxBrAz@yCp@[p@Vf@lAl@sAz@CNfBf@PfBiCrBaAhFiNtB@|DkErE{M`@{H~@e@~BIfC|AfA|BRzDsA`FvCvA~E\\fA]b@k@CeD\\uBhByAlDp@lGs@pFpCtDd@|AqA{@mD|ByHmAwCn@aCEqDvAaEl@kGpAqBbCu@vAl@jC~KvBvFb@RfAUbFwD^oD~EkBhKdI|B]|AvAjHeAdDcCvA{Hk@iDmEwMeD{A{DQmB~@uFxImBtG{Aj@yRaEiBuAk@{C"]
 },
 {
   id:"iaMiddleBearCreek", name:"Middle Bear Creek", color:"#0e6f7d",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"wild", geom:"iadnr", wildTrout:"Brown, Brook",
+  troutClass:"wild", geom:"iadnr", dnrCode:"TMB96", wildTrout:"Brown, Brook",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as fingerling-stocked or natural reproduction.",
-  fish:"Wild brook, brown trout present. Put-and-grow or naturally reproducing rather than catchable-stocked — better fish, fewer of them, and more of a hunt.",
-  cz:"qhjhGtkjnPYDWCSGSIQMIG[SQEKEGECE?I@GBM?I?IIKMCKA[EGAG?CBCDGHIHM@I?c@JYLKF]\\QJOJIPMXGLCRCZGZJd@Fh@"
+  blurb:"Middle Bear Creek is about 7 miles northeast of Highlandville and runs entirely through private land: only the lower quarter-mile is open to public fishing, and the rest needs the landowner's permission. The DNR lists 1.3 miles. Wisconsin Ash Creek-strain brook trout stocked from 2006 to 2010 took hold, and a 2017 survey at two sites found good numbers of brook trout to 12 inches, with good reproduction. Source: the Iowa DNR's Middle Bear Creek page (summary updated Feb 8, 2022).",
+  fish:"Wild brown and brook trout are present. The DNR's page gives no stocking figures.",
+  cz:"qhjhGtkjnPyAO}A{@GeAeAM{DvBo@dCRnA"
 },
 {
   id:"iaMinkCreek", name:"Mink Creek", color:"#a8552a",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"stocked", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TMI33", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as catchable trout water.",
-  fish:"Wild brown trout present. Stocked with catchable-size trout through the season, so expect company on stocking days.",
-  cz:"a_udGjclnPXo@b@SRGJNDNE\\FNNGAYLq@Lc@Da@FWRCJQXAp@AlAm@^]b@_@XgAD_A\\[b@?L_@Bw@B[\\Yd@DTp@Lb@^ELi@^]NHL`@ZENk@PYPENGZP?d@Sb@I^Nr@PR`@IR]PMf@Tp@EXQb@c@NSd@G\\En@J^Bf@P^m@\\gBj@oAv@kCJgBH_AHi@JgDVsB"
+  blurb:"Mink Creek is on private land 1.5 miles north of Wadena, with access on Bighorn Road; the DNR lists 0.9 miles. Catchable rainbows are stocked weekly in April, May, June, September and October, and in 2011 the DNR found French Creek-strain browns reproducing for the first time (384 per mile, fish to 18 inches). It is open to fishing only, and no permission is needed. Source: the Iowa DNR's Mink Creek page (summary updated Feb 8, 2022).",
+  fish:"Wild brown trout are present; the DNR also lists smallmouth bass and bluegill. In 2025 the DNR stocked 3,142 catchable rainbow trout (Apr–Oct), 6 broodstock rainbow trout and 4,000 brook trout fingerlings.",
+  cz:"a_udGjclnPhAkAf@hAj@mD`Ca@zBcB`@gCdAc@b@aCn@@x@xAf@oA|@j@l@mAn@IPh@c@zAh@z@|@y@pAX~AuAdEPpCkJbAmN"
 },
 {
   id:"iaMossyGlenCreek", name:"Mossy Glen Creek", color:"#0e6f7d",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"wild", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"wild", geom:"iadnr", dnrCode:"TMG22", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as fingerling-stocked or natural reproduction.",
-  fish:"Wild brown trout present. Put-and-grow or naturally reproducing rather than catchable-stocked — better fish, fewer of them, and more of a hunt.",
-  cz:"{wscGfe_mPI?_APa@VK^]d@OPODYIMFQb@M^IHCZMXONSNOEGMO@g@LSXOVSXGLIDSMESAUKUMDORUPOPODWAQDSXe@ZG@EG?UGMMGQEO@IPS^OJYLw@TM?M@OFGLIPIDE?AGEUIMKOSDG^@XFLANKJOCK?"
+  blurb:"Mossy Glen Creek is in Mossy Glen State Preserve, about five miles northwest of Edgewood at the end of the Level B section of Eagle Avenue; park in the small lot past the farmstead and walk about 0.4 miles. The DNR lists 0.5 miles. It holds a low-density, self-sustaining brown trout population in the preserve and on some neighbouring private land, where fishing needs the landowner's permission. Source: the Iowa DNR's Mossy Glen page (summary updated Feb 10, 2026).",
+  fish:"Wild brown trout are present. The DNR's page gives no stocking figures.",
+  cz:"{wscGfe_mP{AZiAdBm@CeAjCi@`@_AMmAdBm@kAwD|BeAu@eEpCq@{@G|Ag@F"
 },
 {
   id:"iaNorthCanoeCreek", name:"North Canoe Creek", color:"#0e6f7d",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"wild", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"wild", geom:"iadnr", dnrCode:"TNC96", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as fingerling-stocked or natural reproduction.",
-  fish:"Wild brown trout present. Put-and-grow or naturally reproducing rather than catchable-stocked — better fish, fewer of them, and more of a hunt.",
-  cz:"ivxgG~xcoPVWRWNETOHSHe@NQRMPCLCFSEYK_@IUBSRKb@?f@^VR^E\\Ob@O\\?LFFZ?j@Ax@DXNNh@Dd@VPEPONSLc@Be@?]HWNSLCTBH^@d@Cl@Cj@AVAVBFJ?FQNYJMTG"
+  blurb:"North Canoe Creek is about 7.5 miles north of Decorah (Locust Road north 5.6 miles, then Canoe Valley Road west 1.3 miles). Only its lower 0.6 miles is open to public fishing; the rest is private and needs the landowner's permission. Brown trout are no longer stocked in this watershed; the creek's brown trout fingerling stocking ended in 2016. Source: the Iowa DNR's North Canoe Creek page (summary updated Dec 10, 2021).",
+  fish:"Wild brown trout are present. The most recent stocking on the DNR's page is from 2016: 8,400 brown trout fingerlings.",
+  cz:"ivxgG~xcoPhDgDUcBX_@bBr@lC]JzC~Aj@r@g@Z_Cr@SBvEdAaA"
 },
 {
   id:"iaNorthCedarCreek", name:"North Cedar Creek", color:"#0e6f7d",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"wild", geom:"iadnr", wildTrout:"Brown, Brook",
+  troutClass:"wild", reachClass:["stocked","wild"], geom:"iadnr", dnrCode:"TNC22", wildTrout:"Brown, Brook",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as fingerling-stocked or natural reproduction.",
-  fish:"Wild brook, brown, brown trout present. Put-and-grow or naturally reproducing rather than catchable-stocked — better fish, fewer of them, and more of a hunt.",
-  cz:"gqaeGrz}kP]yCiBkDq@qCFmDvAcBp@wA?iCTwAj@aBYkB|@gAYeAr@Sv@cA?cEd@cBdA_JcBkHqAoJ|EyEkBeH_CHeGp@D}EtBsGa@sD_BgCeB_@yBv@iA~DMzFmFrDcEyCaFmC}B~@kA}DaAjAiBcD{@gD}DoFmGkAmEyBeAnBaBi@mGsAqEn@eDqA_Cj@SaCaDr@wA{CaBaA{AqB_BOoAt@}BZcB_BwDlC}Ap@}BdAsFDgFi@YgHw@SeBo@gAkBwByAmCj@mCsA"
+  blurb:"North Cedar Creek is about 3 miles west of McGregor off CR B60 (Ivory Road); the DNR lists 2 miles. Above Ivory Road it is stocked twice a month from April through October with catchable rainbows, and both browns and brook trout reproduce naturally (168 browns and 120 brook trout per mile in 2011, to 14 and 12 inches). It is a small stream under heavy tree cover, and primitive camping is available. Source: the Iowa DNR's North Cedar Creek page (summary updated Feb 8, 2022).",
+  fish:"Wild brown and brook trout are present. In 2025 the DNR stocked 2,000 catchable rainbow trout (Apr–Oct) and 7 broodstock rainbow trout.",
+  cz:["uvceG~lykPm@UwAj@QXVj@iA`@KcA_CmAmCKiCjBiG{C}B~@Qw@`@y@{@]yCnAu@u@MiCqAb@IuBe@}@q@Ia@iAk@p@gAMB~A}Ac@]l@w@Is@[KkAuAXcBjACrB}CMKhAmBLiBo@sA`@kA_@_Ad@{BkAb@uEe@y@}@VP_C{Bf@U}AiA_@A_AyAEi@x@k@o@mBb@mAwA","gqaeGrz}kPcAyAl@mBmCc@p@yBgAkBV_A_@uApBoAIq@~@aAu@e@l@_Bq@{@nBq@DqDe@UhA]g@_BPkA`@@Xz@\\y@PaF]YCaA|@WbA{IuBcIImBsAg@A_B^aBhB_BRsApBs@NwA_@qBuBmAaAfCm@{ByEdAcBo@~@oFtAoAh@gCkAa@\\wBWgC}@@WuAk@a@aAr@mBQOp@^r@}An@@dI}@lD{H^aA{@G_CyAQgAiAaACa@fBgA[aAuE_@vBc@CaCiEqAc@t@oBq@]m@qDoGcAs@iA{CTs@m@A_A"]
 },
 {
   id:"iaPattersonCreek", name:"Patterson Creek", color:"#a8552a",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"stocked", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TPA03", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as catchable trout water. Access is at least partly by public fishing easement across private land — fish and walk the stream corridor, don't leave it.",
-  fish:"Wild brown trout present. Stocked with catchable-size trout through the season, so expect company on stocking days.",
-  cz:"{|pgGb}ymP@fBKj@Ab@a@zAgAhB}C~@kATkCJ}@Mg@Dk@BC`@q@rADvCr@vAJb@I\\cA~A}@CK`ATTVEP^DT?\\f@jANpA[t@k@Ti@G{@ZRx@l@~ACzAZz@ONc@XKv@MrAk@tAL`@^rANn@dAvB|@tBtAzAPFn@Gb@Jl@TQ`Ae@dAi@?c@m@y@Ju@nARvASz@N|@v@pBSVWPKIe@Mo@CaBb@_@PoAYg@["
+  blurb:"Patterson Creek is about 4 miles northwest of Waukon; the DNR lists 1.4 miles. Catchable rainbows are stocked weekly in April, May, June, September and October, and browns were found reproducing for the first time in 2011 (1,492 French Creek-strain browns per mile, fish to 14 inches). It runs through lightly grazed private land open to public fishing, with easy access. Source: the Iowa DNR's Patterson Creek page (summary updated Feb 8, 2022).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 5,332 catchable rainbow trout (Apr–Jun, Sep–Oct) and 13 broodstock rainbow trout.",
+  cz:"{|pgGb}ymPKdEiAdDuFfB}GCeApBCrCdA|Ck@`ByABQ~@z@h@`AzF_An@mB@zAjI{@f@_A`FhEpLxA`AzBNPn@eAhB{AeAqAfAL~BYnAhAjDgEGaAv@{Bw@"
 },
 {
   id:"iaPineCreek", name:"Pine Creek", color:"#0e6f7d",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"wild", geom:"iadnr", wildTrout:"Brown, Brook",
+  troutClass:"wild", geom:"iadnr", dnrCode:"TPI03", wildTrout:"Brown, Brook",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as fingerling-stocked or natural reproduction.",
-  fish:"Wild brook, brown trout present. Put-and-grow or naturally reproducing rather than catchable-stocked — better fish, fewer of them, and more of a hunt.",
-  cz:["}u{gGdsfnPo@{BJ{AlAqA~AmAnB[nEiAdAuAjAaBZ{AC{CR}BAcGlB_Cr@_Cr@_BBkBNoDRyCGkB}@qEgCsC?gBoAwDwA{Dx@gD@{CjAwBpAaDb@mC_A_Bm@kA~@mAf@eBfAKN{Ax@oBBuB|AwAAoB?mAo@oAt@aD[iBdBk@PaCwAMXyBEaBViCx@qCFgC{@_BRqCdAgBl@wBR}BaAuEC_EAeFXsF~@kAPsCM{C\\qAAmCzAb@l@uA","co{gG|lzmPaW~S"]
+  blurb:"Pine Creek is on the Pine Creek Wildlife Management Area, 2 miles northeast of Sattre on Balsam Road (CR W60); the DNR lists 2.5 miles. Wisconsin Ash Creek-strain brook trout introduced from 2006 to 2010 are reproducing in the upper mile, and browns are most common in the lower 1.5 miles; the DNR's latest figures are 292 browns (to 11 inches) and 317 brook trout (to 10 inches) per mile. The area has good hiking, fair bank access and primitive camping. Source: the Iowa DNR's Pine Creek page (summary updated Feb 7, 2022).",
+  fish:"Wild brown and brook trout are present. The DNR's page gives no stocking figures.",
+  cz:["}u{gGdsfnPgA{CbAiBtC_CnHoAxDoE[wCj@wCEwHzBgCb@mChA_CQq@f@yIWc@FuD_EiFYaAVcA_DcIEwA|@iBDoEhA_AbBaEJ{CiBoAEkAdAu@EwAhBBV{B`AqBCkB^mAbBg@K_Aq@c@ReBm@e@JeA|@y@w@wAFs@bAEv@}@AkCoAZO_@z@_Ca@cAd@kAMgA|@}@ZkDuAuBd@uA_@{CJ_@tAC~@gDmAgGDkSzAuBFgCm@qA`@mAn@IWqEb@Q\\r@bADZi@Wo@","co{gG|lzmP_Fq@mHvC}@hAd@jAQxAz@jCeG|D"]
 },
 {
   id:"iaPineSpringCreek", name:"Pine Spring Creek", color:"#7b2d8e",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"restrictive", geom:"iadnr", wildTrout:"Brown, Brook",
+  troutClass:"restrictive", geom:"iadnr", dnrCode:"TPS96", wildTrout:"Brown, Brook",
   troutRegs:"Continuous open season; Artificial lures only; Catch and release all Brook Trout; All other trout no length limit, 5 daily bag, 10 possession limit.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as restrictive-regulation stream. Access is at least partly by public fishing easement across private land — fish and walk the stream corridor, don't leave it.",
-  fish:"A restrictive-regulation stream: special rules apply and they are stricter than the statewide trout regs. Wild brook, brown trout present. Read the current Iowa DNR trout regulations before you fish it.",
-  cz:"qixgGxtioPvAKjAPfAQb@}Af@gBNgAd@sBAw@u@w@Fq@j@i@Qc@q@YGw@T_@Mu@i@}AqA}BaA_@sAWs@c@[eAOsAMk@^oA|@u@n@St@i@Hk@a@e@Is@NmAj@i@n@eAf@m@l@G`@LZ]?aCd@gCRwBIoAGyA[eBE}ED_CIuA^UhAJL_@f@{Cf@_E`@gARs@t@oACiCg@qEUmEOqFGaFBwBPkDU}C}@c@k@uA_@oBC{GC}Ck@gC"
+  blurb:"Pine Spring Creek winds about 2 miles through the Seed Savers Exchange Heritage Farm, 6.5 miles north of Decorah off North Winn Road (W34). It holds a restored, naturally reproducing population of South Pine-strain brook trout, plus browns that move in from other streams. Brook trout are catch-and-release and lures must be artificial. Seed Savers allows no tobacco on the property (it protects heritage tobacco strains from mosaic virus) and no alcohol. Source: the Iowa DNR's Pine Spring Creek page (summary updated Feb 8, 2022).",
+  fish:"Wild brown and brook trout are present. The most recent stocking on the DNR's page is from 2021: 2,016 brook trout fingerlings.",
+  cz:"qixgGxtioPdERd@_@`CaKAw@{@yAx@kAcAk@HkB}@{DgAaAwDaAkA_Fr@iBxCiBg@qAJqBbC}CjBW?aCz@cHo@kFIsLrBSrAqJvBcGcAqJg@mOZ{KUkB}@e@aAsCU{CNyGw@{D"
 },
 {
   id:"iaSouthCedarCreek", name:"South Cedar Creek", color:"#a8552a",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"stocked", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TSC22", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as catchable trout water.",
-  fish:"Wild brown trout present. Stocked with catchable-size trout through the season, so expect company on stocking days.",
-  cz:["emldGzk|kPt@_Bt@wBLcADc@Ho@RQl@NTd@HVZTb@HNF`@bAr@~BAb@Wl@K@GXZZf@Dv@HVVXF\\DdAH~@MdAmAn@eBGe@C_@Z[l@C^GRKH`@AhA?`@LLv@G`@KTCTMNWLBVPD\\Cf@AVJRZNNGRSROND","c_mdGla|kPx@H`@Jh@Rf@ZXVVb@HLLVLPDRp@fALT^\\Ph@"]
+  blurb:"South Cedar Creek is about 2 miles south of Garnavillo, reached from Jigsaw Road; the DNR lists 0.5 miles. Catchable rainbows are stocked weekly in April, May, June, September and October; French Creek-strain brown fingerlings were stocked from 2006 to 2017, and recent sampling found browns reproducing naturally. Source: the Iowa DNR's South Cedar Creek page (summary updated Feb 8, 2022).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 3,300 catchable rainbow trout (Apr–Jun, Sep–Oct) and 15 broodstock rainbow trout.",
+  cz:["emldGzk|kPjBwE`@_DXIlAzA~@Nf@lAr@~Bm@fBZ`@jEz@hBIlBmCBwBnBg@TxC~C{@b@\\@bBb@TfAe@","c_mdGla|kPfE|AtDtG"]
 },
 {
   id:"iaSouthPineCreek", name:"South Pine Creek", color:"#7b2d8e",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"restrictive", geom:"iadnr", wildTrout:"Brown, Brook",
-  troutRegs:"Continuous open season; Artificial lures only; Catch and release all Brook Trout; All other trout no length limit, 5 daily bag, 10 possession limit",
+  troutClass:"restrictive", geom:"iadnr", dnrCode:"TSP96", wildTrout:"Brown, Brook",
+  troutRegs:"Continuous open season; Artificial lures only; Catch and release all Brook Trout; All other trout no length limit, 5 daily bag, 10 possession limit<br><b>On the DNR stream page:</b> Brook Trout — Daily Bag Limit: Zero, catch and release only in posted area; Possession Limit: Zero, catch and release only in posted area; Length Limit: Catch and release only in posted area; Other: Catch and release only in posted area. Artificial lures only in posted area. Artificial lure means lures that do not contain or have applied to them any natural or human-made substance designed to attract fish by the sense of taste or smell. · Brown Trout — Daily Bag Limit: brown trout only - 5 fish; Possession Limit: 10 trout; Other: Artificial lures only in posted area. Artificial lure means lures that do not contain or have applied to them any natural or human-made substance designed to attract fish by the sense of taste or smell.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as restrictive-regulation stream.",
-  fish:"A restrictive-regulation stream: special rules apply and they are stricter than the statewide trout regs. Wild brook, brown trout present. Read the current Iowa DNR trout regulations before you fish it.",
-  cz:"w`xgGd`pnP`@Zh@M^c@h@Un@Mn@Sp@_@n@a@d@g@n@P^BZgAh@k@Z{@@cAZ]FiAXm@z@UHoAGyA~@Yn@Xd@{@FiA^?VY`@{@XaAE}@R_APi@VPb@Pd@KZJ\\]Ne@Zq@Rw@Na@D_@\\k@RQh@St@e@h@Un@aAPs@Ze@r@]h@u@h@wAg@sAFs@p@Tj@YHuA`@s@f@Al@h@Vk@PoAB_Bf@sBTaBZkA~AdAjAoB"
+  blurb:"South Pine Creek is about 1.5 miles southeast of Sattre, a small open stream in a narrow valley of floodplain prairie; the DNR lists 1.3 miles. Brook and brown trout both reproduce naturally, and since 2022 brook trout are catch-and-release while browns may be kept, artificial lures only. Getting there means a walk of about a mile on a mowed trail from the parking lot on Spring Creek Road; primitive camping is allowed on the wildlife area. Source: the Iowa DNR's South Pine Creek page (summary updated Jan 14, 2022).",
+  fish:"Wild brown and brook trout are present. The most recent stocking on the DNR's page is from 2017: 431 brook trout fingerlings.",
+  cz:"w`xgGd`pnPv@b@`AiAzDgApAqA~@j@hBmDG}Aj@Y?oB|Ac@E}Cr@]z@\\r@qCVIBh@nAuCCsAh@qBTb@lBHlByEAo@rDiBbAwAF{@pB_Bn@oBo@gALo@xAJ`@uCnBf@`@uF`BaHh@IdAjCr@uC"
 },
 {
   id:"iaTenMileCreek", name:"Ten Mile Creek", color:"#0e6f7d",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"wild", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"wild", geom:"iadnr", dnrCode:"TTM96", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as fingerling-stocked or natural reproduction.",
-  fish:"Wild brown trout present. Put-and-grow or naturally reproducing rather than catchable-stocked — better fish, fewer of them, and more of a hunt.",
-  cz:"edogG~~toPViAP{@`@_APg@Vm@X_@\\O\\UNM`@GV[DQ@[@WASA_@E]FOTS"
+  blurb:"Ten Mile Creek is about 2 miles northwest of Decorah; a short section on the Falcon Springs Wildlife Management Area is open to public fishing, and the rest is private and needs the landowner's permission. The DNR lists 0.2 miles. A January 2020 sample found 217 brown trout per mile, 5 to 14 inches. Source: the Iowa DNR's Ten Mile Creek page (summary updated Aug 1, 2023).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 1,002 brook trout fingerlings.",
+  cz:"edogG~~toPtB{G~CwB?wC\\c@"
 },
 {
   id:"iaTroutRiver", name:"Trout River", color:"#a8552a",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"stocked", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TTR96", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as catchable trout water.",
-  fish:"Wild brown trout present. Stocked with catchable-size trout through the season, so expect company on stocking days.",
-  cz:["c_`gGvronP_Aa@Q}@y@DWaBy@aAw@[qBTaAi@cB{@g@_@?c@v@[p@y@CwAW{Ay@}@e@t@w@Y_@m@u@c@}@o@TmA`@_@DaAGm@]Ek@Fe@i@g@a@a@o@KcAIiAJ_AJo@[w@q@Wa@d@Cx@STi@q@eAa@c@hAIzAYl@s@i@u@b@gAZ","g_cgG|lnnPo@VwAgAXyAi@gBw@`@StAm@XW{@AkAeBb@m@f@sAGA|Bf@hABbAy@h@{@WF`Br@v@f@zAy@|A"]
+  blurb:"Trout River is about 5 miles southeast of Decorah off 133rd Avenue; the DNR lists 5 miles. Catchable rainbows are stocked weekly from April through October, and it has a self-sustaining brown trout population (224 per mile, fish to 15 inches, in 2009). Primitive camping is available on the Trout River Wildlife Management Area. Source: the Iowa DNR's Trout River page (summary updated Feb 4, 2022).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 6,975 catchable rainbow trout (Apr–Oct), 18 broodstock rainbow trout and 517 brook trout fingerlings.",
+  cz:["g_cgG|lnnPu@TyAiA@w@p@iAaAaAo@^u@~Be@w@DoAe@SaB|AcBUSjBfAjCk@jAsAg@?dB|AhCCx@s@r@","c_`gGvronP_Aa@K}@_ADuAkEqD^kEiCzBaCKsBu@cBi@I_A|@s@wAuBuAR_Ad@ILaBKi@_BBsAyA]uDXwB]k@aAM[nBgCyAe@nEiAc@}B~@"]
 },
 {
   id:"iaTwinBridgesCreek", name:"Twin Bridges Creek", color:"#a8552a",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"stocked", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TTB28", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as catchable trout water. Access is at least partly by public fishing easement across private land — fish and walk the stream corridor, don't leave it.",
-  fish:"Wild brown trout present. Stocked with catchable-size trout through the season, so expect company on stocking days.",
-  cz:"osdcGreflPKS?]CK?WIUQMe@QYW_@e@e@w@[u@Wc@g@aAWaAUw@IaASi@SIOGYSo@KEMAMIg@Qc@Qc@A]?UGmAEq@Ac@Ge@GOOQi@o@K[OKc@SISK]IyACiBAiBBkAFk@Py@@e@Cm@CiAGk@Aq@P{AJ[EkASo@YWUc@QGSMU_@IWKG_AWe@]Ya@YYOYq@s@WW"
+  blurb:"This stretch of Elk Creek runs through Twin Bridges County Park, just south of Highway 3 about 5.5 miles west of Colesburg; the DNR lists 0.9 miles. Catchable rainbows are stocked regularly from April through October, and a low-density population of stream-reared and wild browns is present. A bank-stabilization project in 2025 added boulder clusters, and the park has electric and non-electric campsites. Source: the Iowa DNR's Twin Bridges page (summary updated Feb 10, 2026).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 4,464 catchable rainbow trout (Mar–Oct) and 30 broodstock rainbow trout.",
+  cz:"osdcGreflPUeBiBsA}BeE{AcGqBw@s@mCWuFwC_EOmH^cEAgMaC_DaBm@}CqD"
 },
 {
   id:"iaTwinSprings", name:"Twin Springs", color:"#a8552a",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"stocked", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TTS96", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as catchable trout water. Access is at least partly by public fishing easement across private land — fish and walk the stream corridor, don't leave it.",
-  fish:"Wild brown trout present. Stocked with catchable-size trout through the season, so expect company on stocking days.",
-  cz:"}eggGl_loPBY?U?]?]@WEc@E[I[]SIs@K_@a@KM[UGe@Ok@?U?WF]CQV]Bc@?QOM[F]E_@I_@Oe@Oo@Cg@La@AYCUUMWYd@g@AYAWAYG[?YKWA_@@m@U]@q@M]Mc@Io@HeAFs@[UQk@U}@Wi@Qu@Gq@?{@Jo@Lo@J]Lq@WYWKc@c@g@Ya@I[]Oi@"
+  blurb:"Twin Springs runs through a city park on the west side of Decorah, near the Upper Iowa River; the DNR lists 0.5 miles. Catchable rainbows are stocked weekly from April through October, and browns reproduce naturally (400 per mile, fish to 11 inches, in 2011). Bank access is easy, and the park has electric and non-electric campsites, a playground, restrooms and trails. Source: the Iowa DNR's Twin Springs page (summary updated Feb 8, 2022).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 7,595 catchable rainbow trout (Apr–Oct) and 13 broodstock rainbow trout.",
+  cz:"}eggGl_loPPuBqAkEuBkAqDj@w@u@Jg@u@sCPcBu@e@j@eAyAwKRoB}AsDa@aCz@yEoDkBYaA"
 },
 {
   id:"iaWestCanoeCreek", name:"West Canoe Creek", color:"#0e6f7d",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"wild", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"wild", reachClass:["stocked","wild","wild"], geom:"iadnr", dnrCode:"TWC96", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as fingerling-stocked or natural reproduction. Access is at least partly by public fishing easement across private land — fish and walk the stream corridor, don't leave it.",
-  fish:"Wild brown trout present. Put-and-grow or naturally reproducing rather than catchable-stocked — better fish, fewer of them, and more of a hunt.",
-  cz:["_h|gGvdkoP}@MeAn@k@}@WwBWoES{Bu@?k@q@uAaBUsBaAcAQeDf@m@l@q@\\Iz@P`@l@dAW~@E^}Af@sBr@y@dAv@bAv@vAhAbAhA|Aj@dBClAn@|@E^iAt@Ln@s@b@g@RsA","aczgGpbgoPdAiGi@iAzAq@xBt@Gl@zAt@dB`@xB~DfF`D|Ag@rAiCm@mKoBsGi@eEk@kH\\sHCaDfBkGfAqG~@cE","ovxgGjldoPf@wBx@}AhCN~Aj@HeCrAjBnCg@lAqAt@gBzAiCy@_E"]
+  blurb:"West Canoe Creek is about 5.5 miles north of Decorah off CR W34, 320th Street and Fox Hollow Road; the DNR lists 3 miles. The stocked part gets catchable rainbows weekly in April through June and September through October (not July or August, when it is usually too warm), and the lower 1.75 miles open to the public is not stocked but holds wild browns. The whole stream is private land: open stretches are signed and are for fishing only. Source: the Iowa DNR's West Canoe Creek page (summary updated Feb 8, 2022).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 1,850 catchable rainbow trout (Apr–Jun, Sep–Oct) and 4 broodstock rainbow trout.",
+  cz:["_h|gGvdkoP_AMcBl@oA_O_@c@i@j@wBiDO}BcA_AI{C~AmBtAb@Pj@lC_@bBsG|HjGfAh@~CBp@j@|@QN}@r@LrAw@\\yB","ovxgGjldoPd@qDn@Gh@mArAD^pAv@j@V?N_AKyA`BhBlBs@rAb@j@qEhAQv@wBD_C_A_A","aczgGpbgoPzAaGeAA`@kCrDx@Ar@`ApAp@sAtBvBzAlDx@?zDhDf@?r@oCx@e@IoEe@yBFuB{@{C_BaC?yCu@{Fh@kEWkGV_Ap@MlA{Jd@gAFaCz@{B"]
 },
 {
   id:"iaWestFrenchCreek", name:"West French Creek", color:"#7b2d8e",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"restrictive", geom:"iadnr", wildTrout:"Brown, Brook",
+  troutClass:"restrictive", geom:"iadnr", dnrCode:"TWF03", wildTrout:"Brown, Brook",
   troutRegs:"Continuous open season; Artificial lures only; Catch and release all Brown Trout; All other trout no length limit, 5 daily bag, 10 possession limit",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as restrictive-regulation stream.",
-  fish:"A restrictive-regulation stream: special rules apply and they are stricter than the statewide trout regs. Wild brook, brown trout present. Read the current Iowa DNR trout regulations before you fish it.",
-  cz:"ckugGbwylPW_@?k@K[O]e@g@WIK]CKGIE[Gi@Ca@Ie@Ci@Kk@I]DQIYKGUWWHGd@EFCNCRQj@a@NMDKKEGUO[KO@O[EQBIEWAOKA[@{@@iAHa@Bg@TMLAFQ?YNOHMRa@HS?Iu@?iACUO?[FILMJMRQL]Ac@OMIMGQAYLm@h@YB"
+  blurb:"The West Branch of French Creek is a secluded little tributary on the French Creek Wildlife Management Area, 6 miles northeast of Waukon, about a mile's walk from the parking lot; the DNR lists 0.4 miles. Its browns and South Pine-strain brook trout reproduce naturally: 744 browns (to 13 inches) and 216 brook trout (to 10 inches) per mile in 2011. Brown trout are catch-and-release and lures must be artificial; primitive camping is allowed on the area. Source: the Iowa DNR's French Creek - West Branch page (summary updated Feb 8, 2022).",
+  fish:"Wild brown and brook trout are present. In 2025 the DNR stocked 1,516 brook trout fingerlings.",
+  cz:"ckugGbwylP[}AmBmCo@cHk@g@eApCe@JyAs@[{AeEJiDfB]UGaC_BdAiBi@gB~@"
 },
 {
   id:"iaWexfordCreek", name:"Wexford Creek", color:"#a8552a",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"stocked", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TWE03", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as catchable trout water.",
-  fish:"Wild brown trout present. Stocked with catchable-size trout through the season, so expect company on stocking days.",
-  cz:"{{bgGdxfkPz@yBj@gAdAa@IwBI_CO}B[wBOPKc@PeA^a@Hk@r@K~Ac@h@[X{AE_BYT]`@o@g@q@e@N}@d@S|@GLcBLm@Z{@T}@?s@^mAOgAHs@Hi@d@Ub@}@?q@Se@q@Oc@GMt@_@^]}A^mA`@MK_AUy@_@L]SJ_AWqAEg@PIZMX_@d@_@d@DJw@Gm@a@g@q@Dm@WSc@JwADc@K_ABaAF_ARgAFgB"
+  blurb:"Wexford Creek is about 5 miles north of Harpers Ferry on the Great River Road (CR X52); the DNR lists 1.4 miles. Catchable rainbows are stocked weekly from April through October; catchable brown trout stocking ended in 2003 and catchable brook trout stocking in 2019. The whole stream is on private land where only fishing is allowed. Source: the Iowa DNR's Wexford Creek page (summary updated Feb 8, 2022).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 1,748 catchable rainbow trout (Apr–Oct) and 6 broodstock rainbow trout.",
+  cz:"{{bgGdxfkPl@}@Z{BfBy@k@{K[cAYJB_Al@u@B}@~D}@f@cCMaA_A|@}AwBfCgAC_B|AmGBkDpAqBi@qAgAEa@tAe@_ANyAp@q@]gB_A?J}@c@yB|AwA|@GHo@_@sAwAAg@q@l@uN"
 },
 {
   id:"iaWhitePineHollowCreek", name:"White Pine Hollow Creek", color:"#0e6f7d",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"wild", geom:"iadnr", wildTrout:"Brown",
+  troutClass:"wild", geom:"iadnr", dnrCode:"TWP31", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as fingerling-stocked or natural reproduction.",
-  fish:"Wild brown trout present. Put-and-grow or naturally reproducing rather than catchable-stocked — better fish, fewer of them, and more of a hunt.",
-  cz:"ekccG~{ckPe@iAUeAaBj@eCP_@iAUoCm@eC_B}@sAMk@~@qAHcAJSq@By@e@mAs@uAO_Ao@@y@_@m@Eo@B{BOu@w@_BJuA|@a@dASpA{@jBgBpAeCpBiCXm@{BLaCQaC[gBoASwAOg@Mu@Oi@S]NgBh@U`@GX[jBEjAGlAe@rA?t@Jr@RrAHrAMb@cAb@m@LQVUVIXONwAjAa@p@?fBFvB]nBMhBw@bBk@|@c@jBg@dA"
+  blurb:"White Pine Hollow Creek lies mostly within White Pine Hollow State Preserve, about 2 miles northwest of Luxemburg; the DNR lists 1.8 miles. It holds a low-density brown trout population in the preserve and on some neighbouring private land, where fishing needs permission. Access is difficult: there is a small parking area on the east side of the preserve, and the DNR says the best fishing is on the west side. Source: the Iowa DNR's White Pine Hollow page (summary updated Feb 10, 2026).",
+  fish:"Wild brown trout are present. The most recent stocking on the DNR's page is from 2019: 1,500 brown trout fingerlings.",
+  cz:"ekccG~{ckPmAuCcCfA}AKu@gGqAwByBg@u@bAuCTY{CgAsAY_BaDi@eBZmCaBaDtAuApF_GpEqBf@}@yAJeF{@aEmHgAsCnA_B~Kh@bGoBx@cEjEH|Eo@nFoDrI"
 },
 {
   id:"iaYellowRiverForestMillsRdEasement", name:"Yellow River Forest Mills Rd. Easement", color:"#0e6f7d",
   state:"IA", region:"driftless", gauges:[], primaryGauge:null,
-  troutClass:"wild", geom:"iadnr", wildTrout:"Brown, Brook",
+  troutClass:"wild", geom:"iadnr", dnrCode:"TYR03", wildTrout:"Brown",
   troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
-  blurb:"Designated Iowa trout water in the northeast Driftless. The DNR classes it as fingerling-stocked or natural reproduction. Access is at least partly by public fishing easement across private land — fish and walk the stream corridor, don't leave it.",
-  fish:"Wild brook, brown, brown trout present. Put-and-grow or naturally reproducing rather than catchable-stocked — better fish, fewer of them, and more of a hunt.",
-  cz:["_zlfGz}fmP?c@@eA]o@i@e@y@Y]HcAk@_@aAs@[S}BTcAP}@Hc@?i@Q_@[y@Wm@SmAIw@KqAEmA_@oBe@eBSy@Ee@Mk@GkAKeBIaA[iDSw@o@{D]gDUgCMgBKqAEkAFgANk@","ybmfGjxcmPl@UrAu@h@Id@[vAKz@@rAL|BRpDLpA?jD?`BSv@KT]@c@Fe@","cnmfGzydmP_@@]@SBMAMCIA","mukfGzrcmPh@`Aj@r@n@R|@j@p@X"]
+  blurb:"This is the public fishing easement on the Yellow River at Forest Mills Road, one of three places along the DNR's 25-mile Yellow River trout section where you can fish from the bank without a landowner's permission (the others are Stonebrook Park and the Volney canoe access). The section's browns reproduce in the wild and are not stocked; rainbow fingerlings are stocked each year. Source: the Iowa DNR's Yellow River (Trout Section) page (summary updated Feb 8, 2022).",
+  fish:"Wild brown trout are present; the DNR also lists smallmouth bass. On the Yellow River trout section as a whole, the most recent stocking on the DNR's page is from 2024: 22,585 rainbow trout fingerlings.",
+  cz:["_zlfGz}fmP@kB]m@eEaBgBmCp@}GeAgCo@eHmBaJy@}KwBcP_@eGVsB","anmfGzydmPyB?","ybmfGjxcmPhH}B~Tp@vC_@^gB","mukfGzrcmPtAtB~CxA"]
 },
 
 /* ================= DRIFTLESS AREA — SOUTHEAST MINNESOTA =================
@@ -16810,6 +16810,118 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   cz:["gwmhGnqvaTcRiHwSuRmHM}LcGqF|@wCyG{PXoHaBaGuFaJw@wAtCiFcFoID","efthG|puaT{FtGsDBgGdErCrAeAjNoGsAwMdd@kLbNkI`WyEdA_DfHmAj_@xDj[yCnMuEvGg@fPeGx]_Abd@}Nby@sFlOcGi@uCfC{IRcC~FkNxM}Nd[sCtTc@j^uHlf@|D`h@tGnRMvDrRtp@dApJhG~FIdL|BxEjApWbLn_@@fl@oA`LmGnKnBpPeD`Nv@hDaA~IeBdB^hUeD~IjBdN{ArU`D|QqLfm@x@j`@nEvCaAlIjAfHoAtCxJzQQhCgDnAjCbBk@~HfBrCiAxAp@dExBl@nDfIKxEtAFmArBrAfAUjGvBDP`D|Eq@LrEdBvAvDkNhCyATfJtBl@`AsBa@_OrE`IrEt@lFlRaAbDvHJj@`DhDiCpA`G~BkEJvEdBYkA~AnBrD}ArA~@nCnIq@_CwFfDl@SsDnB~BrAwBjAvAw@x@fDm@wCxDnDfAe@lB`DgDz@`J~@mB`A|B^iClFtAl@uAClB|D`BhAlEZiDpF?dA~AgAfCfDfCfB}@e@bEpBlA\\aBj@`EvDyBf@fCpAaAArBjN}@t@v@yA|EpIbBp@~C`I^cCfB^xCnBFsAjDxDEyFtDfEvAjBrEUlDfIsEfCtGhEmAzVxEtDgGlGvFzFmChCvFdAeA{@{IlDoAdEjHKzNlHQ~JzZjDtCnCc@`KrJdCjK`MzIvExKdLtC`B|ElI|BdCtFlGX`MxFv\\p_@hFuAzChEvAg@|IxP`BgCpAtCxAq@XvFvE~ChF|LbEjRcBvDnC~@@jGrBGShFbKrCnAbNhMdXxH}@|B`I`FKvFbStVhCvCzBjOqMdRc@jGbBhJ_D`D`D`MoEvCjD`DeCbBn@xAaGfE~@N|CxCqCxDlFfEkCZxD`DyB`DbBX{BjDq@|DgMl@uM`DIPuCtBKvE_IxAhAZuFnU{Eb@kDxC`B`KyGRsE`Bf@tK{Gt@kDxJ`CnDeCpInK`LVbDoEdArB~BqAbM|Mr@rDbWrAdHuJG{F|EuCmAkHnEuPrBaBRuRtByItKwIdD}{@kFkNJaFtMiPfCsHlPaLlDoM~SgJxDmKbIoG~GsA"]
 },
 /* <<< wyoming wgfd streams */
+/* >>> ne iowa dnr trout streams (generated by iowa/dnr_trout.py — re-run, don't hand-edit) */
+{
+  id:"ia_bigmillcreek", name:"Big Mill Creek", color:"#0e6f7d",
+  state:"IA", region:"driftless", gauges:[], primaryGauge:null,
+  troutClass:"stocked", reachClass:["stocked","wild"], geom:"iadnr", dnrCode:"TBM49", wildTrout:"Brown",
+  troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Big Mill Creek runs through the Big Mill Wildlife Management Area, 4.5 miles west of Bellevue just south of Mill Creek Road; the DNR lists 0.9 miles. It is stocked with catchable rainbows from April through October and has a high density of wild browns. Floodplain restoration in 2014 and 2019 opened up the banks along the upper reach; access stays difficult below the restored sites and below the mouth of the South Fork, and camping is allowed. Source: the Iowa DNR's Big Mill Creek page (summary updated Feb 10, 2026).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 7,401 catchable rainbow trout (Apr–Oct) and 35 broodstock rainbow trout.",
+  cz:["mz~`GnrogP[wDbA}AA{GtC_AXoAm@gBx@iC]qDl@eCo@yCXkBK_Cn@yCKkChAaBIoG\\iAu@yALmCYiA{AY?uA","ul_aG`iqgPmBvB{Au@oBpFwBLcA}@@~Ac@lAsCfCGZf@ATh@uArEAxBcClC{AYiAf@"]
+},
+{
+  id:"ia_brushcreekjackson", name:"Brush Creek (Jackson)", color:"#0e6f7d",
+  state:"IA", region:"driftless", gauges:[], primaryGauge:null,
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TBR49",
+  troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"This Brush Creek is 3.5 miles north of Andrew in Jackson County, just south of 200th Street; the DNR lists 0.5 miles. Only this upper section is stocked, with catchable rainbows in April, May, June, September and October; the lower creek is no longer stocked and is closed to public fishing. Source: the Iowa DNR's Brush Creek page (summary updated Feb 10, 2026).",
+  fish:"In 2025 the DNR stocked 2,830 catchable rainbow trout (Apr–Jun, Sep–Oct) and 15 broodstock rainbow trout.",
+  cz:"c`r`GtfxgPx@XZ|En@p@TnD_@lD}@~BRpEg@nBh@rA|@Yd@x@x@y@hC~@r@U|@Z"
+},
+{
+  id:"ia_littlemillcreek", name:"Little Mill Creek", color:"#0e6f7d",
+  state:"IA", region:"driftless", gauges:[], primaryGauge:null,
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TLM49", wildTrout:"Brown",
+  troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Little Mill Creek is on the Little Mill Wildlife Management Area and private land 2 miles west of Bellevue, with parking south off 216th Street; the DNR lists 0.7 miles. Catchable rainbows are stocked from April through October, and stream-reared browns are present: a 2024 sample on the public land found 56, six of them over 12 inches. Ask before fishing the neighbouring private land; primitive camping is allowed on the state ground. Source: the Iowa DNR's Little Mill Creek page (summary updated Feb 10, 2026).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 3,447 catchable rainbow trout (Apr–Oct) and 18 broodstock rainbow trout.",
+  cz:"mxy`GfahgPZwAkAmBwAm@QsDgAgCI}BsA{AIuC]g@w@@aAyE{B}BIoAoCoEg@kCiAc@eA}B_CcCg@qG_BaIYcF"
+},
+{
+  id:"ia_millcreek", name:"Mill Creek", color:"#0e6f7d",
+  state:"IA", region:"driftless", gauges:[], primaryGauge:null,
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TMC49",
+  troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"This stretch of Mill Creek runs through Felderman Park in the city of Bellevue and became a stocked trout fishery in 2019; the DNR lists 0.3 miles. Catchable rainbows are stocked from April through October, and a streambank project in the winter of 2021 improved access. Source: the Iowa DNR's Mill Creek page (summary updated Feb 10, 2026).",
+  fish:"In 2025 the DNR stocked 3,333 catchable rainbow trout (Apr–Oct) and 27 broodstock rainbow trout.",
+  cz:"wn{`Gps}fPcAuDH_A~@wAw@qHxCqD"
+},
+{
+  id:"ia_mcloudrun", name:"McLoud Run", color:"#0e6f7d",
+  state:"IA", region:"driftless", gauges:[], primaryGauge:null,
+  troutClass:"restrictive", geom:"iadnr", dnrCode:"TMR57",
+  troutRegs:"Continuous open season, Artificial lures only; catch-and-release all trout.<br><b>On the DNR stream page:</b> Brown Trout, Rainbow Trout — Other: Catch and release only. Artificial lures only in posted areas. Artificial lure means lures that do not contain or have applied to them any natural or human-made substance designed to attract fish by the sense of taste or smell.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"McLoud Run is an urban trout stream in central Cedar Rapids, along the east side of I-380; the DNR lists 2.5 miles. It is catch-and-release with artificial lures only, and every trout goes straight back; in 2024 the DNR moved 218 brown trout of 5 to 15 inches here from South Pine Creek. Picnic areas, trails, a playground, restrooms and an accessible shoreline are along it. Source: the Iowa DNR's McLoud Run page (summary updated Jan 27, 2016).",
+  fish:"In 2025 the DNR stocked 250 catchable rainbow trout.",
+  cz:"}jo_GvlonPpW{Ob@iC~C{D|D?pBf@bMeFrHg@\\z@f@HjDo@nPMhCy@jNi@dQp@dHvAjId@tGq@fA^t@{@p@`@\\zAxEt@NbGvDzDZvK`Hje@hAvAdAoA`FiAzAjC"
+},
+{
+  id:"ia_monasterycreek", name:"Monastery Creek", color:"#0e6f7d",
+  state:"IA", region:"driftless", gauges:[], primaryGauge:null,
+  troutClass:"wild", geom:"iadnr", dnrCode:"TMS31", wildTrout:"Brown",
+  troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Monastery Creek is a small tributary of Catfish Creek above the Swiss Valley Nature Center, reached through the Dubuque County Swiss Valley Nature Preserve about 4 miles southwest of Dubuque off Swiss Valley Road; the DNR lists 0.2 miles. It is hard to get to and holds a low density of stream-reared or wild brown trout; the downstream part is Dubuque County land. Source: the Iowa DNR's Monastery Creek page (summary updated Feb 10, 2026).",
+  fish:"Wild brown trout are present. The most recent stocking on the DNR's page is from 2020: 1,000 brown trout fingerlings.",
+  cz:"mozaGb``iPImArAe@GoCxCt@aAuCn@E^{An@["
+},
+{
+  id:"ia_southforkbigmillcreek", name:"South Fork Big Mill Creek", color:"#0e6f7d",
+  state:"IA", region:"driftless", gauges:[], primaryGauge:null,
+  troutClass:"wild", geom:"iadnr", dnrCode:"TSM49", wildTrout:"Brown",
+  troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The South Fork of Big Mill Creek is in the Big Mill Wildlife Management Area between Bellevue-Cascade Road and Mill Creek Road, about 4 miles west of Bellevue; the DNR lists 1.1 miles. Its wild browns sustain themselves at moderate numbers, adults mostly 8 to 12 inches, and the brook trout fingerlings stocked in recent years have left a few adult brook trout of 6 to 11 inches. Dense vegetation makes it hard to fish for much of the year. Source: the Iowa DNR's South Fork Mill Creek page (summary updated Feb 10, 2026).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 500 brook trout fingerlings.",
+  cz:"ak}`G~uogPwByBPcA]k@k@F{@{@m@LqBwD}@@]{@Li@a@YkAb@u@qB`@qDw@iATcCa@y@{AiA_@r@_BaB}Ci@IwAs@`@g@i@a@z@e@{@Bo@y@G"
+},
+{
+  id:"ia_springcreek", name:"Spring Creek", color:"#0e6f7d",
+  state:"IA", region:"driftless", gauges:[], primaryGauge:null,
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TSP66", wildTrout:"Brown",
+  troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Spring Creek is on the west edge of Orchard in Mitchell County; the DNR lists 0.8 miles. Catchable rainbows are stocked weekly from April through October, and stream-reared French Creek-strain browns are present. Upstream of March Avenue (the east side) it is private land where only fishing is allowed. Source: the Iowa DNR's Spring Creek page (summary updated Feb 8, 2022).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 4,131 catchable rainbow trout (Apr–Oct) and 9 broodstock rainbow trout.",
+  cz:"gczfGpoguPKdEnAzCr@rLo@jCqAkAeBl@O`BdBhFMpBxBADxBrA`Bb@~C|@v@zCU\\jAbAn@jAm@{@}AEsAl@S`Ap@OpAfDrCAtDRv@r@RKrPqC~G}EjDoAnB"
+},
+{
+  id:"ia_swissvalleycreek", name:"Swiss Valley Creek", color:"#0e6f7d",
+  state:"IA", region:"driftless", gauges:[], primaryGauge:null,
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TSV31", wildTrout:"Brown",
+  troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"This is Catfish Creek through Swiss Valley Park, 3 miles south of Dubuque off Swiss Valley Road; the DNR lists 3.25 miles. The upper creek, a walk-in fishery from the Swiss Valley Nature Center, is stocked with catchable rainbows from April through October and has a self-sustaining wild brown population, while the lower creek in the park is stocked only in April, May, September and October because it is too warm for trout in summer. The lower park has electric and non-electric campsites. Source: the Iowa DNR's Swiss Valley Creek page (summary updated Feb 10, 2026).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 11,604 catchable rainbow trout (Mar–Oct), 71 broodstock rainbow trout and 1,000 brook trout fingerlings.",
+  cz:["_bzaGh_`iPg@oBwAq@Vs@YiA|@q@EoAcCuAy@uBkA\\q@y@x@wCi@}@gAv@kBC_A_Az@wASk@qDo@}AmAgCTBwAcDwAcBXcB[Ye@l@mDoBs@mCt@Gz@mAIi@{@IaCcBEcClB@`@bAFYn@k@?_@o@kALwDeDX{DoBy@kBHWiAPg@zBDl@y@m@eBcBAm@_AZoBvBqBi@}@oCZMwB`AgBBcAo@aBwBK_AyCVg@nBg@k@aCiAwALiB[aDWk@iAWt@}E","qv}aGxfzhPUuDyFsGo@uDiAsBeAPYiBwAqCwFsA"]
+},
+{
+  id:"ia_turtlecreek", name:"Turtle Creek", color:"#0e6f7d",
+  state:"IA", region:"driftless", gauges:[], primaryGauge:null,
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TTU66", wildTrout:"Brown",
+  troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"Turtle Creek is about half a mile north of St. Ansgar off Highway 218, in Mitchell County; the DNR lists 2.2 miles. Catchable rainbows are stocked weekly from April through October, and its French Creek-strain browns have reproduced naturally since 2009 (a 2011 survey recorded 452, with fish to 16 inches). It runs through the Mitchell County Conservation Board's Boerjan Wildlife Area and several private properties where only fishing is allowed, with many easy access points. Source: the Iowa DNR's Turtle Creek page (summary updated Feb 7, 2022).",
+  fish:"Wild brown trout are present. In 2025 the DNR stocked 8,958 catchable rainbow trout (Apr–Oct) and 20 broodstock rainbow trout.",
+  cz:["yp{gGbe_vPtAf@FjAi@`AxAdA_Ax@hApDvB~@ZsAr@TzDtGhAI~@p@h@{@pAtEa@dGqAbAIfDr@FFj@u@jDe@vGNtAs@x@UqAWFG~ChArCTxC`C^Ar@{Bt@t@tAR|BxC~@LfHr@z@xAm@EnDl@tCt@Nv@tDEz@WAg@qAsAy@c@zBkAxAb@pCs@r@hBnDtExAh@`B|@JEz@v@h@\\xA`@lEzBs@~@xCJjHRPb@q@Vh@m@pCn@FVxA~BX","{x{gGdu}uPFvAi@pA^~@E`BfAnASl@Rb@v@ZEhC"]
+},
+{
+  id:"ia_wapsiriver", name:"Wapsi River (Trout Section)", color:"#0e6f7d",
+  state:"IA", region:"driftless", gauges:[], primaryGauge:null,
+  troutClass:"stocked", geom:"iadnr", dnrCode:"TWR66",
+  troutRegs:"Continuous open season; No length limit; 5 trout daily bag, possession 10.",
+  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  blurb:"The Wapsipinicon's trout section is half a mile west of McIntire in Mitchell County; the DNR lists 2.5 miles. Catchable rainbows are stocked weekly in April, May, June, September and October, and there are low numbers of stream-reared French Creek-strain browns. Source: the Iowa DNR's Wapsi River (Trout Section) page (summary updated Feb 7, 2022).",
+  fish:"In 2025 the DNR stocked 840 catchable rainbow trout (Apr–Oct) and 4 broodstock rainbow trout.",
+  cz:"ktihGprltPtDMSuB`@gAg@_APk@r@DUcAxBeAv@dAE}Al@aA\\tAdAWVwEh@OTyBzACd@qAUcAb@]h@Kp@p@vA_@zC`BlASd@l@BfBt@DhDyJEaAj@wAtBkA@yA~@QxBwE`D}DS{A{AIBs@zBkAvD_@fAgB~A?bA_CbAOj@{@HiGtC_BViDp@e@VmA[uA~@Ig@iCbBo@|@TEjB^h@rDkHb@{Dq@iCQwDdAc@v@sCrAXHuBb@}@Ku@l@]J_Bv@GRq@x@x@fAu@JcMr@}Cq@wBy@m@TmBt@AfAlA|C`@tDpEAhCbAn@dA]b@`AlAL`DuA]iB|ADfAjBh@u@z@CPwBq@o@Hi@dD^rAtDdBk@Fy@e@o@t@}Aj@ZOnA|@Z^uAq@y@Ne@nBBk@pAf@p@p@@DsAbBdAh@aA}@_@JiAdAQXtA~AmAaA}@H{@bBeA|DG"
+},
+/* <<< ne iowa dnr trout streams */
 ];
 
 /* ---------- Access points ---------- */
@@ -16946,34 +17058,24 @@ const RAMPS = [
      Always confirm the current easement map and regulations with the
      state agency before you rely on a spot. */
   // ---- Iowa Driftless ----
-  {id:"uibluff",  river:"upperiowa", name:"Bluffton access", role:"both", pos:[43.4069,-91.8990], note:"Canoe access and gauge site below the Bluffton bluffs; top of the classic float to Decorah."},
+  {id:"uibluff",  river:"upperiowa", name:"Bluffton access", role:"both", pos:[43.40677,-91.89884], note:"Canoe access and gauge site below the Bluffton bluffs; top of the classic float to Decorah.", src:"Iowa DNR Fishing Atlas"},
   {id:"uichimney",river:"upperiowa", name:"Chimney Rock / Kendallville area", role:"launch", pos:[43.4330,-91.9650], note:"Outfitter and canoe access on the upper river; the coldest, most trout-like reach."},
   {id:"uidecorah",river:"upperiowa", name:"Decorah — Twin Springs / city access", role:"both", pos:[43.3049,-91.7955], note:"In-town river access with parking; USGS gauge here. Smallmouth water through town."},
   {id:"uidorch",  river:"upperiowa", name:"Dorchester bridge access", role:"takeout", pos:[43.4211,-91.5088], note:"Lower-river access near the Waterloo Creek confluence; gauge at the bridge."},
-  {id:"watcr1",   river:"waterloocreek", name:"Waterloo Creek — Dorchester", role:"wade", pos:[43.4511,-91.5051], note:"Roadside parking along the valley road north of Dorchester; gauge site. Walk upstream for better fish."},
+  {id:"watcr1",   river:"waterloocreek", name:"Waterloo Creek — Dorchester", role:"wade", kind:"parking", pos:[43.45075,-91.50659], note:"Roadside parking along the valley road north of Dorchester; gauge site. Walk upstream for better fish.", src:"Iowa DNR Fishing Atlas"},
   {id:"watcr2",   river:"waterloocreek", name:"Waterloo Creek — upper valley", role:"wade", pos:[43.4800,-91.5400], note:"Pull-offs toward the Minnesota line; tight brushy water, short rod."},
   {id:"trhatch",  river:"troutrunia", name:"Decorah Fish Hatchery", role:"wade", pos:[43.2870,-91.7550], note:"Hatchery parking on Trout Run; heavily stocked and heavily fished. Trout Run Trail parallels the creek."},
-  {id:"trupper",  river:"troutrunia", name:"Trout Run — upper valley", role:"wade", pos:[43.2600,-91.7380], note:"Trail and roadside parking upstream of the hatchery; walk away from the lots for better water."},
-  {id:"coldw1",   river:"coldwaterIA", name:"Coldwater Creek access", role:"wade", pos:[43.4200,-91.8870], note:"Iowa DNR access in the Coldwater valley; spring-fed and cold through summer."},
-  {id:"sbear1",   river:"southbear", name:"South Bear — Highlandville", role:"wade", pos:[43.4122,-91.7290], note:"DNR parking at Highlandville; special regulations apply on parts of this stream — read the current trout regs."},
-  {id:"sbear2",   river:"southbear", name:"South Bear — lower valley", role:"wade", pos:[43.3960,-91.7120], note:"Pull-off downstream toward the Upper Iowa confluence."},
-  {id:"nbear1",   river:"northbear", name:"North Bear Creek access", role:"wade", pos:[43.46980,-91.64260], note:"Roadside parking in the North Bear valley; brushy small water."},
-  {id:"canoe1",   river:"canoecreek", name:"Canoe Creek access", role:"wade", pos:[43.3860,-91.7080], note:"Bridge pull-off northeast of Decorah; quieter than Trout Run."},
-  {id:"french1",  river:"frenchcreek", name:"French Creek Wildlife Area", role:"wade", pos:[43.4400,-91.3600], note:"DNR wildlife area parking; managed wild brown trout water — check current special regulations."},
+  {id:"nbear1",   river:"northbear", name:"North Bear Creek access", role:"wade", kind:"parking", pos:[43.47131,-91.64336], note:"Roadside parking in the North Bear valley; brushy small water.", src:"Iowa DNR Fishing Atlas"},
   {id:"paint1",   river:"paintcreek", name:"Yellow River State Forest HQ", role:"wade", pos:[43.1800,-91.2420], note:"State forest parking and campground; miles of public bank on Paint Creek."},
   {id:"paint2",   river:"paintcreek", name:"Paint Creek — Waterville", role:"wade", pos:[43.2172,-91.2905], note:"Upper-valley access near Waterville; colder water, wild fish."},
   {id:"village1", river:"villagecreek", name:"Village Creek access", role:"wade", pos:[43.3600,-91.2800], note:"Roadside parking in the valley behind Lansing."},
-  {id:"clearia1", river:"clearcreekia", name:"Clear Creek access", role:"wade", pos:[43.36010,-91.29590], note:"Bluff-valley pull-off near Lansing; clear, technical water."},
   {id:"yellow1",  river:"yellowriver", name:"Yellow River — Ion gauge", role:"wade", pos:[43.1119,-91.2651], note:"Bridge access at the gauge; smallmouth water here, trout in the upper valley."},
   {id:"yellow2",  river:"yellowriver", name:"Effigy Mounds / river mouth", role:"wade", pos:[43.0957,-91.2202], note:"National monument parking near the Mississippi confluence."},
-  {id:"bloody1",  river:"bloodyrun", name:"Bloody Run County Park", role:"wade", pos:[43.0408,-91.2065], note:"Clayton County park with campground and creekside parking; gauge on site. Walk upstream from the campground."},
-  {id:"snymag1",  river:"snymagill", name:"Sny Magill Creek access", role:"wade", pos:[42.9200,-91.1400], note:"Public access near the Sny Magill Mound Group; cold spring water, good in hot weather."},
+  {id:"bloody1",  river:"bloodyrun", name:"Bloody Run County Park", role:"wade", kind:"parking", pos:[43.04169,-91.20771], note:"Clayton County park with campground and creekside parking; gauge on site. Walk upstream from the campground.", src:"Iowa DNR Fishing Atlas"},
   {id:"turkey1",  river:"turkeyriver", name:"Turkey River — Elkader", role:"both", pos:[42.8435,-91.4013], note:"In-town access and gauge; good smallmouth float water above and below."},
   {id:"turkey2",  river:"turkeyriver", name:"Turkey River — Spillville", role:"launch", pos:[43.2073,-91.9503], note:"Upper-river access and gauge in Winneshiek County."},
   {id:"volga1",   river:"volgariver", name:"Volga River State Recreation Area", role:"wade", pos:[42.8200,-91.7400], note:"State recreation area with camping, trails and public bank on the Volga."},
   {id:"volga2",   river:"volgariver", name:"Littleport gauge access", role:"takeout", pos:[42.7539,-91.3690], note:"Bridge access at the gauge near the Turkey confluence."},
-  {id:"bigspr1",  river:"springbranchia", name:"Big Spring Fish Hatchery", role:"wade", pos:[42.81180,-91.33210], note:"Hatchery parking on Spring Branch; very stable spring flows — a dependable wet-weather fallback."},
-  {id:"grannis1", river:"grannis", name:"Grannis Creek access", role:"wade", pos:[42.82050,-91.76510], note:"Roadside parking near West Union, Fayette County."},
   {id:"otteria1", river:"ottercreekia", name:"Otter Creek — Elgin", role:"wade", pos:[42.9575,-91.6379], note:"Fayette County access near Elgin; pairs well with Grannis Creek."},
   {id:"backbone1",river:"richmondsprings", name:"Backbone State Park — Richmond Springs", role:"wade", pos:[42.6203,-91.5697], note:"Iowa's oldest state park: paved parking, campground, trails, easy family access to the spring branch."},
 
@@ -18030,6 +18132,171 @@ const RAMPS = [
 /* >>> beaver creek osm access (generated by iowa/apply.py — re-run, don't hand-edit) */
   {id:"osm_n7271024332", river:"beavercreek", name:"Beaver Creek Water Trail Access Area", role:"both", pos:[41.68777,-93.73517], note:"Slipway inside the Beaver Creek Water Trail Access Area, mapped in OpenStreetMap. Small creek — check signage and water level before you launch.", src:"OpenStreetMap"},
 /* <<< beaver creek osm access */
+/* >>> ne iowa dnr parking (generated by iowa/driftless_parking.py — re-run, don't hand-edit) */
+  {id:"iap_44239", river:"upperiowa", name:"Black Hawk Point", role:"both", pos:[43.47412,-91.29504], note:"Iowa DNR boat ramp.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38104", river:"upperiowa", name:"Blackhawk Point WMA Parking Area", role:"wade", kind:"parking", pos:[43.47359,-91.29399], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38468", river:"upperiowa", name:"upper iowa river - lowell's bridge", role:"both", pos:[43.33967,-91.83484], note:"Iowa DNR boat ramp.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_37987", river:"upperiowa", name:"Upper Iowa River WMA Parking Area 1", role:"wade", kind:"parking", pos:[43.32812,-91.71511], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38611", river:"upperiowa", name:"Upper Iowa River WMA Parking Area 2", role:"wade", kind:"parking", pos:[43.34010,-91.64238], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38902", river:"upperiowa", name:"Upper Iowa River WMA Parking Area 3", role:"wade", kind:"parking", pos:[43.33943,-91.83331], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_44230", river:"upperiowa", name:"Upper Iowa River — DNR parking", role:"wade", kind:"parking", pos:[43.40679,-91.55612], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38880", river:"upperiowa", name:"Wild Landing", role:"both", pos:[43.42886,-91.39734], note:"Iowa DNR boat ramp.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_42096", river:"waterloocreek", name:"Waterloo Creek — DNR parking 1", role:"wade", kind:"parking", pos:[43.43238,-91.51912], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_44225", river:"waterloocreek", name:"Waterloo Creek — DNR parking 2", role:"wade", kind:"parking", pos:[43.43488,-91.51767], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38624", river:"waterloocreek", name:"Waterloo — parking lot 1", role:"wade", kind:"parking", pos:[43.43976,-91.51241], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38626", river:"waterloocreek", name:"Waterloo — parking lot 3", role:"wade", kind:"parking", pos:[43.45041,-91.50214], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38627", river:"waterloocreek", name:"Waterloo — parking lot 4", role:"wade", kind:"parking", pos:[43.46413,-91.49750], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38645", river:"waterloocreek", name:"Waterloo — parking lot 5", role:"wade", kind:"parking", pos:[43.47619,-91.51886], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38101", river:"troutrunia", name:"Trout Run — parking lot 1", role:"wade", kind:"parking", pos:[43.29040,-91.75921], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38827", river:"troutrunia", name:"Trout Run — parking lot 2", role:"wade", kind:"parking", pos:[43.27954,-91.77351], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38828", river:"troutrunia", name:"Trout Run — parking lot 3", role:"wade", kind:"parking", pos:[43.27541,-91.77747], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38090", river:"troutrunia", name:"Trout Run — parking lot 4", role:"wade", kind:"parking", pos:[43.27342,-91.77998], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38118", river:"coldwaterIA", name:"Coldwater — parking lot 1", role:"wade", kind:"parking", pos:[43.43457,-91.94879], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38119", river:"coldwaterIA", name:"Coldwater — parking lot 2", role:"wade", kind:"parking", pos:[43.43360,-91.95845], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38613", river:"southbear", name:"South Bear — parking lot 1", role:"wade", kind:"parking", pos:[43.44888,-91.61680], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38614", river:"southbear", name:"South Bear — parking lot 2", role:"wade", kind:"parking", pos:[43.43863,-91.62762], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38210", river:"southbear", name:"South Bear — parking lot 3", role:"wade", kind:"parking", pos:[43.44101,-91.64700], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38211", river:"southbear", name:"South Bear — parking lot 4", role:"wade", kind:"parking", pos:[43.43965,-91.65260], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38766", river:"southbear", name:"South Bear — parking lot 5", role:"wade", kind:"parking", pos:[43.44100,-91.66494], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38171", river:"southbear", name:"South Bear — parking lot 6", role:"wade", kind:"parking", pos:[43.44238,-91.67034], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38170", river:"southbear", name:"South Bear — parking lot 7", role:"wade", kind:"parking", pos:[43.44537,-91.68881], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38615", river:"northbear", name:"North Bear — parking lot 1", role:"wade", kind:"parking", pos:[43.44945,-91.61695], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38169", river:"northbear", name:"North Bear — parking lot 2", role:"wade", kind:"parking", pos:[43.45740,-91.63393], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38896", river:"northbear", name:"North Bear — parking lot 4", role:"wade", kind:"parking", pos:[43.48254,-91.63487], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38897", river:"northbear", name:"North Bear — parking lot 5", role:"wade", kind:"parking", pos:[43.49616,-91.65080], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_44231", river:"canoecreek", name:"Canoe Creek WMA Parking Area", role:"wade", kind:"parking", pos:[43.36694,-91.61702], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_42073", river:"canoecreek", name:"Canoe Creek — DNR parking", role:"wade", kind:"parking", pos:[43.38040,-91.77307], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38543", river:"frenchcreek", name:"French — parking lot 1", role:"wade", kind:"parking", pos:[43.40515,-91.39876], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38544", river:"frenchcreek", name:"French — parking lot 2", role:"wade", kind:"parking", pos:[43.38481,-91.40783], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_44066", river:"frenchcreek", name:"French — parking lot 3", role:"wade", kind:"parking", pos:[43.38316,-91.40150], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_42091", river:"paintcreek", name:"Paint Cr. Parking", role:"wade", kind:"parking", pos:[43.18128,-91.28330], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_42092", river:"paintcreek", name:"Paint Creek Parking", role:"wade", kind:"parking", pos:[43.17948,-91.26592], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_41858", river:"paintcreek", name:"Paint Creek — DNR parking", role:"wade", kind:"parking", pos:[43.17092,-91.24898], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_41936", river:"paintcreek", name:"Paint — parking lot", role:"wade", kind:"parking", pos:[43.17203,-91.24511], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38200", river:"paintcreek", name:"Paint — parking lot 1", role:"wade", kind:"parking", pos:[43.17334,-91.22100], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38201", river:"paintcreek", name:"Paint — parking lot 2", role:"wade", kind:"parking", pos:[43.17114,-91.24434], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38202", river:"paintcreek", name:"Paint — parking lot 3", role:"wade", kind:"parking", pos:[43.17450,-91.25310], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38877", river:"paintcreek", name:"Paint — parking lot 5", role:"wade", kind:"parking", pos:[43.20166,-91.28561], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38878", river:"paintcreek", name:"Paint — parking lot 6", role:"wade", kind:"parking", pos:[43.21145,-91.30444], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_41857", river:"paintcreek", name:"Yellow River State Forest 1", role:"wade", kind:"parking", pos:[43.17150,-91.25862], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_41863", river:"paintcreek", name:"Yellow River State Forest 2", role:"wade", kind:"parking", pos:[43.15761,-91.21917], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38876", river:"clearcreekia", name:"Clear (Lansing) — parking lot 1", role:"wade", kind:"parking", pos:[43.35880,-91.23782], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_44229", river:"clearcreekia", name:"Clear Creek — DNR parking", role:"wade", kind:"parking", pos:[43.36052,-91.23018], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_44222", river:"yellowriver", name:"Yellow River — DNR parking 1", role:"wade", kind:"parking", pos:[43.11315,-91.23419], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_44223", river:"yellowriver", name:"Yellow River — DNR parking 2", role:"wade", kind:"parking", pos:[43.15372,-91.51072], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_44224", river:"yellowriver", name:"Yellow River — DNR parking 3", role:"wade", kind:"parking", pos:[43.13053,-91.37632], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_44235", river:"bloodyrun", name:"Bloody Run Creek — DNR parking", role:"wade", kind:"parking", pos:[43.03683,-91.25569], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38010", river:"bloodyrun", name:"Bloody Run — parking lot 2", role:"wade", kind:"parking", pos:[43.03970,-91.21781], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38984", river:"bloodyrun", name:"Bloody Run — parking lot 3", role:"wade", kind:"parking", pos:[43.03066,-91.30511], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38014", river:"snymagill", name:"Sny Magill — parking lot 1", role:"wade", kind:"parking", pos:[42.95015,-91.18943], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38015", river:"snymagill", name:"Sny Magill — parking lot 2", role:"wade", kind:"parking", pos:[42.95243,-91.19529], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38016", river:"snymagill", name:"Sny Magill — parking lot 3", role:"wade", kind:"parking", pos:[42.96413,-91.21356], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38017", river:"snymagill", name:"Sny Magill — parking lot 4", role:"wade", kind:"parking", pos:[42.96643,-91.21674], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38018", river:"snymagill", name:"Sny Magill — parking lot 5", role:"wade", kind:"parking", pos:[42.96770,-91.22292], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38019", river:"snymagill", name:"Sny Magill — parking lot 6", role:"wade", kind:"parking", pos:[42.97049,-91.23076], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38020", river:"snymagill", name:"Sny McGill - North Cedar WMA Parking Area 1", role:"wade", kind:"parking", pos:[42.97668,-91.23795], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38021", river:"snymagill", name:"Sny McGill - North Cedar WMA Parking Area 2", role:"wade", kind:"parking", pos:[42.95374,-91.19687], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38362", river:"turkeyriver", name:"Turkey River — parking lot 1", role:"wade", kind:"parking", pos:[42.91059,-91.47286], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38987", river:"turkeyriver", name:"Turkey River — parking lot 2", role:"wade", kind:"parking", pos:[42.91270,-91.48298], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_37972", river:"turkeyriver", name:"Turkey River — parking lot 3", role:"wade", kind:"parking", pos:[42.90866,-91.47415], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38568", river:"springbranchia", name:"Spring Branch — parking 1", role:"wade", kind:"parking", pos:[42.46102,-91.39697], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_39073", river:"springbranchia", name:"Spring Branch — parking 2", role:"wade", kind:"parking", pos:[42.47040,-91.40060], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38549", river:"grannis", name:"Grannis — parking lot 1", role:"wade", kind:"parking", pos:[42.83503,-91.70951], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38832", river:"grannis", name:"Grannis — parking lot 2", role:"wade", kind:"parking", pos:[42.82461,-91.72140], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_44236", river:"ottercreekia", name:"Otter Creek — DNR parking 1", role:"wade", kind:"parking", pos:[42.94401,-91.65566], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_44237", river:"ottercreekia", name:"Otter Creek — DNR parking 2", role:"wade", kind:"parking", pos:[42.93366,-91.71537], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_44238", river:"ottercreekia", name:"Otter Creek — DNR parking 3", role:"wade", kind:"parking", pos:[42.92946,-91.69932], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38283", river:"ottercreekia", name:"Otter — parking lot 1", role:"wade", kind:"parking", pos:[42.93592,-91.69179], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_39009", river:"ottercreekia", name:"Otter — parking lot 2", role:"wade", kind:"parking", pos:[42.95028,-91.75424], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38511", river:"ottercreekia", name:"Otter — parking lot 3", role:"wade", kind:"parking", pos:[42.94403,-91.77610], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_44067", river:"ottercreekia", name:"Otter — parking lot 4", role:"wade", kind:"parking", pos:[42.94619,-91.78914], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_46414", river:"richmondsprings", name:"Accessible Trout Stream Access", role:"wade", pos:[42.63553,-91.56122], note:"Iowa DNR fishing access.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_25397", river:"richmondsprings", name:"ADA Parking", role:"wade", kind:"parking", pos:[42.63570,-91.56103], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_25403", river:"richmondsprings", name:"Richmond Springs — DNR parking 1", role:"wade", kind:"parking", pos:[42.63644,-91.55790], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_25410", river:"richmondsprings", name:"Richmond Springs — DNR parking 2", role:"wade", kind:"parking", pos:[42.63598,-91.55972], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_25412", river:"richmondsprings", name:"Richmond Springs — DNR parking 3", role:"wade", kind:"parking", pos:[42.63074,-91.56104], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_45511", river:"richmondsprings", name:"Richmond Springs — DNR parking 4", role:"wade", kind:"parking", pos:[42.63761,-91.55651], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_45514", river:"richmondsprings", name:"Richmond Springs — DNR parking 5", role:"wade", kind:"parking", pos:[42.63632,-91.56195], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_45516", river:"richmondsprings", name:"Richmond Springs — DNR parking 6", role:"wade", kind:"parking", pos:[42.63293,-91.56314], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_45517", river:"richmondsprings", name:"Richmond Springs — DNR parking 7", role:"wade", kind:"parking", pos:[42.63170,-91.56542], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_682", river:"richmondsprings", name:"Richmond Springs — parking", role:"wade", kind:"parking", pos:[42.63383,-91.56239], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_39873", river:"iaBaileySFord", name:"Bailey's Ford Park", role:"both", pos:[42.44311,-91.40963], note:"Iowa DNR boat ramp.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38282", river:"iaBaileySFord", name:"Bailey's Ford — parking", role:"wade", kind:"parking", pos:[42.44534,-91.41072], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38292", river:"iaBankstonCreek", name:"Bankston — parking", role:"wade", kind:"parking", pos:[42.55830,-90.95500], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_42087", river:"iaBearCreekAllamakee", name:"Bear Creek Parking", role:"wade", kind:"parking", pos:[43.43541,-91.56644], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38735", river:"iaBearCreekClayton", name:"Bear Creek — parking", role:"wade", kind:"parking", pos:[42.67506,-91.40059], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_39007", river:"iaBearCreekFayette", name:"Bear — parking lot 1", role:"wade", kind:"parking", pos:[42.80985,-91.69594], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38893", river:"iaBigalkCreek", name:"Bigalk — parking lot 1", role:"wade", kind:"parking", pos:[43.47393,-92.07922], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38911", river:"iaBigalkCreek", name:"Bigalk — parking lot 2", role:"wade", kind:"parking", pos:[43.47257,-92.08434], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38682", river:"iaBohemianCreek", name:"Bohemian — parking lot", role:"wade", kind:"parking", pos:[43.21427,-92.06268], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38612", river:"iaBrushCreekFayette", name:"Brush — parking lot 1", role:"wade", kind:"parking", pos:[42.77490,-91.68658], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38985", river:"iaBuckCreek", name:"Buck — parking lot 1", role:"wade", kind:"parking", pos:[42.88917,-91.20376], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38986", river:"iaBuckCreek", name:"Buck — parking lot 2", role:"wade", kind:"parking", pos:[42.86384,-91.19311], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_42090", river:"iaCaseySprings", name:"Casey Springs Parking", role:"wade", kind:"parking", pos:[43.35814,-91.86537], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_42094", river:"iaChihakCreek", name:"Cardinal Marsh WMA Parking Area", role:"wade", kind:"parking", pos:[43.32950,-92.08026], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38224", river:"iaClearCreekNewAlbin", name:"Clear (north) — parking lot 1", role:"wade", kind:"parking", pos:[43.44889,-91.42006], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38225", river:"iaClearCreekNewAlbin", name:"Clear (north) — parking lot 2", role:"wade", kind:"parking", pos:[43.46242,-91.42217], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38226", river:"iaClearCreekNewAlbin", name:"Clear (north) — parking lot 3", role:"wade", kind:"parking", pos:[43.47126,-91.41132], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38227", river:"iaClearCreekNewAlbin", name:"Clear (north) — parking lot 4", role:"wade", kind:"parking", pos:[43.47505,-91.41178], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38610", river:"iaCoonCreek", name:"Coon — parking lot", role:"wade", kind:"parking", pos:[43.31592,-91.62918], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38894", river:"iaDunningSSpring", name:"Dunning's Spring — parking lot", role:"wade", kind:"parking", pos:[43.31138,-91.79120], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_42089", river:"iaDuttonSpringCreek", name:"Dutton Springs Parking", role:"wade", kind:"parking", pos:[42.99789,-91.76648], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_42093", river:"iaEnsignHollowCreek", name:"Ensign Parking", role:"wade", kind:"parking", pos:[42.75737,-91.56635], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38279", river:"iaFountainSprings", name:"Fountain Springs — parking 1", role:"wade", kind:"parking", pos:[42.61798,-91.30102], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38280", river:"iaFountainSprings", name:"Fountain Springs — parking 2", role:"wade", kind:"parking", pos:[42.61115,-91.31244], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38510", river:"iaGloversCreek", name:"Glovers — parking lot 1", role:"wade", kind:"parking", pos:[42.94935,-91.77484], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38724", river:"iaJoySprings", name:"Joy Springs — parking", role:"wade", kind:"parking", pos:[42.67663,-91.59670], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_44226", river:"iaLansingWildlifeAreaCreek", name:"Lansing WMA Parking Area", role:"wade", kind:"parking", pos:[43.40705,-91.26552], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38196", river:"iaLittlePaintCreek", name:"Little Paint — parking lot 1", role:"wade", kind:"parking", pos:[43.17722,-91.22982], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38197", river:"iaLittlePaintCreek", name:"Little Paint — parking lot 2", role:"wade", kind:"parking", pos:[43.18396,-91.23614], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38198", river:"iaLittlePaintCreek", name:"Little Paint — parking lot 3", role:"wade", kind:"parking", pos:[43.18641,-91.23587], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38199", river:"iaLittlePaintCreek", name:"Little Paint — parking lot 4", role:"wade", kind:"parking", pos:[43.19137,-91.23868], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38281", river:"iaLittleTurkeyRiver", name:"Little Turkey — parking", role:"wade", kind:"parking", pos:[42.63447,-91.15529], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_25398", river:"iaMaquoketaRiver", name:"Maquoketa River — DNR parking 1", role:"wade", kind:"parking", pos:[42.61677,-91.56156], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_25402", river:"iaMaquoketaRiver", name:"Maquoketa River — DNR parking 2", role:"wade", kind:"parking", pos:[42.61638,-91.56612], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_25416", river:"iaMaquoketaRiver", name:"Maquoketa River — DNR parking 3", role:"wade", kind:"parking", pos:[42.61833,-91.55953], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_25417", river:"iaMaquoketaRiver", name:"Maquoketa River — DNR parking 4", role:"wade", kind:"parking", pos:[42.61836,-91.56091], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_25418", river:"iaMaquoketaRiver", name:"Maquoketa River — DNR parking 5", role:"wade", kind:"parking", pos:[42.61768,-91.56087], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_25430", river:"iaMaquoketaRiver", name:"Maquoketa River — DNR parking 6", role:"wade", kind:"parking", pos:[42.61701,-91.55573], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_25431", river:"iaMaquoketaRiver", name:"Maquoketa River — DNR parking 7", role:"wade", kind:"parking", pos:[42.61521,-91.56026], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_25433", river:"iaMaquoketaRiver", name:"Maquoketa River — DNR parking 8", role:"wade", kind:"parking", pos:[42.61511,-91.56606], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_45519", river:"iaMaquoketaRiver", name:"Maquoketa River — DNR parking 9", role:"wade", kind:"parking", pos:[42.61456,-91.56051], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_39005", river:"iaMaquoketaRiver", name:"Upper Maquoketa River — parking 1", role:"wade", kind:"parking", pos:[42.65873,-91.58850], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_39081", river:"iaMaquoketaRiver", name:"Upper Maquoketa River — parking 2", role:"wade", kind:"parking", pos:[42.64393,-91.57897], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_39008", river:"iaMinkCreek", name:"Mink — parking lot 1", role:"wade", kind:"parking", pos:[42.86946,-91.65166], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38013", river:"iaNorthCedarCreek", name:"North Cedar — parking lot", role:"wade", kind:"parking", pos:[42.96261,-91.22899], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38026", river:"iaPineCreek", name:"Pine — parking lot", role:"wade", kind:"parking", pos:[43.39605,-91.59000], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_44227", river:"iaPineSpringCreek", name:"Pine Spring Creek — DNR parking", role:"wade", kind:"parking", pos:[43.38172,-91.80679], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38100", river:"iaTroutRiver", name:"Trout River — parking lot", role:"wade", kind:"parking", pos:[43.26417,-91.66115], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_39871", river:"iaTwinBridgesCreek", name:"Twin Bridges — parking 1", role:"wade", kind:"parking", pos:[42.63166,-91.28467], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_39872", river:"iaTwinBridgesCreek", name:"Twin Bridges — parking 2", role:"wade", kind:"parking", pos:[42.62759,-91.29575], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38898", river:"iaTwinSprings", name:"Twin Springs — parking lot 1", role:"wade", kind:"parking", pos:[43.29840,-91.81207], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38899", river:"iaTwinSprings", name:"Twin Springs — parking lot 2", role:"wade", kind:"parking", pos:[43.29837,-91.81455], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38103", river:"iaTwinSprings", name:"Twin Springs — parking lot 3", role:"wade", kind:"parking", pos:[43.29594,-91.81667], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_44228", river:"iaWestCanoeCreek", name:"West Canoe Creek — DNR parking", role:"wade", kind:"parking", pos:[43.39000,-91.78021], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38900", river:"iaWestCanoeCreek", name:"West Canoe — parking lot 1", role:"wade", kind:"parking", pos:[43.40533,-91.80813], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38901", river:"iaWestCanoeCreek", name:"West Canoe — parking lot 2", role:"wade", kind:"parking", pos:[43.40216,-91.80697], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38879", river:"iaWexfordCreek", name:"Wexford — parking lot", role:"wade", kind:"parking", pos:[43.27245,-91.13334], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_42088", river:"iaYellowRiverForestMillsRdEasement", name:"Yellow River Forest Mills Rd. Easement — DNR parking", role:"wade", kind:"parking", pos:[43.16436,-91.45378], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_44217", river:"ia_bigmillcreek", name:"Big Mill Creek — DNR parking", role:"wade", kind:"parking", pos:[42.27811,-90.53781], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_39879", river:"ia_bigmillcreek", name:"Big Mill — parking 1", role:"wade", kind:"parking", pos:[42.27036,-90.52397], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_39880", river:"ia_bigmillcreek", name:"Big Mill — parking 2", role:"wade", kind:"parking", pos:[42.27048,-90.51474], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_40150", river:"ia_littlemillcreek", name:"Little Mill — parking", role:"wade", kind:"parking", pos:[42.24922,-90.47674], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_44216", river:"ia_millcreek", name:"Mill Creek — DNR parking", role:"wade", kind:"parking", pos:[42.25358,-90.43096], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_47857", river:"ia_mcloudrun", name:"McLoud Run Park", role:"wade", pos:[41.99984,-91.66620], note:"Iowa DNR fishing access.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_39175", river:"ia_mcloudrun", name:"McLoud Run — parking", role:"wade", kind:"parking", pos:[42.01244,-91.66542], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_42097", river:"ia_springcreek", name:"Spring — parking lot 1", role:"wade", kind:"parking", pos:[43.22467,-92.79002], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38923", river:"ia_springcreek", name:"Spring — parking lot 2", role:"wade", kind:"parking", pos:[43.22479,-92.78941], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38361", river:"ia_swissvalleycreek", name:"Swiss Valley (Lower) — parking", role:"wade", kind:"parking", pos:[42.43010,-90.74082], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38360", river:"ia_swissvalleycreek", name:"Swiss Valley (Upper) — parking", role:"wade", kind:"parking", pos:[42.42302,-90.75873], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38924", river:"ia_turtlecreek", name:"Turtle — parking lot 1", role:"wade", kind:"parking", pos:[43.39340,-92.92262], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38925", river:"ia_turtlecreek", name:"Turtle — parking lot 2", role:"wade", kind:"parking", pos:[43.39978,-92.89975], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38926", river:"ia_turtlecreek", name:"Turtle — parking lot 3", role:"wade", kind:"parking", pos:[43.40129,-92.89054], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38785", river:"ia_wapsiriver", name:"Wapsi River WMA Parking Area 1", role:"wade", kind:"parking", pos:[43.46761,-92.63349], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38786", river:"ia_wapsiriver", name:"Wapsi River WMA Parking Area 2", role:"wade", kind:"parking", pos:[43.46488,-92.63133], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38655", river:"ia_wapsiriver", name:"Wapsi River — parking lot 1", role:"wade", kind:"parking", pos:[43.45187,-92.61278], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+  {id:"iap_38784", river:"ia_wapsiriver", name:"Wapsi River — parking lot 2", role:"wade", kind:"parking", pos:[43.46651,-92.63343], note:"Iowa DNR trout-stream parking.", src:"Iowa DNR Fishing Atlas"},
+/* <<< ne iowa dnr parking */
 ];
 
 /* ---------- Float sections ---------- */
@@ -18567,7 +18834,7 @@ const WADE_ONLY = {
   waterloocreek:"Wade only. A few feet wide in places; short rod, roll casts, and a willingness to crawl.",
   troutrunia:"Wade only, with the Trout Run Trail bike path paralleling the creek — easiest access in Iowa trout country.",
   coldwaterIA:"Wade only. Cold spring water; approach low and fish upstream.",
-  southbear:"Wade only. Special regulations apply on parts of this stream — read the current Iowa DNR trout regs.",
+  southbear:"Wade only. The Iowa DNR lists no special-regulation reach here: standard trout rules apply — confirm in the current Iowa DNR trout regs.",
   northbear:"Wade only. Brushy enough that spring and October are the comfortable windows.",
   canoecreek:"Wade only, despite the name — the canoe is historical, not practical.",
   frenchcreek:"Wade only. Managed wild-trout water; check the current special regulations before you fish it.",
@@ -19585,7 +19852,7 @@ const FLOW_REV = {
   blackfootid:"0??",
   blackriverwi:"0",
   blacktaildeer:"000000",
-  bloodyrun:"0000001",
+  bloodyrun:"000?0001",
   blueriver:"0",
   bohemianvalley:"?",
   boisbrulewi:"0",
@@ -19599,7 +19866,7 @@ const FLOW_REV = {
   campcreekmn:"01",
   canfield:"0",
   cannonriver:"0",
-  canoecreek:"00?",
+  canoecreek:"11?",
   cascadecreekgt:"0",
   cascaderiver:"1",
   castlerock:"0",
@@ -19607,7 +19874,7 @@ const FLOW_REV = {
   chippewawi:"0",
   christiancreek:"??",
   clarksfork:"0",
-  clearcreekia:"0??",
+  clearcreekia:"??0",
   clearcreekyell:"00100",
   clearwater:"0",
   coldwaterIA:"00",
@@ -19636,7 +19903,7 @@ const FLOW_REV = {
   fireholeriver:"000000?00?001",
   flambeau:"01??",
   flutereedriver:"0",
-  frenchcreek:"011",
+  frenchcreek:"001",
   frenchriverns:"0",
   gallatinyell:"000000",
   gardnerriver:"00011",
@@ -19658,18 +19925,18 @@ const FLOW_REV = {
   henrysfork:"0",
   hibbardscr:"0",
   hiddenspringscr:"0",
-  iaBaileySFord:"?",
+  iaBaileySFord:"0",
   iaBankstonCreek:"0",
   iaBearCreek:"?",
   iaBearCreekAllamakee:"1",
   iaBearCreekClayton:"0",
   iaBearCreekFayette:"0",
   iaBigalkCreek:"0",
-  iaBohemianCreek:"0",
+  iaBohemianCreek:"?",
   iaBrushCreekFayette:"0",
-  iaBuckCreek:"00??",
-  iaCaseySprings:"?",
-  iaChihakCreek:"11",
+  iaBuckCreek:"??00",
+  iaCaseySprings:"0",
+  iaChihakCreek:"??",
   iaClearCreekNewAlbin:"00",
   iaCoonCreek:"0",
   iaDunningSSpring:"00",
@@ -19678,31 +19945,31 @@ const FLOW_REV = {
   iaFalconSpringBranch:"1",
   iaFountainSprings:"0",
   iaGloversCreek:"0",
-  iaHickoryCreek:"1",
+  iaHickoryCreek:"0",
   iaJoySprings:"?",
   iaLansingWildlifeAreaCreek:"1",
-  iaLittlePaintCreek:"11",
+  iaLittlePaintCreek:"100",
   iaLittleTurkeyRiver:"0",
-  iaMaquoketaRiver:"11",
-  iaMiddleBearCreek:"0",
+  iaMaquoketaRiver:"00",
+  iaMiddleBearCreek:"1",
   iaMinkCreek:"0",
   iaMossyGlenCreek:"0",
   iaNorthCanoeCreek:"?",
-  iaNorthCedarCreek:"0",
+  iaNorthCedarCreek:"00",
   iaPattersonCreek:"0",
   iaPineCreek:"00",
   iaPineSpringCreek:"0",
-  iaSouthCedarCreek:"01",
+  iaSouthCedarCreek:"00",
   iaSouthPineCreek:"0",
-  iaTenMileCreek:"0",
-  iaTroutRiver:"1?",
+  iaTenMileCreek:"?",
+  iaTroutRiver:"?0",
   iaTwinBridgesCreek:"0",
   iaTwinSprings:"0",
   iaWestCanoeCreek:"000",
   iaWestFrenchCreek:"0",
   iaWexfordCreek:"0",
   iaWhitePineHollowCreek:"0",
-  iaYellowRiverForestMillsRdEasement:"1111",
+  iaYellowRiverForestMillsRdEasement:"????",
   indiancreek:"0101",
   jumpriver:"0",
   kadunceriver:"0",
@@ -19753,14 +20020,14 @@ const FLOW_REV = {
   nfpayette:"00",
   nfshoshone:"00",
   nfwhitewater:"0",
-  northbear:"011",
+  northbear:"00?",
   nplattereef:"0?",
   nplatteupper:"0?01????0000",
   nraccoon:"0",
   obsidiancreek:"1?11?",
-  ottercreekia:"001?00",
+  ottercreekia:"00??10",
   owlcreekgt:"01000",
-  paintcreek:"0001?111",
+  paintcreek:"00?00001?",
   panthercreek:"11",
   payette:"00?0011000????0???1??0????0000?1??1??1?",
   pebblecreek:"0000000",
@@ -19776,7 +20043,7 @@ const FLOW_REV = {
   priest:"000",
   raccoon:"0",
   redcedar:"0",
-  richmondsprings:"?",
+  richmondsprings:"0",
   rootriver:"0",
   rullandscoulee:"0",
   rumriver:"0",
@@ -19871,7 +20138,7 @@ const FLOW_REV = {
   vermillionmn:"0??",
   villagecreek:"0",
   volgariver:"0",
-  waterloocreek:"0000",
+  waterloocreek:"00000",
   wforkkickapoo:"0",
   whitefishbaycr:"?",
   whitewater:"01",
@@ -19879,7 +20146,7 @@ const FLOW_REV = {
   winnebagocr:"00",
   wisconsinriver:"0",
   wolfriverwi:"0000",
-  yellowriver:"10?1",
+  yellowriver:"0??10",
   yellowstoneriver:"000011000100?0100?0?1?1???1?",
   ywagateCreek:"00",
   ywalluviumCreek:"11",
@@ -20986,6 +21253,19 @@ const FLOW_REV = {
   hoback:"0",
   flatcreek:"00",
 /* <<< wyoming wgfd streams */
+/* >>> ne iowa dnr trout streams (generated by iowa/dnr_trout.py — re-run, don't hand-edit) */
+  ia_bigmillcreek:"0?",
+  ia_brushcreekjackson:"?",
+  ia_littlemillcreek:"0",
+  ia_millcreek:"?",
+  ia_mcloudrun:"0",
+  ia_monasterycreek:"0",
+  ia_southforkbigmillcreek:"0",
+  ia_springcreek:"0",
+  ia_swissvalleycreek:"0?",
+  ia_turtlecreek:"0?",
+  ia_wapsiriver:"0",
+/* <<< ne iowa dnr trout streams */
 };
 
 /* ---------- Closed water ----------
