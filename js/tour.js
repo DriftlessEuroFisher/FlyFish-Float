@@ -81,15 +81,15 @@
       enter(){ if(typeof zonesShown !== "undefined" && zonesShown && typeof hideZones === "function"){ hideZones(); state.hid = true; } },
       extra(){ return LOC_ON() ? [["Turn on location", () => { locPrefSet("on"); if(locState === "off") locStart("following"); next(); }, "tt-primary"],
                                  ["Not now", () => { locPrefSet("off"); next(); }]] : null; }},
-    {part:"Map", sel:["#btn-zones"], title:"Regions", text:"Tap to get back to the state chooser at any time."},
+    {part:"Map", sel:["#btn-zones"], title:"Change Region", text:"Tap to get back to the state chooser at any time."},
     {part:"Map", sel:["#regionsel"], title:"Jump to region", text:"Pick an area from this list to fly straight to it — national parks, Alaska and all."},
-    {part:"Map", sel:['button[data-menu="tierchips"]'], title:"River classes", text:"Rivers are ranked Gold, Class 1, 2 and 3. Class 3 is hidden by default — open this menu and tap All to show everything. Your favourites always show."},
-    {part:"Map", sel:['button[data-menu="layerchips"]'], title:"Map layers", text:"Open this menu to switch on what you need: wade access and boat ramps, USGS gauges, falls and dams, bridge access, parking, campsites, trailheads, closed water and public land. Some appear only as you zoom in."},
+    {part:"Map", sel:['button[data-menu="tierchips"]'], title:"River Filters", text:"Rivers are ranked Gold, Class 1, 2 and 3. Class 3 is hidden by default — open this menu and tap All to show everything. Every launch starts this way again. Your favourites always show."},
+    {part:"Map", sel:['button[data-menu="layerchips"]'], title:"Map Icons", text:"The map opens with no icons, so the rivers read clearly. Open this menu to switch on what you need: wade access and boat ramps, USGS gauges, falls and dams, bridge access, parking, campsites, trailheads, closed water and public land. Zoom in close and access, ramps, parking and trailheads come on by themselves; open a river and the map shows that river's own access."},
     {part:"Map", skip:INSTALLED, title:"Add it to your Home Screen", text:"On iPhone, tap Share, then Add to Home Screen. It opens like an app, and it keeps your Field Book safe: Safari can clear a website’s saved data after a week without a visit, but not a Home Screen app’s."},
     {check:true, title:"That’s the map", text:"Want a quick look inside a river? We’ll open the Snake River in Jackson Hole as an example.",
       extra(){ return [["Show me", () => { state.skipped = false; next(); }, "tt-primary"],
                        ["Done for now", () => { state.skipped = true; go(FINISH, 1); }]]; }},
-    {part:"River", id:"snake", sheet:true, sel:["#sheetbody .rulescard"], title:"Rules today", text:"Before flows or notes: whether the season is open, whose licence you need, the rules this river names, and your right to wade. This is the Snake River as an example.",
+    {part:"River", id:"snake", sheet:true, sel:["#sheetbody .rulescard"], title:"Rules today", text:"Opening a river outlines it in gold on the map and shows its access points. First in the panel: whether the season is open, whose licence you need, the rules this river names, and your right to wade. This is the Snake River as an example.",
       enter: openSnake},
     {part:"River", sheet:true, sel:["#sheetbody .flowcard"], title:"Live flow", text:"Right-now CFS from the gauge, compared with the 7-year median for this week of the year. The label (like “Around average”) says how it compares; where a good-flow range is set it shows too. Many small creeks — most of the NE Iowa Driftless — have no gauge. Those say “Ungauged” and point you to the nearest gauged river as a rough guide, rather than guessing a number."},
     {part:"River", sheet:true, sel:["#sheetbody .sec"], title:"Float sections", text:"Each stretch lists its launch and take-out, river miles and a float-time estimate — scaled to today’s flow when there’s a reading, otherwise for a typical day."},
@@ -195,7 +195,8 @@
     sh.classList.remove("tall");
     if(typeof openRiver === "function"){
       // openRiver paints at once, then waits on the stats fetch; don't wait on a slow API.
-      await Promise.race([openRiver("snake"), new Promise(ok => setTimeout(ok, 5000))]);
+      // fit:false — the map stays put under the spotlight rather than flying off behind it.
+      await Promise.race([openRiver("snake", null, {fit:false}), new Promise(ok => setTimeout(ok, 5000))]);
     }
     await new Promise(ok => setTimeout(ok, 350));     // let the sheet finish sliding up before anything is measured
   }
@@ -251,7 +252,7 @@
     document.body.classList.remove("touring");
     const sh = sheetEl();
     if(state.openedSheet){
-      if(state.wasOpen && state.prevRiver && typeof openRiver === "function") openRiver(state.prevRiver);
+      if(state.wasOpen && state.prevRiver && typeof openRiver === "function") openRiver(state.prevRiver, null, {fit:false});
       else { sh.classList.remove("open"); if(typeof curRiver !== "undefined") curRiver = null; }
     }
     if(state.hid && typeof showZones === "function") showZones();

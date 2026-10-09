@@ -45,8 +45,9 @@ like an app, not a browser tab.
   class up or down, or to Class 3 when closed — `tierOf(r, date)`. It is a
   window table, not a forecast; live CFS status still comes from the gauge
   and is deliberately not mixed into the class. The filter is four empty
-  layer groups (layer control checkboxes + the chip row under "Regions"),
-  persisted in `localStorage.tierFilter`. Opening a hidden river (gauge tap)
+  layer groups (layer control checkboxes + the "River Filters" menu). It is
+  **not persisted**: every launch starts at Gold + 1 + 2 (owner's decision,
+  2026-10-09). Opening a hidden river (gauge tap)
   shows it for the session (`tempShown`). Park zone cards count *visible*
   rivers ("14 of 208") via `refreshZoneCounts()`. Yellowstone's 166 `minor`
   creeks are never listed, so they are Class 3.
@@ -1238,9 +1239,41 @@ never stored or sent.
 - **Two-finger tap** zooms out. Both fingers often land in one event on iOS.
 - **`zoomSnap` is 0.25, so `getZoom()` is fractional.** Compare with `>=`/`<`;
   floor it before using it as a key or with `<=` on an integer maximum.
-- **Rivers ▾ and Map layers ▾ are collapsible menus**, built from `TIER_KEYS`
-  and the **`LAYER_CHIPS`** table — a new layer (bridge access points) is one
-  more row.
+- **River Filters ▾ and Map Icons ▾ are collapsible menus** (renamed from
+  Rivers / Map layers on 2026-10-09), built from `TIER_KEYS` and the
+  **`LAYER_CHIPS`** table. A new layer is one more row. **Every icon layer
+  starts off at launch.**
+- **Icon layers have one owner: `syncIconLayers()`.** `iconWanted(id)`
+  decides each layer from, in order: river focus, the user's own chip
+  choices, then close zoom (`AUTO_ICON_ZOOM` 12 turns on wade, ramps,
+  parking and trailheads, 400 ms after the zoom settles). Any add or remove
+  not made by `syncIconLayers()` is recorded as the user's choice, and the
+  user's choice always wins. Don't add or remove these layers anywhere else.
+- **River focus** (`focusRiver` / `unfocusRiver`): opening a river frames it
+  in the area clear of the sheet and the controls (`goTo` takes `padding`),
+  draws it at full strength in `focusPane` with a gold casing while the
+  rivers pane fades, shows only its own access points at any zoom, turns on
+  parking, bridges and falls/dams (plus closed water if it has
+  `CLOSURES`), and turns gauges off. A gauge tap, the tour and a live float
+  open with `{fit:false}`. Closing the sheet, a lake or the chooser ends it.
+  If the whole river would frame below `FOCUS_MIN_ZOOM` (10), the view
+  centres on an anchor at zoom 10 instead: the tapped point, the tapped pin,
+  the nearest on-screen point of the line, the primary gauge, or the line's
+  middle, in that order. On a phone the clear area is only ~200×120 px.
+- **Bridges draw on a canvas, and a Leaflet canvas swallows every tap that
+  lands on it**, even after its layer is switched off. Once focus mode turned
+  bridges on routinely, river and chooser taps underneath silently died. The
+  bridge pane is `pointer-events:none`, and a map click within `BR_HIT_PX`
+  (10 px) of a drawn bridge opens its popup. Markers beat bridges, and
+  bridges beat river lines. Keep any future canvas layer the same way.
+- **Pane CSS uses Leaflet's real class names**: `leaflet-rivers-pane`,
+  `leaflet-land-pane`, `leaflet-allGauge-pane` (case matters),
+  `leaflet-zone-pane`, which is the `createPane` name minus "Pane". Until
+  2026-10-09 the selectors read `.riversPane`, matched nothing, and the
+  river halo and the chooser's tap-blocking had never actually worked.
+- **Empty-map nudge:** from zoom 9 to below 12, with no icons on, no sheet
+  open and no chooser, welcome or tour showing, the Map Icons button gets a
+  ring. A tip shows once per session (sessionStorage).
 - **Zoom +/− is bottom-right** above locate. Top-left controls clear the app
   bar by its *measured* height (`--appbar-h`, set by a ResizeObserver): the
   title wraps to two lines on a phone.
@@ -1848,7 +1881,7 @@ are worth calibrating first.
 - **Park cards drop out at 12% overlap, not 45%**, and parks with mapped water
   are placed before parks without — the Four Corners cards stacked into an
   unreadable pile otherwise. A dropped card comes back one zoom step in.
-- **The Regions button is top-left, under the zoom control.** The safety
+- **The "◄ Change Region" button (`#btn-zones`) is top-left.** The safety
   panel opens over the top-right corner the moment you enter a zone, and
   it was burying the one control that gets you back out.
 - **The flow animation has to be right before it is pretty.** River lines
@@ -1941,9 +1974,8 @@ are worth calibrating first.
   zoom past 16 instead of upscaling. Imagery layers (Google, Esri, USGS
   Imagery+Topo) are still available in the layer control.
 - **Map layers and marker density.** Markers live in toggleable
-  `L.layerGroup`s wired into the layer control: *Wade access & parking* and
-  *USGS gauges* on by default, *Boat ramps* off, *Public hunting / fishing
-  land* on. Dropping ~280 access pins at every zoom made the map unreadable,
+  `L.layerGroup`s wired into the layer control, **all off at launch** (see
+  the icon-layer rules above). Dropping ~280 access pins at every zoom made the map unreadable,
   so `syncMarkers()` also zoom-gates membership — boat ramps from z8, wade
   access from z9 — independently of whether the group is switched on. On a
   Driftless creek "access" means a signed gravel pull-off, not a ramp, which

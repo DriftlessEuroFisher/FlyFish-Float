@@ -17,6 +17,101 @@ testing close to home, including wade and hike-in-only water.
 National-park features start in Grand Teton and Yellowstone. Expand only
 after they've been used for real there. (See CLAUDE.md, "How we work".)
 
+### Usability cleanup from the pilot regions — `ready` (decided 2026-10-09)
+A self-review of what someone actually sees on a Driftless creek, the
+Jackson Hole rivers and the Des Moines water trails. Theme: **the app says
+the same thing three times and buries the one thing that matters.** Build
+it after the river focus view / Map Icons / launch-defaults change has
+landed (that one is rewriting the same menus and the tour). Build it in
+three batches, one per session. Panel changes are pure UI and ship
+everywhere at once.
+
+**Decisions made**
+- The app's own ranking is renamed so it can't be confused with an agency's
+  class. Gold / Class 1 / Class 2 / Class 3 become **Top pick / Worth it /
+  Local / Other**. Keep the `tiers.js` keys (`gold`, `"1"`, `"2"`, `"3"`)
+  so no data changes. Top pick also needs a colour that isn't gold: gold now
+  means "the river you opened" (focus highlight `#e2b33c`, close to the old
+  tier `#c79a1c`). Avoid the survey orange, the closure red and the
+  trout-class teal, rust and purple.
+- The **"All" chip draws "Other" rivers only inside the view, from zoom 8**,
+  instead of ~1,000 lines at once.
+
+**Batch A — the river panel** (`build-opus-xhigh`: this is how regulations
+are displayed)
+1. Rename the ranking everywhere: `TIER_INFO`, `TIER_LABEL`,
+   `tierChipHTML()` ("Usually Class 1 — …"), the River Filters chips, the
+   layer control, tour.js, the legend, any `why` text in tiers.js that says
+   "Class", and CLAUDE.md.
+2. **One regulations block.** Keep the rules-card tags as the summary. Below
+   them goes a single fold, "Regulations", holding:
+   - the per-reach class badges with miles
+   - the verbatim text per reach
+   - the DNR page lines, with repeated sentences shown once (Waterloo
+     repeats the "artificial lure means…" definition for each species)
+   - the source and the DNR link
+
+   Drop the separate "Trout class & regulations" section. Use the same
+   single fold for `parkRegs` rivers.
+3. **Driftless access in the card.** On `region:"driftless"` (and
+   `doorcounty`), the "Wading & access" row becomes the easement rule: fish
+   and walk the stream corridor, don't leave it, park in the marked
+   pull-offs. The state streambed law moves into the fold. Remove the grey
+   Driftless footer line that duplicates it.
+4. **Season row.** If every reach's rule text says "Continuous open season",
+   show "Open all year". Drop the empty "Season set by the rules below" row;
+   the licence line leads instead.
+5. **Rows that tell nothing:**
+   - Hide "Floating: Wade only." on Driftless creeks that have no
+     `SECTIONS`.
+   - The ungauged card becomes one line on Driftless, Door and North Shore
+     water: "No gauge on this creek — judge clarity on arrival." The nearby
+     river's reading folds underneath, labelled as a different stream. Keep
+     the rule that no status badge appears there.
+   - Fold `fish` into the description block. There's no separate "Fishing
+     notes" heading when it repeats the description's stocking facts.
+   - Research becomes one link, "Search for fishing reports ↗". The Reddit
+     links stay in the Field Book Research tab.
+6. **Multi-gauge rivers** (the Snake has 4, the Raccoon 4, the Des Moines
+   3): the primary gauge card comes first, and the rest fold into "3 more
+   gauges along the river". Float sections come right after the primary
+   gauge, ahead of the notes.
+7. **Des Moines water trails:** the low-head-dam warning moves into the
+   rules card (state IA, not driftless), out of the footer.
+
+**Batch B — controls and chrome** (`build-opus-high`)
+1. Merge "◄ Change Region" and the "Jump to region…" dropdown into one
+   control: tapping it opens the chooser, which also lists the jump targets.
+2. Map Icons, 11 switches down to 8:
+   - **Parking & access**: the wade layer, which carries the DNR P lots and
+     fishing access, plus the OSM Parking layer.
+   - **Gauges**, with "show every USGS gauge" as an option inside it,
+     replacing the separate "All USGS gauges" chip.
+   - **Hazards & closures**: falls, rapids & dams plus closed water, both
+     safety layers.
+   - Unchanged: Boat ramps, Trailheads, Campsites, Bridge access, Public
+     land.
+
+   Keep the close-zoom auto icons and focus mode behaving the same through
+   the merge.
+3. App bar on phones (under 768 px): drop the tagline and keep the title to
+   one line. It currently takes about 20% of an iPhone screen.
+4. The "All" chip draws Other rivers only in view, from zoom 8 (see the
+   decisions above): recompute on `moveend`, using the existing
+   `riverVisible()` / `tierShown()` path.
+
+**Batch C — help** (`build-sonnet-high`)
+1. The `?` panel becomes a one-screen key: line colours (trout classes and
+   what a colour change part-way means), the ranking names, the icons
+   including **P**, the gold focus highlight, closures and hazards. The
+   current 35 notes move into a fold, "How this data was built", kept
+   verbatim. Tour copy is checked against it.
+
+**Check each batch on a phone-sized viewport** with Waterloo Creek, South
+Bear, the Snake, the Raccoon and one Yellowstone creek. The test: from a
+cold open, the rule and the nearest parking are findable in five seconds
+without scrolling past a repeat.
+
 ### Rulebook streams, every western state — `building`
 Every stream with its own entry in the state's 2026 regulations, one state
 per session (CLAUDE.md, "Rulebook streams"). Montana done (93, 7d267c5).

@@ -878,6 +878,7 @@ map.on("zoomend moveend", syncLakes);
 
 function openLake(id){
   const k = LAKES.find(x => x.id === id); if(!k) return;
+  unfocusRiver();                       // the sheet stays open, but it is no longer a river's
   curRiver = null;
   $("#sw").style.background = "#3aa7c2";
   $("#sh-title").textContent = k.name;
@@ -933,7 +934,7 @@ function openLake(id){
    ============================================================ */
 const closurePane = map.createPane("closurePane");
 closurePane.style.zIndex = 418;          // over the rivers and the current, under the labels
-const closureLayer = L.layerGroup().addTo(map);
+const closureLayer = L.layerGroup();      // off at launch; on while a river with a closure is open (focusSays)
 const closureShapes = [];
 const CLOSURE_MIN_ZOOM = 9;
 
@@ -1077,7 +1078,9 @@ function syncFlow(){
   };
   const want = [];
   let budget = FLOW_MAX_PATHS;
-  for(const r of RIVERS){
+  // the river whose sheet is open is the one being looked at: it gets the budget first
+  const order = focusId ? [riverLayers[focusId].river].concat(RIVERS.filter(r => r.id !== focusId)) : RIVERS;
+  for(const r of order){
     const l = riverLayers[r.id];
     if(!l || !riverVisible(r)) continue;
     if(!view.intersects(l.line.getBounds())) continue;
@@ -1111,7 +1114,7 @@ function syncFlow(){
       const l = L.polyline(run, {pane:"flowPane", interactive:false,
         color:"#ffffff", opacity:.95, weight:3, lineCap:"round",
         lineJoin:"round", smoothFactor:0,
-        dashArray:"6 24", className:"flow-line " + cls}).addTo(flowLayer);
+        dashArray:"6 24", className:"flow-line " + cls + (r.id === focusId ? " rv-on" : "")}).addTo(flowLayer);
       lines.push(l);
     });
     if(lines.length) flowLines[r.id] = lines;
@@ -1140,7 +1143,11 @@ function syncLabels(){
     const t = tierNow.get(l.river.id);
     if(t && t.tier === "2") min += 1;
     else if(t && t.tier === "3") min += 2;
-    l.lbl.setOpacity(z >= min ? 1 : 0);
+    // the open river keeps its name at any zoom; the rest fade with it (css: .rv-focus)
+    const mine = l.river.id === focusId;
+    l.lbl.setOpacity(z >= min || mine ? 1 : 0);
+    const el = l.lbl.getElement();
+    if(el) el.classList.toggle("rv-on", mine);
   });
 }
 map.on("zoomend", syncLabels);
@@ -1199,11 +1206,9 @@ function riverColor(r){
    dimmed — so it also costs no labels, flow animation or geometry fetches
    (riverVisible() is what the flow and refine loops already ask). */
 const TIER_KEYS = ["gold","1","2","3"];
+/* Every launch starts on these defaults; the choice is not remembered
+   (an old `tierFilter` key left in localStorage is simply never read). */
 let tierFilter = {gold:true, "1":true, "2":true, "3":false};
-try{
-  const saved = JSON.parse(localStorage.getItem("tierFilter")||"null");
-  if(saved && TIER_KEYS.every(k => typeof saved[k]==="boolean")) tierFilter = saved;
-}catch(e){}
 /* ---------- Field Book storage ----------
    One localStorage key, loaded once into memory and written through on every
    change. It lives up here, above tierShown(), because tierShown() asks it
@@ -1580,6 +1585,10 @@ const GRTE_SHARED = ["snake","buffalofork","grosventre",
 
 const riverLayers = {}, rampMarkers = {}, gaugeDots = {};
 let highlight = null;
+/* The river whose sheet is open and the map has turned to (see "RIVER
+   FOCUS" further down), or null. Declared up here because syncLabels() and
+   syncMarkers() read it on their first calls at startup. */
+let focusId = null;
 
 /* Per-reach colours. The Iowa DNR designates a stream reach by reach -- a
    catch-and-release stretch inside catchable water -- and `reachClass` gives
@@ -1600,7 +1609,7 @@ function reachOverlays(r, line){
     const o = L.polyline(run, {color:tc.color, weight:tierWeight(r), opacity:.92,
       lineCap:"round", lineJoin:"round", smoothFactor:1.2, pane:"riversPane"}).addTo(map);
     o.reachColor = tc.color;
-    onTap(o, ()=>openRiver(r.id));
+    onTap(o, e=>openRiver(r.id, null, {at:e.latlng}));
     out.push(o);
   });
   if(out.length){
@@ -1628,7 +1637,15 @@ function reachMiles(r){
 RIVERS.forEach(r=>{
   const line = L.polyline(r.coords,{color:riverColor(r), weight:tierWeight(r), opacity:.92,
     lineCap:"round", lineJoin:"round", smoothFactor:1.2, pane:"riversPane"}).addTo(map);
-  onTap(line, ()=>openRiver(r.id));
+  // An NHD snap or a zoom refinement redraws the line in place; the gold
+  // focus outline has to follow it rather than keep tracing the old one.
+  const setLL = line.setLatLngs;
+  line.setLatLngs = function(ll){
+    const out = setLL.call(this, ll);
+    if(focusId === r.id) drawFocus();
+    return out;
+  };
+  onTap(line, e=>openRiver(r.id, null, {at:e.latlng}));   // where it was tapped: see fitFocus
   const mid = midCoord(r.coords);
   const lbl = L.marker(mid,{interactive:false,icon:L.divIcon({className:"riv-label",html:r.name.split("—")[0].split("(")[0].trim(),iconSize:null})}).addTo(map);
   riverLayers[r.id]={line,lbl,river:r,reaches:reachOverlays(r, line)};
@@ -1660,37 +1677,48 @@ function apGlyph(p){
    dots on at once, at every zoom — unreadable at statewide view and not much
    better at regional. Now each kind lives in its own toggleable group:
 
-     Boat ramps          off by default — opt in when you're floating.
-     Wade access/parking on  by default — this is the whole game on a
-                             Driftless spring creek, where "access" means a
-                             signed gravel pull-off, not a ramp.
-     USGS gauges         on  by default — they're the live data.
+     Boat ramps          launch / take-out / both
+     Wade access/parking role:"wade" — on a Driftless spring creek "access"
+                         means a signed gravel pull-off, not a ramp.
+     USGS gauges         the live data, as coloured dots.
+
+   Every group starts OFF at launch, so the map opens on the rivers alone.
+   Which ones come on after that — the user's taps, an open river's sheet,
+   or zooming in close — is decided in one place, iconWanted() (see "MAP
+   ICONS" further down).
 
    syncMarkers() additionally zoom-gates membership so the groups stay empty
    at statewide zoom and fill in as you get close enough for them to mean
-   something. */
+   something — and while a river's sheet is open, only that river's access
+   points show. */
 const rampLayer   = L.layerGroup();              // launch / takeout / both
-const wadeLayer   = L.layerGroup().addTo(map);   // role:"wade" parking & walk-in
-const gaugeLayer  = L.layerGroup().addTo(map);
+const wadeLayer   = L.layerGroup();              // role:"wade" parking & walk-in
+const gaugeLayer  = L.layerGroup();
 const RAMP_MIN_ZOOM = 8, WADE_MIN_ZOOM = 9;
 
 RAMPS.forEach(p=>{
   const m = L.marker(p.pos,{icon:apIcon(p,"")});
   m.bindPopup(`<b>${p.name}</b><br><span style="font-size:11px">${p.kind==="parking" ? "Parking" : roleWord(p.role)} · ${p.note}</span>`+
     (p.src ? `<br><span style="font-size:10.5px;color:var(--txt-dim)">Source: ${p.src}</span>` : ""));
-  m.on("click",()=>{ openRiver(p.river); });
+  m.on("click",()=>{ openRiver(p.river, null, {at:p.pos}); });
   rampMarkers[p.id]=m;
 });
 function groupFor(p){ return p.role==="wade" ? wadeLayer : rampLayer; }
 function minZoomFor(p){ return p.role==="wade" ? WADE_MIN_ZOOM : RAMP_MIN_ZOOM; }
 /* Membership is (passes the filter chips) AND (zoomed in far enough).
    Toggling the group itself on/off is the layer control's job, so this
-   stays independent of whether the user has that group showing. */
+   stays independent of whether the user has that group showing.
+   While a river is in focus (its sheet open) every other river's access
+   points step aside, so the pins on screen are the ones that answer "where
+   do I get on this water?" — put-ins and take-outs included, since focus
+   switches both groups on. The zoom gates still apply to the focused river:
+   showing its pins at any zoom put eighteen of them on the Snake at zoom 7,
+   one clump sitting on the very line they were meant to explain. */
 function syncMarkers(){
   const z = map.getZoom();
   RAMPS.forEach(p=>{
     const m = rampMarkers[p.id], g = groupFor(p);
-    const show = rampPassesFilter(p) && z >= minZoomFor(p);
+    const show = rampPassesFilter(p) && (!focusId || p.river === focusId) && z >= minZoomFor(p);
     const has = g.hasLayer(m);
     if(show && !has) g.addLayer(m);
     else if(!show && has) g.removeLayer(m);
@@ -1756,7 +1784,7 @@ function repaintGauges(){ Object.keys(gaugeDots).forEach(k=>gaugeDots[k].setIcon
    ============================================================ */
 const PADUS_URL = "https://services.arcgis.com/v01gqwM5QqNysAAi/ArcGIS/rest/services/PADUS_Public_Access/FeatureServer/0/query";
 const PUBLIC_LAND_MIN_ZOOM = 8;
-const publicLand = L.layerGroup().addTo(map);
+const publicLand = L.layerGroup();               // off at launch, like every Map Icons layer
 let padusKey = null, padusBusy = false;
 
 /* Manager -> colour, all drawn at the SAME weight.
@@ -2178,12 +2206,36 @@ const bridgeLayer = makeTiledLayer({
     }).bindPopup(() => bridgePopupHTML(row), {maxWidth:270, className:"ag-popup"})
 });
 layerControl.addOverlay(bridgeLayer, "Bridge access");
+/* The canvas takes no taps; bridges are matched to a tap here instead.
+   A Leaflet canvas answers every tap that lands on it, bridge or not, and
+   passes none of them down — and its renderer stays on the map after the
+   layer is switched off. So once bridges had been on (which every open
+   river now does), the canvas sat over the rivers, the falls and dams, the
+   parking pins and the region chooser, and none of them could be tapped:
+   tapping a second river didn't open it, and tapping a state didn't enter
+   it. Now the pane is pass-through and a map tap within BR_HIT_PX of a
+   drawn bridge opens that bridge. It beats a river line tapped at the same
+   spot (the bridge is drawn on top: cancelTap() stops the river's delayed
+   open) and loses to any marker, since markers don't pass a tap to the map. */
+bridgePane.style.pointerEvents = "none";
+const BR_HIT_PX = 10;
+map.on("click", e => {
+  if(zonesShown || !map.hasLayer(bridgeLayer) || !e.containerPoint) return;
+  let best = null, bestD = BR_HIT_PX;
+  bridgeLayer.eachLayer(m => {
+    const d = map.latLngToContainerPoint(m.getLatLng()).distanceTo(e.containerPoint);
+    if(d < bestD){ bestD = d; best = m; }
+  });
+  if(best){ cancelTap(); best.openPopup(); }
+});
 
 /* ============================================================
    WATERFALLS, RAPIDS & DAMS — a safety layer (data/hazards/)
    USGS National Hydrography Dataset. Row: [lat, lng, type, name|null],
-   type "falls" | "rapids" | "dam". ON by default: knowing there is a low-head
-   dam below the next bend matters more than any other marker here. Glyphs are
+   type "falls" | "rapids" | "dam". Off at launch like every Map Icons layer,
+   but it comes on whenever a river's sheet is open: knowing there is a
+   low-head dam below the next bend matters more than any other marker here,
+   and the open river is the water you are about to be on. Glyphs are
    inline SVG with a white outline so they read over blue topo water; they sit
    in a pane above the rivers (410) and below the markers (600). */
 const hazardPane = map.createPane("hazardPane");
@@ -2224,7 +2276,6 @@ const hazardLayer = makeTiledLayer({
     .bindPopup(() => hazardPopupHTML(row), {maxWidth:270, className:"ag-popup"})
 });
 layerControl.addOverlay(hazardLayer, "Falls, rapids &amp; dams");
-hazardLayer.addTo(map);                          // on by default
 
 /* ============================================================
    PARKING, CAMPSITES & TRAILHEADS (data/poi/) — three layers, one set of cells
@@ -2621,7 +2672,14 @@ function riverPlace(r){
 }
 function riverStateName(r){ return riverPlace(r).split(" · ")[0]; }
 
-async function openRiver(id, focusGauge){
+/* opts.fit === false opens the sheet without moving the map — the tour, and
+   the tour putting back a river that was open before it. A gauge tap
+   (focusGauge) pans to that gauge instead, and a live float keeps the map on
+   the boat; every other way in is someone choosing this river, so the map
+   frames it (focusRiver). opts.at is where on the river they chose it — the
+   point tapped on the line, or the access pin tapped — which is what a river
+   too long to show whole is framed on (fitFocus). */
+async function openRiver(id, focusGauge, opts){
   const r = RIVERS.find(x=>x.id===id); if(!r) return;
   curRiver = id;
   if(!tierShown(r)){ tempShown.add(id); applyFilters(); }   // opened on purpose: show it
@@ -2631,6 +2689,8 @@ async function openRiver(id, focusGauge){
   fbShowRow(r);
   sheet.classList.add("open");
   loadRealRiver(r);                    // snap this river to exact USGS linework
+  const floating = typeof floatActiveNow === "function" && floatActiveNow();
+  focusRiver(r, !focusGauge && !(opts && opts.fit === false) && !floating, opts && opts.at);
   renderSheet(r);                      // instant paint with whatever we have
   // lazy-load stats + metadata for this river's gauges, then repaint.
   // Batched across the river's gauges: opening the Mississippi Headwaters
@@ -3027,8 +3087,10 @@ function sectionHTML(s){
 function zoomSection(s){
   const put = RAMPS.find(p=>p.id===s.put), take = RAMPS.find(p=>p.id===s.take);
   // zooming to a float is an explicit "show me the ramps" gesture, so switch
-  // the boat-ramp layer on even though it's off by default
-  if(!map.hasLayer(rampLayer)) rampLayer.addTo(map);
+  // the boat-ramp layer on even though it's off by default. It is recorded
+  // as the user's own choice: on a phone this closes the sheet, which ends
+  // the river focus, and that must not take the ramps away again.
+  iconUserSet("ramps", true); syncIconLayers();
   // restyle the two ramps as put-in / take-out
   RAMPS.forEach(p=>rampMarkers[p.id].setIcon(apIcon(p,"")));
   rampMarkers[put.id].setIcon(apIcon(put,"sel-put"));
@@ -3508,9 +3570,7 @@ bookBody.addEventListener("click", e => {
   const r = RIVERS.find(x => x.id===b.dataset.fbopen); if(!r) return;
   closeBook();
   hideZones();                               // no-op unless the region chooser is up
-  const pts = flatCoords(r.coords);
-  if(pts.length) goTo(L.latLngBounds(pts).pad(0.1));
-  openRiver(r.id);
+  openRiver(r.id);                           // frames the river clear of the sheet (focusRiver)
 });
 
 /* Export / import. Import is a merge, never a replace: per river the newer
@@ -3613,7 +3673,7 @@ refreshAll();
    The map opens on the country with the covered areas drawn over it, so the
    first question ("where am I fishing?") is answered by pointing rather than
    by panning around a continent looking for coloured lines. Picking a zone
-   flies there and dismisses the picker; the Regions button brings it back.
+   flies there and dismisses the picker; the Change Region button brings it back.
    ============================================================ */
 const zonePane = map.createPane("zonePane");
 zonePane.style.zIndex = 450;
@@ -3641,9 +3701,12 @@ function canAnimate(){
 let pendingView = null;
 map.on("resize", () => {
   if(!pendingView) return;
-  const v = pendingView; pendingView = null; goTo(v.target, v.zoom);
+  const v = pendingView; pendingView = null; goTo(v.target, v.zoom, v.opts);
 });
-function goTo(target, zoom){
+/* `opts` is passed through to a bounds fit — paddingTopLeft/BottomRight and
+   maxZoom — so a river can be framed in the part of the map the sheet
+   leaves uncovered. */
+function goTo(target, zoom, opts){
   const s = map.getSize();
   if(!s.x || !s.y){
     // A zero-size container doesn't only break the animation: fitBounds
@@ -3651,17 +3714,17 @@ function goTo(target, zoom){
     // answer is the whole world. That is how the opening chooser once
     // landed on a zoom-0 view of the globe with every zone a few pixels
     // wide. Hold the move until the map has real dimensions.
-    pendingView = {target, zoom};
+    pendingView = {target, zoom, opts};
     setTimeout(() => {
       if(pendingView && map.getSize().x){
-        const v = pendingView; pendingView = null; goTo(v.target, v.zoom);
+        const v = pendingView; pendingView = null; goTo(v.target, v.zoom, v.opts);
       }
     }, 200);
     return;
   }
   if(target instanceof L.LatLngBounds){
-    if(canAnimate()) map.flyToBounds(target, {duration:0.9});
-    else map.fitBounds(target, {animate:false});
+    if(canAnimate()) map.flyToBounds(target, Object.assign({duration:0.9}, opts));
+    else map.fitBounds(target, Object.assign({animate:false}, opts));
   } else {
     if(canAnimate()) map.flyTo(target, zoom, {duration:0.7});
     else map.setView(target, zoom, {animate:false});
@@ -3993,6 +4056,7 @@ map.on("zoomend moveend", syncRegionLabels);
 
 function showZones(){
   if(zonesShown) return;
+  unfocusRiver();                     // the chooser is "which part of the country", not one river
   zonesShown = true;
   zoneLayer.addTo(map);
   document.body.classList.add("zones-open");
@@ -4029,14 +4093,14 @@ syncFlow();
 syncLakes();
 syncClosures();
 
-/* Regions button — always available, so you can get back to the chooser
-   without hunting for the right zoom level. Top *left*, under the app bar
+/* Change Region button — always available, so you can get back to the
+   chooser without hunting for the right zoom level. Top *left*, under the app bar
    (the zoom +/− now lives bottom-right): top-right is taken by the layer control and sheet, and the
-   Regions button is the one control that gets you back out. */
+   Change Region button is the one control that gets you back out. */
 const zoneCtl = L.control({position:"topleft"});
 zoneCtl.onAdd = function(){
   const d = L.DomUtil.create("div");
-  d.innerHTML = `<button id="btn-zones" title="Back to region chooser">◄ Regions</button>`;
+  d.innerHTML = `<button id="btn-zones" title="Back to region chooser">◄ Change Region</button>`;
   L.DomEvent.disableClickPropagation(d);
   d.querySelector("button").addEventListener("click", ()=>{
     if(zonesShown) hideZones(); else showZones();
@@ -4087,7 +4151,6 @@ TIER_KEYS.forEach(k => {
     if(tierFilter[k] === on) return;
     tierFilter[k] = on;
     tempShown.clear();
-    try{ localStorage.setItem("tierFilter", JSON.stringify(tierFilter)); }catch(e){}
     syncTierChips(); applyFilters();
   };
   g.on("add", ()=>set(true));
@@ -4111,9 +4174,9 @@ const LAYER_CHIPS = [
   ["closed", "Closed water", closureLayer, "#c0392b"],
   ["land",   "Public land",  publicLand,   "#3f8f4f"],
 ];
-/* The chips live in two collapsed menus ("Rivers", "Map layers") rather than
-   two always-open columns, which covered a lot of a phone-sized map. Only one
-   panel is open at a time; a map tap or Escape closes it. Always starts
+/* The chips live in two collapsed menus ("River Filters", "Map Icons") rather
+   than two always-open columns, which covered a lot of a phone-sized map. Only
+   one panel is open at a time; a map tap or Escape closes it. Always starts
    collapsed — nothing is remembered. */
 const tierCtl = L.control({position:"topleft"});
 tierCtl.onAdd = function(){
@@ -4121,15 +4184,15 @@ tierCtl.onAdd = function(){
   d.id = "chipbar";
   d.innerHTML =
     `<button type="button" class="menubtn" data-menu="tierchips" aria-expanded="false" aria-controls="tierchips">`+
-      `<span class="mlabel">Rivers</span> <span class="mcount"></span><span class="mcaret" aria-hidden="true">\u25BE</span></button>`+
-    `<div id="tierchips" class="chipcol menupanel" role="group" aria-label="River classes shown" hidden>`+
+      `<span class="mlabel">River Filters</span> <span class="mcount"></span><span class="mcaret" aria-hidden="true">\u25BE</span></button>`+
+    `<div id="tierchips" class="chipcol menupanel" role="group" aria-label="River filters: classes shown" hidden>`+
     TIER_KEYS.map(k =>
       `<button data-tier="${k}" class="${tierFilter[k]?"on":""}" aria-pressed="${!!tierFilter[k]}" style="--tc:${TIER_INFO[k].color}">`+
       `${k==="3" ? "All" : k==="gold" ? "Gold" : "Class "+k}</button>`).join("")+
     `</div>`+
     `<button type="button" class="menubtn" data-menu="layerchips" aria-expanded="false" aria-controls="layerchips">`+
-      `<span class="mlabel">Map layers</span> <span class="mcount"></span><span class="mcaret" aria-hidden="true">\u25BE</span></button>`+
-    `<div id="layerchips" class="chipcol menupanel" role="group" aria-label="Map markers shown" hidden>`+
+      `<span class="mlabel">Map Icons</span> <span class="mcount"></span><span class="mcaret" aria-hidden="true">\u25BE</span></button>`+
+    `<div id="layerchips" class="chipcol menupanel" role="group" aria-label="Map icons shown" hidden>`+
     LAYER_CHIPS.map(([id,label,g,c]) =>
       `<button data-layer="${id}" class="${map.hasLayer(g)?"on":""}" aria-pressed="${map.hasLayer(g)}" style="--tc:${c}">${label}</button>`).join("")+
     `</div>`;
@@ -4180,6 +4243,319 @@ tierCtl.onAdd = function(){
 tierCtl.addTo(map);
 TIER_KEYS.forEach(k => { if(tierFilter[k]) tierGroups[k].addTo(map); });
 refreshMenuCounts();
+
+/* ============================================================
+   MAP ICONS — one answer to "which icon layers are on?"
+   Three things have a say, and as separate add/remove paths they would undo
+   each other (focus restoring a layer that close zoom had just turned on,
+   or zooming out taking away one the user asked for). So there is one
+   function, iconWanted(), computed from:
+
+     1. The user's own choice: a chip, a layer-control checkbox, or "Show on
+        map" on a float section. Everything is off at launch and nothing is
+        remembered between launches.
+     2. River focus: while a river's sheet is open, its access points,
+        parking, bridges and the safety layers come on and the gauges step
+        aside — unless the user taps that chip during the focus, after which
+        it is theirs, and stays theirs when the sheet closes.
+     3. Close zoom: from AUTO_ICON_ZOOM in, access, boat ramps, parking and
+        trailheads come on by themselves and go again below it. One the user
+        switches off while zoomed in stays off until they zoom back out; one
+        they switched on stays on both ways.
+
+   syncIconLayers() applies the answer and is the only code that adds or
+   removes these layers on the app's behalf; any other add or remove is the
+   user's and is recorded as such (iconUserSet). Ending a focus is therefore
+   just recomputing without it — no snapshot to restore, and nothing the
+   user changed in the meantime gets overwritten.
+   ============================================================ */
+const AUTO_ICON_ZOOM  = 12;          // compare with >= : zoomSnap is 0.25, so zoom is fractional
+const AUTO_ICON_DELAY = 400;         // ms after zoomend, so a pinch passing through 12 doesn't flap
+const AUTO_ICONS      = new Set(["wade", "ramps", "parking", "trailheads"]);
+const FOCUS_ICONS_ON  = new Set(["wade", "ramps", "parking", "bridges", "hazards"]);
+const FOCUS_ICONS_OFF = new Set(["gauges", "allgauges"]);
+const iconChoice   = {};             // chip id -> the user's own on/off (absent = off)
+const autoVeto     = new Set();      // switched off by hand while zoomed in close
+const focusTouched = new Set();      // tapped during the current focus: the user's call now
+let autoZoomed = false;              // the last *settled* zoom was close (never mid-animation)
+let autoT = null, applyingIcons = false;
+
+function focusSays(id){
+  if(!focusId || focusTouched.has(id)) return null;
+  if(FOCUS_ICONS_OFF.has(id)) return false;
+  if(FOCUS_ICONS_ON.has(id)) return true;
+  // Closed water only where this river has a closure (Yellowstone); anywhere
+  // else it would add one to the count and nothing to the map.
+  if(id === "closed" && typeof CLOSURES !== "undefined" && CLOSURES.some(c => c.river === focusId)) return true;
+  return null;
+}
+function iconWanted(id){
+  const f = focusSays(id);
+  if(f !== null) return f;
+  if(iconChoice[id]) return true;
+  return autoZoomed && AUTO_ICONS.has(id) && !autoVeto.has(id);
+}
+function syncIconLayers(){
+  applyingIcons = true;
+  try{
+    LAYER_CHIPS.forEach(([id,,g]) => {
+      const want = iconWanted(id), has = map.hasLayer(g);
+      if(want && !has) map.addLayer(g);
+      else if(!want && has) map.removeLayer(g);
+    });
+  } finally { applyingIcons = false; }
+}
+function iconUserSet(id, on){
+  iconChoice[id] = on;
+  if(focusId) focusTouched.add(id);
+  if(on) autoVeto.delete(id);
+  else if(autoZoomed && AUTO_ICONS.has(id)) autoVeto.add(id);
+}
+LAYER_CHIPS.forEach(([id,,g]) => {
+  g.on("add",    () => { if(!applyingIcons) iconUserSet(id, true);  iconNudge(); });
+  g.on("remove", () => { if(!applyingIcons) iconUserSet(id, false); iconNudge(); });
+});
+/* Close zoom acts only once the zoom has settled: zoomstart cancels a
+   pending check, so a pinch or a fly that passes through 12 on its way
+   somewhere else never switches anything. */
+function autoIconsLater(){
+  clearTimeout(autoT);
+  autoT = setTimeout(() => {
+    if(map._animatingZoom){ autoIconsLater(); return; }
+    autoZoomed = !zonesShown && map.getZoom() >= AUTO_ICON_ZOOM;
+    if(!autoZoomed) autoVeto.clear();          // zoomed back out: a fresh start next time in
+    syncIconLayers();
+  }, AUTO_ICON_DELAY);
+}
+map.on("zoomend", autoIconsLater);
+map.on("zoomstart", () => clearTimeout(autoT));
+
+/* ============================================================
+   RIVER FOCUS — the map turns to the river whose sheet is open.
+   Opening a river outlines it in gold, fades the rest of the water back,
+   frames it clear of the sheet (fitFocus), shows that river's own access
+   points (put-ins and take-outs included) and no other river's,
+   switches on parking, bridges and the safety layers, and takes
+   the gauge dots away — the sheet already has the flow. Closing the sheet
+   puts the map back as it was (iconWanted() without the focus) and leaves
+   the view where it is. Going straight from one river to another moves the
+   focus without putting anything back in between.
+
+   The fading is ONE opacity on the rivers pane (css: #map.rv-focus), not a
+   restyle of a thousand polylines, and so that the open river isn't faded
+   with them it is drawn again at full strength in its own pane above,
+   over a gold casing. That copy takes no taps: they fall through to the
+   river's real line underneath, which is what everything else uses.
+   ============================================================ */
+const focusPane = map.createPane("focusPane");
+focusPane.style.zIndex = 412;          // over the faded rivers (410), under the current (415) and floats (415)
+focusPane.style.pointerEvents = "none";
+const FOCUS_GOLD = "#e2b33c";
+const FOCUS_MAX_ZOOM = 14;             // a 1 km creek shouldn't fill the screen at z17
+const FOCUS_MIN_ZOOM = 10;             // below this a whole river is a thread: frame a reach of it (fitFocus)
+let focusDrawn = null;                 // the gold casing + the full-strength copy, as one group
+
+function drawFocus(){
+  if(focusDrawn){ map.removeLayer(focusDrawn); focusDrawn = null; }
+  const lay = focusId && riverLayers[focusId];
+  if(!lay) return;
+  const r = lay.river, w = tierWeight(r), ll = lay.line.getLatLngs();
+  const opt = {pane:"focusPane", interactive:false, lineCap:"round", lineJoin:"round", smoothFactor:1.2};
+  focusDrawn = L.layerGroup([
+    L.polyline(ll, {...opt, color:FOCUS_GOLD, weight:w + 14, opacity:.25}),   // soft glow
+    L.polyline(ll, {...opt, color:FOCUS_GOLD, weight:w + 6,  opacity:.95}),   // the casing
+    L.polyline(ll, {...opt, color:riverColor(r), weight:w, opacity:.95}),
+    // per-reach trout colours stay on top, exactly as on the real line
+    ...lay.reaches.map(o => L.polyline(o.getLatLngs(), {...opt, color:o.reachColor, weight:w, opacity:.95})),
+  ]).addTo(map);
+}
+function markFocusFlow(){
+  Object.keys(flowLines).forEach(id => flowLines[id].forEach(l => {
+    const el = l.getElement();
+    if(el) el.classList.toggle("rv-on", id === focusId);
+  }));
+}
+/* The part of the map the sheet and the controls leave uncovered, as
+   padding in pixels: a bottom sheet on a phone, the right-hand panel from
+   900px (styles.css), the Change Region / menu stack top-left and the region
+   picker top-right. On a phone that leaves a strip, but a river framed under
+   the buttons is a river you can't see. The sheet is measured with
+   offsetHeight/Width, not getBoundingClientRect: it is mid-slide when this
+   runs, and the transform would put it off screen. */
+function focusFrame(){
+  const size = map.getSize();
+  let top = ($("#appbar") ? $("#appbar").offsetHeight : 0) + 12, left = 16, right = 16, bottom = 16;
+  if(window.innerWidth >= 900) right = sheet.offsetWidth + 14 + 16;
+  else bottom = sheet.offsetHeight + 12;
+  const tl = $(".leaflet-top.leaflet-left"), tr = $(".leaflet-top.leaflet-right");
+  const a = tl && tl.getBoundingClientRect(), b = tr && tr.getBoundingClientRect();
+  if(a && a.width && a.right < size.x / 2) left = Math.max(left, a.right + 8);
+  if(b && b.width && b.left < size.x - right) top = Math.max(top, b.bottom + 8);
+  // a sheet pulled tall still leaves some map to frame against
+  bottom = Math.max(16, Math.min(bottom, size.y - top - 120));
+  return {size, tl:L.point(left, top), br:L.point(right, bottom)};
+}
+/* Frame the open river in the part of the map the sheet leaves uncovered.
+
+   A river that fits there at a readable zoom (FOCUS_MIN_ZOOM or closer) is
+   shown whole, and left alone when it already is — unless it is so far off
+   that it is a squiggle (two zoom levels short of fitting), where staying
+   put would show a gold dot rather than a river.
+
+   A river that doesn't is framed where it was chosen instead. The whole
+   Snake through Jackson Hole fits a phone's clear strip only at about zoom
+   7, where it is a thread under a clump of pins; at 10, centred on the reach
+   that was tapped, it reads. The zoom is FOCUS_MIN_ZOOM or wherever closer
+   the user already is — never out — and the map isn't moved at all when
+   they are already that close and the spot is in the clear. */
+function fitFocus(r, at){
+  const lay = riverLayers[r.id]; if(!lay) return;
+  const b = lay.line.getBounds(); if(!b.isValid()) return;
+  const {size, tl, br} = focusFrame();
+  const whole = () => goTo(b, null, {paddingTopLeft:tl, paddingBottomRight:br, maxZoom:FOCUS_MAX_ZOOM});
+  if(!size.x || !size.y){ whole(); return; }          // no size yet: goTo holds the move until there is
+  const z = map.getZoom();
+  const clear = p => p.x >= tl.x && p.y >= tl.y && p.x <= size.x - br.x && p.y <= size.y - br.y;
+  const fitZ = Math.min(FOCUS_MAX_ZOOM, map.getBoundsZoom(b, false, tl.add(br)));
+  if(fitZ >= FOCUS_MIN_ZOOM){
+    const inView = clear(map.latLngToContainerPoint(b.getNorthWest())) && clear(map.latLngToContainerPoint(b.getSouthEast()));
+    if(!(inView && fitZ - z < 2)) whole();
+    return;
+  }
+  const anchor = focusAnchor(r, at);
+  if(z >= FOCUS_MIN_ZOOM && clear(map.latLngToContainerPoint(anchor))) return;
+  const tz = Math.max(z, FOCUS_MIN_ZOOM);
+  // The anchor goes in the middle of the CLEAR area, not of the map: the sheet
+  // and the controls cover it unevenly, so the map's centre is offset by the
+  // difference between the two.
+  const mid = L.point((tl.x + size.x - br.x) / 2, (tl.y + size.y - br.y) / 2);
+  goTo(map.unproject(map.project(anchor, tz).add(size.divideBy(2).subtract(mid)), tz), tz);
+}
+/* Where to frame a river too long to show whole: the spot it was chosen at
+   (a tap on the line, or an access pin); otherwise the part of it already
+   on screen nearest the middle, since that is the reach being looked at;
+   otherwise its gauge, the reach the flow card is about; otherwise the
+   middle of the line. Measured on the line as drawn, in screen pixels, and
+   only the on-screen part of each segment counts. */
+function focusAnchor(r, at){
+  if(at) return L.latLng(at);
+  const size = map.getSize(), view = L.bounds([0, 0], [size.x, size.y]), c = size.divideBy(2);
+  const ll = riverLayers[r.id].line.getLatLngs();
+  let best = null, bestD = Infinity;
+  (Array.isArray(ll[0]) ? ll : [ll]).forEach(run => {
+    const px = run.map(p => map.latLngToContainerPoint(p));
+    for(let i = 1; i < px.length; i++){
+      const seg = L.LineUtil.clipSegment(px[i-1], px[i], view, false, false);
+      if(!seg) continue;
+      const p = L.LineUtil.closestPointOnSegment(c, seg[0], seg[1]), d = p.distanceTo(c);
+      if(d < bestD){ bestD = d; best = p; }
+    }
+  });
+  if(best) return map.containerPointToLatLng(best);
+  if(r.primaryGauge && GAUGE_POS[r.primaryGauge]) return L.latLng(GAUGE_POS[r.primaryGauge]);
+  return L.latLng(midCoord(r.coords));
+}
+function focusRiver(r, fit, at){
+  if(zonesShown) return;                       // the chooser is up: nothing to focus over
+  focusId = r.id;
+  map.getContainer().classList.add("rv-focus");
+  drawFocus();
+  syncMarkers(); syncLabels(); markFocusFlow(); syncIconLayers(); iconNudge();
+  if(fit) fitFocus(r, at);
+  syncFlow();                                   // this river first in the animation budget
+}
+function unfocusRiver(){
+  if(!focusId) return;                         // also what makes this safe to call at startup
+  focusId = null;
+  focusTouched.clear();
+  map.getContainer().classList.remove("rv-focus");
+  drawFocus();                                  // with no focus, this just clears it
+  syncMarkers(); syncLabels(); markFocusFlow(); syncIconLayers(); syncFlow();
+}
+/* The sheet closes in many places — ✕, a drag down, a float section on a
+   phone, the tour backing out — so the class is watched rather than every
+   one of them being hooked. openLake keeps it open and ends the focus
+   itself; showZones does too. */
+new MutationObserver(() => {
+  if(!sheet.classList.contains("open")) unfocusRiver();
+  iconNudge();
+}).observe(sheet, {attributes:true, attributeFilter:["class"]});
+
+/* ============================================================
+   EMPTY-MAP NUDGE — every launch starts with no icons, which is right for
+   reading the rivers but leaves someone zoomed in on a creek wondering
+   where the parking went. Between zoom 9 and AUTO_ICON_ZOOM (past it the
+   access icons come on by themselves), with no sheet open and not one icon
+   layer on, the Map Icons button pulses — teal, the water colour; orange is
+   reserved for live data — and once a session a small tip points at it.
+   The ring goes the moment anything is switched on or a sheet opens; the
+   tip doesn't come back once dismissed or once the menu has been opened.
+   Shown after the view has sat still for a moment, so it doesn't flash
+   during the fly-in from the chooser. Never over the welcome card, the tour
+   or the chooser.
+   ============================================================ */
+const NUDGE_MIN_ZOOM = 9, NUDGE_DELAY = 800;
+const iconTip = document.body.appendChild(document.createElement("div"));
+iconTip.id = "icontip"; iconTip.setAttribute("role", "status");
+iconTip.innerHTML = `<button type="button" class="it-text">No icons on the map — tap <b>Map Icons</b> to show parking, access, gauges and more.</button>` +
+  `<button type="button" class="it-x" aria-label="Dismiss tip">✕</button>`;
+let nudgeT = null, tipDoneMem = false;
+const iconMenuBtn = () => document.querySelector('#chipbar [data-menu="layerchips"]');
+const menuOpen = () => !!document.querySelector("#chipbar .menubtn[aria-expanded=true]");
+function tipDone(){ try{ return sessionStorage.getItem("iconTipDone") === "1" || tipDoneMem; }catch(e){ return tipDoneMem; } }
+function tipDoneSet(){ tipDoneMem = true; try{ sessionStorage.setItem("iconTipDone", "1"); }catch(e){} hideIconTip(); }
+function nudgeWanted(){
+  const z = map.getZoom();
+  return !zonesShown && z >= NUDGE_MIN_ZOOM && z < AUTO_ICON_ZOOM
+    && !sheet.classList.contains("open")
+    && !document.body.classList.contains("touring")
+    && !(typeof welcomePending === "function" && welcomePending())
+    && !LAYER_CHIPS.some(([,,g]) => map.hasLayer(g));
+}
+function iconNudge(){
+  clearTimeout(nudgeT);
+  if(!nudgeWanted()){ nudgeOff(); return; }      // going away is immediate
+  nudgeT = setTimeout(() => { if(nudgeWanted()) nudgeOn(); else nudgeOff(); }, NUDGE_DELAY);
+}
+function nudgeOn(){
+  const b = iconMenuBtn(); if(!b) return;
+  b.classList.add("nudge");
+  if(tipDone() || menuOpen()){ hideIconTip(); return; }
+  iconTip.classList.add("show");
+  placeIconTip();
+}
+function nudgeOff(){
+  const b = iconMenuBtn(); if(b) b.classList.remove("nudge");
+  hideIconTip();
+}
+function hideIconTip(){ iconTip.classList.remove("show"); }
+/* Beside the button when there is room (a 375 px phone has ~230 px to its
+   right), otherwise under it. */
+function placeIconTip(){
+  const b = iconMenuBtn(); if(!b || !iconTip.classList.contains("show")) return;
+  const r = b.getBoundingClientRect(), room = innerWidth - r.right - 10 - 12;
+  const beside = room >= 170;
+  iconTip.classList.toggle("below", !beside);
+  iconTip.style.width = (beside ? Math.min(250, room) : Math.min(300, innerWidth - 24)) + "px";
+  if(beside){
+    iconTip.style.left = (r.right + 10) + "px";
+    iconTip.style.top = Math.max(8, r.top + r.height / 2 - iconTip.offsetHeight / 2) + "px";
+  } else {
+    iconTip.style.left = Math.max(12, r.left) + "px";
+    iconTip.style.top = (r.bottom + 10) + "px";
+  }
+}
+iconTip.querySelector(".it-x").addEventListener("click", tipDoneSet);
+iconTip.querySelector(".it-text").addEventListener("click", () => { const b = iconMenuBtn(); if(b) b.click(); });
+// Opening Map Icons is what the tip asks for; any menu open would sit under the tip.
+document.querySelectorAll("#chipbar .menubtn").forEach(m => m.addEventListener("click", () => {
+  if(m.dataset.menu === "layerchips") tipDoneSet(); else hideIconTip();
+  iconNudge();
+}));
+map.on("moveend zoomend click", iconNudge);       // a map tap is also what closes a menu
+addEventListener("resize", placeIconTip);
+// zones-open (the chooser) and touring (the tour) are body classes
+new MutationObserver(iconNudge).observe(document.body, {attributes:true, attributeFilter:["class"]});
 
 /* My location — a dot on the map and a button to follow it.
 

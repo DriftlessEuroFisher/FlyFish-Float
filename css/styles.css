@@ -87,8 +87,8 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 /* ---------- Map ---------- */
 #map{position:fixed;inset:0;z-index:1}
 .leaflet-control-attribution{font-size:9px}
-/* the app bar floats over the map, so the top-left stack (Regions, menus)
-   needs clearance, and so do the top-right controls, or the Regions button
+/* the app bar floats over the map, so the top-left stack (Change Region, menus)
+   needs clearance, and so do the top-right controls, or the Change Region button
    hides behind the title */
 .leaflet-top.leaflet-left{margin-top:var(--appbar-h,94px)}
 /* zoom lives bottom-right above the locate button: thumb-sized on touch,
@@ -163,8 +163,12 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
    hydrography, brown contours and black section lines. A soft white halo
    separates the coloured line from all of that without making it heavier —
    the cartographer's casing trick. One filter on the pane is far cheaper on
-   a phone than giving 181 polylines a second casing path each. */
-.leaflet-pane.riversPane > svg{
+   a phone than giving 181 polylines a second casing path each.
+   Pane selectors: map.createPane("riversPane") gets the class
+   "leaflet-rivers-pane" — Leaflet drops "Pane" and wraps the rest — not
+   "riversPane". Written the second way, this rule and the chooser's rules
+   below silently matched nothing. */
+.leaflet-rivers-pane > svg{
   filter: drop-shadow(0 0 1.6px rgba(255,255,255,.95))
           drop-shadow(0 0 3px rgba(255,255,255,.55));
 }
@@ -406,7 +410,7 @@ body.zones-open #btn-far{ display:block; }
 .zone-tip{ font-family:"Public Sans",sans-serif; }
 
 /* while the chooser is up, the river furniture would just be noise */
-body.zones-open .leaflet-pane.riversPane,
+body.zones-open .leaflet-rivers-pane,
 body.zones-open .leaflet-marker-pane,
 body.zones-open .riv-label{ opacity:.25; transition:opacity .25s; }
 /* …and they mustn't take the click either. Gauge dots and access markers
@@ -414,19 +418,19 @@ body.zones-open .riv-label{ opacity:.25; transition:opacity .25s; }
    while the chooser is up a tap aimed at a zone was landing on whatever
    river furniture happened to be under it and opening that river's sheet.
    Zone cards are markers in zonePane, so they keep their clicks. */
-body.zones-open .leaflet-pane.riversPane,
-body.zones-open .leaflet-pane.landPane,
-body.zones-open .leaflet-pane.allGaugePane,
+body.zones-open .leaflet-rivers-pane,
+body.zones-open .leaflet-land-pane,
+body.zones-open .leaflet-allGauge-pane,
 body.zones-open .leaflet-marker-pane,
 body.zones-open .riv-label{ pointer-events:none; }
 /* Leaflet marks every interactive marker and path pointer-events:auto, and
    a child that opts back in is hit-tested even when its pane says none —
    so the children have to be named too. */
 body.zones-open .leaflet-marker-pane > *,
-body.zones-open .leaflet-pane.riversPane path,
-body.zones-open .leaflet-pane.landPane path,
-body.zones-open .leaflet-pane.allGaugePane path{ pointer-events:none !important; }
-body.zones-open .leaflet-pane.zonePane{ opacity:1; }
+body.zones-open .leaflet-rivers-pane path,
+body.zones-open .leaflet-land-pane path,
+body.zones-open .leaflet-allGauge-pane path{ pointer-events:none !important; }
+body.zones-open .leaflet-zone-pane{ opacity:1; }
 
 /* Closed water — hazard tape over the river. The bar pulses very slightly so
    it reads as a warning rather than as map furniture; the dashes don't move,
@@ -457,6 +461,40 @@ body.zones-open .leaflet-pane.zonePane{ opacity:1; }
   border:2px solid var(--tc);margin-right:8px;vertical-align:-1px}
 #chipbar .menupanel button.on{color:var(--txt);border-color:var(--tc)}
 #chipbar .menupanel button.on::before{background:var(--tc)}
+
+/* ---------- empty-map nudge (app.js "EMPTY-MAP NUDGE") ----------
+   Teal, the water colour: survey orange is reserved for live data. The ring
+   breathes outward; with reduced motion it is a still ring instead. */
+#chipbar .menubtn.nudge{border-color:var(--river);animation:iconnudge 2.2s ease-out infinite}
+@keyframes iconnudge{
+  0%  {box-shadow:0 0 0 0 rgba(31,111,139,.55),0 1px 4px rgba(15,30,22,.2)}
+  70% {box-shadow:0 0 0 10px rgba(31,111,139,0),0 1px 4px rgba(15,30,22,.2)}
+  100%{box-shadow:0 0 0 0 rgba(31,111,139,0),0 1px 4px rgba(15,30,22,.2)}
+}
+@media (prefers-reduced-motion:reduce){
+  #chipbar .menubtn.nudge{box-shadow:0 0 0 3px rgba(31,111,139,.45),0 1px 4px rgba(15,30,22,.2)}
+}
+body.touring #chipbar .menubtn.nudge{animation:none;box-shadow:0 1px 4px rgba(15,30,22,.2);border-color:var(--line)}
+#icontip{position:fixed;z-index:1150;display:none;align-items:flex-start;background:var(--paper-2);color:var(--txt);
+  border:1px solid var(--line);border-left:3px solid var(--river);border-radius:11px;box-shadow:var(--shadow)}
+#icontip.show{display:flex}
+body.touring #icontip,body.zones-open #icontip{display:none}
+#icontip .it-text{flex:1;min-width:0;text-align:left;font-size:12.5px;line-height:1.35;color:var(--txt);padding:8px 2px 8px 10px}
+#icontip .it-x{flex:0 0 auto;width:36px;height:36px;margin:2px 2px 0 0;border-radius:8px;color:var(--txt-dim);font-size:13px}
+/* the pointer: left edge when beside the button, top edge when under it */
+#icontip::before{content:"";position:absolute;left:-9px;top:50%;margin-top:-7px;
+  border:7px solid transparent;border-left:0;border-right:7px solid var(--river)}
+#icontip.below::before{left:22px;top:-9px;margin-top:0;border:7px solid transparent;border-top:0;border-bottom:7px solid var(--river)}
+
+/* ---------- river focus (app.js "RIVER FOCUS") ----------
+   An open river's sheet fades the rest of the water: one opacity on the
+   rivers pane, not a restyle of every line. The open river is redrawn at
+   full strength over a gold casing in its own pane (focusPane), so it isn't
+   faded with them. Its current and its label keep full strength too. */
+#map.rv-focus .leaflet-rivers-pane{opacity:.32}
+#map.rv-focus .leaflet-flow-pane path:not(.rv-on){opacity:.25}
+#map.rv-focus .riv-label:not(.rv-on){color:rgba(16,64,90,.42);text-shadow:0 0 3px rgba(255,255,255,.8)}
+.leaflet-focus-pane > svg{filter:drop-shadow(0 1px 2px rgba(70,48,0,.35))}
 .tier-sw{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
 .tierline{display:flex;align-items:flex-start;gap:8px;margin:10px 2px 0}
 .tierbadge{flex:none;font:700 11px 'Barlow Condensed',sans-serif;letter-spacing:.06em;text-transform:uppercase;
