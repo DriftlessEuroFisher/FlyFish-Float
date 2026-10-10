@@ -37,8 +37,8 @@ everywhere at once.
 - The **"All" chip draws "Other" rivers only inside the view, from zoom 8**,
   instead of ~1,000 lines at once.
 
-**Batch A — the river panel** (`build-opus-xhigh`: this is how regulations
-are displayed)
+**Batch A — the river panel** — `done` 2026-10-10, not yet committed (`build-opus-xhigh`: this is how regulations
+are displayed). Left over: the lake sheet still has a "Fishing notes" heading; Door's footer repeats the no-gauge note and Great Lakes rules; Door/North Shore "Floating: Wade only" rows unchanged; Top pick green sits close to the Public land chip green.
 1. Rename the ranking everywhere: `TIER_INFO`, `TIER_LABEL`,
    `tierChipHTML()` ("Usually Class 1 — …"), the River Filters chips, the
    layer control, tour.js, the legend, any `why` text in tiers.js that says
@@ -713,6 +713,14 @@ would cover one person's use.
 - Sunrise, sunset and moon phase, computed on the phone.
 
 ## Done
+
+- **Iowa state water trails + ICON central Iowa trails, with float sections**
+  (2026-10-10, not yet committed). 34 trails, 200 DNR sections. Start float is
+  offered on Beginner/Intermediate sections with no dam, canoe or kayak only.
+  Follow-ups: apply brochure ratings to the 110 "Not Rated" sections; the
+  doubled "DNR: Beginner" + "Beginner-friendly" badge (Batch A of the
+  usability cleanup); the low-head-dam note now fires on every Iowa water
+  trail (Batch A item 7 applies statewide).
 
 - **Location pop-up + auto-start, collapsible Rivers/Map layers menus, zoom bottom-right, park cards hidden below z6** (cbe940a).
 

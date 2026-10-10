@@ -72,7 +72,7 @@
   // check/finish cards carry no part and no number. skip(): true when the step has nothing to say right now.
   const STEPS = [
     {part:"Map", sel:["#btn-book"], title:"Field Book", text:"Your favourites, rivers you’ve fished, notes, research links and offline map saving. It’s all stored only on your phone — export it to back it up."},
-    {part:"Map", sel:["#btn-legend"], title:"Legend & help", text:"What the colours and symbols mean, how river classes work, and where to replay this tour."},
+    {part:"Map", sel:["#btn-legend"], title:"Legend & help", text:"What the colours and symbols mean, how the river rankings work, and where to replay this tour."},
     {part:"Map", sel:["#btn-report"], title:"The report flag", text:"Tell us anything the app gets wrong — or right — or ask for more detail on your area. Interested in continued testing? Say so in a report and we’ll build out your home water."},
     {part:"Map", sel:["#btn-refresh", "#updated"], title:"Live flows", text:"Readings come live from USGS gauges. Tap refresh to update them; the time beside it shows when they last updated."},
     {part:"Map", sel:[".leaflet-control-zoom"], title:"Zooming", text:"Use + and −, or double-tap to zoom in. Double-tap and drag with one finger for smooth zoom, and tap with two fingers to zoom out."},
@@ -83,7 +83,7 @@
                                  ["Not now", () => { locPrefSet("off"); next(); }]] : null; }},
     {part:"Map", sel:["#btn-zones"], title:"Change Region", text:"Tap to get back to the state chooser at any time."},
     {part:"Map", sel:["#regionsel"], title:"Jump to region", text:"Pick an area from this list to fly straight to it — national parks, Alaska and all."},
-    {part:"Map", sel:['button[data-menu="tierchips"]'], title:"River Filters", text:"Rivers are ranked Gold, Class 1, 2 and 3. Class 3 is hidden by default — open this menu and tap All to show everything. Every launch starts this way again. Your favourites always show."},
+    {part:"Map", sel:['button[data-menu="tierchips"]'], title:"River Filters", text:"Rivers are ranked Top pick, Worth it, Local and Other. Other is hidden by default — open this menu and tap All to show everything. Every launch starts this way again. Your favourites always show."},
     {part:"Map", sel:['button[data-menu="layerchips"]'], title:"Map Icons", text:"The map opens with no icons, so the rivers read clearly. Open this menu to switch on what you need: wade access and boat ramps, USGS gauges, falls and dams, bridge access, parking, campsites, trailheads, closed water and public land. Zoom in close and access, ramps, parking and trailheads come on by themselves; open a river and the map shows that river's own access."},
     {part:"Map", skip:INSTALLED, title:"Add it to your Home Screen", text:"On iPhone, tap Share, then Add to Home Screen. It opens like an app, and it keeps your Field Book safe: Safari can clear a website’s saved data after a week without a visit, but not a Home Screen app’s."},
     {check:true, title:"That’s the map", text:"Want a quick look inside a river? We’ll open the Snake River in Jackson Hole as an example.",
@@ -91,7 +91,7 @@
                        ["Done for now", () => { state.skipped = true; go(FINISH, 1); }]]; }},
     {part:"River", id:"snake", sheet:true, sel:["#sheetbody .rulescard"], title:"Rules today", text:"Opening a river outlines it in gold on the map and shows its access points. First in the panel: whether the season is open, whose licence you need, the rules this river names, and your right to wade. This is the Snake River as an example.",
       enter: openSnake},
-    {part:"River", sheet:true, sel:["#sheetbody .flowcard"], title:"Live flow", text:"Right-now CFS from the gauge, compared with the 7-year median for this week of the year. The label (like “Around average”) says how it compares; where a good-flow range is set it shows too. Many small creeks — most of the NE Iowa Driftless — have no gauge. Those say “Ungauged” and point you to the nearest gauged river as a rough guide, rather than guessing a number."},
+    {part:"River", sheet:true, sel:["#sheetbody .flowcard"], title:"Live flow", text:"Right-now CFS from the gauge, compared with the 7-year median for this week of the year. The label (like “Around average”) says how it compares; where a good-flow range is set it shows too. Many small creeks — most of the NE Iowa Driftless — have no gauge. Those say so in one line, with the nearest gauged river folded underneath as a rough guide, rather than guessing a number."},
     {part:"River", sheet:true, sel:["#sheetbody .sec"], title:"Float sections", text:"Each stretch lists its launch and take-out, river miles and a float-time estimate — scaled to today’s flow when there’s a reading, otherwise for a typical day."},
     {part:"River", sheet:true, sel:["#sheetbody .floatgo"], title:"Start float", text:"On eligible sections this opens a planner, then a live tracker with miles left and your ETA. We won’t start one now.", scrollTo:"mid"},
     {part:"River", sheet:true, sel:["#fbrow"], title:"Your Field Book row", text:"☆ Favourite a river, mark it ✓ Fished, and keep notes. Saved on this phone only."},

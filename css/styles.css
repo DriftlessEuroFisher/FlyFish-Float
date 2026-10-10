@@ -285,12 +285,22 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .k1{color:#1d7a46;border-color:#9fceb2;background:#eef8f1}
 .k2{color:#946000;border-color:#e3c787;background:#fdf6e5}
 .k3{color:#b3261e;border-color:#e3a09b;background:#fdeeed}
+.k0{color:var(--txt-dim);border-color:var(--line);background:var(--paper)}   /* a section nobody has rated */
 .sec .meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:7px;font-size:12px;color:var(--txt-dim)}
 .sec .meta b{color:var(--txt)}
 .sec .time{font-family:"IBM Plex Mono",monospace}
 .sec .est{font-size:10px;color:var(--txt-dim)}
 .sec .beg{display:inline-block;font-size:10.5px;font-weight:700;color:#1d7a46;background:#eef8f1;border:1px solid #9fceb2;border-radius:5px;padding:2px 7px;margin-top:7px}
 .sec .notes{margin-top:7px;font-size:12px;color:var(--txt-dim)}
+/* A low-head dam on an Iowa section: the warning amber the stale-reading
+   note uses, not red, which on this map means closed water. */
+.sec .dam{margin-top:7px;font-size:12px;line-height:1.35;color:#92400e;background:#fef3c7;border:1px solid #fcd34d;border-radius:7px;padding:6px 9px}
+.sec .dam b{color:#7a3608}
+.sec .nofloat{margin-top:8px;font-size:11px;color:var(--txt-dim)}
+/* Iowa water-trail designation, between the class line and the blurb */
+.wtrow{margin:8px 2px 0;font-size:12px;line-height:1.4;color:var(--txt-dim)}
+.wtrow b{color:var(--txt)}
+.wtrow a{color:var(--river);font-weight:700;white-space:nowrap}
 .sec .shuttle{margin-top:6px;font-size:11.5px;color:var(--txt-dim)}
 .sec .shuttle b{color:var(--txt)}
 .sec .zoom{margin-top:8px;font-size:12px;font-weight:700;color:var(--river)}
@@ -573,8 +583,43 @@ body.touring #icontip,body.zones-open #icontip{display:none}
 .rc-lic{font-size:12.5px;color:var(--txt);line-height:1.35;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
 .rc-tags{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:8px}
 .rc-lab{font-size:10.5px;color:var(--txt-dim);flex-basis:100%}
+/* No season row above it: the licence line leads, without a rule over it. */
+.rc-lic.rc-lead{margin-top:0;padding-top:0;border-top:0}
+.rc-desig + .rc-lic.rc-lead{margin-top:0}
+/* Iowa low-head dams, in the card: the warning amber a dam on a section card
+   wears, not red, which on this map means closed water. */
+.rc-dam{margin-top:9px;font-size:12px;line-height:1.4;color:#92400e;background:#fef3c7;border:1px solid #fcd34d;border-radius:7px;padding:6px 9px}
+.rc-dam a{color:#7a3608}
+.rc-dam b{color:#7a3608}
+
+/* The sheet's folds (Regulations, more gauges, the ungauged detail) share one
+   summary row: thumb height, its own caret, teal like every other tap target. */
+details.fold>summary{cursor:pointer;list-style:none;display:flex;align-items:baseline;gap:8px;
+  min-height:40px;padding:10px 2px 6px;font-size:13px;font-weight:700;color:var(--river)}
+details.fold>summary>span{min-width:0}    /* a long label wraps beside the caret, not under it */
+details.fold>summary::-webkit-details-marker{display:none}
+details.fold>summary::before{content:"\25B8";flex:none;width:12px;font-size:13px}
+details.fold[open]>summary::before{content:"\25BE"}
 details.rulesfull{margin-bottom:9px}
-details.rulesfull>summary{cursor:pointer;font-size:12px;font-weight:600;color:var(--river);padding:6px 2px}
+.rf-hint{font-size:11px;font-weight:500;color:var(--txt-dim)}
+.rg-text{margin-top:8px;font-size:12px;line-height:1.45;color:var(--txt)}
+.rg-sp{margin-top:4px}
+.rg-sub{font-weight:700;color:var(--txt);margin:2px 0 4px}
+.rg-src{font-size:10.5px;color:var(--txt-dim);margin-top:8px}
+.rg-src a{color:var(--river)}
+.rg-law{font-size:12px;line-height:1.4}
+.rg-law blockquote{margin:6px 0 2px;padding-left:9px;border-left:2px solid var(--line);font-size:11.5px;line-height:1.4;color:var(--txt-dim)}
+details.morefold{margin:-4px 0 6px}
+/* Ungauged small-stream water: one line, the detail folded under it. */
+.flowcard.ungauged{padding:10px 12px}
+.ung-line{font-size:14px;font-weight:600;color:var(--txt);line-height:1.3}
+.ung-more{margin-top:4px}
+.ung-more>summary{font-size:12.5px;font-weight:500;min-height:36px;padding-top:8px}
+/* The description: blurb, fishing note and wade tip, no headings between. */
+.desc{margin:0 2px}
+.desc .wtrow{margin:0 0 8px}
+.desc p{font-size:13.5px;line-height:1.45;margin:0 0 9px}
+.rp-search{margin-top:4px}
 
 /* ---------- Field Book ---------- */
 /* Row above the sheet body; buttons are 44px tall for a thumb. Teal marks
@@ -686,7 +731,7 @@ details.rulesfull>summary{cursor:pointer;font-size:12px;font-weight:600;color:va
 .fp-ends .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:baseline}
 .fp-ends .dot.put{background:#1d7a46}.fp-ends .dot.take{background:#8c4a1d}
 .fp-ends .arrow{color:var(--txt-dim);margin:0 3px}
-.fp-craft{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.fp-craft{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:6px}   /* four crafts in the West, two on an Iowa water trail */
 .fp-craft button{min-height:44px;padding:0 2px;border-radius:9px;border:1px solid var(--line);background:var(--paper-2);font-size:12.5px;font-weight:600}
 .fp-craft button.on{background:var(--river);border-color:var(--river);color:#fff}
 .fp-launch{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0 6px;font-size:13px;font-weight:600}

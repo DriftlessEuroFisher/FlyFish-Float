@@ -34,7 +34,11 @@ like an app, not a browser tab.
   polyline itself must go through `flatCoords()` / `midCoord()` in
   `js/app.js`; don't index `r.coords[0]` directly. Segments are kept apart
   on purpose: welding them draws a channel across a gap that isn't there.
-- `js/tiers.js` — **river classes.** `TIERS` ranks every river Gold / "1" /
+- `js/tiers.js` — **river classes.** Shown to users as **Top pick / Worth
+  it / Local / Other** (renamed 2026-10-10 so the app's ranking can't be
+  mistaken for an agency class; Top pick is green `#3a7d44` because gold now
+  means the focused river). The keys and the prose below keep gold/1/2/3.
+  `TIERS` ranks every river Gold / "1" /
   "2" / "3"; a river not listed is Class 3, and Class 3 is **hidden by
   default** (off the map entirely, not dimmed, so it also costs no labels,
   flow animation or geometry fetches — `riverVisible()` starts with
@@ -217,6 +221,46 @@ show by default.
   - `rc2`'s stated 14 mi measures 17.6 along the line.
   - The North Raccoon's `booneville` pin sits ~25 km from the real
     Booneville Access, which is on the Raccoon.
+
+### Iowa state water trails and ICON (2026-10-10)
+**34 water-trail entries**: 26 new `wt_*` and 8 existing rivers that *are*
+a trail (desmoines, raccoon, n/m/s raccoon, sskunk, beavercreek,
+upperiowa). All are Class 2. Each carries
+`waterTrail:{name, src, designated, counties, miles, url}`, and the sheet
+shows it as a row plus the "Iowa · Water trail" subtitle. Pipeline:
+`~/.cache/flyfish-osm/iowa/watertrails/` (`specs.py` holds every
+per-trail decision, the run order is in `apply.py`, and `build.log` has
+the skips and off-line pins). Fences: "iowa water trail access /
+gauges / sections". Owner decisions: **designated trails only**, not the
+DNR's ~700 Paddling Routes.
+- **Which trails:** the DNR's list at iowadnr.gov/places-go/water-trails.
+  **Geometry and skill:** the DNR AGOL layer `Water_Trails_Only`
+  (`Rec_Skill` per segment), else MapServer layer 6, else brochure
+  endpoints. ICON adds Fourmile, Mud and Walnut Creeks.
+  `geom:"iawt"` is never snapped or refined.
+- **Driftless trout reaches (`iadnr`) are never the water trail.** A trail
+  on the Turkey, Maquoketa or Wapsi is its own entry overlapping the trout
+  line: different designation, different claim.
+- **Skipped, not guessed:** the Grand, North Skunk and Yellow (nothing
+  fixes the designated reach), Odessa and the Cedar Valley lakes (still
+  water), Mitchell County's Cedar, ICON's North River and
+  Chichaqua/Skunk.
+- **Float:** 200 sections, one per DNR segment, with `level` instead of
+  `klass`, `dams[]` and `src`. **Start float only on Beginner/Intermediate
+  sections with no dam** (`floatEligible`'s level rule, which requires
+  `dams` to be an explicit `[]`); 56 qualify. Crafts are **Canoe or Kayak
+  only** on water trails (`floatCrafts()`, stored as `floatCraftIA`),
+  and the West keeps its four. `typSpeed` 2.0 is a guess; three Louisa
+  County sections use 2.5, from that brochure's "2 to 3 mph".
+- **Open:**
+  - The old hand sections dm1, dm2, rc1, rc2, nrc1, mrc1, src1 and sk1
+    were deleted, on the owner's call: they were unsourced "Class I,
+    beginner-friendly" claims next to the DNR's own ratings. On Iowa
+    water trails, only DNR sections are kept.
+  - 110 sections are DNR "Not Rated" where some brochures do rate them.
+  - The South Fork Iowa reach was taken because its length matches the
+    DNR's.
+  - Three sections use a pin assigned to another river.
 
 ### Northeast Iowa comes from the Iowa DNR, not NHD
 
@@ -1172,13 +1216,33 @@ Added on 2026-10-02 after using the app on an iPhone. Backlog and status for
 everything here and to come: **`IDEAS.md`**.
 
 ### Rules today card (top of every river panel)
-`rulesCardHTML(r)` renders first in `renderSheet`, then the full official
-text folded in `<details class="rulesfull">`, then flows, blurb and the rest.
+`rulesCardHTML(r)` renders first in `renderSheet`, then **one** fold,
+"Regulations" (`regsFoldHTML`), then the primary gauge, the other gauges
+folded ("N more gauges along the river"), float sections, and "About"
+(blurb + `fish`). Usability cleanup Batch A, 2026-10-10:
+- **The fold holds everything verbatim, once:** per-reach class badges with
+  miles, the reach text, the DNR page lines, source and link, and the state
+  streambed law (`stateLawFoldHTML`). `parkRegs` long entries are opened out
+  inside it (`unfoldRegs`), not nested. DNR page sentences shared by several
+  species are shown once on a line naming every species that carries them;
+  if any sentence would go missing, the raw page text is shown instead.
+  Repeated `parkRegs` lines are separate rules for separate reaches and stay.
+- **Driftless and Door:** the "Wading & access" row is the easement rule
+  (Door: no easements — county park, state park, land-trust ground); the
+  state law is in the fold. The old Driftless footer line is gone.
+- **Iowa outside the Driftless:** the low-head-dam warning is an amber row in
+  the card, not the footer.
+- **Ungauged Driftless/Door/North Shore:** one line, "No gauge on this creek
+  — judge clarity on arrival", with the nearby reading folded beneath it.
+- `fish` drops a "Wild … trout are present." sentence the blurb already
+  says. Research is one "Search for fishing reports ↗" link; Reddit stays in
+  the Field Book. Fold open state survives a re-render of the same river.
 - **Season status comes only from `closed` windows in `tiers.js`, and those
   are whole months.** So the card never says a bare "Open": in the month
   before or after a closed window it says "Season opens or closes this
-  month — check the exact date". No closed window → "Season set by the rules
-  below" (or "No season on file").
+  month — check the exact date". No closed window → "Open all year" if
+  every reach says "Continuous open season", else no season row at all and
+  the licence line leads (or "No season on file" when there is no text).
 - **Licence line** = `PARK_INFO[region].licence`, written only from text
   already in that row's footer/note/regBody, plus a small by-state fallback
   for the older regions. Michigan and South Dakota rows say "see …" because

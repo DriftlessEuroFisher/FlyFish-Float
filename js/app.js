@@ -892,6 +892,7 @@ function openLake(id){
                          : grte ? "Wyoming · Grand Teton National Park · lake"
                                 : "Wyoming · Yellowstone National Park · lake";
   sheet.classList.add("open");
+  delete body.dataset.river;            // renderSheet's fold memory is per river; this is a lake
   body.innerHTML =
     (desigHTML(k.id) ? `<div class="rulescard">${desigHTML(k.id)}</div>` : "") +
     `<p style="margin:12px 2px 2px;font-size:13.5px">${k.blurb}</p>` +
@@ -2405,7 +2406,7 @@ async function loadRealRiver(r){
      may fish. It also disambiguates names NHD can't — a plain
      "BEAR CREEK" lookup in this corner of Iowa can match any of four
      different Bear Creeks, and there is another one in Door County. */
-  // "iadnr" (NE Iowa) or "widnr" (Door Peninsula) — either way, leave it alone
+  // "iadnr" (NE Iowa), "iawt" (Iowa water trails), "widnr" (Door Peninsula)… — any tag: leave it alone
   if(r.geom){ layer.real = true; layer.tried = true; return; }
   layer.tried = true;
   const ck = "nhd:"+r.id;
@@ -2479,7 +2480,7 @@ let geomSweeps = 0;
 
    Two guards on what may be refined:
 
-   * `iadnr` / `widnr` / `midnr` / `wgfd` rivers are never touched. Those lines are the state
+   * `iadnr` / `iawt` / `widnr` / `midnr` / `wgfd` rivers are never touched. Those lines are the state
      fisheries agency's own drawing of the reach that is *designated trout
      water*, which is a different claim from "where the channel runs", and
      NHD would happily replace it with the whole creek or the wrong Bear
@@ -2560,6 +2561,8 @@ async function refineRiver(r){
   if(!layer || layer.refined || layer.refining) return;
   /* Agency geometry is left alone: for iadnr/widnr the line IS the
      designated trout reach, and NHD would replace it with the whole creek.
+     iawt is the Iowa DNR's (or ICON's) drawing of a designated water trail,
+     which starts and stops where the designation does, not where the river does.
      wgfd is Wyoming Game & Fish's own line for the water it rates, and a
      Grand Teton creek extended past the park on it must not be clipped back
      to the park by a cached NHD refinement.
@@ -2567,7 +2570,7 @@ async function refineRiver(r){
      sources along one channel fragments the line wherever they disagree by
      more than REFINE_BUFFER_KM. The baked OSM line is simplified (40 m, 80 m
      in Alaska); the refinement is the same ways at full resolution. */
-  if(r.geom === "iadnr" || r.geom === "widnr" || r.geom === "midnr" || r.geom === "wgfd"){ layer.refined = true; return; }
+  if(r.geom === "iadnr" || r.geom === "iawt" || r.geom === "widnr" || r.geom === "midnr" || r.geom === "wgfd"){ layer.refined = true; return; }
   layer.refining = true;
   const ck = "nhdfine:" + r.id;
   const cached = store.get(ck);
@@ -2667,7 +2670,9 @@ function riverPlace(r){
                      yellowstone:" · Yellowstone National Park",
                      grandteton:" · Grand Teton National Park",
                      tetonvalley:" · Teton Valley", swanvalley:" · Swan Valley"}[r.region]
-                    || (PARK_INFO[r.region] && PARK_INFO[r.region].sub) || "";
+                    || (PARK_INFO[r.region] && PARK_INFO[r.region].sub)
+                    // Iowa water trails run statewide now, so "Central" no longer fits them all
+                    || (r.state==="IA" && r.region!=="driftless" && r.waterTrail ? " · Water trail" : "");
   return stateName + subRegion;
 }
 function riverStateName(r){ return riverPlace(r).split(" · ")[0]; }
@@ -2692,6 +2697,10 @@ async function openRiver(id, focusGauge, opts){
   const floating = typeof floatActiveNow === "function" && floatActiveNow();
   focusRiver(r, !focusGauge && !(opts && opts.fit === false) && !floating, opts && opts.at);
   renderSheet(r);                      // instant paint with whatever we have
+  // a gauge tapped on the map may be one of the folded ones: show it (the fold then stays open on repaint)
+  if(focusGauge && focusGauge !== primaryGaugeOf(r)){
+    const d = body.querySelector('details[data-fold="gauges"]'); if(d) d.open = true;
+  }
   // lazy-load stats + metadata for this river's gauges, then repaint.
   // Batched across the river's gauges: opening the Mississippi Headwaters
   // (6 gauges) is 2 requests, not 48.
@@ -2702,10 +2711,12 @@ async function openRiver(id, focusGauge, opts){
 
 function tierChipHTML(r){
   const t = tierNow.get(r.id) || tierOf(r), info = TIER_INFO[t.tier], base = TIER_INFO[t.base];
+  // the ranking names are labels, not words in the sentence, so they are quoted
+  const usually = `Usually ranked “${base.label}” — `;
   let line = "";
   if(t.state === "closed") line = `Closed ${winText(t.wins)}${t.why ? " — "+t.why : ""}`;
-  else if(t.state === "best") line = `${t.tier!==t.base ? "Usually "+base.label+" — " : ""}Prime time now (${winText(t.wins)}).${t.why ? " "+t.why : ""}`;
-  else if(t.state === "poor") line = `Usually ${base.label} — off this time of year (${winText(t.wins)}).${t.why ? " "+t.why : ""}`;
+  else if(t.state === "best") line = `${t.tier!==t.base ? usually+"prime" : "Prime"} time now (${winText(t.wins)}).${t.why ? " "+t.why : ""}`;
+  else if(t.state === "poor") line = `${usually}off this time of year (${winText(t.wins)}).${t.why ? " "+t.why : ""}`;
   else if(t.why) line = t.why;
   return `<div class="tierline"><span class="tierbadge" style="--tc:${info.color}">${info.label}${t.state==="closed"?" · closed":""}</span>`+
          (line ? `<span class="tierwhy">${line}</span>` : `<span class="tierwhy">${info.blurb}</span>`)+`</div>`;
@@ -2738,19 +2749,60 @@ function regBodyFor(r){
    federal land and the state's streambed law doesn't govern it. State rows in
    PARK_INFO have sub:"" and do get the row. fbEsc is declared further down but
    only called at render time, well after it exists. */
-function accessLawHTML(r){
+function stateLaw(r){
   const pi = PARK_INFO[r.region];
-  if(r.region==="yellowstone" || r.region==="grandteton" || (pi && /National Park|Park Complex/.test(pi.sub||""))) return "";
-  const a = typeof ACCESS_LAW!=="undefined" && ACCESS_LAW[r.state]; if(!a) return "";
+  if(r.region==="yellowstone" || r.region==="grandteton" || (pi && /National Park|Park Complex/.test(pi.sub||""))) return null;
+  return (typeof ACCESS_LAW!=="undefined" && ACCESS_LAW[r.state]) || null;
+}
+/* On Driftless and Door County water the question standing at the creek is
+   not the state's streambed law but whose ground the bank is, so the card
+   gives that rule and the state law moves into the Regulations fold
+   (stateLawFoldHTML). The Driftless runs through private land under public
+   angling easements; Door County has no easements at all, and its access is
+   county park, state park and land-trust ground. */
+const ACCESS_ROW = {
+  driftless:"Much of the best water crosses private land under a public angling easement: fish and walk the stream corridor, and don't leave it. Park in the marked pull-offs.",
+  doorcounty:"Reach the water from county park, state park and land-trust ground — there are no angling easements on the peninsula. Park only where parking is marked.",
+};
+function accessLawHTML(r){
+  if(ACCESS_ROW[r.region]) return `<div class="rc-lic rc-access"><span class="rc-lab">Wading &amp; access</span>`+
+    `<div style="font-size:13px;line-height:1.35;margin-top:2px">${ACCESS_ROW[r.region]}</div></div>`;
+  const a = stateLaw(r); if(!a) return "";
   return `<div class="rc-lic rc-access"><span class="rc-lab">Wading &amp; access</span>`+
     `<div style="font-size:13px;line-height:1.35;margin-top:2px">${fbEsc(a.head)}</div>`+
-    `<details class="rc-law"><summary>${a.quote ? "The law, in its own words" : "Source"}</summary>`+
+    `<details class="rc-law" data-fold="law"><summary>${a.quote ? "The law, in its own words" : "Source"}</summary>`+
     (a.quote ? `<blockquote>${fbEsc(a.quote)}</blockquote>` : "")+
     `<div class="fb-note">Source: <a href="${fbEsc(a.url)}" target="_blank" rel="noopener">${fbEsc(a.src)}</a></div></details></div>`;
 }
+function stateLawFoldHTML(r){
+  const a = ACCESS_ROW[r.region] && stateLaw(r); if(!a) return "";
+  return `<div class="fishnote rg-law"><b>Wading &amp; access — ${fbEsc(riverStateName(r))} law</b>`+
+    `<div style="margin-top:3px;color:var(--txt)">${fbEsc(a.head)}</div>`+
+    (a.quote ? `<blockquote>${fbEsc(a.quote)}</blockquote>` : "")+
+    `<div class="rg-src">Source: <a href="${fbEsc(a.url)}" target="_blank" rel="noopener">${fbEsc(a.src)}</a></div></div>`;
+}
+
+/* Iowa's low-head dams are the hazard on its paddling water, at almost any
+   flow, so the warning sits in the rules card rather than the footer: every
+   non-trout Iowa river, and every water trail wherever it runs (a water trail
+   on a Driftless river is paddling water like any other). */
+function damWarnHTML(r){
+  if(!((r.state==="IA" && r.region!=="driftless") || r.waterTrail)) return "";
+  return `<div class="rc-dam">⚠ Iowa rivers have low-head dams — the "drowning machine" recirculating hydraulic at the base is dangerous at almost any flow. Scout unfamiliar stretches and check <a href="https://www.iowawhitewater.org/lhd/LHDrivers.html" target="_blank" rel="noopener">Iowa Whitewater's low-head dam list</a> before you put in. Dams the DNR maps are on the <b>Falls, rapids &amp; dams</b> layer, with the portage side.</div>`;
+}
+
+/* The Iowa DNR states the season reach by reach ("Continuous open season;
+   …"). Only when every reach says so is the stream "Open all year". The
+   DNR stream page's own species lines are not a reach and aren't tested. */
+const DNR_PAGE_LABEL = "<b>On the DNR stream page:</b>";
+function openAllYear(r){
+  if(!r.troutRegs || r.parkRegs) return false;
+  const reaches = r.troutRegs.split(/<br\s*\/?>/i).map(s => s.trim()).filter(s => s && !s.startsWith(DNR_PAGE_LABEL));
+  return reaches.length > 0 && reaches.every(s => /continuous open season/i.test(s));
+}
 
 /* An agency's own designation (Gold Medal, Blue Ribbon), from designations.js.
-   Gold Medal wears this app's gold; Blue Ribbon a deep blue, not gauge blue. */
+   Gold Medal wears gold; Blue Ribbon a deep blue, not gauge blue. */
 function desigHTML(id){
   const d = typeof DESIGNATIONS !== "undefined" && DESIGNATIONS[id], s = d && DESIG_SRC[d.src];
   if(!s) return "";
@@ -2763,7 +2815,7 @@ function rulesCardHTML(r){
   const m = new Date().getMonth() + 1;
   const e = TIERS[r.id], s = e && e.season, closed = s && s.closed && s.closed.length ? s.closed : null;
   const hasText = !!(r.parkRegs || r.troutRegs);
-  let dot, head, sub = "";
+  let dot = "", head = "", sub = "";
   if(closed && inWindow(m, closed)){
     dot = "#9a4a2e"; head = "Closed season";
     sub = `Closed ${winText(closed)}${s.why ? " — "+s.why : ""}`;
@@ -2772,11 +2824,14 @@ function rulesCardHTML(r){
     sub = `Closed ${winText(closed)}. Check the exact date in the rules below.`;
   } else if(closed){
     dot = "#2f7d4f"; head = "In season"; sub = `Closed ${winText(closed)}`;
-  } else {
-    dot = "#8b9690";
-    if(hasText){ head = "Season set by the rules below"; }
-    else { head = "No season on file"; sub = `Check ${regBodyFor(r)}`; }
+  } else if(openAllYear(r)){
+    dot = "#2f7d4f"; head = "Open all year";
+  } else if(!hasText){
+    dot = "#8b9690"; head = "No season on file"; sub = `Check ${regBodyFor(r)}`;
   }
+  /* Otherwise the season is somewhere in the rule text, which no window here
+     can summarise; a row saying so told the reader nothing, so there is no
+     row and the licence line leads the card. */
 
   /* A river with no region (Wyoming's WGFD streams) finds its row through
      parkRegsSrc. Every existing parkRegsSrc that names a PARK_INFO row
@@ -2822,64 +2877,133 @@ function rulesCardHTML(r){
      restrictive reach's, not the whole stream's -- so the chip says so. */
   const part = r.reachClass && r.reachClass.includes("restrictive") && r.reachClass.some(c => c !== "restrictive");
 
-  return `<div class="rulescard">${desigHTML(r.id)}<div class="rc-status"><span class="rc-dot" style="background:${dot}"></span>`+
-    `<div><div class="rc-head">${head}</div>${sub ? `<div class="rc-sub">${sub}</div>` : ""}</div></div>`+
-    `<div class="rc-lic">${lic}</div>`+
+  return `<div class="rulescard">${desigHTML(r.id)}`+
+    (head ? `<div class="rc-status"><span class="rc-dot" style="background:${dot}"></span>`+
+      `<div><div class="rc-head">${head}</div>${sub ? `<div class="rc-sub">${sub}</div>` : ""}</div></div>` : "")+
+    `<div class="rc-lic${head ? "" : " rc-lead"}">${lic}</div>`+
     accessLawHTML(r)+
     (tags.length ? `<div class="rc-tags"><span class="rc-lab">Named in this river's rules:</span>${tags.map(t=>`<span class="tierbadge" style="--tc:#5a6f66">${t.replace("&","&amp;")}${part ? " · part of stream" : ""}</span>`).join("")}</div>` : "")+
+    damWarnHTML(r)+
     `</div>`;
 }
 
-function renderSheet(r){
-  /* The rules come first: the card, then the full text folded under it, then
-     everything else. `full` collects the verbatim regulation blocks. */
-  let full = "";
-  let h = tierChipHTML(r) + `<p style="margin:12px 2px 2px;font-size:13.5px">${r.blurb}</p>`;
+/* The DNR stream page lists its rules species by species and repeats the
+   same sentences under each: Waterloo Creek gives the whole "Artificial lure
+   means …" definition once for browns and again for rainbows. A sentence
+   that more than one species carries is shown once, under the names of every
+   species that carries it ("Brown Trout, Rainbow Trout — Other: …", the form
+   the page itself uses when it groups species). It is never dropped from one
+   species and left on another, which would read as though the rule didn't
+   apply there. Every word is the DNR's; only the grouping changes, and
+   anything that doesn't parse as "Species — Field: text; Field: text" is
+   shown exactly as it came. */
+function dnrPageLinesHTML(txt){
+  if(/</.test(txt)) return txt;
+  const sentences = v => { const p = v.split(/\.\s+(?=[A-Z])/); return p.map((s, i) => i < p.length - 1 ? s + "." : s); };
+  const items = txt.split(" · ").map(part => {
+    const m = /^([^—]+?) — (.+)$/.exec(part.trim());
+    if(!m) return null;
+    const fields = m[2].split(/;\s+(?=[A-Z][A-Za-z ]*:\s)/).map(f => {
+      const fm = /^([A-Z][A-Za-z ]*):\s+(.+)$/.exec(f.trim());
+      return fm && {name:fm[1], sents:sentences(fm[2].trim())};
+    });
+    return fields.every(Boolean) ? {sp:m[1].trim(), fields} : null;
+  });
+  if(!items.length || items.some(x => !x)) return txt;
+  // which species carry each field-and-sentence
+  const key = (f, s) => f + "\u0001" + s, owners = new Map();
+  items.forEach((it, i) => it.fields.forEach(f => f.sents.forEach(s => {
+    const k = key(f.name, s);
+    if(!owners.has(k)) owners.set(k, new Set());
+    owners.get(k).add(i);
+  })));
+  const shared = k => owners.get(k).size > 1;
+  const fieldText = fs => fs.map(f => `${f.name}: ${f.sents.join(" ")}`).join("; ");
+  const lines = [];
+  items.forEach(it => {
+    const own = it.fields.map(f => ({name:f.name, sents:f.sents.filter(s => !shared(key(f.name, s)))})).filter(f => f.sents.length);
+    if(own.length) lines.push(`${it.sp} — ${fieldText(own)}`);
+  });
+  // the shared sentences, grouped by exactly which species carry them, in first-seen order
+  const groups = new Map();
+  items.forEach(it => it.fields.forEach(f => f.sents.forEach(s => {
+    const k = key(f.name, s); if(!shared(k)) return;
+    const who = [...owners.get(k)].sort((a, b) => a - b).join(",");
+    if(!groups.has(who)) groups.set(who, []);
+    const g = groups.get(who);
+    if(!g.some(u => u.k === k)) g.push({k, name:f.name, s});
+  })));
+  groups.forEach((units, who) => {
+    const names = who.split(",").map(i => items[+i].sp);
+    const label = names.join(", ");      // the page's own form when it groups species ("Brown Trout, Rainbow Trout — …")
+    const fs = [];
+    units.forEach(u => { const last = fs[fs.length - 1]; if(last && last.name === u.name) last.sents.push(u.s); else fs.push({name:u.name, sents:[u.s]}); });
+    lines.push(`${label} — ${fieldText(fs)}`);
+  });
+  // belt and braces: if any sentence of the page went missing, show the page as it came
+  const out = lines.join("\n");
+  if(items.some(it => it.fields.some(f => f.sents.some(s => !out.includes(s))))) return txt;
+  return lines.map(l => `<div class="rg-sp">${l}</div>`).join("");
+}
+function troutRegsHTML(t){
+  const i = t.indexOf(DNR_PAGE_LABEL);
+  if(i < 0) return t;
+  return t.slice(0, i) + DNR_PAGE_LABEL + " " + dnrPageLinesHTML(t.slice(i + DNR_PAGE_LABEL.length).trim());
+}
 
-  if(r.gauges.length){
-    r.gauges.forEach(k=>{ h += flowCardHTML(k, r.id); });
-  } else {
-    h += noGaugeHTML(r);
-  }
+/* A long state entry arrives folded in its own <details> ("This river's own
+   rules — 6 reaches, tap to read"). Inside the Regulations fold that would be
+   a fold in a fold, so it is opened out and its summary kept as a plain
+   heading, minus the "tap to read"; the count goes up to the fold's own
+   summary. */
+function unfoldRegs(html){
+  let count = "";
+  const out = html.replace(/<details>\s*<summary>([^<]*)<\/summary>/g, (m, s) => {
+    const label = s.replace(/,?\s*tap to read\s*$/i, "");
+    if(!count){ const c = /— (\d+ \w+)$/.exec(label); if(c) count = c[1]; }
+    return `<div class="rg-sub">${label}</div>`;
+  }).replace(/<\/details>/g, "");
+  return {html:out, count};
+}
 
-  h += `<div class="secthead">Fishing notes</div><div class="fishnote">🎣 ${r.fish}</div>`;
-
-  /* Regulation class, straight from the state's own trout-stream layer.
-     The special-regulation text is reproduced verbatim rather than
-     paraphrased — on a catch-and-release or artificial-only stretch the
-     exact wording is the thing that keeps you legal. */
-  if(r.troutClass){
+/* Everything the rules card summarises, in full, in one fold: for an Iowa
+   or Wisconsin trout stream the class badges with their miles, then the
+   regulation text reach by reach, then the DNR page's lines (repeats shown
+   once), then whose wording it is; for park and state rivers the agency's
+   own entry and its source. The text is reproduced verbatim rather than
+   paraphrased — on a catch-and-release or artificial-only stretch the exact
+   wording is the thing that keeps you legal. On Driftless and Door County
+   water the state's streambed law sits here too, since the card gives the
+   easement rule instead. */
+function regsFoldHTML(r){
+  let inner = "", count = "";
+  if(r.troutClass || r.troutRegs){
     const src = TROUT_SOURCE[r.troutSource || "iadnr"];
     /* A stream the DNR designates reach by reach gets one badge per class with
        its miles along the drawn line, longest first -- the colours it wears on
-       the map. Reach-by-reach rule text starts with its own bold labels, so it
-       starts on a line of its own. */
-    const reaches = reachMiles(r);
+       the map. */
+    const reaches = r.troutClass ? reachMiles(r) : [];
     const badges = reaches.map(([cls, mi]) => `<span class="badge" style="background:${TROUT_CLASS[cls].color}">`+
       `${TROUT_CLASS[cls].label}${mi != null ? " · " + mi.toFixed(1) + " mi" : ""}</span>`).join(" ");
     const page = r.dnrCode
       ? ` <a href="https://programs.iowadnr.gov/lakemanagement/FishIowa/TroutStreamDetails/${encodeURIComponent(r.dnrCode)}" target="_blank" rel="noopener">Iowa DNR stream page</a>`
       : "";
-    full += `<div class="secthead">Trout class &amp; regulations</div><div class="fishnote">`+
+    inner += `<div class="fishnote">`+
       (reaches.length > 1 ? `<div style="display:flex;flex-wrap:wrap;gap:6px">${badges}</div>` : badges)+
-      (r.wildTrout ? `${reaches.length > 1 ? `<div style="margin-top:6px">` : " "}<span style="font-size:11.5px">Wild trout present: <b>${r.wildTrout}</b></span>${reaches.length > 1 ? "</div>" : ""}` : "")+
-      (r.troutRegs ? `<div style="margin-top:8px"><b>Regulations:</b>${/^<b>/.test(r.troutRegs) ? "<br>" : " "}${r.troutRegs}</div>` : "")+
-      `<div style="font-size:10.5px;color:var(--txt-dim);margin-top:8px">Classification and any special-regulation wording come from the ${src.agency} ${src.what}. Regulations change — confirm against the current ${src.regs} before you fish.${page}</div>`+
+      (r.wildTrout ? `<div style="margin-top:6px;font-size:11.5px">Wild trout present: <b>${r.wildTrout}</b></div>` : "")+
+      (r.troutRegs ? `<div class="rg-text">${troutRegsHTML(r.troutRegs)}</div>` : "")+
+      `<div class="rg-src">Classification and any special-regulation wording come from the ${src.agency} ${src.what}. Regulations change — confirm against the current ${src.regs} before you fish.${page}</div>`+
       `</div>`;
   }
-
-  /* Yellowstone's rules are the reason the park is its own region, and they
-     are specific enough per river that a single park-wide note wouldn't do:
-     one reach opens May 1 and another July 15, one is fly-fishing-only, and
-     in the Lamar drainage releasing a rainbow alive is illegal. Wording is
-     taken from the Park Service's own regulations rather than paraphrased. */
+  /* Park rules are specific enough per river that one park-wide note won't
+     do: in Yellowstone one reach opens May 1 and another July 15, one is
+     fly-fishing-only, and in the Lamar drainage releasing a rainbow alive is
+     illegal. Two parks, two authorities, and the difference is the single
+     most useful thing here: Yellowstone issues its own permit and a state
+     licence is void there, while Grand Teton is Wyoming water with a Wyoming
+     licence. The Snake, Buffalo Fork and Gros Ventre carry a Grand Teton note
+     without being in that region, so the source is a field. */
   if(r.parkRegs){
-    /* Two parks, two authorities, and the difference is the single most
-       useful thing on this card: Yellowstone issues its own permit and a
-       state licence is void there, while Grand Teton is Wyoming water with
-       a Wyoming licence. Crediting the wrong one would send someone to the
-       wrong counter. The Snake, Buffalo Fork and Gros Ventre carry a Grand
-       Teton note without being in that region, so the source is a field. */
     const src = r.parkRegsSrc || (r.region==="yellowstone" ? "yell" : "grte");
     const pk = PARK_INFO[src];
     const badge = pk ? pk.badge : src==="idfg" ? "Idaho Fish &amp; Game"
@@ -2889,28 +3013,110 @@ function renderSheet(r){
       : src==="grte"
       ? `From the National Park Service's Grand Teton fishing information, which follows <b>Wyoming Game &amp; Fish</b> regulations. Seasons and closures are re-issued every year — check the current Wyoming regulations, and carry a Wyoming licence.`
       : `From the park's <b>2026</b> fishing regulations. Seasons, closures and possession limits are re-issued every year and streams close on short notice in low water — read the current edition before you fish, and carry your park permit.`;
-    full += `<div class="secthead">${(pk && pk.heading) || (src==="idfg" ? "Regulations" : "Park regulations")}</div><div class="fishnote">`+
+    const u = unfoldRegs(r.parkRegs);
+    count = u.count;
+    inner += `<div class="fishnote">`+
       `<span class="badge" style="background:#4a6f8a">${badge}</span> `+
-      `<span style="font-size:11.5px">${r.parkRegs}</span>`+
-      `<div style="font-size:10.5px;color:var(--txt-dim);margin-top:8px">${note}</div>`+
+      `<span style="font-size:11.5px">${u.html}</span>`+
+      `<div class="rg-src">${note}</div>`+
       `</div>`;
+  }
+  inner += stateLawFoldHTML(r);
+  if(!inner) return "";
+  return `<details class="rulesfull fold" data-fold="regs"><summary><span>Regulations</span>`+
+    `<span class="rf-hint">full wording${count ? " · " + count : ""}</span></summary>${inner}</details>`;
+}
+
+/* "Des Moines River Water Trail · State water trail (Iowa DNR) · Designated
+   Jun 2010 · 19.1 designated miles · Trail map →". A designation is a fact
+   about the water, not a rule for fishing it, so it sits with the blurb
+   rather than in the rules card. Every field but the name may be missing. */
+const WT_MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function waterTrailHTML(r){
+  const w = r.waterTrail;
+  if(!w || !w.name) return "";
+  const bits = [`<b>${fbEsc(w.name)}</b>`, w.src === "Iowa DNR" ? "State water trail (Iowa DNR)" : fbEsc(w.src || "Water trail")];
+  // read "YYYY-MM-DD" as text: new Date() takes it as UTC midnight, and in
+  // Iowa a trail designated on the 1st would read as the month before
+  const d = /^(\d{4})-(\d{2})/.exec(w.designated || "");
+  if(d && WT_MONTHS[+d[2]-1]) bits.push(`Designated ${WT_MONTHS[+d[2]-1]} ${d[1]}`);
+  if(Number.isFinite(w.miles)) bits.push(`${w.miles} designated miles`);
+  if(w.url) bits.push(`<a href="${fbEsc(w.url)}" target="_blank" rel="noopener">Trail map →</a>`);
+  return `<div class="wtrow">🛶 ${bits.join(" · ")}</div>`;
+}
+
+/* The gauge a river is read by: its primary, else the first it has. */
+function primaryGaugeOf(r){ return r.gauges.includes(r.primaryGauge) ? r.primaryGauge : r.gauges[0]; }
+
+/* The fishing note, minus what the blurb already says. The NE Iowa notes and
+   blurbs were both written from the DNR's stream page, so the note's "Wild
+   brown trout are present." restates the blurb's own wild-brown sentence,
+   while the stocking figures after it are new and stay. Whole sentences
+   only: one goes when it is in the blurb word for word, or when it is that
+   "Wild … trout are present." line and the blurb already names wild or
+   naturally reproducing fish of every species it lists. */
+const FISH_SP = "brown|brook|rainbow|tiger|cutthroat";
+const WILD_PRESENT = new RegExp(`^Wild ((?:${FISH_SP})(?:(?:, | and )(?:${FISH_SP}))*) trout are present\\.$`, "i");
+function fishNoteText(r){
+  if(!r.fish) return "";
+  const blurb = (r.blurb || "").toLowerCase();
+  const parts = r.fish.split(/\.\s+(?=[A-Z])/), sents = parts.map((s, i) => i < parts.length - 1 ? s + "." : s);
+  return sents.filter(s => {
+    if(s.length >= 20 && blurb.includes(s.toLowerCase())) return false;
+    const w = WILD_PRESENT.exec(s);
+    return !(w && /\bwild\b|reproduc|natural/.test(blurb) && w[1].toLowerCase().split(/, | and /).every(sp => blurb.includes(sp)));
+  }).join(" ");
+}
+
+function renderSheet(r){
+  /* A re-render (stats arriving, a flow refresh) must not snap shut a fold
+     the reader opened, so the open ones are noted by name and put back.
+     Another river starts with everything folded. */
+  const keepOpen = body.dataset.river === r.id
+    ? [...body.querySelectorAll("details[data-fold]")].filter(d => d.open).map(d => d.dataset.fold) : [];
+
+  /* The order answers "can I fish it, and is it worth the drive today": the
+     rules card, the full rules folded under it, the ranking, the river's own
+     gauge, the floats, then the description. A river with several gauges
+     leads with its primary and folds the rest, so the float sections aren't
+     pushed a screen down by readings from other reaches. */
+  let h = tierChipHTML(r);
+  if(r.gauges.length){
+    const pg = primaryGaugeOf(r), rest = r.gauges.filter(k => k !== pg);
+    h += flowCardHTML(pg, r.id);
+    if(rest.length) h += `<details class="fold morefold" data-fold="gauges"><summary><span>${rest.length} more gauge${rest.length > 1 ? "s" : ""} along the river</span></summary>`+
+      rest.map(k => flowCardHTML(k, r.id)).join("") + `</details>`;
+  } else {
+    h += noGaugeHTML(r);
   }
 
   const secs = SECTIONS.filter(s=>s.river===r.id && passFilter(s));
   const allSecs = SECTIONS.filter(s=>s.river===r.id);
+  let tip = "";
   if(allSecs.length){
     h += `<div class="secthead">Float sections</div>`;
     if(!secs.length) h += `<div class="fishnote">No sections match the current filters — clear a chip up top to see all ${allSecs.length}.</div>`;
     secs.forEach(s=>{ h += sectionHTML(s); });
   } else if(WADE_ONLY[r.id]) {
-    h += `<div class="secthead">Floating</div><div class="fishnote">🛶 ${WADE_ONLY[r.id]}</div>`;
+    /* Every Driftless creek is wade water, so "Floating: Wade only." says
+       nothing there. What follows those words is a fishing tip ("short rod,
+       roll casts…"), which joins the description rather than being lost. */
+    const w = WADE_ONLY[r.id];
+    if(r.region === "driftless" && /^Wade only\b/i.test(w)) tip = w.replace(/^Wade only\.\s*/i, "");
+    else h += `<div class="secthead">Floating</div><div class="fishnote">🛶 ${w}</div>`;
   }
-  h += researchLinksHTML(r);
+
+  /* The description: the blurb, then the fishing note and any wade tip as
+     more of the same, with no headings of their own. */
+  const fish = fishNoteText(r);
+  h += `<div class="secthead">About</div><div class="desc">${waterTrailHTML(r)}<p>${r.blurb}</p>`+
+    (fish ? `<p>🎣 ${fish}</p>` : "") + (tip ? `<p>${tip}</p>` : "") + `</div>`;
+  h += reportSearchHTML(r);
   const regBody = regBodyFor(r);
   h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Flow data: USGS Water Data OGC API${r.state==="CO"?" and Colorado Division of Water Resources":""}. River lines simplified — not for navigation. Verify regulations with ${regBody}.</p>`;
-  if(r.region==="driftless"){
-    h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🚶 Driftless access is mostly <b>walk-and-wade</b>, and a lot of the best water runs through <b>private land under a public angling easement</b> — you may fish and walk the stream corridor, but not leave it. Park only in the marked pull-offs, and check the state's current easement map and trout regulations (including any catch-and-release or artificial-only stretches) before you go. Iowa also requires a <b>trout fee</b> on top of a fishing license.</p>`;
-  }
+  /* No Driftless footer: the easement rule is the card's access row, the
+     trout fee is on its licence line, and the special-regulation stretches
+     are in the Regulations fold. */
   if(r.region==="northshore"){
     h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🌊 North Shore streams drop fast and cold straight off the ridge — spring steelhead runs are driven by snowmelt timing more than the calendar, so check current run reports before making the drive. Most access is <b>state park or DNR wayside</b> parking (many require a vehicle permit); a Minnesota <b>trout stamp</b> is required in addition to a fishing license. The Pigeon River and Grand Portage River cross into tribal or international jurisdiction — check current Grand Portage Band and Ontario licensing before fishing those reaches.</p>`;
   }
@@ -2928,14 +3134,14 @@ function renderSheet(r){
     h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">${piFoot.footer}</p>`;
   }
   if(r.region==="doorcounty"){
-    h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🌊 Door County has <b>no USGS gauge anywhere in the county</b> — every stream here is ungauged on purpose, and the nearest gauged water is a long way off. These creeks are small and rain-driven: judge them on the water. Almost all of them are <b>Great Lakes tributary</b> water, which carries its own season, a 10" minimum, a hook-gap limit and a <b>night-fishing closure</b> from September 15 — read the current Wisconsin regs before you go. Access is county park, state park and land-trust ground rather than DNR easement; there are no angling easements on the peninsula.</p>`;
+    h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🌊 Door County has <b>no USGS gauge anywhere in the county</b> — every stream here is ungauged on purpose, and the nearest gauged water is a long way off. These creeks are small and rain-driven: judge them on the water. Almost all of them are <b>Great Lakes tributary</b> water, which carries its own season, a 10" minimum, a hook-gap limit and a <b>night-fishing closure</b> from September 15 — read the current Wisconsin regs before you go.</p>`;
+    // (who owns the bank is the card's access row now, not a footer line)
   }
-  if(r.state==="IA" && r.region!=="driftless"){
-    h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">⚠ Central Iowa rivers have low-head dams — the "drowning machine" recirculating hydraulic at the base is dangerous at almost any flow. Scout unfamiliar stretches and check <a href="https://www.iowawhitewater.org/lhd/LHDrivers.html" target="_blank" rel="noopener">Iowa Whitewater's low-head dam list</a> before you put in.</p>`;
-  }
-  body.innerHTML = rulesCardHTML(r) +
-    (full ? `<details class="rulesfull"><summary>Full regulations — tap to read</summary>${full}</details>` : "") + h +
+  // The Iowa low-head-dam warning is in the rules card (damWarnHTML), not down here.
+  body.innerHTML = rulesCardHTML(r) + regsFoldHTML(r) + h +
     `<div class="rp-wrap"><button type="button" class="rp-link" data-report="${fbEsc(r.id)}">Report an issue with this river</button></div>`;
+  body.dataset.river = r.id;
+  keepOpen.forEach(k => { const d = body.querySelector(`details[data-fold="${k}"]`); if(d) d.open = true; });
 
   body.querySelectorAll("[data-zoom]").forEach(el=>el.addEventListener("click",()=>{
     const s = SECTIONS.find(x=>x.id===el.dataset.zoom);
@@ -3049,9 +3255,24 @@ function noGaugeHTML(r){
     ? "Nine gauges cover the park's main rivers and none of them is on this one — most Yellowstone water is backcountry and ungauged, and the app won't put a number on it that isn't measured. The nearest gauged river below is the useful read: on this plateau the whole park rises and falls together with snowmelt, so a neighbouring drainage tracks this one far more closely than it would in farm country. Runoff usually has the park high and off-colour into late June, and the backcountry streams come into shape as it drops."
     : r.region==="doorcounty"
     ? "There is <b>no USGS discharge gauge anywhere in Door County</b> — not on this creek and not on a neighbouring one — so there is no number to show and nothing close enough to borrow as a regional read. Nearly all of this water is short and rain-driven: <b>clarity and recent rain</b> are the whole story. On the Great Lakes tributaries the other half of the question is whether fish have run yet, which is driven by lake temperature and a rise in the creek, not by the calendar — a soaking rain in spring or from mid-September on is what turns them on."
+    : r.waterTrail      // the default below is about Driftless spring creeks, and wrong for paddling water
+    ? "There's no live USGS discharge gauge on this water trail, and the app doesn't invent a number for it. The nearest gauged river below is only a rough read on how wet the region is — a different river, not this one's level. Look at the water at the access before you put in."
     : r.region==="northshore"
     ? "Most North Shore streams are too small to gauge — there's no live number for this one, and the app doesn't invent one. Judge it on arrival: <b>clarity</b> is the thing that matters most. These are rain- and snowmelt-driven freestone streams, not spring creeks — they blow out fast after a heavy rain or a warm melt day and can take several days to clear and drop back into shape, longer than a Driftless spring creek would."
     : "Most Driftless spring creeks are too small to gauge — there's no live number for this one, and the app doesn't invent one. Judge it on arrival: <b>clarity</b> is the thing that matters most. If you can see the bottom in two feet of water it's on; chocolate-brown after a storm means give it a day or two. Spring-fed creeks clear far faster than the bigger freestone rivers, and often fish well the day after rain that has the mainstems blown out.";
+  /* On the small-stream regions nearly every creek is ungauged, and the
+     card's whole message is one line. The nearby river's reading (a
+     different stream, and labelled so before it is even opened) and the
+     longer explanation fold underneath it. */
+  if(r.region==="driftless" || r.region==="doorcounty" || r.region==="northshore"){
+    const what = /\briver\b/i.test(r.name) ? "river" : "creek";
+    const label = near ? `Nearest gauge: <b>${near.name.split("—")[0].trim()}</b> — a different stream`
+                       : "Why there's no reading here";
+    return `<div class="flowcard ungauged">
+    <div class="ung-line">No gauge on this ${what} — judge clarity on arrival.</div>
+    <details class="fold ung-more" data-fold="ungauged"><summary><span>${label}</span></summary>${proxy}<div class="plain">${ungaugedNote}</div></details>
+  </div>`;
+  }
   return `<div class="flowcard">
     <div class="gname">No USGS gauge on this water</div>
     <div class="flowrow"><span class="cfs">—<small> CFS</small></span>
@@ -3061,26 +3282,54 @@ function noGaugeHTML(r){
   </div>`;
 }
 
+/* The rating chip on a float section. Western sections carry a whitewater
+   class; Iowa water-trail sections carry the DNR's paddler-skill rating in
+   `level` and klass:null. They are different claims by different people, so
+   the chip names whose rating it is, and reuses the class colours only as
+   easy / middling / hard. */
+const DNR_LEVEL_CLS = {Beginner:"k1", Intermediate:"k2", Advanced:"k3"};
+function sectionChipHTML(s){
+  if(typeof s.klass === "string" && s.klass.trim()){
+    const kCls = s.klass.includes("III")?"k3":(s.klass.includes("II")?"k2":"k1");
+    return `<span class="klass ${kCls}">Class ${s.klass}</span>`;
+  }
+  if(typeof s.level !== "string") return "";
+  return DNR_LEVEL_CLS[s.level] ? `<span class="klass ${DNR_LEVEL_CLS[s.level]}">DNR: ${s.level}</span>`
+                                : `<span class="klass k0">Not rated by the DNR</span>`;
+}
+
 function sectionHTML(s){
   const est = floatEstimate(s);
-  const kCls = s.klass.includes("III")?"k3":(s.klass.includes("II")?"k2":"k1");
   const put = RAMPS.find(p=>p.id===s.put), take = RAMPS.find(p=>p.id===s.take);
+  const canFloat = typeof floatEligible==="function" && floatEligible(s);
+  /* A low-head dam is the one thing on an Iowa section that must not be
+     missed, so it sits above the notes, one line per dam, with the DNR's
+     portage side where the DNR gives one. */
+  const dams = Array.isArray(s.dams) ? s.dams : [];
+  const damHTML = dams.map(d => `<div class="dam">⚠ Low-head dam on this section: <b>${fbEsc(d.name)}</b>`+
+    `${d.portage ? ` — portage ${fbEsc(d.portage)}` : ""}</div>`).join("");
+  /* A DNR-rated section already says "DNR: Beginner" in its chip; a second
+     "Beginner-friendly" badge would say it twice, and in our words rather
+     than the DNR's. The badge stays for sections nobody else has rated. */
+  const begBadge = s.beginner && typeof s.level !== "string";
   return `<div class="sec">
-    <div class="top"><h3>${s.name}</h3><span class="klass ${kCls}">Class ${s.klass}</span></div>
+    <div class="top"><h3>${s.name}</h3>${sectionChipHTML(s)}</div>
     <div class="meta">
       <span><b>${s.miles}</b> river mi</span>
       <span class="time">⏱ <b>${est.text}</b></span>
       <span class="est">${est.scaled?"estimate · scaled to today's flow":"estimate · typical flow"}</span>
     </div>
-    ${s.beginner?`<span class="beg">✓ Beginner-friendly</span>`:""}
+    ${begBadge?`<span class="beg">✓ Beginner-friendly</span>`:""}
+    ${damHTML}
     <div class="notes">${s.notes}</div>
     <div class="notes" style="margin-top:4px"><span style="color:#1d7a46;font-weight:700">●</span> Put-in <b>${put.name}</b> &nbsp;→&nbsp; <span style="color:#8c4a1d;font-weight:700">●</span> Take-out <b>${take.name}</b></div>
     <div class="shuttle"><b>Shuttle/outfitters:</b> ${s.shuttle}</div>
     <button class="zoom" data-zoom="${s.id}">Show on map →</button>
-    ${typeof floatEligible==="function" && floatEligible(s) ? `<div class="floatbtns">
+    ${canFloat ? `<div class="floatbtns">
       <button class="zoom floatgo" data-float="${s.id}">🛶 Start float</button>
       <a class="zoom shuttle-link" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=${put.pos[0]},${put.pos[1]}&destination=${take.pos[0]},${take.pos[1]}">Shuttle directions →</a>
-    </div>` : ""}
+    </div>` : typeof s.level === "string" && typeof floatEligible === "function"
+      ? `<div class="nofloat">Start float is offered on DNR Beginner and Intermediate sections without a dam.</div>` : ""}
   </div>`;
 }
 
@@ -3103,7 +3352,9 @@ function zoomSection(s){
 const filters = {act:"all", beg:false, dur:null, cls:null};
 function passFilter(s){
   if(filters.beg && !s.beginner) return false;
-  if(filters.cls==="1" && s.klass!=="I") return false;
+  // an Iowa water-trail section has no class; the DNR's Beginner stands in for Class I
+  const classOne = (typeof s.klass === "string" && s.klass) ? s.klass === "I" : s.level === "Beginner";
+  if(filters.cls==="1" && !classOne) return false;
   if(filters.dur){
     const est = floatEstimate(s), mid=(est.lo+est.hi)/2;
     if(filters.dur==="half" && mid>4.2) return false;
@@ -3247,16 +3498,21 @@ function fbShowRow(r, force){
 /* ---------- Field Book: research links ----------
    Plain outbound searches built from the river's name. Nothing is fetched. */
 function fbCleanName(r){ return r.name.split("—")[0].split("(")[0].trim(); }
-function researchLinksHTML(r, bare){
+function reportSearchURL(r){ return "https://www.google.com/search?q="+encodeURIComponent(`${fbCleanName(r)} ${riverStateName(r)} fishing report`); }
+// The Field Book's Research tab: every link, Reddit included.
+function researchLinksHTML(r){
   const n = fbCleanName(r), st = riverStateName(r), q = encodeURIComponent;
   const links = [
     ["Reddit — posts about this river", "https://www.reddit.com/search/?q="+q(`"${n}" ${st} fishing`)],
     ["r/flyfishing — this river", "https://www.reddit.com/r/flyfishing/search/?restrict_sr=1&q="+q(n)],
-    ["Current fishing report (web search)", "https://www.google.com/search?q="+q(`${n} ${st} fishing report`)],
+    ["Current fishing report (web search)", reportSearchURL(r)],
   ];
-  const list = `<div class="fb-links">${links.map(([t,u]) => `<a href="${fbEsc(u)}" target="_blank" rel="noopener">${t} ↗</a>`).join("")}</div>`;
-  if(bare) return list;
-  return `<div class="secthead">Research</div>${list}<p class="fb-note">Links open outside the app; posts belong to their authors.</p>`;
+  return `<div class="fb-links">${links.map(([t,u]) => `<a href="${fbEsc(u)}" target="_blank" rel="noopener">${t} ↗</a>`).join("")}</div>`;
+}
+/* The river sheet: one link, not a Research section. The Reddit searches
+   live in the Field Book, for the rivers you've starred. */
+function reportSearchHTML(r){
+  return `<div class="fb-links rp-search"><a href="${fbEsc(reportSearchURL(r))}" target="_blank" rel="noopener">Search for fishing reports ↗</a></div>`;
 }
 
 /* ---------- Offline map areas ----------
@@ -3441,7 +3697,7 @@ const BOOK_SECTIONS = [
     let h = `<p class="bk-intro">Research for your favourite rivers — more research tools will appear here.</p>`;
     h += ids.length ? ids.map(id => {
       const r = RIVERS.find(x => x.id===id);
-      return `<div class="bk-res"><button type="button" class="bk-name" data-fbopen="${fbEsc(id)}">${fbEsc(r.name)}</button>${researchLinksHTML(r, true)}</div>`;
+      return `<div class="bk-res"><button type="button" class="bk-name" data-fbopen="${fbEsc(id)}">${fbEsc(r.name)}</button>${researchLinksHTML(r)}</div>`;
     }).join("") + `<p class="fb-note">Links open outside the app; posts belong to their authors.</p>`
       : fbEmpty("Favourite a river to get research links for it here.<br>Tap <b>☆ Favourite</b> on any river.");
     el.innerHTML = h;
@@ -3475,7 +3731,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v11";
+const APP_VERSION = "flyroutes-v13";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){
@@ -4136,7 +4392,7 @@ farCtl.addTo(map);
    control (same pattern as "Boat ramps") or tapping a chip adds/removes the
    group, and the add/remove events are what flip tierFilter. */
 const tierGroups = {};
-const TIER_LABEL = {gold:"Gold rivers", "1":"Class 1 rivers", "2":"Class 2 rivers", "3":"All other rivers (Class 3)"};
+const TIER_LABEL = {gold:"Top pick rivers", "1":"Worth it rivers", "2":"Local rivers", "3":"Other rivers (all the rest)"};
 let refreshMenuCounts = () => {};      // set by tierCtl once its buttons exist
 function syncTierChips(){
   TIER_KEYS.forEach(k => {
@@ -4188,7 +4444,7 @@ tierCtl.onAdd = function(){
     `<div id="tierchips" class="chipcol menupanel" role="group" aria-label="River filters: classes shown" hidden>`+
     TIER_KEYS.map(k =>
       `<button data-tier="${k}" class="${tierFilter[k]?"on":""}" aria-pressed="${!!tierFilter[k]}" style="--tc:${TIER_INFO[k].color}">`+
-      `${k==="3" ? "All" : k==="gold" ? "Gold" : "Class "+k}</button>`).join("")+
+      `${k==="3" ? "All" : TIER_INFO[k].label}</button>`).join("")+
     `</div>`+
     `<button type="button" class="menubtn" data-menu="layerchips" aria-expanded="false" aria-controls="layerchips">`+
       `<span class="mlabel">Map Icons</span> <span class="mcount"></span><span class="mcaret" aria-hidden="true">\u25BE</span></button>`+
@@ -4224,8 +4480,8 @@ tierCtl.onAdd = function(){
     const k = b.dataset.tier, g = tierGroups[k];
     if(map.hasLayer(g)) map.removeLayer(g);          // turning a class off never touches the others
     else{
-      /* "All" means all: turning Class 3 on also turns Gold, Class 1 and Class 2 on, so the count
-         reads 4. They go first, while Class 3 is still off, so each repaint is the cheap one. */
+      /* "All" means all: turning Other ("3") on also turns Top pick, Worth it and Local on, so the
+         count reads 4. They go first, while Other is still off, so each repaint is the cheap one. */
       if(k === "3") TIER_KEYS.forEach(o => { if(o !== "3" && !map.hasLayer(tierGroups[o])) map.addLayer(tierGroups[o]); });
       map.addLayer(g);
     }

@@ -14,26 +14,66 @@
 
 const FLOAT_RIVERS  = ["snake","teton","southfork","green"];   // add "newfork" here later
 const FLOAT_EXCLUDE = ["s7"];   // Snake River Canyon West Table → Sheep Gulch: whitewater, not a fishing float
+const FLOAT_LEVELS  = ["Beginner","Intermediate"];   // Iowa DNR skill ratings that get Start float
 
-/* Class III or easier, on a river listed above, and not excluded. A section
-   with no class is never offered, and anything naming IV or V never is. */
+/* Two rules, by what the section is rated with. Neither applies to an id in
+   FLOAT_EXCLUDE.
+
+   Western sections carry a whitewater `klass`: Class III or easier, on a
+   river in FLOAT_RIVERS. A section with no class is never offered, and
+   anything naming IV or V never is.
+
+   Iowa water-trail sections carry the DNR's own skill rating in `level`
+   (and klass:null): offered only on a Beginner or Intermediate segment of a
+   river with a `waterTrail`, and only when `dams` is an empty list. A
+   low-head dam on a section means the route would run the live float
+   straight over it, so that section is listed with its warning and never
+   offered — and a section that doesn't say whether it has a dam isn't
+   either: an unknown is not a no. Advanced and Not Rated are not offered. */
 function floatEligible(s){
-  if(!s || !FLOAT_RIVERS.includes(s.river) || FLOAT_EXCLUDE.includes(s.id)) return false;
+  if(!s || FLOAT_EXCLUDE.includes(s.id)) return false;
+  if(typeof s.level === "string"){
+    if(!FLOAT_LEVELS.includes(s.level)) return false;
+    if(!Array.isArray(s.dams) || s.dams.length) return false;
+    const r = RIVERS.find(x => x.id === s.river);
+    return !!(r && r.waterTrail);
+  }
+  if(!FLOAT_RIVERS.includes(s.river)) return false;
   if(typeof s.klass !== "string" || !s.klass.trim()) return false;
   if(/IV|V/.test(s.klass)) return false;
   return /^(I{1,3})(-(I{1,3}))?$/.test(s.klass.trim());
 }
+/* What the section is rated, for the planner: a whitewater class on western
+   water, the DNR's skill rating on an Iowa water trail. */
+function floatRating(s){
+  if(typeof s.klass === "string" && s.klass.trim()) return "Class " + s.klass;
+  if(typeof s.level === "string") return ["Beginner","Intermediate","Advanced"].includes(s.level) ? "DNR " + s.level : "Not rated by the DNR";
+  return "";
+}
 
 /* Speed factor against the section's typical speed. These are STARTING
-   GUESSES — a pontoon is slower, a kayak quicker — and they are replaced by
-   your own history: once you have completed floats on a section, the planner
-   leads with the median of those instead. */
+   GUESSES — a pontoon is slower, a kayak quicker, a canoe taken as even with
+   a drift boat — and they are replaced by your own history: once you have
+   completed floats on a section, the planner leads with the median of those
+   instead. */
 const CRAFT = {
   drift:   {label:"Drift boat", f:1.0},
   raft:    {label:"Raft",       f:1.0},
   pontoon: {label:"Pontoon",    f:0.85},
   kayak:   {label:"Kayak",      f:1.15},
+  canoe:   {label:"Canoe",      f:1.0},
 };
+/* Which crafts a section offers, first entry the default. An Iowa water
+   trail is canoe-and-kayak water (owner's decision, 2026-10-10); the West
+   keeps its four and never offers a canoe. Each list remembers its own
+   choice, so picking a canoe in Iowa can't turn up as the Snake's default. */
+const CRAFT_WEST = ["drift","raft","pontoon","kayak"];
+const CRAFT_WT   = ["canoe","kayak"];
+function floatCrafts(s){
+  const r = s && RIVERS.find(x => x.id === s.river);
+  return r && r.waterTrail ? CRAFT_WT : CRAFT_WEST;
+}
+const flCraftKey = s => floatCrafts(s) === CRAFT_WT ? "floatCraftIA" : "floatCraft";
 const FLOAT_MIN_MPH   = 0.4;     // below this between two fixes, the time counts as stopped
 const FLOAT_MAX_ACC   = 75;      // metres; looser fixes are ignored
 const FLOAT_OFF_KM    = 0.3;     // further than this from the line: "off the river"
@@ -208,7 +248,12 @@ function flToast(msg){
   t.textContent = msg; t.classList.add("show");
   clearTimeout(flToast.t); flToast.t = setTimeout(() => t.classList.remove("show"), 3500);
 }
-const flCraft = () => { try{ const c = localStorage.getItem("floatCraft"); if(CRAFT[c]) return c; }catch(e){} return "drift"; };
+/* the stored choice for this section's kind of water, if it offers it; else its first craft */
+const flCraft = s => {
+  const list = floatCrafts(s);
+  try{ const c = localStorage.getItem(flCraftKey(s)); if(list.includes(c)) return c; }catch(e){}
+  return list[0];
+};
 const flDefaultLaunch = () => {
   const d = new Date(Math.ceil(Date.now()/300000)*300000);
   return String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
@@ -294,7 +339,7 @@ function flLaunchMs(){
   return d.getTime();
 }
 function flPlanEstimateHTML(){
-  const craft = flCraft(), n = floatPlanNumbers(flSec, craft), launch = flLaunchMs();
+  const craft = flCraft(flSec), n = floatPlanNumbers(flSec, craft), launch = flLaunchMs();
   const win = `${flClock(launch + n.lo*3600e3)} – ${flClock(launch + n.hi*3600e3)}`;
   const typLine = `${flHr(n.typ.lo)}–${flHr(n.typ.hi)}`;
   const label = n.typ.scaled ? "estimate · from typical speed and today's flow" : "estimate · from typical speed at typical flow";
@@ -314,15 +359,15 @@ function flPlanEstimateHTML(){
 function flRenderPlanner(){
   const s = flSec, r = RIVERS.find(x => x.id === s.river);
   const put = RAMPS.find(p => p.id === s.put), take = RAMPS.find(p => p.id === s.take);
-  const craft = flCraft();
+  const craft = flCraft(s);
   const routeOk = !!flRoute && !flRoute.error;
   flPlan.innerHTML = `
     <div class="fp-head"><div><h3>${fbEsc(s.name)}</h3>
-      <div class="fp-meta">${fbEsc(r.name)} · Class ${fbEsc(s.klass)} · <b>${s.miles}</b> mi</div></div>
+      <div class="fp-meta">${fbEsc(r.name)}${floatRating(s) ? " · " + fbEsc(floatRating(s)) : ""} · <b>${s.miles}</b> mi</div></div>
       <button class="x" id="fp-x" type="button" aria-label="Close">✕</button></div>
     <div class="fp-ends"><span class="dot put"></span>${fbEsc(put.name)} <span class="arrow">→</span> <span class="dot take"></span>${fbEsc(take.name)}</div>
-    <div class="fp-craft" role="radiogroup" aria-label="Craft">${Object.entries(CRAFT).map(([k,c]) =>
-      `<button type="button" role="radio" aria-checked="${k===craft}" data-craft="${k}" class="${k===craft?"on":""}">${c.label}</button>`).join("")}</div>
+    <div class="fp-craft" role="radiogroup" aria-label="Craft">${floatCrafts(s).map(k =>
+      `<button type="button" role="radio" aria-checked="${k===craft}" data-craft="${k}" class="${k===craft?"on":""}">${CRAFT[k].label}</button>`).join("")}</div>
     <label class="fp-launch">Launch time <input type="time" id="fp-time" value="${flDefaultLaunch()}"></label>
     <div class="fp-est" id="fp-est">${flPlanEstimateHTML()}</div>
     ${routeOk ? "" : `<div class="fp-warn">This section can't be traced on the river line yet.</div>`}
@@ -356,12 +401,12 @@ function floatOpenPlanner(id){
 flPlan.addEventListener("click", e => {
   const b = e.target.closest("button"); if(!b || !flSec) return;
   if(b.dataset.craft){
-    try{ localStorage.setItem("floatCraft", b.dataset.craft); }catch(err){}
+    try{ localStorage.setItem(flCraftKey(flSec), b.dataset.craft); }catch(err){}
     flPlan.querySelectorAll("[data-craft]").forEach(x => { const on = x===b; x.classList.toggle("on", on); x.setAttribute("aria-checked", on); });
     document.getElementById("fp-est").innerHTML = flPlanEstimateHTML();
   } else if(b.id === "fp-x" || b.id === "fp-cancel") flClosePlanner(true);
   else if(b.id === "fp-share"){
-    const n = floatPlanNumbers(flSec, flCraft()), launch = flLaunchMs();
+    const n = floatPlanNumbers(flSec, flCraft(flSec)), launch = flLaunchMs();
     flShare(flShareText(flSec, launch, `${flClock(launch + n.lo*3600e3)} – ${flClock(launch + n.hi*3600e3)}`));
   } else if(b.id === "fp-start") flStart();
 });
@@ -396,9 +441,9 @@ document.addEventListener("visibilitychange", () => {
 
 function flStart(){
   if(!flSec || !flRoute || flRoute.error || F) return;
-  const n = floatPlanNumbers(flSec, flCraft());
+  const n = floatPlanNumbers(flSec, flCraft(flSec));
   F = {id:Math.random().toString(36).slice(2,10) + Date.now().toString(36), section:flSec.id, river:flSec.river,
-       craft:flCraft(), start:Date.now(), planned:{lo:n.lo, hi:n.hi, mid:n.mid}, log:[]};
+       craft:flCraft(flSec), start:Date.now(), planned:{lo:n.lo, hi:n.hi, mid:n.mid}, log:[]};
   flAlong = 0; flLastT = 0; flOff = false; flGotFix = false; flCollapsed = false;
   flSave();
   flPlan.classList.remove("show"); flSec = null;
