@@ -568,9 +568,9 @@ the end of this batch.
 #### Conditions additions — `new` · fit: strong (mostly free sources)
 - **Gauge height:** USGS 00065, same batched calls. Worth showing *beside*
   CFS, never instead — status still needs discharge (CLAUDE.md, Always/Never).
-- **Water temperature:** USGS 00010 where the gauge reports it. Also the
+- **Water temperature:** `done` (2026-10-10, uncommitted; see CLAUDE.md). USGS 00010 where the gauge reports it. Also the
   trout-stress cue (warm afternoons in August).
-- **Weather & wind:** National Weather Service API, free, no key — forecast,
+- **Weather & wind:** `done` (2026-10-10, hourly strip, no gusts). National Weather Service API, free, no key — forecast,
   wind and gusts at the river's midpoint.
 - **Clarity outlook:** no source measures it. A rising-flow-after-rain
   heuristic could be offered **labelled as a guess**, or left out. Clarity

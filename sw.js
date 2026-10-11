@@ -8,7 +8,7 @@
      and a background fetch refreshes it, so a rebuilt layer reaches phones
      on the next visit instead of never.
    Every URL here is relative: the site lives at a sub-path on GitHub Pages. */
-const VERSION = "flyroutes-v14";
+const VERSION = "flyroutes-v15";
 const TILES_BROWSE = "tiles-browse", TILES_SAVED = "tiles-saved", DATA_TILES = "data-tiles";
 const TOPO = "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/";
 const LEAFLET = [
@@ -97,7 +97,7 @@ self.addEventListener("fetch", e => {
   if(url.hostname==="fonts.googleapis.com" || url.hostname==="fonts.gstatic.com"){
     e.respondWith(cacheFirst(req)); return;
   }
-  // Everything else (USGS water, DWR, NHD, Overpass, PAD-US, other basemaps,
-  // analytics) goes straight to the browser. Other tile servers' terms forbid
-  // offline caching, so they are never stored.
+  // Everything else (USGS water, DWR, NHD, Overpass, PAD-US, the National
+  // Weather Service, other basemaps, analytics) goes straight to the browser.
+  // Other tile servers' terms forbid offline caching, so they are never stored.
 });

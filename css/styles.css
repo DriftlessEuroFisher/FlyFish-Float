@@ -278,6 +278,39 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .goodflow{margin-top:8px;font-size:12px;font-weight:600;border-radius:7px;padding:6px 9px}
 .goodflow.in{color:#1e5a35;background:#e3f3e8;border:1px solid #bfe3cc}
 .goodflow.out{color:#7a4a12;background:#fbeee0;border:1px solid #f0cfa6}
+/* Water temperature under the flow number, and the trout-stress note in the
+   warning amber (not survey orange, which is the live readout's alone). */
+.wtemp{margin-top:6px;font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--txt-dim)}
+.wtemp b{color:var(--ink);font-weight:600}
+.tempwarn{margin-top:6px;font-size:12px;line-height:1.35;color:#92400e;background:#fef3c7;border:1px solid #fcd34d;border-radius:7px;padding:6px 9px}
+
+/* Wind & weather (NWS hourly). Gauge-paper panel like the flow card; windy
+   hours wear the warning amber, strong wind a darker brown-amber. Teal,
+   orange, closure red and the trout-class colours are all spoken for. */
+.wxcard{background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);
+  padding:12px;margin:12px 0;box-shadow:0 1px 4px rgba(15,30,22,.08)}
+.wxcard .gname{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--txt-dim)}
+.wx-now{margin-top:5px;font-size:13px;line-height:1.4;color:var(--txt)}
+.wx-now b{font-family:"IBM Plex Mono",monospace;font-weight:600;color:var(--ink)}
+.wx-dim{color:var(--txt-dim)}
+.wx-wtxt.wx-w1{color:#92400e;font-weight:700}
+.wx-wtxt.wx-w2{color:#5a2a06;font-weight:700}
+/* six cells fit a phone; if they ever don't, the strip scrolls, not the page */
+.wx-strip{display:flex;gap:4px;margin-top:9px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.wx-cell{flex:1 0 44px;text-align:center;background:var(--paper);border:1px solid var(--line);
+  border-radius:7px;padding:5px 2px 4px;font-family:"IBM Plex Mono",monospace}
+.wx-h{font-size:10px;font-weight:600;color:var(--txt-dim);text-transform:uppercase}
+.wx-t{font-size:13px;font-weight:600;color:var(--ink);margin-top:1px}
+.wx-wind{font-size:11px;color:var(--txt);margin-top:2px;white-space:nowrap}
+.wx-wind small{display:block;font-size:8.5px;color:var(--txt-dim)}
+.wx-pop{font-size:10px;color:var(--river);min-height:13px;margin-top:1px}
+.wx-cell.wx-w1{background:#fef3c7;border-color:#fcd34d}
+.wx-cell.wx-w1 .wx-wind{color:#92400e;font-weight:700}
+.wx-cell.wx-w2{background:#f6c26b;border-color:#b45309}
+.wx-cell.wx-w2 .wx-wind{color:#5a2a06;font-weight:700}
+.wx-sum{margin-top:8px;font-size:12.5px;font-weight:600;color:var(--txt)}
+.wx-src{margin-top:6px;font-size:10.5px;line-height:1.35;color:var(--txt-dim)}
+.wx-off{margin-top:5px;font-size:12.5px;color:var(--txt-dim)}
 
 /* ---------- Sections list ---------- */
 .secthead{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:15px;

@@ -1,6 +1,7 @@
 /* ============================================================
    USGS WATER DATA — modernized OGC API (api.waterdata.usgs.gov)
-   - latest-continuous : current discharge (00060)
+   - latest-continuous : current discharge (00060) and, in the same
+                         request, water temperature (00010) where reported
    - daily             : historical daily means -> day-of-year median
    - monitoring-locations : runtime verification of gauge IDs
    Legacy waterservices.usgs.gov is NOT used (being decommissioned).
@@ -102,6 +103,7 @@ const store = {
 };
 
 const flows = {};   // gaugeKey -> {cfs, time, fetchedAt, stale}
+const temps = {};   // gaugeKey -> {c, time, fetchedAt}  water temperature (00010), USGS only
 const stats = {};   // gaugeKey -> {median, mean, min, max, n}
 const meta  = {};   // gaugeKey -> {name, verified}
 
@@ -206,7 +208,23 @@ function markStale(keys){
     flows[key] = prev && prev.cfs != null
       ? {...prev, stale:true}
       : {cfs:null, stale:true, error:true};
+    // the saved temperature comes back with it; the 24 h rule in
+    // flowCardHTML still keeps an old one off the card
+    if(!temps[key]){ const t = store.get("temp:"+key); if(t && t.c != null) temps[key] = t; }
   });
+}
+
+/* Water temperature rides along in the latest-continuous request as a second
+   parameter (00010), so it costs no extra calls. A site can answer with
+   several 00010 rows (more than one sensor); the most recent wins. Only rows
+   with a reading are passed here, and a missing row leaves any earlier
+   reading in place to age out under the 24 h rule. */
+function keepTemp(key, p){
+  const c = parseFloat(p.value);
+  if(!isFinite(c) || !p.time) return;
+  if(temps[key] && temps[key].time > p.time) return;
+  temps[key] = {c, time:p.time, fetchedAt:Date.now()};
+  store.set("temp:"+key, temps[key]);
 }
 
 /* Does this endpoint honour a comma-separated monitoring_location_id list?
@@ -220,11 +238,14 @@ let batchSupported = true;
 async function fetchOneLatest(key){
   if(apiPaused()){ markStale([key]); return; }
   const url = apiURL("latest-continuous/items", {
-    monitoring_location_id: siteOf(key), parameter_code:"00060", limit:"4"
+    // limit 8: room for the temperature rows without crowding out discharge
+    monitoring_location_id: siteOf(key), parameter_code:"00060,00010", limit:"8"
   });
   try{
     const j = await fetchJSON(url, 15000);
-    const f = (j.features||[]).find(x=>x.properties && x.properties.value != null);
+    const rows = (j.features||[]).filter(x=>x.properties && x.properties.value != null);
+    rows.filter(x=>x.properties.parameter_code === "00010").forEach(x=>keepTemp(key, x.properties));
+    const f = rows.find(x=>x.properties.parameter_code === "00060");
     const cfs = f ? parseFloat(f.properties.value) : NaN;
     if(!isFinite(cfs)) throw new Error("no data");
     flows[key] = {cfs, time:f.properties.time, fetchedAt:Date.now(), stale:false};
@@ -234,7 +255,8 @@ async function fetchOneLatest(key){
 
 /* Latest discharge for many gauges in ONE request. Each returned feature
    carries its own monitoring_location_id, so the response is split back
-   out per gauge. */
+   out per gauge — and its parameter_code, so the water temperature asked
+   for alongside (00010) is split off into `temps`. */
 async function fetchLatestBatch(keys){
   const dwr = keys.filter(isDWR);
   if(dwr.length){ await fetchDWRLatest(dwr); keys = keys.filter(k=>!isDWR(k)); }
@@ -246,19 +268,26 @@ async function fetchLatestBatch(keys){
   }
   const url = apiURL("latest-continuous/items", {
     monitoring_location_id: keys.map(siteOf).join(","),
-    parameter_code: "00060",
-    limit: String(keys.length * 4)
+    parameter_code: "00060,00010",
+    limit: String(keys.length * 6)      // 4 per site as before, plus room for temperature rows
   });
   try{
     const j = await fetchJSON(url, 20000);
-    const feats = (j.features||[]).filter(f=>f.properties && f.properties.value != null);
-    const sites = new Set(feats.map(f=>f.properties.monitoring_location_id));
+    const rows = (j.features||[]).filter(f=>f.properties && f.properties.value != null);
+    // counted over every row, discharge and temperature alike: a temperature
+    // row can only add sites, so this never trips where it didn't before
+    const sites = new Set(rows.map(f=>f.properties.monitoring_location_id));
     // asked for many, heard about at most one -> the list wasn't honoured
     if(sites.size <= 1 && keys.length > 1){
       batchSupported = false;
       for(const k of keys) await fetchOneLatest(k);
       return;
     }
+    rows.forEach(f=>{
+      const p = f.properties, key = KEY_BY_SITE[p.monitoring_location_id];
+      if(key && p.parameter_code === "00010") keepTemp(key, p);
+    });
+    const feats = rows.filter(f=>f.properties.parameter_code === "00060");
     const got = new Set();
     feats.forEach(f=>{
       const p = f.properties;
@@ -879,11 +908,13 @@ function openLake(id){
                                 : "Wyoming · Yellowstone National Park · lake";
   sheet.classList.add("open");
   delete body.dataset.river;            // renderSheet's fold memory is per river; this is a lake
+  const wx = {key:"lake:" + k.id, pt:wxLakePoint(k)};    // on a lake the wind is the forecast that matters
   body.innerHTML =
     (desigHTML(k.id) ? `<div class="rulescard">${desigHTML(k.id)}</div>` : "") +
     `<p style="margin:12px 2px 2px;font-size:13.5px">${k.blurb}</p>` +
     `<div class="flowcard"><div class="gname">Still water — ${k.areaKm2} km²</div>` +
     `<div class="plain">No gauge and no flow number: a lake doesn't have one. What "in shape" means here is ice-off, water temperature and wind, not CFS — and on the big lakes the wind is the thing that decides the day.</div></div>` +
+    wxCardHTML(wx) +
     `<div class="secthead">Fishing notes</div><div class="fishnote">🎣 ${k.fish}</div>` +
     `<div class="secthead">${(pk && pk.heading) || "Park regulations"}</div><div class="fishnote">` +
       `<span class="badge" style="background:#4a6f8a">${pk ? pk.badge : grte ? "Grand Teton · Wyoming regs" : "National Park Service"}</span> ` +
@@ -896,6 +927,7 @@ function openLake(id){
       ? "WY Game &amp; Fish and the park — Grand Teton takes a <b>Wyoming licence</b>, unlike Yellowstone"
       : "the National Park Service (a state fishing licence is <b>not</b> valid in the park)"}.</p>` +
     `<div class="rp-wrap"><button type="button" class="rp-link" data-report="${fbEsc(k.id)}">Report an issue with this lake</button></div>`;
+  wxLoad(wx);
 }
 
 /* ============================================================
@@ -3074,6 +3106,200 @@ function fishNoteText(r){
   }).join(" ");
 }
 
+/* ============================================================
+   WIND & WEATHER — the National Weather Service hourly forecast.
+   A gauge says what the river is doing; whether the day is worth the drive
+   is as often decided by wind (casting, a drift boat on flat water, a big
+   lake) and by rain. api.weather.gov is free, needs no key and is CORS-open.
+   Two calls: /points/{lat},{lng} names the forecast office's grid cell and
+   its hourly-forecast URL (that never changes for a point, so it is kept
+   forever), then the hourly forecast itself (kept 30 minutes). Neighbouring
+   rivers often share a grid cell, so the forecast is cached by its URL.
+   This is not the USGS host, so none of it touches the request budget or
+   apiPaused(). The hourly product carries no gusts and none are invented.
+   ============================================================ */
+const NWS_POINTS = "https://api.weather.gov/points/";
+const WX_FRESH_MS = 30*60*1000;      // reuse a forecast this long
+const WX_RETRY_MS = 2*60*1000;       // after a failure, don't retry on every re-render
+const WX_PRUNE_MS = 6*60*60*1000;    // saved forecasts older than this are deleted
+const WX_CELLS = 6, WX_STEP = 2;     // the strip: six cells, two hours apart
+const WX_WINDY = 15, WX_STRONG = 25; // mph, top of the forecast range
+const WX_LIGHT = 10;                 // under this all strip long: "light wind"
+const WX_RAIN_MIN = 20;              // % chance worth printing
+const wxPtMem = {};                  // point id -> hourly URL, or null outside NWS coverage
+const wxFcMem = {};                  // hourly URL -> {fetchedAt, updated, periods}
+const wxBusy = {};                   // point id / URL -> in-flight promise (one per URL)
+const wxFailedAt = {};               // point id -> last failure
+
+/* Where the forecast is for, and how the card says so. A river is read at
+   its primary gauge — the same water the flow card describes — or, with no
+   gauge, near the middle of its line. A lake at the centre of its outline. */
+function wxPoint(lat, lng, label){
+  // 4 decimals is what /points takes; trailing zeros dropped so it doesn't redirect
+  const id = `${+lat.toFixed(4)},${+lng.toFixed(4)}`;
+  return {id, label};
+}
+function wxRiverPoint(r){
+  const pg = r.gauges.length ? primaryGaugeOf(r) : null;
+  const p = pg && GAUGE_POS[pg];
+  if(p) return wxPoint(p[0], p[1], `Forecast at the ${GAUGES[pg].label} gauge`);
+  const m = midCoord(r.coords);
+  return wxPoint(m[0], m[1], "Forecast near the middle of the river");
+}
+function wxLakePoint(k){
+  const b = k.bounds;
+  return b ? wxPoint((b[0][0]+b[1][0])/2, (b[0][1]+b[1][1])/2, "Forecast on the lake")
+           : wxPoint(k.at[0], k.at[1], "Forecast on the lake");
+}
+
+/* The point's hourly URL: memory, then this phone's store, then /points. A
+   404 there means the point is outside NWS coverage, and the card is hidden. */
+function wxURLKnown(pt){
+  if(pt.id in wxPtMem) return wxPtMem[pt.id];
+  const s = store.get("nwsPt:"+pt.id);
+  if(s && s.url) return wxPtMem[pt.id] = s.url;
+  return undefined;
+}
+async function wxHourlyURL(pt){
+  const known = wxURLKnown(pt);
+  if(known !== undefined) return known;
+  try{
+    const j = await fetchJSON(NWS_POINTS + pt.id, 10000);
+    const url = j.properties && j.properties.forecastHourly;
+    if(url) store.set("nwsPt:"+pt.id, {url});
+    return wxPtMem[pt.id] = url || null;
+  }catch(e){
+    if(/HTTP 404/.test(e.message)) return wxPtMem[pt.id] = null;   // not for the session's store: could be a blip
+    throw e;
+  }
+}
+function wxCached(url){
+  if(!url) return null;
+  if(!wxFcMem[url]){ const s = store.get("nwsFc:"+url); if(s && s.periods) wxFcMem[url] = s; }
+  return wxFcMem[url] || null;
+}
+/* Saved forecasts are only ever worth half an hour, but each is a few KB and
+   one is kept per grid cell looked at. Old ones are cleared so they can't
+   creep up on the Field Book's share of localStorage. */
+function wxPrune(){
+  try{
+    for(let i = localStorage.length - 1; i >= 0; i--){
+      const k = localStorage.key(i);
+      if(!k || !k.startsWith("nwsFc:")) continue;
+      const v = store.get(k);
+      if(!v || !(Date.now() - v.fetchedAt < WX_PRUNE_MS)) localStorage.removeItem(k);
+    }
+  }catch(e){}
+}
+async function wxFetchForecast(url){
+  if(wxBusy[url]) return wxBusy[url];
+  return wxBusy[url] = (async () => {
+    try{
+      const j = await fetchJSON(url, 10000);
+      const pr = j.properties || {}, now = Date.now();
+      // only what the card uses, and only hours not already over
+      const periods = (pr.periods || []).filter(p => new Date(p.endTime).getTime() > now).slice(0, 24).map(p => ({
+        s:p.startTime, e:p.endTime, t:p.temperature, u:p.temperatureUnit, ws:p.windSpeed || "", wd:p.windDirection || "",
+        pop:p.probabilityOfPrecipitation ? p.probabilityOfPrecipitation.value : null, sf:p.shortForecast || ""}));
+      if(!periods.length) throw new Error("empty forecast");
+      const fc = {fetchedAt:now, updated:pr.updateTime || pr.generatedAt || null, periods};
+      wxFcMem[url] = fc;
+      wxPrune();
+      store.set("nwsFc:"+url, fc);
+      return fc;
+    } finally { delete wxBusy[url]; }
+  })();
+}
+
+/* Kick a fetch if this point has no fresh forecast. renderSheet calls it on
+   every re-render, so it does nothing while one is in flight, while the
+   cached copy is fresh, or for a couple of minutes after a failure. */
+function wxLoad(target){
+  const pt = target.pt;
+  const url = wxURLKnown(pt);
+  if(url === null) return;                                    // outside NWS coverage
+  const fc = wxCached(url);
+  if(fc && Date.now() - fc.fetchedAt < WX_FRESH_MS) return;
+  if(wxBusy[pt.id]) return;
+  if(wxFailedAt[pt.id] && Date.now() - wxFailedAt[pt.id] < WX_RETRY_MS) return;
+  wxBusy[pt.id] = (async () => {
+    try{
+      const u = await wxHourlyURL(pt);
+      if(u) await wxFetchForecast(u);
+      delete wxFailedAt[pt.id];
+    }catch(e){ wxFailedAt[pt.id] = Date.now(); }
+    finally{ delete wxBusy[pt.id]; }
+    wxFill(target);
+  })();
+}
+/* Only into the sheet it was asked for: the placeholder carries the river's
+   or lake's id, so if the sheet has moved on there is nothing to fill. */
+function wxFill(target){
+  const el = body.querySelector(`[data-wx="${target.key}"]`);
+  if(!el) return;
+  const html = wxCardHTML(target);
+  if(html) el.outerHTML = html; else el.remove();
+}
+
+const wxTop = ws => Math.max(0, ...(String(ws).match(/\d+/g) || ["0"]).map(Number));   // "10 to 15 mph" -> 15
+const wxEmph = top => top >= WX_STRONG ? " wx-w2" : top >= WX_WINDY ? " wx-w1" : "";
+/* The hour as the forecast gives it — local time at the river, from the
+   offset in startTime — not the phone's, which may be a time zone away. */
+function wxHour(p){
+  const h = +String(p.s).slice(11, 13);
+  return isFinite(h) ? `${h % 12 || 12}${h < 12 ? "a" : "p"}` : "";
+}
+function wxCardHTML(target){
+  const url = wxURLKnown(target.pt);
+  if(url === null) return "";
+  const head = `<div class="gname">Wind &amp; weather</div>`;
+  const shell = inner => `<div class="wxcard" data-wx="${target.key}">${head}${inner}</div>`;
+  const fc = wxCached(url);
+  const now = Date.now();
+  const periods = fc ? fc.periods.filter(p => new Date(p.e).getTime() > now) : [];
+  const fresh = fc && now - fc.fetchedAt < WX_FRESH_MS;
+  // an older copy stands in while its refresh is on the way, but not once
+  // that refresh has failed: then it is no longer the current forecast
+  const failed = wxFailedAt[target.pt.id] && !wxBusy[target.pt.id];
+  if(!periods.length || (!fresh && failed)){
+    return failed
+      ? shell(`<div class="wx-off">Forecast unavailable — no connection to the National Weather Service.</div>`)
+      : shell(`<div class="wx-now wx-dim">Loading forecast…</div>`);
+  }
+  const unit = u => u === "F" || !u ? "°F" : "°" + u;
+  const p0 = periods[0], top0 = wxTop(p0.ws);
+  const wind = (p, full) => wxTop(p.ws) === 0 ? "calm"
+    : full ? `${p.wd} ${p.ws}`.trim() : `${p.wd} ${wxTop(p.ws)}`.trim();
+  const nowBits = [`<b>${p0.t}${unit(p0.u)}</b>`, `Wind <span class="wx-wtxt${wxEmph(top0)}">${wind(p0, true)}</span>`];
+  if(p0.pop != null && p0.pop >= WX_RAIN_MIN) nowBits.push(`${p0.pop}% rain`);
+  if(p0.sf) nowBits.push(fbEsc(p0.sf));
+
+  const cells = [];
+  for(let n = 1; n <= WX_CELLS; n++){ const p = periods[n * WX_STEP]; if(p) cells.push(p); }
+  const strip = cells.map(p => {
+    const top = wxTop(p.ws);
+    return `<div class="wx-cell${wxEmph(top)}"><div class="wx-h">${wxHour(p)}</div><div class="wx-t">${p.t}°</div>`+
+      `<div class="wx-wind">${wind(p, false)}${top ? "<small>mph</small>" : ""}</div>`+
+      `<div class="wx-pop">${p.pop != null && p.pop >= WX_RAIN_MIN ? p.pop + "%" : ""}</div></div>`;
+  }).join("");
+
+  // the summary reads only the hours on the card: now, then the strip
+  const seen = [p0, ...cells];
+  let windiest = p0;
+  seen.forEach(p => { if(wxTop(p.ws) > wxTop(windiest.ws)) windiest = p; });
+  const last = seen[seen.length - 1];
+  const sum = wxTop(windiest.ws) < WX_LIGHT
+    ? (seen.length > 1 ? `Light wind through ${wxHour(last)} (under ${WX_LIGHT} mph)` : `Light wind (under ${WX_LIGHT} mph)`)
+    : `Windiest ${windiest === p0 ? "now" : "around " + wxHour(windiest)} (${windiest.ws.replace(/ to /, "–")})`;
+
+  const issued = fc.updated ? readingWhen(fc.updated) : "";
+  return shell(
+    `<div class="wx-now">${nowBits.join(" · ")}</div>` +
+    (strip ? `<div class="wx-strip">${strip}</div>` : "") +
+    `<div class="wx-sum">${sum}</div>` +
+    `<div class="wx-src">National Weather Service hourly forecast · ${fbEsc(target.pt.label)}${issued ? ` · issued ${issued}` : ""}</div>`);
+}
+
 function renderSheet(r){
   /* A re-render (stats arriving, a flow refresh) must not snap shut a fold
      the reader opened, so the open ones are noted by name and put back.
@@ -3087,13 +3313,16 @@ function renderSheet(r){
      leads with its primary and folds the rest, so the float sections aren't
      pushed a screen down by readings from other reaches. */
   let h = tierChipHTML(r);
+  // the forecast sits right under the river's own reading: the two together
+  // are "is it worth the drive"; a cached forecast paints at once, no flicker
+  const wx = {key:"river:" + r.id, pt:wxRiverPoint(r)};
   if(r.gauges.length){
     const pg = primaryGaugeOf(r), rest = r.gauges.filter(k => k !== pg);
-    h += flowCardHTML(pg, r.id);
+    h += flowCardHTML(pg, r.id) + wxCardHTML(wx);
     if(rest.length) h += `<details class="fold morefold" data-fold="gauges"><summary><span>${rest.length} more gauge${rest.length > 1 ? "s" : ""} along the river</span></summary>`+
       rest.map(k => flowCardHTML(k, r.id)).join("") + `</details>`;
   } else {
-    h += noGaugeHTML(r);
+    h += noGaugeHTML(r) + wxCardHTML(wx);
   }
 
   const secs = SECTIONS.filter(s=>s.river===r.id && passFilter(s));
@@ -3147,6 +3376,7 @@ function renderSheet(r){
   body.innerHTML = rulesCardHTML(r) + regsFoldHTML(r) + h +
     `<div class="rp-wrap"><button type="button" class="rp-link" data-report="${fbEsc(r.id)}">Report an issue with this river</button></div>`;
   body.dataset.river = r.id;
+  wxLoad(wx);
   keepOpen.forEach(k => { const d = body.querySelector(`details[data-fold="${k}"]`); if(d) d.open = true; });
 
   body.querySelectorAll("[data-zoom]").forEach(el=>el.addEventListener("click",()=>{
@@ -3159,6 +3389,34 @@ function renderSheet(r){
   body.querySelectorAll("[data-river]").forEach(el=>el.addEventListener("click",()=>{
     openRiver(el.dataset.river);
   }));
+}
+
+/* Water temperature on trout water. Thresholds are common catch-and-release
+   guidance for trout, not a regulation anywhere this map covers. */
+const TROUT_WARM_F = 68;      // fish early, land and release fast
+const TROUT_REST_F = 72;      // give them a rest
+/* Trout water, decided by where the river is before what its text says.
+   Everything outside IA/MN/WI/IL is western or Great Lakes trout water, and
+   so are the small-stream regions inside them; text alone missed the Snake
+   (named only as "cutthroat") and the Henry's Fork (no species at all). The
+   warmwater left over -- Iowa water trails, MN/WI big rivers -- gets the cue
+   only where its own text names trout reaches. */
+const TROUT_REGIONS = new Set(["driftless","northshore","doorcounty","wisouthshore","wicentralsands"]);
+function isTroutWater(r){
+  return !!(r && (r.troutClass || TROUT_REGIONS.has(r.region) || !["IA","MN","WI","IL"].includes(r.state) ||
+    /trout|steelhead|salmon|cutthroat|grayling/i.test((r.fish || "") + " " + (r.blurb || ""))));
+}
+/* The temperature line under the flow number. Same 24 h rule as discharge:
+   an old temperature is not today's, so it isn't shown at all. */
+function waterTempHTML(key, riverObj){
+  const t = temps[key];
+  if(!t || t.c == null || readingIsOld(t)) return "";
+  const f = Math.round(t.c * 9/5 + 32);
+  const cue = !isTroutWater(riverObj) ? ""
+    : f >= TROUT_REST_F ? "Too warm for trout — give them a rest today."
+    : f >= TROUT_WARM_F ? "Warm for trout — fish early, land and release fish fast." : "";
+  return `<div class="wtemp">Water <b>${f}°F</b> (${t.c.toFixed(1)}°C)</div>` +
+    (cue ? `<div class="tempwarn">🌡 ${cue}</div>` : "");
 }
 
 function flowCardHTML(key, riverId){
@@ -3187,6 +3445,7 @@ function flowCardHTML(key, riverId){
       <span class="cfs">${cfsTxt}<small> CFS</small></span>
       <span class="badge" style="background:${st.color}">${st.label}</span>
     </div>
+    ${waterTempHTML(key, riverObj)}
     ${curLeft!=null?`<div class="staff"><div class="bar"></div><div class="tick" style="left:45%"></div><div class="cur" style="left:${curLeft}%"></div></div>`:""}
     <div class="flowmeta">
       ${s?`<span>median <b>${Math.round(s.median).toLocaleString()}</b></span><span>range <b>${Math.round(s.min)}–${Math.round(s.max).toLocaleString()}</b></span><span>${STAT_YEARS}-yr, ±${STAT_WINDOW}d</span>`:`<span>${loading?"loading history…":"history unavailable"}</span>`}
@@ -3773,7 +4032,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v14";
+const APP_VERSION = "flyroutes-v15";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){

@@ -1389,6 +1389,29 @@ rebuilt layer still reaches phones.
   means nothing, and the popup names the source. On by default, a safety
   layer, from zoom 10.
 
+### Water temperature and the wind & weather card (2026-10-10)
+- **Water temperature is free on the budget.** `latest-continuous` takes
+  `parameter_code=00060,00010` and returns a row per site per parameter, so
+  temperature rides in the same batched calls (limit is `keys.length*6`).
+  It lives in `temps{}` (store `temp:<key>`), never in `flows`, and the
+  flow card shows it only under the same 24 h rule as discharge.
+- **Trout warning** at 68°F / 72°F (`TROUT_WARM_F`, `TROUT_REST_F`, common
+  catch-and-release guidance, not a rule). `isTroutWater()` decides by
+  *place* first: every river outside IA/MN/WI/IL, and the small-stream
+  regions inside them, is trout water; the warmwater rest only if its own
+  text names trout. A word match alone missed the Snake ("cutthroat") and
+  the Henry's Fork (no species named). 1,386 of 1,442; the 56 left out are
+  exactly the Iowa water trails and the MN/WI big rivers.
+- **Wind & weather** is the NWS hourly forecast (`api.weather.gov`, no key,
+  CORS open, not on the USGS budget, not cached by `sw.js`), at the
+  primary gauge, else the river's midpoint, else the lake's centre.
+  Points are cached forever (`nwsPt:`), the forecast 30 min (`nwsFc:`),
+  one request in flight per URL, a 2 min pause after a failure, and a 404
+  (outside NWS coverage) hides the card. The placeholder carries
+  `data-wx="river:<id>"`/`"lake:<id>"` so a late answer can't land in the
+  wrong sheet. **No gusts**: the hourly forecast doesn't carry them and the
+  gridpoint data that does is far too big for a phone. Don't invent them.
+
 ### All USGS gauges (off by default)
 Every live **discharge** gauge in view, fetched from `latest-continuous` by
 bbox per 1° cell (cached 15 min), from zoom 8, skipping gauges already in
