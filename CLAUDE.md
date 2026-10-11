@@ -42,7 +42,11 @@ like an app, not a browser tab.
   "2" / "3"; a river not listed is Class 3, and Class 3 is **hidden by
   default** (off the map entirely, not dimmed, so it also costs no labels,
   flow animation or geometry fetches — `riverVisible()` starts with
-  `tierShown()`). The scale is **relative to the region**: the West has more
+  `tierShown()`). **Even with "All" on, Class 3 draws only inside the
+  padded view from zoom 8** (`otherViewSet()` / `syncOtherRivers()` on
+  `moveend`, only changed rivers re-applied); tempShown, favourites and the
+  focused river are exempt. `tierPicked()` is the class check without the
+  view gate, and zone counts use it. The scale is **relative to the region**: the West has more
   Gold because it has more blue-ribbon water, and the Driftless list is a
   labelled draft to be overruled from experience. Optional `season` windows
   (`best` / `poor` / `closed`, months, may wrap the year) move a river one
@@ -1305,12 +1309,21 @@ never stored or sent.
   floor it before using it as a key or with `<=` on an integer maximum.
 - **River Filters ▾ and Map Icons ▾ are collapsible menus** (renamed from
   Rivers / Map layers on 2026-10-09), built from `TIER_KEYS` and the
-  **`LAYER_CHIPS`** table. A new layer is one more row. **Every icon layer
-  starts off at launch.**
+  **`LAYER_CHIPS`** table. **Every icon layer starts off at launch.**
+  Since Batch B (2026-10-10) it is **8 chips, and one chip can own several
+  layers**: rows are `[id, label, [layers], color]`. *Parking & access* =
+  wade + OSM parking, *Hazards & closures* = falls/rapids/dams + closed
+  water. `ICON_SUBS` holds options inside a chip ("Every USGS gauge" under
+  Gauges, shown only while Gauges is on). Choices, `autoVeto` and
+  `focusTouched` are keyed by chip id. The layer control (bottom-left) holds
+  only basemaps and the four tiers; icon layers are not in it. The jump list
+  and the menus overlap on a phone, so opening one closes the other
+  (`closeIconMenus` / `zoneCollapseJump`).
 - **Icon layers have one owner: `syncIconLayers()`.** `iconWanted(id)`
   decides each layer from, in order: river focus, the user's own chip
-  choices, then close zoom (`AUTO_ICON_ZOOM` 12 turns on wade, ramps,
-  parking and trailheads, 400 ms after the zoom settles). Any add or remove
+  choices, then close zoom (`AUTO_ICON_ZOOM` 12 turns on access, ramps
+  and trailheads, 400 ms after the zoom settles). Focus turns on access,
+  ramps, bridges and hazards & closures, and turns gauges off. Any add or remove
   not made by `syncIconLayers()` is recorded as the user's choice, and the
   user's choice always wins. Don't add or remove these layers anywhere else.
 - **River focus** (`focusRiver` / `unfocusRiver`): opening a river frames it
@@ -1340,7 +1353,9 @@ never stored or sent.
   ring. A tip shows once per session (sessionStorage).
 - **Zoom +/− is bottom-right** above locate. Top-left controls clear the app
   bar by its *measured* height (`--appbar-h`, set by a ResizeObserver): the
-  title wraps to two lines on a phone.
+  title wraps to two lines on a phone. Under 768 px the tagline is hidden
+  and the title is 16px/line-height 1, so its two lines fit inside the 38 px
+  buttons (bar 54 px). On one line it was cut to "DELANOIT'S FL…".
 - **Park cards are hidden below zoom 6** (`PARK_CARD_ZOOM`). The outlines
   stay tappable.
 
@@ -1947,7 +1962,12 @@ are worth calibrating first.
   unreadable pile otherwise. A dropped card comes back one zoom step in.
 - **The "◄ Change Region" button (`#btn-zones`) is top-left.** The safety
   panel opens over the top-right corner the moment you enter a zone, and
-  it was burying the one control that gets you back out.
+  it was burying the one control that gets you back out. **It is the only
+  region control** (Batch B): while the chooser is up, a "Jump to…" list of
+  `REGIONS` (`#jump` / `#jumplist`) sits beside it; `── … ──` rows are
+  headings. It opens expanded from the button and collapsed when the
+  chooser comes up by itself at launch, where expanded it would cover the
+  northern states. The old `#regionsel` dropdown is gone.
 - **The flow animation has to be right before it is pretty.** River lines
   carry a dashed overlay whose `stroke-dashoffset` animates, so the dashes
   crawl along the path. Three constraints shaped it:

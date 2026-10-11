@@ -640,15 +640,15 @@ const gSat = L.tileLayer("https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",{
 const gHyb = L.tileLayer("https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}",{
   maxZoom:20, subdomains:["mt0","mt1","mt2","mt3"], attribution:"Imagery © Google"});
 usgsTopo.addTo(map);
-/* Overlay toggles are wired in after the marker layers exist — see
-   layerControl.addOverlay() calls further down. */
+/* Overlays: only the river classes (tierGroups, further down). The icon
+   layers are switched from the Map Icons menu (LAYER_CHIPS). */
 const layerControl = L.control.layers(
   {"USGS Topo":usgsTopo,"USGS Imagery + Topo":usgsImgTopo,"Google Hybrid":gHyb,"Google Satellite":gSat,"Esri Satellite":sat,"OpenTopoMap":topo},
   null, {position:"bottomleft"}).addTo(map);
 
-/* region quick-jump */
+/* Named areas for the "Jump to…" list beside Change Region (zoneCtl, further
+   down). A null target is a group heading in the list, not a destination. */
 const REGIONS = [
-  ["Jump to region…", null],
   ["Statewide view", [44.30,-112.90,6]],
   ["Jackson Hole / Tetons", [43.55,-110.80,9]],
   ["Eastern Idaho (Henry's Fork / SF)", [43.95,-111.55,9]],
@@ -823,20 +823,6 @@ const REGIONS = [
   ["Glacier Bay", [58.70,-136.70,7]],
   ["Kenai Fjords", [59.90,-150.00,8]],
 ];
-const regionCtl = L.control({position:"topright"});
-regionCtl.onAdd = function(){
-  const d = L.DomUtil.create("div");
-  d.innerHTML = '<select id="regionsel" style="font:600 12px \'Public Sans\',sans-serif;padding:7px 8px;border-radius:9px;border:1px solid var(--line);background:var(--paper-2);color:var(--txt);box-shadow:0 1px 4px rgba(15,30,22,.2);max-width:200px">'+
-    REGIONS.map((r,i)=>`<option value="${i}">${r[0]}</option>`).join("")+'</select>';
-  L.DomEvent.disableClickPropagation(d);
-  d.querySelector("select").addEventListener("change",e=>{
-    const r = REGIONS[+e.target.value][1];
-    if(r) map.setView([r[0],r[1]], r[2]);
-    e.target.value = 0;
-  });
-  return d;
-};
-regionCtl.addTo(map);
 
 /* ============================================================
    LAKES — still water, marked as still water.
@@ -1243,11 +1229,36 @@ const tempShown = new Set();          // hidden rivers opened on purpose (search
 const tierNow = new Map();            // river id → tierOf() for today
 function refreshTiers(){ RIVERS.forEach(r => tierNow.set(r.id, tierOf(r))); }
 refreshTiers();
-function tierShown(r){
+/* Is this river's class switched on? Ignores where the map is looking —
+   which is what a zone card's count wants ("rivers in this park"). */
+function tierPicked(r){
   const t = tierNow.get(r.id);
   /* A favourite is a persistent tempShown: you starred it, so a class filter
      doesn't get to hide it. */
   return tempShown.has(r.id) || fbIsFav(r.id) || (t ? tierFilter[t.tier] : tierFilter["3"]);
+}
+/* "All" (the Other class) is some five hundred lines. Drawn at once they are
+   seconds of work on a phone and a map of nothing but line, so Other rivers
+   are drawn only where the map is looking, from OTHER_MIN_ZOOM in:
+   otherInView holds the ones whose bounds meet the (padded) view, and the
+   river in focus, so an opened river never vanishes from under its sheet.
+   tempShown and favourites are exempt too. Everything that asks tierShown()
+   — labels, the current, gauge dots, geometry fetches — follows the gate;
+   syncOtherRivers() keeps it current on moveend. */
+const OTHER_MIN_ZOOM = 8;            // compare with >= : zoom is fractional
+const OTHER_VIEW_PAD = 0.25;
+let otherInView = new Set();
+const riverBoundsCache = new Map();
+function riverBounds(r){
+  let b = riverBoundsCache.get(r.id);
+  if(!b){ b = L.latLngBounds(flatCoords(r.coords)); riverBoundsCache.set(r.id, b); }
+  return b;
+}
+const isOther = r => { const t = tierNow.get(r.id); return !t || t.tier === "3"; };
+function tierShown(r){
+  if(!tierPicked(r)) return false;
+  if(tempShown.has(r.id) || fbIsFav(r.id) || !isOther(r)) return true;
+  return otherInView.has(r.id);
 }
 const TIER_WEIGHT = {gold:5.5, "1":4.5, "2":3.6, "3":3};
 function tierWeight(r){ const t = tierNow.get(r.id); return TIER_WEIGHT[t ? t.tier : "3"]; }
@@ -1891,11 +1902,10 @@ map.on("moveend", loadPublicLand);
 publicLand.on("add", () => { padusKey = null; loadPublicLand(); });
 publicLand.on("remove", () => { publicLand.clearLayers(); padusKey = null; });
 
-layerControl.addOverlay(publicLand, "Public land (state, federal, county)");
-layerControl.addOverlay(wadeLayer,  "Wade access &amp; parking");
-layerControl.addOverlay(rampLayer,  "Boat ramps");
-layerControl.addOverlay(gaugeLayer, "USGS gauges");
-layerControl.addOverlay(closureLayer, "Closed water (year-round)");
+/* The icon layers are switched from the Map Icons menu (LAYER_CHIPS) only.
+   The layer control keeps the basemaps and the river classes: once one chip
+   came to drive two layers, a checkbox per layer there could split a chip in
+   half. */
 
 /* ============================================================
    ALL USGS GAUGES — every live discharge gauge in view
@@ -2067,7 +2077,6 @@ function agSchedule(){ clearTimeout(agTimer); agTimer = setTimeout(agUpdate, 600
 map.on("moveend", agSchedule);
 allGaugeLayer.on("add", agSchedule);
 allGaugeLayer.on("remove", agClear);
-layerControl.addOverlay(allGaugeLayer, "All USGS gauges");
 
 /* ============================================================
    STATIC TILED DATA — the pattern for layers too big for a JS file
@@ -2206,7 +2215,6 @@ const bridgeLayer = makeTiledLayer({
       fillColor:BR_COLOR, fillOpacity:.95
     }).bindPopup(() => bridgePopupHTML(row), {maxWidth:270, className:"ag-popup"})
 });
-layerControl.addOverlay(bridgeLayer, "Bridge access");
 /* The canvas takes no taps; bridges are matched to a tap here instead.
    A Leaflet canvas answers every tap that lands on it, bridge or not, and
    passes none of them down — and its renderer stays on the map after the
@@ -2276,7 +2284,6 @@ const hazardLayer = makeTiledLayer({
   rowToMarker: row => L.marker([row[0], row[1]], {icon:hazardIcon(row[2]), pane:"hazardPane", keyboard:false})
     .bindPopup(() => hazardPopupHTML(row), {maxWidth:270, className:"ag-popup"})
 });
-layerControl.addOverlay(hazardLayer, "Falls, rapids &amp; dams");
 
 /* ============================================================
    PARKING, CAMPSITES & TRAILHEADS (data/poi/) — three layers, one set of cells
@@ -2318,7 +2325,6 @@ Object.keys(POI).forEach(type => {
     rowToMarker: row => L.marker([row[0], row[1]], {icon:poiIcon(type), pane:"poiPane", keyboard:false})
       .bindPopup(() => poiPopupHTML(row), {maxWidth:270, className:"ag-popup"})
   });
-  layerControl.addOverlay(poiLayers[type], POI[type].label + (type==="parking" ? "" : "s"));
 });
 document.addEventListener("click", e => {
   const a = e.target.closest && e.target.closest("a.poi-river"); if(!a) return;
@@ -3372,30 +3378,66 @@ function riverVisible(r){
   }
   return true;
 }
-function applyFilters(){
-  RIVERS.forEach(r=>{
-    const L_ = riverLayers[r.id];
-    if(!tierShown(r)){                       // hidden by class: off the map, not dimmed
-      if(map.hasLayer(L_.line)) map.removeLayer(L_.line);
-      if(map.hasLayer(L_.lbl))  map.removeLayer(L_.lbl);
-      L_.reaches.forEach(o => { if(map.hasLayer(o)) map.removeLayer(o); });
-      return;
-    }
-    const readd = !map.hasLayer(L_.line);
-    if(readd) L_.line.addTo(map);
-    if(!map.hasLayer(L_.lbl))  L_.lbl.addTo(map);
-    const on = riverVisible(r);
-    L_.line.setStyle({color:on?riverColor(r):"#9aa49b", opacity:on?0.92:0.35, weight:on?tierWeight(r):3});
-    // per-reach overlays follow their line: shown, greyed and weighted with it, and kept on top of it
-    L_.reaches.forEach(o => {
-      if(!map.hasLayer(o)) o.addTo(map); else if(readd) o.bringToFront();
-      o.setStyle({color:on?o.reachColor:"#9aa49b", opacity:on?0.92:0.35, weight:on?tierWeight(r):3});
-    });
+function applyRiver(r){
+  const L_ = riverLayers[r.id];
+  if(!tierShown(r)){                       // hidden by class: off the map, not dimmed
+    if(map.hasLayer(L_.line)) map.removeLayer(L_.line);
+    if(map.hasLayer(L_.lbl))  map.removeLayer(L_.lbl);
+    L_.reaches.forEach(o => { if(map.hasLayer(o)) map.removeLayer(o); });
+    return;
+  }
+  const readd = !map.hasLayer(L_.line);
+  if(readd) L_.line.addTo(map);
+  if(!map.hasLayer(L_.lbl))  L_.lbl.addTo(map);
+  const on = riverVisible(r);
+  L_.line.setStyle({color:on?riverColor(r):"#9aa49b", opacity:on?0.92:0.35, weight:on?tierWeight(r):3});
+  // per-reach overlays follow their line: shown, greyed and weighted with it, and kept on top of it
+  L_.reaches.forEach(o => {
+    if(!map.hasLayer(o)) o.addTo(map); else if(readd) o.bringToFront();
+    o.setStyle({color:on?o.reachColor:"#9aa49b", opacity:on?0.92:0.35, weight:on?tierWeight(r):3});
   });
+}
+function applyFilters(){
+  otherInView = otherViewSet();
+  RIVERS.forEach(applyRiver);
   syncGaugeDots(); syncLabels(); syncFlow(); refreshZoneCounts();
   syncMarkers();
   if(curRiver) renderSheet(RIVERS.find(r=>r.id===curRiver));
 }
+/* The Other rivers the view gate lets through right now (see tierShown). */
+function otherViewSet(){
+  const set = new Set();
+  if(focusId) set.add(focusId);
+  if(!tierFilter["3"] || zonesShown || map.getZoom() < OTHER_MIN_ZOOM || !map.getSize().x) return set;
+  const view = map.getBounds().pad(OTHER_VIEW_PAD);
+  RIVERS.forEach(r => {
+    if(!isOther(r)) return;
+    const b = riverBounds(r);
+    if(b.isValid() && view.intersects(b)) set.add(r.id);
+  });
+  return set;
+}
+/* On moveend, only the Other rivers that came into or went out of the gate
+   are redrawn — not a full applyFilters() over every river on each pan. */
+function syncOtherRivers(){
+  const next = otherViewSet(), changed = [];
+  next.forEach(id => { if(!otherInView.has(id)) changed.push(id); });
+  otherInView.forEach(id => { if(!next.has(id)) changed.push(id); });
+  otherInView = next;
+  if(!changed.length) return;
+  changed.forEach(id => { const r = riverLayers[id] && riverLayers[id].river; if(r) applyRiver(r); });
+  syncGaugeDots(); syncLabels(); syncFlow(); syncMarkers();
+}
+let otherT = null;
+function syncOtherLater(){
+  clearTimeout(otherT);
+  otherT = setTimeout(() => {
+    if(map._animatingZoom){ syncOtherLater(); return; }      // not mid-animation
+    syncOtherRivers();
+  }, 150);
+}
+map.on("moveend", syncOtherLater);
+map.on("zoomstart", () => clearTimeout(otherT));
 /* Does this access point survive the current filter chips? Visibility also
    depends on zoom and on whether its group is switched on — see syncMarkers. */
 function rampPassesFilter(p){
@@ -3731,7 +3773,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v13";
+const APP_VERSION = "flyroutes-v14";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){
@@ -4310,11 +4352,16 @@ function syncRegionLabels(){
 }
 map.on("zoomend moveend", syncRegionLabels);
 
+let zoneCollapseJump = () => {};    // set by zoneCtl: folds the "Jump to…" list away
+let closeIconMenus = () => {};      // set by tierCtl: the jump list and the menus overlap, so one open closes the other
 function showZones(){
   if(zonesShown) return;
   unfocusRiver();                     // the chooser is "which part of the country", not one river
   zonesShown = true;
   zoneLayer.addTo(map);
+  // the cards are rebuilt from their original html when the layer comes
+  // back, so a class switched on or off since the last look must be recounted
+  refreshZoneCounts();
   document.body.classList.add("zones-open");
   syncRegionLabels();
   if(typeof syncFlow === "function") syncFlow();
@@ -4325,7 +4372,8 @@ function showZones(){
   // actually gets opened on.
   // Alaska and its parks are `far`: drawn and tappable, but left out of the
   // fit, because a frame wide enough for Anchorage shrinks the lower 48 to a
-  // strip of slivers. Pan up to it, or take it from "Jump to region".
+  // strip of slivers. Pan up to it, take the Alaska ▲ button, or pick an
+  // Alaska area from the "Jump to…" list beside Change Region.
   goTo(L.latLngBounds([].concat(...ZONES.filter(z=>!z.far).map(z=>z.bounds))).pad(0.04));
   map.once("moveend", layoutZoneCards);
   setTimeout(layoutZoneCards, 60);
@@ -4336,6 +4384,7 @@ function hideZones(){
   zonesShown = false;
   map.removeLayer(zoneLayer);
   document.body.classList.remove("zones-open");
+  zoneCollapseJump();
   syncRegionLabels();
   if(typeof syncFlow === "function") syncFlow();
   if(typeof syncLakes === "function") syncLakes();
@@ -4352,15 +4401,48 @@ syncClosures();
 /* Change Region button — always available, so you can get back to the
    chooser without hunting for the right zoom level. Top *left*, under the app bar
    (the zoom +/− now lives bottom-right): top-right is taken by the layer control and sheet, and the
-   Change Region button is the one control that gets you back out. */
+   Change Region button is the one control that gets you back out.
+
+   It is also the one region control. While the chooser is up, a "Jump to…"
+   list of named areas (REGIONS) sits beside the button, so the states and
+   the places that aren't states are chosen in the same spot. It opens
+   expanded when the button opened the chooser, and collapsed to its header
+   when the chooser came up by itself at launch: expanded, it sits over the
+   northern states on a phone's first view. Absolutely placed to the right of
+   the button so it pushes none of the controls below it. */
 const zoneCtl = L.control({position:"topleft"});
 zoneCtl.onAdd = function(){
-  const d = L.DomUtil.create("div");
-  d.innerHTML = `<button id="btn-zones" title="Back to region chooser">◄ Change Region</button>`;
+  const d = L.DomUtil.create("div", "zonectl");
+  d.innerHTML = `<button id="btn-zones" title="Back to region chooser">◄ Change Region</button>`+
+    `<div id="jump">`+
+      `<button type="button" id="jump-btn" aria-expanded="false" aria-controls="jumplist">`+
+        `Jump to\u2026<span class="mcaret" aria-hidden="true">\u25BE</span></button>`+
+      `<div id="jumplist" role="group" aria-label="Jump to a named area" hidden>`+
+      REGIONS.map((r,i) => r[1]
+        ? `<button type="button" data-jump="${i}">${r[0]}</button>`
+        : `<div class="jl-group">${r[0].replace(/^[\u2500\s]+|[\u2500\s]+$/g, "")}</div>`).join("")+
+      `</div>`+
+    `</div>`;
   L.DomEvent.disableClickPropagation(d);
-  d.querySelector("button").addEventListener("click", ()=>{
-    if(zonesShown) hideZones(); else showZones();
+  L.DomEvent.disableScrollPropagation(d);
+  const jbtn = d.querySelector("#jump-btn"), list = d.querySelector("#jumplist");
+  const setJump = open => { jbtn.setAttribute("aria-expanded", String(open)); list.hidden = !open; };
+  d.querySelector("#btn-zones").addEventListener("click", ()=>{
+    if(zonesShown){ hideZones(); return; }
+    showZones();
+    list.scrollTop = 0;
+    setJump(true);
   });
+  jbtn.addEventListener("click", () => { if(list.hidden) closeIconMenus(); setJump(list.hidden); });
+  list.addEventListener("click", e => {
+    const b = e.target.closest("[data-jump]"); if(!b) return;
+    const r = REGIONS[+b.dataset.jump][1];
+    hideZones();
+    goTo(L.latLng(r[0], r[1]), r[2]);         // never map.setView: see goTo()
+  });
+  map.on("click", () => setJump(false));      // a tap on the map, like the menus
+  // hidden with the chooser (css), and collapsed for next time
+  zoneCollapseJump = () => setJump(false);
   return d;
 };
 zoneCtl.addTo(map);
@@ -4413,23 +4495,44 @@ TIER_KEYS.forEach(k => {
   g.on("remove", ()=>set(false));
   layerControl.addOverlay(g, `<span class="tier-sw" style="background:${TIER_INFO[k].color}"></span>${TIER_LABEL[k]}`);
 });
-/* Map-layer chips beside the class chips: the same layer groups the layer
-   control drives, so ticking either one stays in sync via add/remove events.
-   A new map layer (e.g. the planned bridge access points) is one more row in
-   this table. */
+/* Map Icons. A chip is the unit of the user's choice, and one chip can own
+   several layers: "Parking & access" is the wade layer (which carries the DNR
+   P lots and fishing access) plus the OSM parking points, and "Hazards &
+   closures" is falls/rapids/dams plus closed water — nobody wants one of a
+   pair without the other. A chip reads "on" when its layers are on. A new map
+   layer is one more row, or one more layer in a row. */
 const LAYER_CHIPS = [
-  ["ramps",  "Boat ramps",   rampLayer,    "#e07b1a"],
-  ["wade",   "Wade access",  wadeLayer,    "#5b6e3a"],
-  ["gauges", "Gauges",       gaugeLayer,   "#2b7fb8"],
-  ["allgauges", "All USGS gauges", allGaugeLayer, "#5a7894"],
-  ["hazards", "Falls, rapids &amp; dams", hazardLayer, "#3b4a56"],
-  ["bridges", "Bridge access", bridgeLayer, "#8a7560"],
-  ["parking", "Parking",     poiLayers.parking,   POI.parking.color],
-  ["camps",   "Campsites",   poiLayers.camp,      POI.camp.color],
-  ["trailheads", "Trailheads", poiLayers.trailhead, POI.trailhead.color],
-  ["closed", "Closed water", closureLayer, "#c0392b"],
-  ["land",   "Public land",  publicLand,   "#3f8f4f"],
+  ["ramps",   "Boat ramps",         [rampLayer],                     "#e07b1a"],
+  ["access",  "Parking &amp; access", [wadeLayer, poiLayers.parking], "#5b6e3a"],
+  ["gauges",  "Gauges",             [gaugeLayer],                    "#2b7fb8"],
+  ["hazards", "Hazards &amp; closures", [hazardLayer, closureLayer], "#3b4a56"],
+  ["bridges", "Bridge access",      [bridgeLayer],                   "#8a7560"],
+  ["camps",   "Campsites",          [poiLayers.camp],                POI.camp.color],
+  ["trailheads", "Trailheads",      [poiLayers.trailhead],           POI.trailhead.color],
+  ["land",    "Public land",        [publicLand],                    "#3f8f4f"],
 ];
+/* Options shown inside a chip while that chip is on: [id, label, layers,
+   colour, parent chip]. Its own id keeps the user's choice for it separate,
+   so it comes back with its parent (after a river focus, say). It is not
+   counted as a chip. */
+const ICON_SUBS = [
+  ["allgauges", "Every USGS gauge", [allGaugeLayer], "#5a7894", "gauges"],
+];
+const ICON_ITEMS = LAYER_CHIPS.map(([id, label, layers]) => ({id, label, layers, parent:null}))
+  .concat(ICON_SUBS.map(([id, label, layers, , parent]) => ({id, label, layers, parent})));
+const ICON_BY_ID = Object.fromEntries(ICON_ITEMS.map(it => [it.id, it]));
+const chipOn = id => ICON_BY_ID[id].layers.some(g => map.hasLayer(g));
+/* Every chip button reflects its layers; a sub-option shows only while its
+   parent chip is on. Called on every icon layer add/remove. */
+function syncIconChips(){
+  ICON_ITEMS.forEach(it => {
+    const b = document.querySelector('#layerchips [data-layer="'+it.id+'"]'); if(!b) return;
+    const on = chipOn(it.id);
+    b.classList.toggle("on", on); b.setAttribute("aria-pressed", String(on));
+    if(it.parent) b.hidden = !chipOn(it.parent);
+  });
+  refreshMenuCounts();
+}
 /* The chips live in two collapsed menus ("River Filters", "Map Icons") rather
    than two always-open columns, which covered a lot of a phone-sized map. Only
    one panel is open at a time; a map tap or Escape closes it. Always starts
@@ -4449,8 +4552,11 @@ tierCtl.onAdd = function(){
     `<button type="button" class="menubtn" data-menu="layerchips" aria-expanded="false" aria-controls="layerchips">`+
       `<span class="mlabel">Map Icons</span> <span class="mcount"></span><span class="mcaret" aria-hidden="true">\u25BE</span></button>`+
     `<div id="layerchips" class="chipcol menupanel" role="group" aria-label="Map icons shown" hidden>`+
-    LAYER_CHIPS.map(([id,label,g,c]) =>
-      `<button data-layer="${id}" class="${map.hasLayer(g)?"on":""}" aria-pressed="${map.hasLayer(g)}" style="--tc:${c}">${label}</button>`).join("")+
+    LAYER_CHIPS.map(([id,label,,c]) =>
+      `<button data-layer="${id}" aria-pressed="false" style="--tc:${c}">${label}</button>`+
+      ICON_SUBS.filter(x => x[4] === id).map(([sid,sl,,sc]) =>
+        `<button data-layer="${sid}" class="sub" aria-pressed="false" hidden style="--tc:${sc}">${sl}</button>`).join("")
+    ).join("")+
     `</div>`;
   L.DomEvent.disableClickPropagation(d);
   L.DomEvent.disableScrollPropagation(d);
@@ -4463,16 +4569,18 @@ tierCtl.onAdd = function(){
     const open = m.getAttribute("aria-expanded") !== "true";
     closeMenus();
     if(open){
+      zoneCollapseJump();
       m.setAttribute("aria-expanded", "true");
       d.querySelector("#"+m.dataset.menu).hidden = false;
     }
   }));
   map.on("click", closeMenus);
+  closeIconMenus = closeMenus;
   document.addEventListener("keydown", e => { if(e.key === "Escape") closeMenus(); });
   // Labels carry a count so a closed menu still says what is on the map.
   refreshMenuCounts = () => {
     const nt = TIER_KEYS.filter(k => tierFilter[k]).length;
-    const nl = LAYER_CHIPS.filter(([,,g]) => map.hasLayer(g)).length;
+    const nl = LAYER_CHIPS.filter(([id]) => chipOn(id)).length;     // chips, not layers: out of 8
     menus[0].querySelector(".mcount").textContent = "\u00B7 " + nt;
     menus[1].querySelector(".mcount").textContent = "\u00B7 " + nl;
   };
@@ -4487,18 +4595,18 @@ tierCtl.onAdd = function(){
     }
     syncTierChips();                                 // aria-pressed on every chip, not just this one
   }));
-  LAYER_CHIPS.forEach(([id,,g]) => {
-    const b = d.querySelector('[data-layer="'+id+'"]');
-    const sync = () => { b.classList.toggle("on", map.hasLayer(g)); b.setAttribute("aria-pressed", String(map.hasLayer(g))); refreshMenuCounts(); };
-    g.on("add remove", sync);
-    b.addEventListener("click", ()=>{ if(map.hasLayer(g)) map.removeLayer(g); else map.addLayer(g); });
-  });
+  // A chip tap is the user's choice for the whole chip; syncIconLayers()
+  // then puts every one of its layers where that choice says.
+  d.querySelectorAll("[data-layer]").forEach(b => b.addEventListener("click", ()=>{
+    iconUserSet(b.dataset.layer, !chipOn(b.dataset.layer));
+    syncIconLayers();
+  }));
   refreshMenuCounts();
   return d;
 };
 tierCtl.addTo(map);
 TIER_KEYS.forEach(k => { if(tierFilter[k]) tierGroups[k].addTo(map); });
-refreshMenuCounts();
+syncIconChips();
 
 /* ============================================================
    MAP ICONS — one answer to "which icon layers are on?"
@@ -4507,9 +4615,10 @@ refreshMenuCounts();
    or zooming out taking away one the user asked for). So there is one
    function, iconWanted(), computed from:
 
-     1. The user's own choice: a chip, a layer-control checkbox, or "Show on
-        map" on a float section. Everything is off at launch and nothing is
-        remembered between launches.
+     1. The user's own choice: a Map Icons chip, or "Show on map" on a
+        float section. Everything is off at launch and nothing is
+        remembered between launches. Choices are per chip (LAYER_CHIPS),
+        not per layer: a chip's layers always come and go together.
      2. River focus: while a river's sheet is open, its access points,
         parking, bridges and the safety layers come on and the gauges step
         aside — unless the user taps that chip during the focus, after which
@@ -4527,8 +4636,8 @@ refreshMenuCounts();
    ============================================================ */
 const AUTO_ICON_ZOOM  = 12;          // compare with >= : zoomSnap is 0.25, so zoom is fractional
 const AUTO_ICON_DELAY = 400;         // ms after zoomend, so a pinch passing through 12 doesn't flap
-const AUTO_ICONS      = new Set(["wade", "ramps", "parking", "trailheads"]);
-const FOCUS_ICONS_ON  = new Set(["wade", "ramps", "parking", "bridges", "hazards"]);
+const AUTO_ICONS      = new Set(["access", "ramps", "trailheads"]);
+const FOCUS_ICONS_ON  = new Set(["access", "ramps", "bridges", "hazards"]);
 const FOCUS_ICONS_OFF = new Set(["gauges", "allgauges"]);
 const iconChoice   = {};             // chip id -> the user's own on/off (absent = off)
 const autoVeto     = new Set();      // switched off by hand while zoomed in close
@@ -4539,13 +4648,15 @@ let autoT = null, applyingIcons = false;
 function focusSays(id){
   if(!focusId || focusTouched.has(id)) return null;
   if(FOCUS_ICONS_OFF.has(id)) return false;
+  // Hazards now carry closed water with them; closureLayer draws only the
+  // permanent closures (and only from zoom 9, syncClosures), so on a river
+  // without one it simply adds nothing.
   if(FOCUS_ICONS_ON.has(id)) return true;
-  // Closed water only where this river has a closure (Yellowstone); anywhere
-  // else it would add one to the count and nothing to the map.
-  if(id === "closed" && typeof CLOSURES !== "undefined" && CLOSURES.some(c => c.river === focusId)) return true;
   return null;
 }
 function iconWanted(id){
+  const it = ICON_BY_ID[id];
+  if(it.parent && !iconWanted(it.parent)) return false;    // an option goes with its chip
   const f = focusSays(id);
   if(f !== null) return f;
   if(iconChoice[id]) return true;
@@ -4554,10 +4665,13 @@ function iconWanted(id){
 function syncIconLayers(){
   applyingIcons = true;
   try{
-    LAYER_CHIPS.forEach(([id,,g]) => {
-      const want = iconWanted(id), has = map.hasLayer(g);
-      if(want && !has) map.addLayer(g);
-      else if(!want && has) map.removeLayer(g);
+    ICON_ITEMS.forEach(it => {
+      const want = iconWanted(it.id);
+      it.layers.forEach(g => {
+        const has = map.hasLayer(g);
+        if(want && !has) map.addLayer(g);
+        else if(!want && has) map.removeLayer(g);
+      });
     });
   } finally { applyingIcons = false; }
 }
@@ -4567,10 +4681,17 @@ function iconUserSet(id, on){
   if(on) autoVeto.delete(id);
   else if(autoZoomed && AUTO_ICONS.has(id)) autoVeto.add(id);
 }
-LAYER_CHIPS.forEach(([id,,g]) => {
-  g.on("add",    () => { if(!applyingIcons) iconUserSet(id, true);  iconNudge(); });
-  g.on("remove", () => { if(!applyingIcons) iconUserSet(id, false); iconNudge(); });
-});
+/* Nothing else adds or removes these layers today, but if anything ever
+   does, it counts as the user's choice for that whole chip, and the chip's
+   other layers follow. */
+ICON_ITEMS.forEach(it => it.layers.forEach(g => {
+  const by = on => () => {
+    if(!applyingIcons){ iconUserSet(it.id, on); syncIconLayers(); }
+    syncIconChips(); iconNudge();
+  };
+  g.on("add", by(true));
+  g.on("remove", by(false));
+}));
 /* Close zoom acts only once the zoom has settled: zoomstart cancels a
    pending check, so a pinch or a fly that passes through 12 on its way
    somewhere else never switches anything. */
@@ -4714,6 +4835,7 @@ function focusAnchor(r, at){
 function focusRiver(r, fit, at){
   if(zonesShown) return;                       // the chooser is up: nothing to focus over
   focusId = r.id;
+  syncOtherRivers();                            // the focused river is exempt from the view gate
   map.getContainer().classList.add("rv-focus");
   drawFocus();
   syncMarkers(); syncLabels(); markFocusFlow(); syncIconLayers(); iconNudge();
@@ -4723,6 +4845,7 @@ function focusRiver(r, fit, at){
 function unfocusRiver(){
   if(!focusId) return;                         // also what makes this safe to call at startup
   focusId = null;
+  syncOtherRivers();                            // and drops back under it
   focusTouched.clear();
   map.getContainer().classList.remove("rv-focus");
   drawFocus();                                  // with no focus, this just clears it
@@ -4766,7 +4889,7 @@ function nudgeWanted(){
     && !sheet.classList.contains("open")
     && !document.body.classList.contains("touring")
     && !(typeof welcomePending === "function" && welcomePending())
-    && !LAYER_CHIPS.some(([,,g]) => map.hasLayer(g));
+    && !LAYER_CHIPS.some(([id]) => chipOn(id));
 }
 function iconNudge(){
   clearTimeout(nudgeT);
@@ -5039,7 +5162,8 @@ function refreshZoneCounts(){
   Object.entries(PARK_INFO).forEach(([reg, p]) => { sets[p.zone] = r => r.region === reg; });
   document.querySelectorAll(".zone-card .zc-count[data-zone]").forEach(el => {
     const f = sets[el.dataset.zone]; if(!f) return;
-    const all = RIVERS.filter(f), shown = all.filter(tierShown).length;
+    // the class filter only: a count is "rivers in this zone", not "in view"
+    const all = RIVERS.filter(f), shown = all.filter(tierPicked).length;
     el.textContent = shown === all.length ? shown+" rivers" : shown+" of "+all.length+" rivers";
   });
 }

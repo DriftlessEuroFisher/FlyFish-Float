@@ -79,7 +79,7 @@ are displayed). Left over: the lake sheet still has a "Fishing notes" heading; D
 7. **Des Moines water trails:** the low-head-dam warning moves into the
    rules card (state IA, not driftless), out of the footer.
 
-**Batch B — controls and chrome** (`build-opus-high`)
+**Batch B — controls and chrome** — `done` 2026-10-10, not yet committed (`build-opus-high`). Left over: the first REGIONS group (Statewide view … Boise / Payette) and the Wyoming entries (Pinedale, Cody, Wind River, Saratoga) have no heading in the jump list; in the tour, the Change Region step shows the button with the chooser hidden, so the jump list it mentions isn't on screen.
 1. Merge "◄ Change Region" and the "Jump to region…" dropdown into one
    control: tapping it opens the chooser, which also lists the jump targets.
 2. Map Icons, 11 switches down to 8:
