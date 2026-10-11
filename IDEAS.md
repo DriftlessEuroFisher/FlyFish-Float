@@ -17,7 +17,7 @@ testing close to home, including wade and hike-in-only water.
 National-park features start in Grand Teton and Yellowstone. Expand only
 after they've been used for real there. (See CLAUDE.md, "How we work".)
 
-### Usability cleanup from the pilot regions — `ready` (decided 2026-10-09)
+### Usability cleanup from the pilot regions — `done` (A 00b7a56, B 1d72473, C d725b45; 2026-10-10)
 A self-review of what someone actually sees on a Driftless creek, the
 Jackson Hole rivers and the Des Moines water trails. Theme: **the app says
 the same thing three times and buries the one thing that matters.** Build
@@ -114,11 +114,11 @@ without scrolling past a repeat.
 
 ### Rulebook streams, every western state — `building`
 Every stream with its own entry in the state's 2026 regulations, one state
-per session (CLAUDE.md, "Rulebook streams"). Montana done (93, 7d267c5).
-Next: Colorado (163), Utah (~30), then California, Oregon, Washington, and
-New Mexico, Arizona, Nevada, Idaho and Wyoming.
+per session (CLAUDE.md, "Rulebook streams"). Montana done (93, 7d267c5),
+Colorado done (181, 29dc687). Next: Utah (~30), then California, Oregon,
+Washington, and New Mexico, Arizona, Nevada, Idaho and Wyoming.
 
-### Welcome card and guided tour — `done` (2026-10-07, not yet committed)
+### Welcome card and guided tour — `done` (5327238, 2026-10-07)
 Owner's request: welcome new users, say honestly which regions get the most
 attention, offer a tour of the header buttons, zoom, location, the left-side
 menus and a Snake River panel, and push the report flag (including "want to
@@ -229,7 +229,7 @@ phone app. **Fit:** strong / medium / weak.
     if that idea goes ahead.
 - **Rule:** sourced, never from memory, the same as the regulations.
 
-#### Gold Medal / Blue Ribbon fisheries — `new` · fit: strong
+#### Gold Medal / Blue Ribbon fisheries — `done` (29dc687, `js/designations.js`: CPW Gold Medal, Utah and WGFD Blue Ribbon, Montana's statutory blue-ribbon streams) · fit: strong
 - **Proposal:** tag rivers and reaches with *official* designations: CPW Gold
   Medal, Montana Blue Ribbon, Wyoming Blue Ribbon, and similar where a state
   publishes one.
@@ -247,7 +247,7 @@ phone app. **Fit:** strong / medium / weak.
 - **Watch:** the USGS request budget of 1,000 an hour. Fetch by bbox from
   zoom 8 and batch the reads.
 
-#### Parking, boat ramps, campsites, trailheads — `building` (ramps + fishing access done 6e1b584; parking, campsites, trailheads to do) · fit: strong
+#### Parking, boat ramps, campsites, trailheads — `done` (ramps + fishing access 6e1b584; parking, campsites, trailheads 4c283f7, `data/poi/`) · fit: strong
 - **Already have:** ramps and fishing access in progress (OSM access pipeline).
 - **Proposal:** extend the same pipeline with OSM `amenity=parking` near
   rivers, `tourism=camp_site` and `highway=trailhead`, each its own toggle.
@@ -443,7 +443,7 @@ accounts and a server, which CLAUDE.md currently rules out ("no backend").
 That is your call to make, not the code's — see **The fork in the road** at
 the end of this batch.
 
-#### Float Mode (personal) — `building` (v1 in `js/float.js`, uncommitted 2026-10-06; 19 of 20 sections trace after the agency ramp fix; New Fork sections drafted but unclassed — likely Class I / not whitewater, unconfirmed) · fit: strong for the on-phone parts
+#### Float Mode (personal) — `building` (v1 in `js/float.js`, a785368; 19 of 20 sections trace after the agency ramp fix; New Fork sections drafted but unclassed — likely Class I / not whitewater, unconfirmed) · fit: strong for the on-phone parts
 - **Problem:** "if I put in here at 9, when am I at the take-out?" — and on
   the water, "am I behind?"
 - **Scope (decided 2026-10-06): only rivers around Pinedale WY, Jackson WY
@@ -715,12 +715,11 @@ would cover one person's use.
 ## Done
 
 - **Iowa state water trails + ICON central Iowa trails, with float sections**
-  (2026-10-10, not yet committed). 34 trails, 200 DNR sections. Start float is
+  (00b7a56, 2026-10-10). 34 trails, 200 DNR sections. Start float is
   offered on Beginner/Intermediate sections with no dam, canoe or kayak only.
   Follow-ups: apply brochure ratings to the 110 "Not Rated" sections; the
-  doubled "DNR: Beginner" + "Beginner-friendly" badge (Batch A of the
-  usability cleanup); the low-head-dam note now fires on every Iowa water
-  trail (Batch A item 7 applies statewide).
+  doubled "DNR: Beginner" + "Beginner-friendly" badge and the statewide
+  low-head-dam note were handled in Batch A of the usability cleanup.
 
 - **Location pop-up + auto-start, collapsible Rivers/Map layers menus, zoom bottom-right, park cards hidden below z6** (cbe940a).
 
