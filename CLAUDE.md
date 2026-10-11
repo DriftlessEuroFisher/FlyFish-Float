@@ -1259,6 +1259,14 @@ folded ("N more gauges along the river"), float sections, and "About"
 - The tier chip's best-season wording is **"Prime time now"**, not "In
   season" — "in season" now means legally open, on the card above it.
 
+### Map key — the `?` panel (Batch C, 2026-10-10)
+`#legend` is a one-screen key: river-line colours (trout classes, the gold
+focus outline, gray = filtered, gap = lake), rankings, icons (including P,
+hazards, closed water, bridges, campsites, trailheads), flow status and
+public land. Icon swatches are static copies of the map's own glyphs, so
+**change both** if a marker changes. Every long note sits verbatim in one
+fold, "How this data was built" (`details.lg-more`).
+
 ### Stream-access law — `js/access-laws.js`
 `ACCESS_LAW[state] = {head, quote, src, url}` for all 18 states, shown as the
 "Wading & access" row of the rules card. Every quote is verbatim from the

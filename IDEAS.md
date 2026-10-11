@@ -37,7 +37,7 @@ everywhere at once.
 - The **"All" chip draws "Other" rivers only inside the view, from zoom 8**,
   instead of ~1,000 lines at once.
 
-**Batch A — the river panel** — `done` 2026-10-10, not yet committed (`build-opus-xhigh`: this is how regulations
+**Batch A — the river panel** — `done` 2026-10-10 (`build-opus-xhigh`: this is how regulations
 are displayed). Left over: the lake sheet still has a "Fishing notes" heading; Door's footer repeats the no-gauge note and Great Lakes rules; Door/North Shore "Floating: Wade only" rows unchanged; Top pick green sits close to the Public land chip green.
 1. Rename the ranking everywhere: `TIER_INFO`, `TIER_LABEL`,
    `tierChipHTML()` ("Usually Class 1 — …"), the River Filters chips, the
@@ -79,7 +79,7 @@ are displayed). Left over: the lake sheet still has a "Fishing notes" heading; D
 7. **Des Moines water trails:** the low-head-dam warning moves into the
    rules card (state IA, not driftless), out of the footer.
 
-**Batch B — controls and chrome** — `done` 2026-10-10, not yet committed (`build-opus-high`). Left over: the first REGIONS group (Statewide view … Boise / Payette) and the Wyoming entries (Pinedale, Cody, Wind River, Saratoga) have no heading in the jump list; in the tour, the Change Region step shows the button with the chooser hidden, so the jump list it mentions isn't on screen.
+**Batch B — controls and chrome** — `done` 2026-10-10 (`build-opus-high`). Left over: the first REGIONS group (Statewide view … Boise / Payette) and the Wyoming entries (Pinedale, Cody, Wind River, Saratoga) have no heading in the jump list; in the tour, the Change Region step shows the button with the chooser hidden, so the jump list it mentions isn't on screen.
 1. Merge "◄ Change Region" and the "Jump to region…" dropdown into one
    control: tapping it opens the chooser, which also lists the jump targets.
 2. Map Icons, 11 switches down to 8:
@@ -100,7 +100,7 @@ are displayed). Left over: the lake sheet still has a "Fishing notes" heading; D
    decisions above): recompute on `moveend`, using the existing
    `riverVisible()` / `tierShown()` path.
 
-**Batch C — help** (`build-sonnet-high`)
+**Batch C — help** — `done` 2026-10-10 (`build-sonnet-high`). Left over: the key's teal "Wild trout (IA, WI I)" row shortens Iowa's "fingerling stocked or natural reproduction"; the closed-water swatch doesn't pulse like the map.
 1. The `?` panel becomes a one-screen key: line colours (trout classes and
    what a colour change part-way means), the ranking names, the icons
    including **P**, the gold focus highlight, closures and hazards. The

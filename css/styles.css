@@ -331,6 +331,39 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .lg-line{width:30px;height:4px;border-radius:2px;flex:0 0 auto}
 .lg-note{font-size:11.5px;color:var(--txt-dim);margin:10px 0 4px}
 #legend .x{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:8px;background:#e0e6df;font-size:15px}
+/* The key: swatch-led one-liners in a 2-column grid; the long notes live in the fold */
+.lg-actions{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:2px}
+#legend > h2{margin-bottom:2px}
+.lg-actions .rp-open{margin:0}
+#legend h3.lg-h{font-family:"Barlow Condensed",sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--txt-dim);margin:12px 0 5px;padding-bottom:3px;border-bottom:1px solid var(--line)}
+#legend h3.lg-h small{font-size:11px;font-weight:600;letter-spacing:.03em;text-transform:none}
+.lg-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px 8px}
+.lg-ic{display:flex;align-items:center;gap:7px;font-size:12px;line-height:1.2;min-width:0}
+.lg-ic i{font-style:normal;color:var(--txt-dim);font-size:10.5px}
+.lg-wide{margin-top:5px}
+.lg-i{flex:0 0 28px;display:flex;align-items:center;justify-content:center;gap:1px}
+.lg-i .ap{width:22px;height:22px;border-radius:6px;border-width:1.5px}
+.lg-i .ap svg{width:14px;height:14px}
+.lg-i .ap.wade{border-radius:50%}
+.lg-i .gdot{width:12px;height:12px;border-width:2px}
+.lg-i svg{flex:0 0 auto}
+.lg-i.lg-multi{flex:0 0 auto;gap:0}
+.lg-i.lg-multi svg{width:16px;height:16px;margin:0 -1px}
+.lg-sw{flex:0 0 28px;height:4px;border-radius:2px;display:inline-block}
+.lg-focus{background:var(--river);box-shadow:0 0 0 2px #e2b33c}
+.lg-tape{flex:0 0 28px}
+.lg-chips{display:flex;flex-wrap:wrap;gap:6px 14px}
+.lg-chip{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600}
+.lg-chip i{width:10px;height:10px;border-radius:50%}
+#legend .lg-tight{margin:5px 0 0}
+.lg-st{margin:4px 0;font-size:12px;gap:8px}
+.lg-st .badge{flex:0 0 112px;text-align:center;font-size:12px;padding:3px 8px}
+.lg-more{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+.lg-more summary{display:flex;align-items:center;justify-content:space-between;min-height:44px;padding:0 12px;background:var(--paper-2);border:1px solid var(--line);border-radius:10px;cursor:pointer;list-style:none;font-family:"Barlow Condensed",sans-serif;font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;-webkit-tap-highlight-color:transparent}
+.lg-more summary::-webkit-details-marker{display:none}
+.lg-more summary::after{content:"\25BE";font-size:16px;color:var(--txt-dim);transition:transform .15s}
+.lg-more[open] summary::after{transform:rotate(180deg)}
+.lg-more h2{font-size:16px}
 
 /* offline pill */
 #netpill{

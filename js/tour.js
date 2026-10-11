@@ -72,7 +72,7 @@
   // check/finish cards carry no part and no number. skip(): true when the step has nothing to say right now.
   const STEPS = [
     {part:"Map", sel:["#btn-book"], title:"Field Book", text:"Your favourites, rivers you’ve fished, notes, research links and offline map saving. It’s all stored only on your phone — export it to back it up."},
-    {part:"Map", sel:["#btn-legend"], title:"Legend & help", text:"What the colours and symbols mean, how the river rankings work, and where to replay this tour."},
+    {part:"Map", sel:["#btn-legend"], title:"Map key & help", text:"A key to the river colours, map icons, flow status and rankings. How the data was built is folded underneath, and this is where you can replay the tour."},
     {part:"Map", sel:["#btn-report"], title:"The report flag", text:"Tell us anything the app gets wrong — or right — or ask for more detail on your area. Interested in continued testing? Say so in a report and we’ll build out your home water."},
     {part:"Map", sel:["#btn-refresh", "#updated"], title:"Live flows", text:"Readings come live from USGS gauges. Tap refresh to update them; the time beside it shows when they last updated."},
     {part:"Map", sel:[".leaflet-control-zoom"], title:"Zooming", text:"Use + and −, or double-tap to zoom in. Double-tap and drag with one finger for smooth zoom, and tap with two fingers to zoom out."},
@@ -81,7 +81,7 @@
       enter(){ if(typeof zonesShown !== "undefined" && zonesShown && typeof hideZones === "function"){ hideZones(); state.hid = true; } },
       extra(){ return LOC_ON() ? [["Turn on location", () => { locPrefSet("on"); if(locState === "off") locStart("following"); next(); }, "tt-primary"],
                                  ["Not now", () => { locPrefSet("off"); next(); }]] : null; }},
-    {part:"Map", sel:["#btn-zones"], title:"Change Region", text:"Tap to get back to the state chooser, or jump straight to a named area from the list beside it — national parks, Alaska and all."},
+    {part:"Map", sel:["#btn-zones"], title:"Change Region", text:"Tap to get back to the state chooser; it also lists named areas — national parks, Alaska and all — to jump straight to."},
     {part:"Map", sel:['button[data-menu="tierchips"]'], title:"River Filters", text:"Rivers are ranked Top pick, Worth it, Local and Other. Other is hidden by default — open this menu and tap All to show everything, drawn around wherever you are looking once you zoom in. Every launch starts this way again. Your favourites always show."},
     {part:"Map", sel:['button[data-menu="layerchips"]'], title:"Map Icons", text:"The map opens with no icons, so the rivers read clearly. Open this menu to switch on what you need: parking and access, boat ramps, gauges, hazards and closures, bridge access, campsites, trailheads and public land. Zoom in close and parking, access, ramps and trailheads come on by themselves; open a river and the map shows that river's own access."},
     {part:"Map", skip:INSTALLED, title:"Add it to your Home Screen", text:"On iPhone, tap Share, then Add to Home Screen. It opens like an app, and it keeps your Field Book safe: Safari can clear a website’s saved data after a week without a visit, but not a Home Screen app’s."},
