@@ -3769,7 +3769,7 @@ function fbDateText(iso){
   return new Date(+m[1], +m[2]-1, +m[3]).toLocaleDateString([], {month:"short", day:"numeric"});
 }
 function fbRowHTML(e){
-  return `<button type="button" class="fb-btn fb-fav${e.fav?" on":""}" aria-pressed="${e.fav}">${e.fav?"★":"☆"} Favourite</button>`+
+  return `<button type="button" class="fb-btn fb-fav${e.fav?" on":""}" aria-pressed="${e.fav}">${e.fav?"★":"☆"} Favorite</button>`+
     `<button type="button" class="fb-btn fb-fished${e.fished?" on":""}" aria-pressed="${e.fished}">✓ ${e.fished && e.fishedOn ? "Fished · "+fbDateText(e.fishedOn) : "Fished"}</button>`+
     `<button type="button" class="fb-btn fb-notes${(e.notes||"").trim()?" has":""}" aria-expanded="false">Notes</button>`+
     `<div class="fb-ta"><textarea rows="3" maxlength="20000" placeholder="Flies that worked, where you parked, water clarity…" aria-label="Notes for this river"></textarea>`+
@@ -3790,7 +3790,7 @@ function fbShowRow(r, force){
   const paint = () => {
     const c = fbGet(id);
     favB.classList.toggle("on", c.fav); favB.setAttribute("aria-pressed", c.fav);
-    favB.textContent = (c.fav ? "★" : "☆") + " Favourite";
+    favB.textContent = (c.fav ? "★" : "☆") + " Favorite";
     fishB.classList.toggle("on", c.fished); fishB.setAttribute("aria-pressed", c.fished);
     fishB.textContent = "✓ " + (c.fished && c.fishedOn ? "Fished · "+fbDateText(c.fishedOn) : "Fished");
   };
@@ -3999,9 +3999,9 @@ const fbEmpty = t => `<div class="bk-empty">${t}</div>`;
    the tab bar, remembers the last tab, and makes any [data-fbopen] inside
    it fly to that river. */
 const BOOK_SECTIONS = [
-  {id:"fav", label:"Favourites", render(el){
+  {id:"fav", label:"Favorites", render(el){
     const ids = fbByName(fbIdsWhere(e => e.fav));
-    el.innerHTML = ids.length ? bookRowsHTML(ids) : fbEmpty("No favourites yet.<br>Tap <b>☆ Favourite</b> on any river to keep it here — and on the map, whatever the class filter says.");
+    el.innerHTML = ids.length ? bookRowsHTML(ids) : fbEmpty("No favorites yet.<br>Tap <b>☆ Favorite</b> on any river to keep it here — and on the map, whatever the class filter says.");
   }},
   {id:"fished", label:"Fished", render(el){
     const ids = fbIdsWhere(e => e.fished).sort((a,b) => (fbGet(b).fishedOn||"").localeCompare(fbGet(a).fishedOn||""));
@@ -4018,12 +4018,12 @@ const BOOK_SECTIONS = [
   }},
   {id:"research", label:"Research", render(el){
     const ids = fbByName(fbIdsWhere(e => e.fav));
-    let h = `<p class="bk-intro">Research for your favourite rivers — more research tools will appear here.</p>`;
+    let h = `<p class="bk-intro">Research for your favorite rivers — more research tools will appear here.</p>`;
     h += ids.length ? ids.map(id => {
       const r = RIVERS.find(x => x.id===id);
       return `<div class="bk-res"><button type="button" class="bk-name" data-fbopen="${fbEsc(id)}">${fbEsc(r.name)}</button>${researchLinksHTML(r)}</div>`;
     }).join("") + `<p class="fb-note">Links open outside the app; posts belong to their authors.</p>`
-      : fbEmpty("Favourite a river to get research links for it here.<br>Tap <b>☆ Favourite</b> on any river.");
+      : fbEmpty("Favorite a river to get research links for it here.<br>Tap <b>☆ Favorite</b> on any river.");
     el.innerHTML = h;
   }},
   {id:"offline", label:"Offline", render: renderOffline},
