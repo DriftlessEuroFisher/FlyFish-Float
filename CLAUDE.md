@@ -1471,13 +1471,23 @@ only state-specific file; see `west2/README.md`.
     `SEASON` row carries `within=True`, which waives `season_ok()`'s no-reach rule.
   - **Lower Fish Creek is not drawn.** OSM and GNIS call that reach the
     Price River, which `priceriver` already covers.
-  - **Open on rivers mapped earlier:** `priceriver`'s top reach is the
-    booklet's Lower Fish Creek (Blue Ribbon, artificial only), but its sheet
-    says "Not listed". About 22 km of `strawberryriver` is above the
-    reservoir, under Strawberry Reservoir tributaries (part closed all
-    year), and its sheet doesn't say so. East Fork Boulder Creek is Blue
-    Ribbon but not in `designations.js`. The Utah zone `bounds` stop short
-    of the Santa Clara and the lower Virgin.
+  - **Rivers mapped earlier, fixed 2026-10-13** in
+    `rockies/regs/assemble.py` (`UT_MAP` and a new `UT_PART` table):
+    `priceriver` carries the booklet's Lower Fish Creek entry for its top
+    reach. `strawberryriver` carries the Strawberry Reservoir tributaries
+    entry for the reach above the reservoir, as well as its own. Both are
+    also in `designations.js` (Price as Blue Ribbon on that reach, plus
+    East Fork Boulder Creek).
+  - **Still open:**
+    - **No `partClosed` on `strawberryriver`.** Its two above-reservoir
+      reaches close differently (all year, and May 15 to July), and
+      `partClosed` holds one reach.
+    - **`provo` will change on the next full rockies `apply.py`.** Its text
+      in `ut_entries.json` was re-extracted ("SR-113" for "SR- 113").
+    - **`gen_ut.py`'s notes are out of date.** Its notes still call the
+      Strawberry River above the reservoir "not built".
+    - **The Utah zone `bounds` stop short** of the Santa Clara and the
+      lower Virgin.
 - **Never run a full `flowdir.py` after these builds.** It rewrites
   `flowrev_osm.json` and drops about 103 entries (mostly the Iowa DNR trout
   streams) that the other apply scripts read back. Use `--only <ids>`.
@@ -1488,7 +1498,7 @@ only state-specific file; see `west2/README.md`.
 
 ### Official designations — `js/designations.js`
 `DESIGNATIONS[riverOrLakeId] = {src, reach}` with `DESIG_SRC` naming the
-agency, shown as the top row of the rules card and the lake sheet. 46 waters:
+agency, shown as the top row of the rules card and the lake sheet. 48 waters:
 CPW Gold Medal (from the 2026 booklet's flags, so it can tag a river whose
 own text lost the marker), Utah DWR Blue Ribbon, WGFD Blue Ribbon (>600 lb
 trout/mile), and Montana's twelve statutory "blue ribbon" Murphy Right
@@ -1928,13 +1938,32 @@ CFS a made-up range would be worse than none. On this water, **clarity is
 the number that matters** — judge it on arrival. The ungauged card in the
 UI says exactly this.
 
-**All 29 East-Central MN/St. Croix and Lakes Country/Northwoods rivers are
-also `null`**, for a simpler reason: no research pass has been done on
-public guide/paddler reports for these two clusters yet, unlike the 28
-West/Central Iowa rivers that got a starting-point pass. These are prime
-candidates for that same treatment — smallmouth/walleye/paddling good-flow
-ranges are genuinely published for water like the St. Croix, the Cannon,
-the Lower Wisconsin Riverway and the Flambeau.
+**The 29 East-Central MN/St. Croix and Lakes Country/Northwoods rivers got
+a research pass on 2026-10-13: 17 have a range and 12 stay `null`.** A range
+was set only where a published number is tied to the river's
+**`primaryGauge`**. That was checked by site number, and for the MN DNR rows
+also by matching the DNR's reading to the USGS one at the same minute. The
+sources are paddling ratings, not fishing bands:
+- **MN DNR river-levels "Medium" band (strongest):** Rum, Kettle, Crow,
+  Mississippi at St. Paul (a wide 6,000–30,000), Sauk, Crow Wing, Long
+  Prairie, Mississippi at Brainerd.
+- **Minnehaha Creek Watershed District:** Minnehaha Creek.
+- **American Whitewater runnable windows (weaker):** Snake (MN), Namekagon,
+  Apple, Flambeau (low end estimated), South Fork Flambeau, Jump, Wolf.
+- **One paddler's trip report:** the Wisconsin at Muscoda.
+
+**Left `null`, on purpose:**
+- **The agency rates the primary gauge by stage, or by cfs only at a
+  different gauge:** the St. Croix (Stillwater), Minnesota (Jordan) and
+  Cannon (Cannon Falls).
+- **The only published number is a play-wave or different-gauge range:**
+  Red Cedar, Chippewa, Black, Prairie (Merrill).
+- **Nothing published:** Elk, Straight (Park Rapids), Prairie (Itasca),
+  Tomahawk, Bear.
+
+Moving these rivers' `primaryGauge` to the rated gauge would unlock a range,
+but it would also change which reading leads the card. That is an owner
+call.
 
 **TODO for me:** replace the researched starting points with my own
 experience-based numbers over time, and fill in the rest for whichever
@@ -2177,17 +2206,31 @@ are worth calibrating first.
 - Labels are zoom-gated in `syncLabels()`: zoom ≥ 8 for the western rivers,
   ≥ 10 for Driftless and North Shore ones, because those creeks sit almost
   on top of each other and dozens of labels at regional zoom is soup.
-- Adding a new region means touching seven things, as the Door Peninsula and
-  Yellowstone passes both confirmed (Yellowstone needed an eighth: the
-  `regBody` line, because inside a national park the state agency is the
-  wrong authority to name): the `region` field on the rivers; the `subRegion` map in
-  `openRiver` (the sheet subtitle); the per-region footer note in
-  `renderSheet`; the ungauged-card copy in `noGaugeHTML()` if the region's
-  streams aren't gauged — the default text talks about Driftless spring
-  creeks and is wrong everywhere else; the zoom gate in `syncLabels()` if
-  the streams sit close together; the `REGIONS` quick-jump list; and the
-  legend copy in `index.html`. **A new national park is one `PARK_INFO`
-  entry** in `app.js` instead of most of that list. A new region does **not** need
+- **A new region is one `PARK_INFO` row** in `app.js` (2026-10-13: the
+  seven older regions — Yellowstone, Grand Teton, Teton Valley, Swan Valley,
+  Driftless, North Shore, Door County — moved in, and their `region==="…"`
+  branches went). The row carries `sub` (sheet subtitle), `labelZoom`,
+  `badge`, `note`, `lakeNote`, `licence`, `regBody`, `footer` and
+  `ungauged`. Any field may be missing and the sheet falls back to the
+  default. Beyond the row: the `region` field on the rivers, the `REGIONS`
+  quick-jump list and the legend copy in `index.html`. Four rules:
+  - **A non-park row has no `zone`.** `refreshZoneCounts()` builds a set
+    per `p.zone`, and a `zone` on the yellowstone/grandteton rows would
+    overwrite the hand-built `grte` set (which includes `GRTE_SHARED`).
+  - **Never key a row by a regs source** (`yell`, `grte`, `idfg`).
+    `PARK_INFO[r.parkRegsSrc]` is a fallback for licence, footer and
+    ungauged text, and a `grte` row would give the Snake the park footer.
+    Sources reach their row through `REGS_SRC_ROW` / `regsSrcRow()`, which
+    is used by the regs fold, the licence and the ungauged text but not the
+    footer.
+  - **`driftless` has no `ungauged` field on purpose.** The default text is
+    the Driftless spring-creek copy, and a Driftless river that is also a
+    water trail must still get the water-trail text.
+  - The by-state licence (trout fee, trout stamp) is `stateLicence(r)`, not
+    a row field, because it depends on state and `troutClass`. State names
+    come from the one `STATE_NAME` table.
+
+  A new region does **not** need
   a zone any more — zones are states. If the region is a named place worth
   showing on the map, add it to `REGION_LABELS` in `zones2.py` instead; if
   it brings a new *state* onto the map, add that state's FIPS code to the

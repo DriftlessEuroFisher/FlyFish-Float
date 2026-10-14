@@ -13,9 +13,10 @@
      located?" (2018): more than 600 lb of trout per mile.
    - Montana: FWP Instream Flows page. The 1969 statute reserved water in
      "twelve blue ribbon streams" (the Murphy Rights), each by reach.
-   Designated water that isn't on this map yet (Utah's East Fork Boulder
-   Creek and Lower Fish Creek, Wyoming's Middle Fork Powder River and Sand
-   Creek, Colorado's Standley Lake) is simply absent. */
+   Designated water that isn't on this map yet (Wyoming's Middle Fork Powder
+   River and Sand Creek, Colorado's Standley Lake) is simply absent. Utah's
+   Lower Fish Creek is drawn as the top of priceriver, which is why that
+   entry's reach is the booklet's own reach sentence rather than a county. */
 const DESIG_SRC = {
   cpw:  {label:"Gold Medal Water", by:"Colorado Parks & Wildlife", url:"https://cpw.state.co.us/fishing"},
   udwr: {label:"Blue Ribbon Fishery", by:"Utah DWR", url:"https://wildlife.utah.gov/fishing"},
@@ -44,8 +45,10 @@ const DESIGNATIONS = {
   northdelaney:  D_("cpw", "Delaney Butte Lakes (North, South & East)"),
   // Utah
   currantcreek:  D_("udwr", "Wasatch County"),
+  eastforkbouldercreekut2: D_("udwr", "Garfield County"),
   greenut:       D_("udwr", "Green River"),
   logan:         D_("udwr", "Cache County"),
+  priceriver:    D_("udwr", "Lower Fish Creek (Price River): from the railroad bridge (approximately one mile below the Scofield Reservoir dam) downstream to the confluence with the White River"),
   provo:         D_("udwr", "Summit, Utah and Wasatch counties"),
   weberut:       D_("udwr", "Summit County"),
   wfduchesne:    D_("udwr", "Duchesne and Wasatch counties"),

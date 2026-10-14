@@ -3092,7 +3092,7 @@ cz:["sxotGr`utP~WcG~MoPrXk}AzTo}@rDsDrNSr`Agc@n_@z@vQ~HbVjCzToAzJrDrXvBbVwBfJcL~
 {
   id:"appleriverwi", name:"Apple River (WI)", color:"#6e9c4a",
   state:"WI", gauges:["appleWI"], primaryGauge:"appleWI",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:200,max:1000}, // starting point from public guide reports (American Whitewater runnable range, Apple River at Somerset, keyed to USGS 05341498) — adjust to your own experience
   blurb:"A short, warm St. Croix tributary near Somerset best known as a summer tubing river — the tube liveries mean the lower miles are a party scene on a hot weekend. Fish it early or late in the day, or upstream of the tubing put-ins.",
   fish:"Smallmouth bass and panfish; a modest fishery mostly overshadowed by the tubing traffic. Best fished off-peak.",
   cz:"yydtGlmxrPdi@qB~G}JxNwh@|v@xE~PpMlPpI~WjQzMtKbHag@j`@wDzl@q`@xlAceA~\\wj@tgBr\\~dAbUv|@ds@lZv@bVeRq@|OvYt[|e@{WdYnFhSeA|SvIlh@bItJ}EvEfRrHdR|[rUlCjw@bJr`C`SdZsa@p_@wb@dg@iA`o@kEjTcJpe@aMbi@hKnPIbPkGxu@wQzRjDtTsG|YmAhmAbg@hExF`RjLzj@dMz_@rI~m@|GwHnXtI~Wu@jf@zPxGjCjMrChSbNd\\nRld@kb@ve@~UrJtgAt\\vPbLuGfZ`u@tu@xMzv@uPtOr[t\\`q@sQdu@rY|XlVjEnf@tJlUx[`Unv@XzW`HeBha@voAnOCjLvGxPtXz\\jLdVv|@vJtd@zUgBiIzi@qKjTsZrJnYlXdr@pi@`r@~WpWdc@x\\_IzDl[j_@jDzTnJeTbc@uQzx@ig@~e@aWvb@_c@dX}VjKXbQw\\f_@w|@`x@yQnh@qPri@|HpEzZnS|_@nu@"
@@ -3100,7 +3100,7 @@ cz:["sxotGr`utP~WcG~MoPrXk}AzTo}@rDsDrNSr`Agc@n_@z@vQ~HbVjCzToAzJrDrXvBbVwBfJcL~
 {
   id:"namekagonriver", name:"Namekagon River", color:"#3a7a9c",
   state:"WI", gauges:["namekagon"], primaryGauge:"namekagon",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:90,max:500}, // starting point from public guide reports (American Whitewater runnable range for Namekagon Dam to St. Croix, keyed to Namekagon River at Leonards, USGS 05331833) — adjust to your own experience
   blurb:"The St. Croix's National Scenic Riverway twin — a designated Wild & Scenic river in its own right, running from Namekagon Lake near Cable down to join the St. Croix near Riverside. Quieter and narrower than the St. Croix mainstem.",
   fish:"Trout water in the cold headwater stretch near Cable; smallmouth and musky take over as it warms downstream. A genuine multi-day canoe trip for paddlers, with Park Service campsites along the way.",
   cz:"c}byGngwkPrkAtRj_AvhA~L|RyGfk@bQpeA{T|tDd_@ll@pc@jgAbQl{@bd@xvAndAbUth@o@lr@xNpg@`e@wGd_@zWjeCfyAfK`rAwLrWbs@xkApkC~oB|hAhfAbp@x`@n_Ad_AkV`m@fy@|y@r{@f_A`h@lbArRbeAxl@_UxvB~HlUdQ~U`w@tw@pZdkBxI_AvIuK`\\lXhf@dFtOrEnB`ShOt]pEnJxW|DvIlEc@lT}Qfg@{Hnu@sFn@mChi@zJtP{Fzt@}Sn{@chA|qC}Wj`A{^z|ATxdAhlAzaBn{@zm@lb@lp@xcAxgBx[jlAhFvcAlYtq@fdAtwAdz@nmAq`BncBheAf[xoAoTdWj}Af_@pu@lk@jSmQ`zAiL``CcOrk@qf@liCqe@jpBerAdtA}mBv|@wc@px@w|Ali@mh@b{@oLhd@oVnkA}o@`rCnHvq@Qdk@idAxVmv@tu@tYla@fKjiAyg@dXwz@`]cp@jLsi@vKsn@`gB|DzeAuQnDeJl\\uUlc@ycAvFca@~[fo@vdC}s@z{@w}@eZs^dwAeCv`Csu@iFbaAzvDmZbsD"
@@ -3108,7 +3108,7 @@ cz:["sxotGr`utP~WcG~MoPrXk}AzTo}@rDsDrNSr`Agc@n_@z@vQ~HbVjCzToAzJrDrXvBbVwBfJcL~
 {
   id:"rumriver", name:"Rum River", color:"#8c3a5f",
   state:"MN", gauges:["rumStFrancis"], primaryGauge:"rumStFrancis",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:1000,max:2000}, // starting point from public guide reports (MN DNR river-levels "Medium" paddling band for Rum River near St. Francis, USGS 05286000) — adjust to your own experience
   blurb:"Minnesota's first State Wild & Scenic River, flowing out of Lake Mille Lacs down to the Mississippi at Anoka — the closest real float-and-fish river to Forest Lake itself, most of it through quiet farmland and county parks rather than the metro.",
   fish:"Smallmouth bass in the rockier upper reaches, walleye and channel cats as it nears the Mississippi. A relaxed, mostly-Class-I paddle with regular county-park access.",
   cz:"{thtGzwpxPhObGrHyD_Jr]rXzY~\\pXxg@~dAnKfw@``@ln@wCx_@|TdEeAef@pJkQdFtH|Dnj@xQpDnQeL`Hm`@tDsTrIz@~Gl_@xOuBjYMxReAiEqOxAeHjMrLrS|LbOiQpClImL|OrJzFhYeLdRz@vSdJhQzUpZ}Hhj@fC|c@iMjV`HnHzQzGf_@xH{DbHoPxFg\\fDxVkFpi@jFdKvG}CtJcUlPJ|HGv^jGxXfTpNlBnW|Bx[eA~\\bHnJo_@m@aItN~FbFiN}CjVhBjQ~LaRpR}HvLiTtHpJcMtSt@jX}`@`]YbYrKpaAp@v]xXtCrL|Z`SeErQl@nWsYx\\|@tQwH~I}RtMrArI{\\dTmL{Cc^`LuLlQxBzJsVxO@rFb]hBhK|RjM`NbIE~Tz`@rGjNiVpDySlR`KdMv@~SmFhLsFiDqYd\\lLtg@rGfUqK`YxYrYdMjP_Fr`@}E"
@@ -3116,7 +3116,7 @@ cz:["sxotGr`utP~WcG~MoPrXk}AzTo}@rDsDrNSr`Agc@n_@z@vQ~HbVjCzToAzJrDrXvBbVwBfJcL~
 {
   id:"snakeriverMN", name:"Snake River (MN)", color:"#4a8c6e",
   state:"MN", gauges:["snakeMNPineCity"], primaryGauge:"snakeMNPineCity",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:800,max:3000}, // starting point from public guide reports (American Whitewater runnable range, Woodland to Mora reach, keyed to Snake River near Pine City, USGS 05338500) — adjust to your own experience
   blurb:"Not the famous one out west — Minnesota's own Snake River runs from Kanabec County through Mora and Pine City to join the St. Croix, a mellow smallmouth-and-walleye float that's an easy weeknight trip from Forest Lake.",
   fish:"Smallmouth bass and walleye, with a fall run of St. Croix River fish pushing up into the lower reaches. Straightforward Class I paddling; a handful of low dams to watch for near Mora.",
   cz:["a_pvGzfbwPcSeUiCcAg@{I~C}lBrB_NeAgDcDnEi\\jd@gI|OeCq@eCkXsG}IqDtHaJlSmEeCcGoNdCiWlBcGxJmLkHsDkEx@kMaG_GiMuAqBsCyc@tGoZzHuJpGuR]}JwAye@gV{c@gGsNuVgV}BiKiGki@gFuPcHeDoDqVuA}ZvM_RgBmRdI_P{@qH_Hao@wAuLmIak@iw@ozACaK~Fo]gImrAHaFlGyl@xFeG^wLeNeTuGcCeNV_KwBwIkO}Ieq@xEmRjCqT`EoGfOuAhIoItG}_@_@_DgHaQnI{QvLiPrEql@oIsTyJeK{Coe@rCwPPwm@bNgQ~Fa@lPs\\pJcc@lCuCnOgCdCl@bK`OdNrBx@mIjAw`@jLqj@~@cCfScFpJy}@KwCaEo^pCuL|DyLsIuCiHtEgCsCrBwSlHqLsFcUcHiPeUia@jJoG`DiCjCqN","ispvGhvzwP|BuNbJmE"]
@@ -3124,7 +3124,7 @@ cz:["sxotGr`utP~WcG~MoPrXk}AzTo}@rDsDrNSr`Agc@n_@z@vQ~HbVjCzToAzJrDrXvBbVwBfJcL~
 {
   id:"kettleriver", name:"Kettle River", color:"#2a6e9c",
   state:"MN", gauges:["kettleSandstone"], primaryGauge:"kettleSandstone",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:1000,max:1500}, // starting point from public guide reports (MN DNR river-levels "Medium" paddling band for Kettle River near Sandstone, USGS 05336700) — adjust to your own experience
   blurb:"A state Wild & Scenic river and one of Minnesota's best whitewater runs — Banning State Park's Class II–III rapids at Sandstone draw kayakers and rafters all summer. Fishing is secondary to the paddling on this one.",
   fish:"Smallmouth bass in the pools between rapids; scout before you fish, since this is genuine whitewater at moderate-to-high flow, not a wade-and-cast river.",
   cz:"{ryzG~l_vPzUiM`b@ib@fTum@`u@|WvTwY|`@yCt_@cPhZ{V~MaVdm@|K|e@b[ld@td@vV|WpWhYvS_@lVuAn_@gW~f@up@`j@hAhq@wNbd@`Q~z@qKrTdC`]uWqJws@dl@wIrEjRfKmQvMiWiW{TvAax@rLpB`Gs_@bLwH|_@cYzGsS|XjV|d@lK`a@ta@nVcNcAlMvJpB`G}KrMhVhHfIvKcCvX_Td`@sDdUbr@}A}Lrs@`n@tg@|Lfu@mp@f}@|Htm@da@fq@k^tf@n_@f`A{]~|@pEra@wQbn@maA`ZoaAzcBaOjv@qNd_@tIx_@cL~cAjQby@gAnM`MzIdCkExIxM|r@dbAdz@`m@to@|nAm\\tnAfJ`n@bLjXdZpd@|K|L{q@bg@ok@td@xRhd@bBfbAvn@rYfK`pAbXnUk@j_@dHnaAk@|X_g@fd@un@xa@_n@vNic@fU_Qte@aYre@|X|Wg[|c@{Bx|@f[tXqUjd@yy@h]xBjaAmqArn@atBuCgi@dHqnAvTsaAOk[zvA{f@"
@@ -3132,7 +3132,7 @@ cz:["sxotGr`utP~WcG~MoPrXk}AzTo}@rDsDrNSr`Agc@n_@z@vQ~HbVjCzToAzJrDrXvBbVwBfJcL~
 {
   id:"crowriver", name:"Crow River", color:"#7a6e2a",
   state:"MN", gauges:["crowRockford"], primaryGauge:"crowRockford",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:500,max:1100}, // starting point from public guide reports (MN DNR river-levels "Medium" paddling band for Crow River at Rockford, USGS 05280000) — adjust to your own experience
   blurb:"The North and South Forks join at Rockford and run on to the Mississippi at Dayton — a slow, muddy-bottomed prairie river that's a sleeper smallmouth and channel cat fishery west of the metro.",
   fish:"Smallmouth bass, channel catfish, and a surprising number of big flathead cats in the deeper holes. Canoe-friendly, mostly flat water.",
   cz:"o_drGb{g{PyEeXbLqFdCkGzBmn@}Dse@qEwPad@c]_K{WiEmE}k@jDoCeMg^gH{j@kTe[cLaOaQqVcTgQgU{P}Tm]a]q[{GwZ_d@yO{a@_Q{PqY{SiB{OpAgOcUut@cAkSlEaP]mQaTex@cKoWgLgIyOw[uPgPqVrCiVeBwUb\\{JnK}P|d@sIjCgNtLoPfSeXpH}X_LkFen@gNwVyH~ByEqC{GkQuUaMaFcT~BoL|SkGdJgEpIoKmAqc@_McHkN`R{IcBz@kq@sIoPgCqL~JQ~HyDsAaE}F}G_NaHU_NmCyFvPeLbMgBT__@_GqMoKaHwOkBiFuOwB_[mGyOiIwb@?ad@{PsX}W_^wJ}CdKqNDsH}ImJ|Aqb@wUsXsLaJe@mG`FsEKyZ|BsL`e@wGlKiJl@oNuJ{MyQ{A{LvCsPw[cSeA{N}FmAkZ}FuDqMrOyBdXiQjB{DmA"
@@ -3140,7 +3140,7 @@ cz:["sxotGr`utP~WcG~MoPrXk}AzTo}@rDsDrNSr`Agc@n_@z@vQ~HbVjCzToAzJrDrXvBbVwBfJcL~
 {
   id:"mississippiTC", name:"Mississippi River — Twin Cities", color:"#2a5f8c",
   state:"MN", gauges:["msTCStCloud","msTCChamplin","msTCBrooklynPark","msTCStPaul","msTCHastings"], primaryGauge:"msTCStPaul",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:6000,max:30000}, // starting point from public guide reports (MN DNR river-levels "Medium" paddling band for Mississippi River at St. Paul, USGS 05331000; a wide band) — adjust to your own experience
   blurb:"The big river running right through the metro, from St. Cloud down past St. Anthony Falls, the Twin Cities, and the Lock & Dam pools to the St. Croix confluence at Prescott. The Coon Rapids Dam and the downtown locks are real low-head hazards — know where they are before you put in.",
   fish:"One of the best urban smallmouth and walleye fisheries in the country, plus musky, catfish, and a genuine sturgeon fishery in the pools below the locks. Character changes completely by reach — braided and rocky above St. Cloud, big and lake-like through the Lock & Dam pools below St. Paul.",
   geom:"osm",   // real channel from OpenStreetMap — don't re-snap
@@ -3173,7 +3173,7 @@ cz:["c{wuGnuz}P~R~u@vLbLz^zEbcAwBvj@be@vLvBzr@nArXkHbj@kCbG?bVfJvcAwo@fw@sXrl@o`
 {
   id:"minnehahacreek", name:"Minnehaha Creek", color:"#3a8c8c",
   state:"MN", gauges:["minnehaha"], primaryGauge:"minnehaha",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:75,max:150}, // starting point from public guide reports (Minnehaha Creek Watershed District ideal paddling flow at the Hiawatha Ave gauge, USGS 05289800) — adjust to your own experience
   blurb:"Minneapolis's most famous small stream — the outlet of Lake Minnetonka, running through a chain of city lakes and parkways to the 53-foot Minnehaha Falls, made famous by Longfellow's \"Song of Hiawatha\" and now the centerpiece of a busy city park.",
   fish:"Mostly a scenic urban creek rather than a fishing destination — panfish and the occasional stocked trout in isolated stretches. Worth a stop for the falls and the walk more than the rod.",
   cz:["}hkqG~quyPh]{d@iQ{cAd_@ad@nNi\\kBkt@rTas@zDkCnBkW~@gg@{G_g@uIsa@uG{JwKkA_FcQ@uZlDwSJkQ{AgIgBeI|@am@zEoBvGeH|EuWnEqSaCqOwCeCjBgOmDqH|HkD|LuArH\\vHmIlLiG~Hn@xMiVxF}Ud@cObGsg@]mIqIeUrZob@p\\vAnJ_VYcD`AkHeByMmAkT~PnBtFbAxDkQwEmEC}O~K_DzFvBtMkRVoKx@qN~Er@bFaKrQeFbFwFzQaIxDtD|JwC}J}ZeAiEiGwBuBaOX}E_IuEkEul@sNyZv@qSsHiCqG}[u@iOnNkZVkh@rAwSxGkLzBuJoIgGcOc_@oD{PkGiE[_RbF_c@cD{LyCaVaKyUgBqf@iJ_TqCi]{EmN|ByEyBs]vAqO`KcOeEqFcBuTtU}O_D{OUiN`IyOpS{MdJw`@","}bfqG`}fzP}f@gfDuwCeiG"]
@@ -3181,7 +3181,7 @@ cz:["c{wuGnuz}P~R~u@vLbLz^zEbcAwBvj@be@vLvBzr@nArXkHbj@kCbG?bVfJvcAwo@fw@sXrl@o`
 {
   id:"saukriverMN", name:"Sauk River", color:"#8c5f2a",
   state:"MN", gauges:["saukStCloud"], primaryGauge:"saukStCloud",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:300,max:800}, // starting point from public guide reports (MN DNR river-levels "Medium" paddling band for Sauk River near St. Cloud, USGS 05270500) — adjust to your own experience
   blurb:"Runs out of Lake Osakis through St. Cloud-area farm country to join the Mississippi at Sauk Rapids — a solid smallmouth river that's a natural add-on to a St. Cloud/Mississippi headwaters trip.",
   fish:"Smallmouth bass and a modest walleye fishery; a handful of low dams through the St. Cloud area to watch for.",
   cz:"suttGzuu~P_CRuQkEsLhDsEkYq@yAeAQkUmBuFXoI~PiCHuA}AsBqc@kLgIkOoFsOAgMkBoUuEqIqEaUFqKwLgLiAm@}PdAkI`CoH{G_S{D_CoM^gGuQDgOwCcMiD_BsI~KeEI_BoEiE_^gFtByEyBoAiEJ_FfHyPk@cAkRwDY_FgDcJ_Mmg@\\cWqD_IcGjA{CuE~FuPLiB_K_VoE_`@p@qFvC_VeDyBkAqD`Cyh@q@Y{NCgDiDq@iE?aOuBd@YtOw@vFiBx@_Uuh@sEiHgMsBu@oCNsJ}Tm\\kD_AcNt@uBaCJ}CkF}FiCCkBaJdBwDg@kItGoO?eGeI_Gc@uG}BsHqX_p@kByCxFsFhAgAvA}GcEiNcHw@yFfAyAeRpByEPcSsA{B{DmAwG|OcCx@gEkJkAgUcFeB}LbCLkFzF_X_CeI"
@@ -3200,7 +3200,7 @@ cz:["c{wuGnuz}P~R~u@vLbLz^zEbcAwBvj@be@vLvBzr@nArXkHbj@kCbG?bVfJvcAwo@fw@sXrl@o`
 {
   id:"crowwing", name:"Crow Wing River", color:"#8c5f4a",
   state:"MN", gauges:["crowWingNimrod","crowWingPillager"], primaryGauge:"crowWingPillager",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:800,max:3000}, // starting point from public guide reports (MN DNR river-levels "Medium" paddling band for Crow Wing River near Pillager, USGS 05247500) — adjust to your own experience
   blurb:"A classic sand-bottomed canoe river running out of the Crow Wing chain of lakes in Hubbard County down past Nimrod and Pillager to the Mississippi at Crow Wing State Park below Brainerd. Steady, gentle current and frequent sandbars make it one of Minnesota's easiest multi-day paddles.",
   fish:"Smallmouth bass throughout, with northern pike and walleye in the deeper bends and a decent channel cat population down low. Wadeable at normal summer flows in many stretches — unusual for a river this size.",
   cz:"{_{}GtdgaQz_A~iAfcAvp@n`CljEly@veCbWnk@rw@luA~PtuAjt@xfCbi@bnD`w@um@jA}d@`p@~[sNae@xH_q@hH_lAlZc{@p|@w^nuAnkBnbAug@l{BxwAe_@isAiSuv@rfAdMv_@nDxRa@xq@dgBndAznA~o@|VwC}x@`vA}@~e@H_Ane@hzAnmBxz@jh@|iApmAnw@wNvm@de@hx@bHlk@zCdb@yEv_Bc}Bwg@_wB~t@mzAxl@id@`qBoA|tBfcAvg@lKnnAmo@dWscAh]onBhx@oiA`wBkVtu@o~@pT{~@jtAhKvdApIrlC`m@~cA}mAx{@hu@d}@adBfQyFzf@qQfWgLxSsHhHxEjCob@x{@br@vb@yg@fRfX|Qt`@vUxZpoA{_@lrA~g@bQpiAfj@taAx_@d@nQszA|Cwu@mCqpBj|BwlAtc@kfAh]wJvCkvAeHinAxb@oEbWdDz|@tB~TuRpx@qcAdEuyAnDib@{t@{qC|[_t@ngA}eDxcBafCkG{jBfq@klCdb@ciAjf@giBwi@{tIai@uxBscA{|A^ohAza@chE~cAadBrj@inAdq@{aDbqAycBju@aN"
@@ -3208,7 +3208,7 @@ cz:["c{wuGnuz}P~R~u@vLbLz^zEbcAwBvj@be@vLvBzr@nArXkHbj@kCbG?bVfJvcAwo@fw@sXrl@o`
 {
   id:"longprairie", name:"Long Prairie River", color:"#6e8c5f",
   state:"MN", gauges:["longPrairieMN"], primaryGauge:"longPrairieMN",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:200,max:500}, // starting point from public guide reports (MN DNR river-levels "Medium" paddling band for Long Prairie River at Long Prairie, USGS 05245100) — adjust to your own experience
   blurb:"An unusual north-flowing river running from the Osakis/Lake Carlos country up through the town of Long Prairie to join the Crow Wing near Motley — small, quiet, and almost entirely overlooked by anglers driving past on their way to the lakes.",
   fish:"Smallmouth bass and northern pike, with panfish in the slower stretches. A modest fishery, but genuinely uncrowded and an easy add-on to a Crow Wing trip.",
   cz:["yzzwGbxybQrc@_RsHec@|BgG~HwFzG{JjJoNvCuUhOTpFcYgEsMrMqg@fWkPnJuh@tTaR_KmV\\gSbOgWeE{j@bGqb@f@wHfGce@@gl@VeLnA}pAoAeJzb@uT|i@eOhKa_@}Dok@fJ_f@rEiPuRmp@oT_X{VfFqXkHuX}DeHbBmIcUa[cEgQjEaRvPqT{UsD}DoTtLyB?_SlGk[dCeKdE_NnDgMpTeHhAs\\cZqPxHmk@`@e@jHyh@{]uU|J}B[s_@yDyOkUmJeEkT{Cy^v@yLtIcNkIaIgJsL`@oQfHoXvGcj@}Hy~@}Pem@yI{VmKyWsXcXeb@e}@kp@{Vcn@eN|PqL`B}Hkh@iLcBcRyVmIqLqPyS_E{YwEkEmW}V_OeF{F~G_b@kVs]kLk`@~Zq]m\\qOpYi`AfG{[pnAunBop@af@hAw}@a[wxAwr@oq@smAeGekAe~@m}Bkj@kuAyi@}n@uTwr@kr@k~Acr@aY","ehmxGv{{aQeAf@"]
@@ -3224,7 +3224,7 @@ cz:["c{wuGnuz}P~R~u@vLbLz^zEbcAwBvj@be@vLvBzr@nArXkHbj@kCbG?bVfJvcAwo@fw@sXrl@o`
 {
   id:"mississippihdw", name:"Mississippi River — Headwaters", color:"#3a6e9c",
   state:"MN", gauges:["msBemidji","msBallClub","msGrandRapids","msAitkin","msBrainerd","msRoyalton"], primaryGauge:"msBrainerd",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:1800,max:7000}, // starting point from public guide reports (MN DNR river-levels "Medium" paddling band for Mississippi River at Brainerd, USGS 05242300) — adjust to your own experience
   blurb:"The Mississippi before it becomes the Mississippi — from Lake Itasca north through Bemidji, east past Grand Rapids, then south through Aitkin and Brainerd down to St. Cloud, where this app's Twin Cities entry picks it up. Small enough to wade near the headwaters and step across at the Itasca outlet; a real river by Brainerd.",
   fish:"Genuinely different fisheries by reach: smallmouth bass through the rocky Grand Rapids and Brainerd stretches, walleye and northern pike in the slower Aitkin bottoms, and muskie in the deeper holes. The Brainerd-area water is the best-known smallmouth stretch.",
   geom:"osm",   // real channel from OpenStreetMap — don't re-snap
@@ -3249,7 +3249,7 @@ cz:["{k~_Hz{v|PrIsNvLwe@~M_Iz@gYnKcQcG{c@z@wGzE_ISkMf^cVrI_D~Hf@~HcG~CsI{EkMSwG~
 {
   id:"flambeau", name:"Flambeau River", color:"#7a3a6e",
   state:"WI", gauges:["flambeauBruce"], primaryGauge:"flambeauBruce",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:680,max:5000}, // starting point from public guide reports (American Whitewater runnable range, Hervas to Beaver Dam Landing, keyed to Flambeau River near Bruce, USGS 05360500; low end is an estimate there) — adjust to your own experience
   blurb:"The North Fork running out of the Turtle-Flambeau Flowage down through the Flambeau River State Forest to the Chippewa near Ladysmith — one of the Northwoods' great canoe-and-camp rivers, with a well-known set of rapids and state forest campsites along the way.",
   fish:"Musky is the headline fishery — this is serious musky water — plus smallmouth bass and walleye. The state forest stretch is remote enough that a weekday float can feel like wilderness.",
   geom:"osm",   // real channel from OpenStreetMap — don't re-snap
@@ -3258,7 +3258,7 @@ cz:["{gfxGj{ndPsDvBRvGbB~RnFjHgJbGnP~CgEfJkWcBSbBrDfEcBfEcGgE?~HvBnKjHrIjCRbBcGn
 {
   id:"sfflambeau", name:"South Fork Flambeau River", color:"#9c4a7a",
   state:"WI", gauges:["sfFlambeauPhillips"], primaryGauge:"sfFlambeauPhillips",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:250,max:1200}, // starting point from public guide reports (American Whitewater runnable range, CTH F to CTH W and CTH W to Skinner Creek reaches, keyed to South Fork Flambeau near Phillips, USGS 05359500) — adjust to your own experience
   blurb:"The wilder, pushier half of the Flambeau system, dropping through the state forest past Phillips to meet the North Fork at the Forks — genuine whitewater at spring flows, including the well-known Little Falls and Slough Gundy ledges.",
   fish:"Smallmouth bass and musky in the pools between rapids. This is scout-first water at anything above moderate flow — the drops are real, not riffles.",
   geom:"osm",   // real channel from OpenStreetMap — don't re-snap
@@ -3275,7 +3275,7 @@ cz:["_lewGftqfPzOnFb`@ja@zJn_@nKvLbGzYzYjCvQ{EfJnAjHoAjHnFvBvGzOfJnFbVS~HgErIsX{
 {
   id:"jumpriver", name:"Jump River", color:"#6e5f8c",
   state:"WI", gauges:["jumpSheldon"], primaryGauge:"jumpSheldon",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:525,max:3525}, // starting point from public guide reports (American Whitewater runnable range, County Line Rd to Little Falls reach, keyed to Jump River at Sheldon, USGS 05362000) — adjust to your own experience
   blurb:"A Rusk/Taylor County tributary of the Chippewa, running past Sheldon down to the Holcombe Flowage — small, remote, and rarely written about.",
   fish:"Smallmouth bass and northern pike, with musky moving up out of the Chippewa flowages. Lightly fished simply because nobody drives out here for it.",
   cz:"andtGdkjhPvArIzE~M`P|VzHdJtClIbClV?tHgArLeFnS|@fLnDhFdR`FbEJpNoB|N|OdClJdAjOOfIxA`LtAzD|GzKQrI{AlBsBp@}EpGp@dHxJvBzC_@`C{BdC`BvDrCv@xNn@jB~CKnGkHvGu@bFrMfNjSt@hKYbBoDvEaAtG~AzHjYpShCbK`A~ShAhExG~@pHjIWlJyCfNdA`J`BzLD~LmFhOw@dDTnGzA|EhBfAlMuB~OlAdCb@hDnC|DbH|M~_@`GvI~P~h@@dOqAnJyBhOaEbBqCpFBrIjD`K`BfLxAvBnLxGrPzD_@bQfEhLvKvFfArD|Hro@vFz`@|DzTnIjUx@`HMzOqCbh@lIjXnKbIlEfF|AnI{@rDyBPyN_A_ApAiBfWN|CnB|Gja@~a@hNxKfSx^h@jZ`CfLhCzd@gKfTwC~Ir@jHzCzGxGbDzRfWfIdDlEhQkBxN\\rGjCjBlCA|LgCvHbFb@rEi@fJhC`UdP~u@aC|Hc@bFv@pLtBxHjFrHxGvHTbHu@pFeBnDmIxG{ApFl@hN|KpTv@hKy@bJwCtLHjIbKp^lFhQdLbO~GvNvI`HhFfZw@nZt@dIvGvXrKpNlGStLm@~BlD`BbNzA~_@sAdLqAn^nAlc@dIxBpJr@|AbAzCfGpGv]v@|\\eMbIoO~FuO{BaLAsARcAdR~Ad[tFjRdUp]`CpE`EpVt@fS|@|FhCvFdDjBbXhBhObDnDfFdCdHr@~NoEp^ZnEjKrYqAvFqFzBmFbEqAvG{@|Q{MrqAp@xHKlh@jOhV\\dG|C|JgEtRiRnRuI|TxAxA~X~H~^jf@tIX`L~Nxo@zi@zDhIMpTiHlg@wEpImDdQn@hNbJhXvE?zZdhBpHfVtC`F"
@@ -3283,7 +3283,7 @@ cz:["_lewGftqfPzOnFb`@ja@zJn_@nKvLbGzYzYjCvQ{EfJnAjHoAjHnFvBvGzOfJnFbVS~HgErIsX{
 {
   id:"wisconsinriver", name:"Wisconsin River", color:"#2a7a5f",
   state:"WI", gauges:["wisRainbow","wisMerrill","wisRothschild","wisRapids","wisDells","wisMuscoda"], primaryGauge:"wisMuscoda",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:5000,max:10000}, // starting point from public guide reports (Miles Paddled trip report, Lower Wisconsin sandbar float, "recommend 5,000-10,000 cfs on the Muscoda gauge", USGS 05407000) — adjust to your own experience
   blurb:"Wisconsin's longest river — 430 miles from Lac Vieux Desert on the Michigan border down through Merrill, Wausau and Wisconsin Rapids, past the Dells, to the Mississippi at Prairie du Chien. Famously \"the hardest-working river in the nation\" for its 25-plus dams, but the Lower Wisconsin State Riverway below Prairie du Sac is the longest free-flowing stretch in the upper Midwest and a superb sandbar canoe-camping trip.",
   fish:"Smallmouth bass and catfish through the Lower Riverway sandbars, walleye and musky in the flowages up north, and a lake sturgeon population down near the Mississippi. The Muscoda gauge is the one that matters for the Lower Riverway sandbar float.",
   cz:"owpxGne__Pzny@~nqAfk~BbgXz|w@o~Gfr_Bfkd@~vxC_wLbnnAfbeCbxa@z_iC"
@@ -3291,7 +3291,7 @@ cz:["_lewGftqfPzOnFb`@ja@zJn_@nKvLbGzYzYjCvQ{EfJnAjHoAjHnFvBvGzOfJnFbVS~HgErIsX{
 {
   id:"wolfriverwi", name:"Wolf River (WI)", color:"#9c5f2a",
   state:"WI", gauges:["wolfLanglade","wolfShawano","wolfNewLondon"], primaryGauge:"wolfLanglade",
-  goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
+  goodFlow:{min:200,max:1250}, // starting point from public guide reports (American Whitewater runnable range, Langlade to Crab N Jack's reach, keyed to Wolf River at Langlade, USGS 04074950) — adjust to your own experience
   blurb:"A National Wild & Scenic River in its upper reaches and one of the Midwest's premier whitewater runs — the Langlade-to-Markton stretch through the Menominee Reservation includes genuine Class III–IV drops. Below Shawano it flattens out into a big, slow river running down to Lake Poygan and the Winnebago system.",
   fish:"Trout in the cold upper river above Langlade, smallmouth through the whitewater reaches, and the famous spring walleye run pushing up out of Lake Winnebago into the lower river. The Menominee Reservation water has its own tribal permit requirements — check before you fish or float it.",
   geom:"osm",   // real channel from OpenStreetMap — don't re-snap
@@ -12881,7 +12881,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
   osmName:"Strawberry River",
   parkRegsSrc:"utah",
-  parkRegs:"<b>From the confluence with Red Creek, near Pinnacles, upstream to Soldier Creek Dam, including all flowing water, standing water, and instream lakes and ponds.</b><br>• Artificial flies and lures only.<br>• No overnight camping on division land.<br><br><b>Utah general rules</b> — Utah's general fish and crayfish season is Jan. 1 through Dec. 31. Trout, kokanee salmon and Arctic grayling (a combined total): 4. Whitefish: 10.",
+  parkRegs:"<i>Above Strawberry Reservoir the booklet lists this river under Strawberry Reservoir tributaries, clauses (a) and (b). From Soldier Creek Dam down to Red Creek it has an entry of its own.</i><br><details><summary>This river's own rules — 4 reaches, tap to read</summary><i>Strawberry Reservoir tributaries, Wasatch County</i><br><b>(a) Indian Creek and all tributaries to Indian Creek, Squaw Creek, the Strawberry River from Strawberry Reservoir upstream to USFS Road 124 (Bull Springs Road), Co-op Creek from the confluence with the Strawberry River upstream to US-40, and the Central Utah Project Canal (commonly known as the “steps” or “ladders”) from the fenced-in upper concrete step structure upstream to the tunnel at US-40.</b><br>• CLOSED TO FISHING YEAR ROUND.<br><b>(b) The Strawberry River and its tributaries upstream from USFS Road 124 (Bull Springs Road) to the headwaters, Co-op Creek and its tributaries upstream from US-40 to the headwaters, Soldier Creek, Coal Canyon, Cow Hollow, Sage Creek, Chicken Creek, Little Co-op Creek, Clyde Creek, Mud Creek, Bryants Fork, Horse Creek, Chipman Creek, Trail Hollow, Broad Hollow, Pine Hollow, Badger Hollow and Road Hollow.</b><br>• Catch and release only. (All fish must be immediately released. It is illegal to fish if you have any fish in possession.)<br>• Artificial flies and lures only. (The use or possession of bait while fishing is illegal.)<br>• CLOSED May 15 through 6 a.m. on the second Saturday of July.<br><b>(c) Trout Creek</b><br>• Catch and release only. (All fish must be immediately released. It is illegal to fish if you have any fish in possession.)<br>• Artificial flies and lures only. (The use or possession of bait while fishing is illegal.)<br>• CLOSED May 15 through 6 a.m. on the second Saturday of July, and from Sept. 1 through 6 a.m. on the second Saturday of October.<br><br><i>Strawberry River, Duchesne and Wasatch counties</i><br><b>From the confluence with Red Creek, near Pinnacles, upstream to Soldier Creek Dam, including all flowing water, standing water, and instream lakes and ponds.</b><br>• Artificial flies and lures only.<br>• No overnight camping on division land.</details><br><br><b>Utah general rules</b> — Utah's general fish and crayfish season is Jan. 1 through Dec. 31. Trout, kokanee salmon and Arctic grayling (a combined total): 4. Whitefish: 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"About 95.0 km of trout water mapped in Utah.",
   fish:"Fished under Utah DWR rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",
@@ -13167,7 +13167,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   geom:"osm",   // OpenStreetMap channel, clipped to the state with park water removed — don't re-snap
   osmName:"Price River",
   parkRegsSrc:"utah",
-  parkRegs:"<i>Not listed in the 2026 Rules for specific waters — the general rules apply.</i><br><br><b>Utah general rules</b> — Utah's general fish and crayfish season is Jan. 1 through Dec. 31. Trout, kokanee salmon and Arctic grayling (a combined total): 4. Whitefish: 10.",
+  parkRegs:"<i>The booklet lists the upper part of this river under Lower Fish Creek (Price River).</i><br><i>Lower Fish Creek (Price River), Carbon and Utah counties</i><br><i>Blue Ribbon Fishery</i> — Utah DWR's designation for its best fishing waters.<br><b>From the railroad bridge (approximately one mile below the Scofield Reservoir dam) downstream to the confluence with the White River.</b><br>• Artificial flies and lures only.<br><br><i>Above the railroad bridge, and below the confluence with the White River, this river has no entry of its own in the 2026 Rules for specific waters — the general rules apply.</i><br><br><b>Utah general rules</b> — Utah's general fish and crayfish season is Jan. 1 through Dec. 31. Trout, kokanee salmon and Arctic grayling (a combined total): 4. Whitefish: 10.",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"About 55.4 km of trout water mapped in Utah.",
   fish:"Fished under Utah DWR rules. The river's own regulations below say what may be kept, on which reach, and how — on a lot of this water that is the first thing to know.",

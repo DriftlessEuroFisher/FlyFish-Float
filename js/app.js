@@ -34,6 +34,13 @@ RIVERS.forEach(r => {
   delete r.cz;
 });
 
+/* Full state names, for the sheet subtitles (rivers and lakes) and the bridge
+   popups. Up here so nothing that runs at startup meets it in its temporal
+   dead zone. */
+const STATE_NAME = {ID:"Idaho", WY:"Wyoming", IA:"Iowa", MN:"Minnesota", WI:"Wisconsin", IL:"Illinois",
+  CA:"California", OR:"Oregon", WA:"Washington", MT:"Montana", CO:"Colorado", UT:"Utah", AK:"Alaska",
+  MI:"Michigan", SD:"South Dakota", NM:"New Mexico", AZ:"Arizona", NV:"Nevada"};
+
 const API_BASE = "https://api.waterdata.usgs.gov/ogcapi/v0/collections";
 const STAT_YEARS = 7;        // years of history for the median
 const STAT_WINDOW = 7;       // +/- days around today's date
@@ -897,15 +904,11 @@ function openLake(id){
   curRiver = null;
   $("#sw").style.background = "#3aa7c2";
   $("#sh-title").textContent = k.name;
-  const grte = k.park === "grandteton";
-  // the western parks answer from PARK_INFO; Yellowstone and Grand Teton keep their own copy
-  const pk = PARK_INFO[k.park];
-  const stateName = {WY:"Wyoming", OR:"Oregon", WA:"Washington", CA:"California", MT:"Montana",
-                     CO:"Colorado", UT:"Utah", AK:"Alaska", ID:"Idaho", MI:"Michigan", SD:"South Dakota",
-                     NM:"New Mexico", AZ:"Arizona", NV:"Nevada"}[k.state] || k.state;
-  $("#sh-sub").textContent = pk ? stateName + pk.sub + " · lake"
-                         : grte ? "Wyoming · Grand Teton National Park · lake"
-                                : "Wyoming · Yellowstone National Park · lake";
+  /* Every lake names its PARK_INFO row in `park` -- a park's, or a state's for
+     the state lakes. A lake that names none reads as Yellowstone's, the first
+     lakes this sheet was written for. */
+  const pk = PARK_INFO[k.park] || PARK_INFO.yellowstone;
+  $("#sh-sub").textContent = (STATE_NAME[k.state] || k.state) + pk.sub + " · lake";
   sheet.classList.add("open");
   delete body.dataset.river;            // renderSheet's fold memory is per river; this is a lake
   const wx = {key:"lake:" + k.id, pt:wxLakePoint(k)};    // on a lake the wind is the forecast that matters
@@ -916,16 +919,12 @@ function openLake(id){
     `<div class="plain">No gauge and no flow number: a lake doesn't have one. What "in shape" means here is ice-off, water temperature and wind, not CFS — and on the big lakes the wind is the thing that decides the day.</div></div>` +
     wxCardHTML(wx) +
     `<div class="secthead">Fishing notes</div><div class="fishnote">🎣 ${k.fish}</div>` +
-    `<div class="secthead">${(pk && pk.heading) || "Park regulations"}</div><div class="fishnote">` +
-      `<span class="badge" style="background:#4a6f8a">${pk ? pk.badge : grte ? "Grand Teton · Wyoming regs" : "National Park Service"}</span> ` +
+    `<div class="secthead">${pk.heading || "Park regulations"}</div><div class="fishnote">` +
+      `<span class="badge" style="background:#4a6f8a">${pk.badge}</span> ` +
       `<span style="font-size:11.5px">${k.regs}</span>` +
-      `<div style="font-size:10.5px;color:var(--txt-dim);margin-top:8px">${pk ? pk.note : grte
-        ? `From the National Park Service's Grand Teton fishing information, which follows <b>Wyoming Game &amp; Fish</b> regulations. Bait is allowed on park lakes that aren't otherwise restricted — the artificial-only rule covers the streams. Seasons and limits are re-issued every year; check the current Wyoming regulations and carry a Wyoming licence.`
-        : `From the park's <b>2026</b> fishing regulations. A park permit is required at 16 and over and a state licence is not valid; tackle is lead-free artificial lures or flies, barbless. Attractors such as dodgers and lake trolls may be used <b>in lakes only</b>. Re-issued every year — read the current edition before you fish.`}</div>` +
+      `<div style="font-size:10.5px;color:var(--txt-dim);margin-top:8px">${pk.lakeNote || pk.note}</div>` +
     `</div>` +
-    `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Lake outline: ${k.src==="osm" ? "OpenStreetMap" : k.src==="wgfd" ? "Wyoming Game &amp; Fish's lakes map (NHDPlus HR)" : "USGS NHD waterbodies"}. Verify regulations with ${pk ? pk.regBody : grte
-      ? "WY Game &amp; Fish and the park — Grand Teton takes a <b>Wyoming licence</b>, unlike Yellowstone"
-      : "the National Park Service (a state fishing licence is <b>not</b> valid in the park)"}.</p>` +
+    `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Lake outline: ${k.src==="osm" ? "OpenStreetMap" : k.src==="wgfd" ? "Wyoming Game &amp; Fish's lakes map (NHDPlus HR)" : "USGS NHD waterbodies"}. Verify regulations with ${pk.regBody}.</p>` +
     `<div class="rp-wrap"><button type="button" class="rp-link" data-report="${fbEsc(k.id)}">Report an issue with this lake</button></div>`;
   wxLoad(wx);
 }
@@ -1148,15 +1147,14 @@ function syncLabels(){
   const z = map.getZoom();
   Object.values(riverLayers).forEach(l => {
     const reg = l.river && l.river.region;
-    // Yellowstone sits between the two: the park fills the screen around
-    // zoom 9, and 40 labels at 8 is soup while 10 hides the whole region.
-    /* `minor` water — the 166 named Yellowstone creeks nobody has written
+    /* Each region's row sets its own (labelZoom): 10 for the small-stream
+       regions, 9 for Yellowstone, which sits between the two -- the park
+       fills the screen around zoom 9, and 40 labels at 8 is soup while 10
+       hides the whole region. Rivers with no region start at 8.
+       `minor` water — the 166 named Yellowstone creeks nobody has written
        about — stays unlabelled until you are close enough to be choosing
        between them. Two hundred labels over the park is not a map. */
     let min = (l.river && l.river.minor) ? 12
-              : (reg === "driftless" || reg === "northshore" || reg === "doorcounty"
-                 || reg === "tetonvalley" || reg === "swanvalley") ? 10
-              : (reg === "yellowstone" || reg === "grandteton") ? 9
               : PARK_INFO[reg] ? (PARK_INFO[reg].labelZoom || 9) : 8;
     // lesser classes need more zoom before their names are worth the clutter
     const t = tierNow.get(l.river.id);
@@ -1305,7 +1303,9 @@ function tierWeight(r){ const t = tierNow.get(r.id); return TIER_WEIGHT[t ? t.ti
 
    Yellowstone and Grand Teton each grew their own branch in every function
    that names an authority. Ten more parks would have been ten more branches
-   in six places; this table is one place instead. Each entry answers the
+   in six places; this table is one place instead, and Yellowstone, Grand
+   Teton and the older regions have since moved in too (the block after the
+   Wyoming row). Each entry answers the
    questions the sheet asks: what to call the place, whose licence it takes,
    who to check with, the rule summary for the footer, and what to say when
    a creek has no gauge.
@@ -1615,6 +1615,66 @@ Object.assign(PARK_INFO, {
     footer:`🎣 <b>Wyoming, Area 1</b> — the Snake, Salt, Greys, Hoback, Gros Ventre and Buffalo Fork drainages and everything west of the Teton and Snake River Ranges. Chapter 46 (effective January 1, 2026): “Fishing is permitted year-round twenty-four (24) hours a day in any waters of this state except as otherwise provided by Commission regulation for specific areas, streams, lakes, or portions thereof”, and “The use or possession of live baitfish in Area 1 is prohibited.” Stream class and species are from WGFD's Fishing Guide map.`,
     ungauged:"No live gauge on this stream, and the app won't put a number on it that isn't measured. The nearest gauged water below is the read on how runoff and rain have the region."},
 });
+
+/* The regions that came before this table: Yellowstone and Grand Teton, the
+   two Idaho valleys, and the three small-stream regions of the Upper Midwest.
+   Same row shape, with these differences worth knowing:
+   - No `zone`. refreshZoneCounts() builds the park cards' sets itself for
+     these two parks (Grand Teton's includes GRTE_SHARED), and a row with a
+     zone would replace that set with the region alone.
+   - The two parks' lakes carry a different source note from their rivers
+     (attractors in Yellowstone's lakes, bait on Grand Teton's), so they have
+     `lakeNote`, which openLake() prefers to `note`.
+   - The Driftless, the North Shore and Door County have no `licence` or
+     `regBody`: both go by state there (stateLicence(), regBodyFor()), and the
+     licence also by whether the water takes a trout fee or stamp. The
+     Driftless has no `ungauged` either -- its spring-creek text is
+     noGaugeHTML()'s default, and a Driftless river that is also a water trail
+     (the Upper Iowa) gets the water-trail text before it.
+   - The two Idaho valleys share everything but the last sentence of the
+     footer (UPPER_SNAKE). */
+const UPPER_SNAKE = {badge:"Idaho Fish &amp; Game",
+  note:`From Idaho Fish &amp; Game's <b>2025–2027 Seasons &amp; Rules</b>, Upper Snake Region. Idaho re-issues the book every two years and the special-rule list changes with it — check the current one before you fish.`,
+  licence:"<b>Idaho</b> fishing licence — Idaho Fish &amp; Game, Upper Snake Region",
+  regBody:"Idaho Fish &amp; Game (Upper Snake Region)",
+  ungauged:"No gauge on this creek — in these two valleys the gauges are on the mainstems, and that is the right place to look anyway. Both rivers run through irrigated valleys, so late summer flow here is as much about diversions as about snowpack, and the tributaries drop and warm well before the river does. The nearest gauged water below is the useful read; remember the <b>June 1–30 closure</b> on the tributaries as well as the level."};
+const UPPER_SNAKE_FOOTER = `🐟 <b>Idaho's cutthroat programme runs both these valleys.</b> On the Teton and the South Fork and their tributaries there is <b>no harvest of cutthroat trout</b> and <b>no limit at all on rainbow trout or hybrids</b> — non-native rainbows displace and interbreed with the native Yellowstone cutthroat, so the state protects one and turns the other loose. The <b>tributaries close June 1–30</b> for the spawning run while the mainstems stay open; Upper Snake water is otherwise open all year. Brook trout are limited to 25 and bull trout are catch-and-release region-wide.`;
+Object.assign(PARK_INFO, {
+  yellowstone: {sub:" · Yellowstone National Park", labelZoom:9, badge:"National Park Service",
+    note:`From the park's <b>2026</b> fishing regulations. Seasons, closures and possession limits are re-issued every year and streams close on short notice in low water — read the current edition before you fish, and carry your park permit.`,
+    lakeNote:`From the park's <b>2026</b> fishing regulations. A park permit is required at 16 and over and a state licence is not valid; tackle is lead-free artificial lures or flies, barbless. Attractors such as dodgers and lake trolls may be used <b>in lakes only</b>. Re-issued every year — read the current edition before you fish.`,
+    licence:"Yellowstone park fishing permit — a state licence is <b>not</b> valid",
+    regBody:"the National Park Service (a state fishing licence is <b>not</b> valid in the park)",
+    footer:`🏞 <b>Yellowstone runs its own fishery.</b> A <b>park fishing permit</b> is required at 16 and over and a state licence is not valid — $40 for three days, $55 for seven, $75 for the season, through Recreation.gov. The standard season is the <b>Saturday of Memorial Day weekend through October 31</b>; the Firehole, the Gibbon below the bridge and the Madison above the state line open <b>May 1</b>, and the Madison below the state line and the Gardner from Osprey Falls down are <b>open year-round</b>. Tackle is <b>lead-free artificial lures or flies only, barbless or barbs pinched</b> — no bait — and up to two flies on a leader; the Firehole, Madison and lower Gibbon are <b>fly fishing only</b>. <b>All native fish go back unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. In the <b>Lamar drainage</b> every rainbow, brook trout and cutthroat/rainbow hybrid <b>must be killed</b>, as must every lake trout from Yellowstone Lake. Closures and opening dates move year to year — check the park's current fishing regulations before you go.`,
+    ungauged:"Nine gauges cover the park's main rivers and none of them is on this one — most Yellowstone water is backcountry and ungauged, and the app won't put a number on it that isn't measured. The nearest gauged river below is the useful read: on this plateau the whole park rises and falls together with snowmelt, so a neighbouring drainage tracks this one far more closely than it would in farm country. Runoff usually has the park high and off-colour into late June, and the backcountry streams come into shape as it drops."},
+  grandteton: {sub:" · Grand Teton National Park", labelZoom:9, badge:"Grand Teton · Wyoming regs",
+    note:`From the National Park Service's Grand Teton fishing information, which follows <b>Wyoming Game &amp; Fish</b> regulations. Seasons and closures are re-issued every year — check the current Wyoming regulations, and carry a Wyoming licence.`,
+    lakeNote:`From the National Park Service's Grand Teton fishing information, which follows <b>Wyoming Game &amp; Fish</b> regulations. Bait is allowed on park lakes that aren't otherwise restricted — the artificial-only rule covers the streams. Seasons and limits are re-issued every year; check the current Wyoming regulations and carry a Wyoming licence.`,
+    licence:"<b>Wyoming</b> fishing licence (Grand Teton follows Wyoming regulations)",
+    regBody:"WY Game &amp; Fish and the park — Grand Teton takes a <b>Wyoming licence</b>, unlike Yellowstone",
+    footer:`🏔 <b>Grand Teton is not Yellowstone.</b> It takes a <b>Wyoming fishing licence</b> and is fished under <b>Wyoming regulations</b>, not a park permit of its own. The rule that shapes a season here: <b>park streams are closed December 1 – July 31</b>, so most of this water opens <b>August 1</b> — the exceptions the park names are the <b>Snake, Buffalo Fork, Pacific Creek, Gros Ventre and Polecat Creek</b>. Streams are <b>artificial flies or lures only</b> apart from those same five, the stream creel is three trout with no more than one over sixteen inches and no more than one cutthroat over twelve inches, and the lakes are six trout of which at most three may be cutthroat. Lakes are open year-round except Jackson Lake, which closes October 1–31. Check the current Wyoming Game &amp; Fish regulations before you go.`,
+    ungauged:"Only three gauges bear on Grand Teton's own water and none of them is on this one. Several of these creeks <i>have</i> USGS site numbers — Spread, Cottonwood, Ditch, Taggart, Pilgrim, Lake Creek — and not one has reported discharge since the 1990s or 2010, so there is nothing live to show. The nearest gauged water below is the useful read: these streams share one snowpack off the same range and rise and fall together. Remember the season here as well as the level — most park streams are shut until <b>August 1</b>."},
+  tetonvalley: {sub:" · Teton Valley", labelZoom:10, ...UPPER_SNAKE,
+    footer:UPPER_SNAKE_FOOTER + " The Teton Range canyons cross into <b>Wyoming</b> part-way up and a Wyoming licence is needed above the line — which is where this zone ends."},
+  swanvalley: {sub:" · Swan Valley", labelZoom:10, ...UPPER_SNAKE,
+    footer:UPPER_SNAKE_FOOTER + " Palisades Reservoir and its tributaries sit at the top of the valley; Big Elk Creek's drainage reaches into Wyoming."},
+  driftless: {sub:" · Driftless Area", labelZoom:10},
+  northshore: {sub:" · North Shore", labelZoom:10,
+    footer:`🌊 North Shore streams drop fast and cold straight off the ridge — spring steelhead runs are driven by snowmelt timing more than the calendar, so check current run reports before making the drive. Most access is <b>state park or DNR wayside</b> parking (many require a vehicle permit); a Minnesota <b>trout stamp</b> is required in addition to a fishing license. The Pigeon River and Grand Portage River cross into tribal or international jurisdiction — check current Grand Portage Band and Ontario licensing before fishing those reaches.`,
+    ungauged:"Most North Shore streams are too small to gauge — there's no live number for this one, and the app doesn't invent one. Judge it on arrival: <b>clarity</b> is the thing that matters most. These are rain- and snowmelt-driven freestone streams, not spring creeks — they blow out fast after a heavy rain or a warm melt day and can take several days to clear and drop back into shape, longer than a Driftless spring creek would."},
+  doorcounty: {sub:" · Door Peninsula", labelZoom:10,
+    footer:`🌊 Door County has <b>no USGS gauge anywhere in the county</b> — every stream here is ungauged on purpose, and the nearest gauged water is a long way off. These creeks are small and rain-driven: judge them on the water. Almost all of them are <b>Great Lakes tributary</b> water, which carries its own season, a 10" minimum, a hook-gap limit and a <b>night-fishing closure</b> from September 15 — read the current Wisconsin regs before you go.`,
+    ungauged:"There is <b>no USGS discharge gauge anywhere in Door County</b> — not on this creek and not on a neighbouring one — so there is no number to show and nothing close enough to borrow as a regional read. Nearly all of this water is short and rain-driven: <b>clarity and recent rain</b> are the whole story. On the Great Lakes tributaries the other half of the question is whether fish have run yet, which is driven by lake temperature and a rise in the creek, not by the calendar — a soaking rain in spring or from mid-September on is what turns them on."},
+});
+/* Regulation sources that are not PARK_INFO keys, and the row each one reads
+   instead. Deliberately not rows of their own: the Snake, Buffalo Fork, Gros
+   Ventre and the park creeks WGFD carries past the boundary have no region and
+   parkRegsSrc "grte", and a "grte" row would be found by every
+   PARK_INFO[r.parkRegsSrc] lookup -- handing them Grand Teton's footer as well.
+   Only the regulation fold's badge and note, the licence line and the
+   ungauged copy look here. */
+const REGS_SRC_ROW = {yell:"yellowstone", grte:"grandteton", idfg:"tetonvalley"};
+function regsSrcRow(r){ return PARK_INFO[REGS_SRC_ROW[r.parkRegsSrc]]; }
 /* Rivers that run through Grand Teton but carry no region of their own: the
    three Jackson Hole rivers, the park creeks WGFD's line carries on past the
    boundary, and the two WGFD streams that rise inside it. Each carries a
@@ -2209,11 +2269,6 @@ function makeTiledLayer({dir, minZoom, maxCells, pane, rowToMarker, filter}){
   return group;
 }
 
-/* Full state names for the popups below. */
-const TL_STATE = {ID:"Idaho", WY:"Wyoming", IA:"Iowa", MN:"Minnesota", WI:"Wisconsin", IL:"Illinois",
-  CA:"California", OR:"Oregon", WA:"Washington", MT:"Montana", CO:"Colorado", UT:"Utah", AK:"Alaska",
-  MI:"Michigan", SD:"South Dakota", NM:"New Mexico", AZ:"Arizona", NV:"Nevada"};
-
 /* ============================================================
    BRIDGE ACCESS — public-owned bridges over water (data/bridges/)
    FHWA National Bridge Inventory 2025, public owners only, canals and
@@ -2236,7 +2291,7 @@ function bridgePopupHTML(row){
     `<div class="tl-title">${fbEsc(water || "Unnamed waterway")}</div>`+
     (road ? `<div>${fbEsc(road)} bridge</div>` : `<div>Bridge</div>`)+
     `<div class="ag-note">${fbEsc(owner || "Public")}${year ? " · built " + fbEsc(year) : ""}</div>`+
-    (law ? `<div class="tl-label">Access from a bridge isn’t automatic — in ${fbEsc(TL_STATE[st] || st)}:</div>`+
+    (law ? `<div class="tl-label">Access from a bridge isn’t automatic — in ${fbEsc(STATE_NAME[st] || st)}:</div>`+
            `<div>${fbEsc(law.head)}</div>` : "")+
     `<div class="ag-note">Bridge location from the National Bridge Inventory; it is not a parking or access sign.</div></div>`;
 }
@@ -2699,19 +2754,10 @@ let curRiver = null;
 /* "Idaho", "Wisconsin · Driftless Area" — the sheet subtitle, shared with the
    Field Book rows so the two can't drift apart. */
 function riverPlace(r){
-  const stateName = {ID:"Idaho", WY:"Wyoming", IA:"Iowa", MN:"Minnesota", WI:"Wisconsin", IL:"Illinois",
-                     CA:"California", OR:"Oregon", WA:"Washington", MT:"Montana",
-                     CO:"Colorado", UT:"Utah", AK:"Alaska", MI:"Michigan", SD:"South Dakota",
-                     NM:"New Mexico", AZ:"Arizona", NV:"Nevada"}[r.state] || r.state;
-  const subRegion = {driftless:" · Driftless Area", northshore:" · North Shore",
-                     doorcounty:" · Door Peninsula",
-                     yellowstone:" · Yellowstone National Park",
-                     grandteton:" · Grand Teton National Park",
-                     tetonvalley:" · Teton Valley", swanvalley:" · Swan Valley"}[r.region]
-                    || (PARK_INFO[r.region] && PARK_INFO[r.region].sub)
+  const subRegion = (PARK_INFO[r.region] && PARK_INFO[r.region].sub)
                     // Iowa water trails run statewide now, so "Central" no longer fits them all
                     || (r.state==="IA" && r.region!=="driftless" && r.waterTrail ? " · Water trail" : "");
-  return stateName + subRegion;
+  return (STATE_NAME[r.state] || r.state) + subRegion;
 }
 function riverStateName(r){ return riverPlace(r).split(" · ")[0]; }
 
@@ -2764,15 +2810,10 @@ function tierChipHTML(r){
    do with it — a Wyoming or Montana licence is not valid in Yellowstone, and
    pointing a reader at Game & Fish for these rivers would be actively wrong. */
 function regBodyFor(r){
-  return PARK_INFO[r.region] ? PARK_INFO[r.region].regBody
-    : r.region==="yellowstone"
-    ? "the National Park Service (a state fishing licence is <b>not</b> valid in the park)"
-    : r.region==="grandteton"
-    ? "WY Game &amp; Fish and the park — Grand Teton takes a <b>Wyoming licence</b>, unlike Yellowstone"
-    : (r.region==="tetonvalley" || r.region==="swanvalley")
-    ? "Idaho Fish &amp; Game (Upper Snake Region)"
-    : {IA:"the Iowa DNR", MN:"the Minnesota DNR", WI:"the Wisconsin DNR", IL:"the Illinois DNR", ID:"Idaho Fish &amp; Game", WY:"Wyoming Game &amp; Fish"}[r.state]
-      || "WY Game &amp; Fish / Idaho Fish &amp; Game";
+  return (PARK_INFO[r.region] && PARK_INFO[r.region].regBody)
+    // no row, or a row that leaves it to the state (the Driftless, North Shore, Door County)
+    || {IA:"the Iowa DNR", MN:"the Minnesota DNR", WI:"the Wisconsin DNR", IL:"the Illinois DNR", ID:"Idaho Fish &amp; Game", WY:"Wyoming Game &amp; Fish"}[r.state]
+    || "WY Game &amp; Fish / Idaho Fish &amp; Game";
 }
 
 /* "Rules today": the three things you need standing at the river — is it in
@@ -2784,12 +2825,13 @@ function regBodyFor(r){
    reserved for closed water on the map. */
 /* State stream-access law: whether you may wade a private streambed is a
    state rule, not a fishing rule, so it gets its own row. Park water is
-   federal land and the state's streambed law doesn't govern it. State rows in
-   PARK_INFO have sub:"" and do get the row. fbEsc is declared further down but
-   only called at render time, well after it exists. */
+   federal land and the state's streambed law doesn't govern it. A park is
+   known by its row's sub ("· Yellowstone National Park"); state and valley
+   rows ("", "· Teton Valley", "· Driftless Area") do get the row. fbEsc is
+   declared further down but only called at render time, well after it exists. */
 function stateLaw(r){
   const pi = PARK_INFO[r.region];
-  if(r.region==="yellowstone" || r.region==="grandteton" || (pi && /National Park|Park Complex/.test(pi.sub||""))) return null;
+  if(pi && /National Park|Park Complex/.test(pi.sub||"")) return null;
   return (typeof ACCESS_LAW!=="undefined" && ACCESS_LAW[r.state]) || null;
 }
 /* On Driftless and Door County water the question standing at the creek is
@@ -2849,6 +2891,22 @@ function desigHTML(id){
     `<span class="rc-dsub"><a href="${fbEsc(s.url)}" target="_blank" rel="noopener">${fbEsc(s.by)}</a> · ${fbEsc(d.reach)}</span></div>`;
 }
 
+/* The licence line where no row states one: the Upper Midwest and the
+   original Idaho and Wyoming rivers. It goes by state, and then by whether the
+   water takes the state's trout fee or stamp -- which differs inside one
+   region (a Minnesota North Shore stream needs the stamp; a Wisconsin one only
+   if it is classified trout water), so it can't be one string per row. */
+function stateLicence(r){
+  const dn = r.region==="driftless" || r.region==="northshore";
+  return r.state==="IA" ? (r.region==="driftless" ? "<b>Iowa</b> fishing licence + trout fee for trout water" : "<b>Iowa</b> fishing licence")
+       : r.state==="MN" ? "<b>Minnesota</b> fishing licence" + (dn ? " + trout stamp" : "")
+       : r.state==="WI" ? "<b>Wisconsin</b> fishing licence" + (r.troutClass || r.region==="driftless" || r.region==="doorcounty" ? " + trout stamp" : "")
+       : r.state==="IL" ? "<b>Illinois</b> fishing licence"
+       : r.state==="ID" ? "<b>Idaho</b> fishing licence"
+       : r.state==="WY" ? "<b>Wyoming</b> fishing licence"
+       : `Licence: see ${regBodyFor(r)}`;
+}
+
 function rulesCardHTML(r){
   const m = new Date().getMonth() + 1;
   const e = TIERS[r.id], s = e && e.season, closed = s && s.closed && s.closed.length ? s.closed : null;
@@ -2896,25 +2954,11 @@ function rulesCardHTML(r){
 
   /* A river with no region (Wyoming's WGFD streams) finds its row through
      parkRegsSrc. Every existing parkRegsSrc that names a PARK_INFO row
-     equals the river's own region, so this changes nothing for them. */
-  const piRow = PARK_INFO[r.region] || PARK_INFO[r.parkRegsSrc];
-  let lic = piRow && piRow.licence;
-  const src = r.parkRegsSrc || (r.region==="yellowstone" ? "yell" : "");
-  if(!lic){
-    if(r.region==="yellowstone") lic = "Yellowstone park fishing permit — a state licence is <b>not</b> valid";
-    else if(r.region==="grandteton" || src==="grte") lic = "<b>Wyoming</b> fishing licence (Grand Teton follows Wyoming regulations)";
-    else if(r.region==="tetonvalley" || r.region==="swanvalley") lic = "<b>Idaho</b> fishing licence — Idaho Fish &amp; Game, Upper Snake Region";
-    else {
-      const dn = r.region==="driftless" || r.region==="northshore";
-      lic = r.state==="IA" ? (r.region==="driftless" ? "<b>Iowa</b> fishing licence + trout fee for trout water" : "<b>Iowa</b> fishing licence")
-          : r.state==="MN" ? "<b>Minnesota</b> fishing licence" + (dn ? " + trout stamp" : "")
-          : r.state==="WI" ? "<b>Wisconsin</b> fishing licence" + (r.troutClass || r.region==="driftless" || r.region==="doorcounty" ? " + trout stamp" : "")
-          : r.state==="IL" ? "<b>Illinois</b> fishing licence"
-          : r.state==="ID" ? "<b>Idaho</b> fishing licence"
-          : r.state==="WY" ? "<b>Wyoming</b> fishing licence"
-          : `Licence: see ${regBodyFor(r)}`;
-    }
-  }
+     equals the river's own region, so this changes nothing for them. The
+     Snake and the other region-less rivers under Grand Teton's rules read
+     the park's line through REGS_SRC_ROW. */
+  const piRow = PARK_INFO[r.region] || PARK_INFO[r.parkRegsSrc], srcRow = regsSrcRow(r);
+  const lic = (piRow && piRow.licence) || (srcRow && srcRow.licence) || stateLicence(r);
 
   /* Tags are phrase matches in this river's own rule text, not interpretations,
      and a tag may apply to one reach only. State rivers' parkRegs end with the
@@ -3063,23 +3107,18 @@ function regsFoldHTML(r){
      most useful thing here: Yellowstone issues its own permit and a state
      licence is void there, while Grand Teton is Wyoming water with a Wyoming
      licence. The Snake, Buffalo Fork and Gros Ventre carry a Grand Teton note
-     without being in that region, so the source is a field. */
+     without being in that region, so the source is a field: the badge and
+     note come from the row the source names (through REGS_SRC_ROW where it
+     isn't a row itself), else from the river's region. */
   if(r.parkRegs){
-    const src = r.parkRegsSrc || (r.region==="yellowstone" ? "yell" : "grte");
-    const pk = PARK_INFO[src];
-    const badge = pk ? pk.badge : src==="idfg" ? "Idaho Fish &amp; Game"
-                : src==="grte" ? "Grand Teton · Wyoming regs" : "National Park Service";
-    const note  = pk ? pk.note : src==="idfg"
-      ? `From Idaho Fish &amp; Game's <b>2025–2027 Seasons &amp; Rules</b>, Upper Snake Region. Idaho re-issues the book every two years and the special-rule list changes with it — check the current one before you fish.`
-      : src==="grte"
-      ? `From the National Park Service's Grand Teton fishing information, which follows <b>Wyoming Game &amp; Fish</b> regulations. Seasons and closures are re-issued every year — check the current Wyoming regulations, and carry a Wyoming licence.`
-      : `From the park's <b>2026</b> fishing regulations. Seasons, closures and possession limits are re-issued every year and streams close on short notice in low water — read the current edition before you fish, and carry your park permit.`;
+    const src = r.parkRegsSrc || r.region;
+    const pk = PARK_INFO[REGS_SRC_ROW[src] || src] || {};
     const u = unfoldRegs(r.parkRegs);
     count = u.count;
     inner += `<div class="fishnote">`+
-      `<span class="badge" style="background:#4a6f8a">${badge}</span> `+
+      (pk.badge ? `<span class="badge" style="background:#4a6f8a">${pk.badge}</span> ` : "")+
       `<span style="font-size:11.5px">${u.html}</span>`+
-      `<div class="rg-src">${note}</div>`+
+      (pk.note ? `<div class="rg-src">${pk.note}</div>` : "")+
       `</div>`;
   }
   inner += stateLawFoldHTML(r);
@@ -3372,28 +3411,14 @@ function renderSheet(r){
   h += reportSearchHTML(r);
   const regBody = regBodyFor(r);
   h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Flow data: USGS Water Data OGC API${r.state==="CO"?" and Colorado Division of Water Resources":""}. River lines simplified — not for navigation. Verify regulations with ${regBody}.</p>`;
-  /* No Driftless footer: the easement rule is the card's access row, the
+  /* The footer is the row's (a region-less WGFD stream's by parkRegsSrc).
+     No Driftless footer: the easement rule is the card's access row, the
      trout fee is on its licence line, and the special-regulation stretches
-     are in the Regulations fold. */
-  if(r.region==="northshore"){
-    h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🌊 North Shore streams drop fast and cold straight off the ridge — spring steelhead runs are driven by snowmelt timing more than the calendar, so check current run reports before making the drive. Most access is <b>state park or DNR wayside</b> parking (many require a vehicle permit); a Minnesota <b>trout stamp</b> is required in addition to a fishing license. The Pigeon River and Grand Portage River cross into tribal or international jurisdiction — check current Grand Portage Band and Ontario licensing before fishing those reaches.</p>`;
-  }
-  if(r.region==="tetonvalley" || r.region==="swanvalley"){
-    h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🐟 <b>Idaho's cutthroat programme runs both these valleys.</b> On the Teton and the South Fork and their tributaries there is <b>no harvest of cutthroat trout</b> and <b>no limit at all on rainbow trout or hybrids</b> — non-native rainbows displace and interbreed with the native Yellowstone cutthroat, so the state protects one and turns the other loose. The <b>tributaries close June 1–30</b> for the spawning run while the mainstems stay open; Upper Snake water is otherwise open all year. Brook trout are limited to 25 and bull trout are catch-and-release region-wide. ${r.region==="tetonvalley" ? "The Teton Range canyons cross into <b>Wyoming</b> part-way up and a Wyoming licence is needed above the line — which is where this zone ends." : "Palisades Reservoir and its tributaries sit at the top of the valley; Big Elk Creek's drainage reaches into Wyoming."}</p>`;
-  }
-  if(r.region==="grandteton"){
-    h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🏔 <b>Grand Teton is not Yellowstone.</b> It takes a <b>Wyoming fishing licence</b> and is fished under <b>Wyoming regulations</b>, not a park permit of its own. The rule that shapes a season here: <b>park streams are closed December 1 – July 31</b>, so most of this water opens <b>August 1</b> — the exceptions the park names are the <b>Snake, Buffalo Fork, Pacific Creek, Gros Ventre and Polecat Creek</b>. Streams are <b>artificial flies or lures only</b> apart from those same five, the stream creel is three trout with no more than one over sixteen inches and no more than one cutthroat over twelve inches, and the lakes are six trout of which at most three may be cutthroat. Lakes are open year-round except Jackson Lake, which closes October 1–31. Check the current Wyoming Game &amp; Fish regulations before you go.</p>`;
-  }
-  if(r.region==="yellowstone"){
-    h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🏞 <b>Yellowstone runs its own fishery.</b> A <b>park fishing permit</b> is required at 16 and over and a state licence is not valid — $40 for three days, $55 for seven, $75 for the season, through Recreation.gov. The standard season is the <b>Saturday of Memorial Day weekend through October 31</b>; the Firehole, the Gibbon below the bridge and the Madison above the state line open <b>May 1</b>, and the Madison below the state line and the Gardner from Osprey Falls down are <b>open year-round</b>. Tackle is <b>lead-free artificial lures or flies only, barbless or barbs pinched</b> — no bait — and up to two flies on a leader; the Firehole, Madison and lower Gibbon are <b>fly fishing only</b>. <b>All native fish go back unharmed</b> — cutthroat, mountain whitefish, Arctic grayling. In the <b>Lamar drainage</b> every rainbow, brook trout and cutthroat/rainbow hybrid <b>must be killed</b>, as must every lake trout from Yellowstone Lake. Closures and opening dates move year to year — check the park's current fishing regulations before you go.</p>`;
-  }
-  const piFoot = PARK_INFO[r.region] || PARK_INFO[r.parkRegsSrc];      // region-less WGFD streams: by parkRegsSrc
-  if(piFoot){
+     are in the Regulations fold. Door County's footer leaves out who owns the
+     bank for the same reason: that is the card's access row too. */
+  const piFoot = PARK_INFO[r.region] || PARK_INFO[r.parkRegsSrc];
+  if(piFoot && piFoot.footer){
     h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">${piFoot.footer}</p>`;
-  }
-  if(r.region==="doorcounty"){
-    h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">🌊 Door County has <b>no USGS gauge anywhere in the county</b> — every stream here is ungauged on purpose, and the nearest gauged water is a long way off. These creeks are small and rain-driven: judge them on the water. Almost all of them are <b>Great Lakes tributary</b> water, which carries its own season, a 10" minimum, a hook-gap limit and a <b>night-fishing closure</b> from September 15 — read the current Wisconsin regs before you go.</p>`;
-    // (who owns the bank is the card's access row now, not a footer line)
   }
   // The Iowa low-head-dam warning is in the rules card (damWarnHTML), not down here.
   body.innerHTML = rulesCardHTML(r) + regsFoldHTML(r) + h +
@@ -3529,25 +3554,19 @@ function noGaugeHTML(r){
     proxy = `<div class="plain" style="margin-top:8px">${said}
       <button class="zoom" data-river="${near.id}" style="margin-top:8px">Open ${near.name.split("—")[0].trim()} →</button></div>`;
   }
-  /* Door County has no gauge at all — not on these creeks, not anywhere in
-     the county — and nearestGaugedRiver() stays inside a region, so there is
-     deliberately no proxy reading offered here. The note says so rather than
-     leaving an empty card that looks like a loading failure. */
-  const piUng = PARK_INFO[r.region] || PARK_INFO[r.parkRegsSrc];      // region-less WGFD streams: by parkRegsSrc
-  const ungaugedNote = piUng ? piUng.ungauged
-    : (r.region==="tetonvalley" || r.region==="swanvalley")
-    ? "No gauge on this creek — in these two valleys the gauges are on the mainstems, and that is the right place to look anyway. Both rivers run through irrigated valleys, so late summer flow here is as much about diversions as about snowpack, and the tributaries drop and warm well before the river does. The nearest gauged water below is the useful read; remember the <b>June 1–30 closure</b> on the tributaries as well as the level."
-    : (r.region==="grandteton" || r.parkRegsSrc==="grte")      // incl. park creeks extended past the boundary
-    ? "Only three gauges bear on Grand Teton's own water and none of them is on this one. Several of these creeks <i>have</i> USGS site numbers — Spread, Cottonwood, Ditch, Taggart, Pilgrim, Lake Creek — and not one has reported discharge since the 1990s or 2010, so there is nothing live to show. The nearest gauged water below is the useful read: these streams share one snowpack off the same range and rise and fall together. Remember the season here as well as the level — most park streams are shut until <b>August 1</b>."
-    : r.region==="yellowstone"
-    ? "Nine gauges cover the park's main rivers and none of them is on this one — most Yellowstone water is backcountry and ungauged, and the app won't put a number on it that isn't measured. The nearest gauged river below is the useful read: on this plateau the whole park rises and falls together with snowmelt, so a neighbouring drainage tracks this one far more closely than it would in farm country. Runoff usually has the park high and off-colour into late June, and the backcountry streams come into shape as it drops."
-    : r.region==="doorcounty"
-    ? "There is <b>no USGS discharge gauge anywhere in Door County</b> — not on this creek and not on a neighbouring one — so there is no number to show and nothing close enough to borrow as a regional read. Nearly all of this water is short and rain-driven: <b>clarity and recent rain</b> are the whole story. On the Great Lakes tributaries the other half of the question is whether fish have run yet, which is driven by lake temperature and a rise in the creek, not by the calendar — a soaking rain in spring or from mid-September on is what turns them on."
-    : r.waterTrail      // the default below is about Driftless spring creeks, and wrong for paddling water
+  /* The copy is the row's: the river's region, else its regulation source
+     (region-less WGFD streams; and through REGS_SRC_ROW, Grand Teton's for the
+     park creeks carried on past the boundary). Door County has no gauge at
+     all — not on these creeks, not anywhere in the county — and
+     nearestGaugedRiver() stays inside a region, so there is deliberately no
+     proxy reading offered there; its row says so rather than leaving an empty
+     card that looks like a loading failure. The Driftless row has no copy of
+     its own: its text is the default below, after the water-trail one. */
+  const piUng = PARK_INFO[r.region] || PARK_INFO[r.parkRegsSrc], srcUng = regsSrcRow(r);
+  const ungaugedNote = (piUng && piUng.ungauged) || (srcUng && srcUng.ungauged)
+    || (r.waterTrail      // the default below is about Driftless spring creeks, and wrong for paddling water
     ? "There's no live USGS discharge gauge on this water trail, and the app doesn't invent a number for it. The nearest gauged river below is only a rough read on how wet the region is — a different river, not this one's level. Look at the water at the access before you put in."
-    : r.region==="northshore"
-    ? "Most North Shore streams are too small to gauge — there's no live number for this one, and the app doesn't invent one. Judge it on arrival: <b>clarity</b> is the thing that matters most. These are rain- and snowmelt-driven freestone streams, not spring creeks — they blow out fast after a heavy rain or a warm melt day and can take several days to clear and drop back into shape, longer than a Driftless spring creek would."
-    : "Most Driftless spring creeks are too small to gauge — there's no live number for this one, and the app doesn't invent one. Judge it on arrival: <b>clarity</b> is the thing that matters most. If you can see the bottom in two feet of water it's on; chocolate-brown after a storm means give it a day or two. Spring-fed creeks clear far faster than the bigger freestone rivers, and often fish well the day after rain that has the mainstems blown out.";
+    : "Most Driftless spring creeks are too small to gauge — there's no live number for this one, and the app doesn't invent one. Judge it on arrival: <b>clarity</b> is the thing that matters most. If you can see the bottom in two feet of water it's on; chocolate-brown after a storm means give it a day or two. Spring-fed creeks clear far faster than the bigger freestone rivers, and often fish well the day after rain that has the mainstems blown out.");
   /* On the small-stream regions nearly every creek is ungauged, and the
      card's whole message is one line. The nearby river's reading (a
      different stream, and labelled so before it is even opened) and the
