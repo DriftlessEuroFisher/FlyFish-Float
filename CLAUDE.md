@@ -1442,10 +1442,47 @@ only state-specific file; see `west2/README.md`.
   lie ≥50% inside the entry's county, using cached Census county polygons.
   45 entries were skipped, not guessed: no line, ambiguous inside the county,
   or park-only. Colorado zone count 43 → 224. Reasons are in `west2/build_co.log`.
-- **`apply.py` now writes one fence for every state: run `python3 apply.py mt co`**
+- **`apply.py` now writes one fence for every state: run `python3 apply.py mt co ut`**
   (plus each new state). Running it with one state drops the others' rivers.
-- Next states: Utah (~30, `ut_entries.json`), then California, Oregon and
-  Washington, whose full heading lists still need parsing from their booklets.
+  It writes the fence back where it sat, and it writes `season` windows.
+- **Utah done (2026-10-13): 39 streams** (ids ending `ut2`) from DWR's 2026
+  "Rules for specific waters", using county-disambiguated names like Colorado's
+  (`gen_ut.py`, `fetch_counties.py`). Utah zone count 34 → 73.
+  - **"See X" headings are real entries.** The sheet says "The booklet lists
+    this water under X" and shows X's text verbatim.
+  - **Not built:** streams named only inside another entry's body (the
+    Dolores, Dirty Devil, lower Duchesne…, listed in `skipped_ut.txt`), and
+    group "… tributaries" headings that name no stream.
+  - **Squaw Creek is GNIS "Kweeyahgut Creek"** (renamed under Secretary's
+    Order 3404). It is drawn under the new name and labelled with the
+    booklet's.
+  - **Season windows only where the entry closes the whole stream**
+    (15 rivers; Indian and Squaw Creeks are closed all year, tier 3).
+  - **Partial closures use `season.partClosed`** (with `partWhy` and
+    `partReach`, verbatim). It never changes the tier or hides the river.
+    The rules card says "Part of this stream is closed" in the window, "…
+    opens or closes this month" next to it, and "In season · part closes …"
+    otherwise. Only Otter Creek carries it (its drawn line lies outside its
+    closed reach), written by `gen_ut.py`'s `PART` table through `apply.py`,
+    never by hand. Duck Fork, Gooseberry and Swan Creeks are whole-stream
+    `closed` windows (`SEASON` table; tier 2, Other only in the closed
+    months, like Bryants Fork) because their drawn lines lie
+    wholly inside closed water; Gooseberry's entry states a reach, so its
+    `SEASON` row carries `within=True`, which waives `season_ok()`'s no-reach rule.
+  - **Lower Fish Creek is not drawn.** OSM and GNIS call that reach the
+    Price River, which `priceriver` already covers.
+  - **Open on rivers mapped earlier:** `priceriver`'s top reach is the
+    booklet's Lower Fish Creek (Blue Ribbon, artificial only), but its sheet
+    says "Not listed". About 22 km of `strawberryriver` is above the
+    reservoir, under Strawberry Reservoir tributaries (part closed all
+    year), and its sheet doesn't say so. East Fork Boulder Creek is Blue
+    Ribbon but not in `designations.js`. The Utah zone `bounds` stop short
+    of the Santa Clara and the lower Virgin.
+- **Never run a full `flowdir.py` after these builds.** It rewrites
+  `flowrev_osm.json` and drops about 103 entries (mostly the Iowa DNR trout
+  streams) that the other apply scripts read back. Use `--only <ids>`.
+- Next states: California, Oregon and Washington, whose full heading lists
+  still need parsing from their booklets.
 - **Helpers must never disable the sandbox.** The Montana run did, to reach
   Overpass mirrors. If a network endpoint is blocked, stop and report.
 

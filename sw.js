@@ -8,7 +8,7 @@
      and a background fetch refreshes it, so a rebuilt layer reaches phones
      on the next visit instead of never.
    Every URL here is relative: the site lives at a sub-path on GitHub Pages. */
-const VERSION = "flyroutes-v15";
+const VERSION = "flyroutes-v16";
 const TILES_BROWSE = "tiles-browse", TILES_SAVED = "tiles-saved", DATA_TILES = "data-tiles";
 const TOPO = "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/";
 const LEAFLET = [

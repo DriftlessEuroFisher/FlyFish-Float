@@ -2853,15 +2853,38 @@ function rulesCardHTML(r){
   const m = new Date().getMonth() + 1;
   const e = TIERS[r.id], s = e && e.season, closed = s && s.closed && s.closed.length ? s.closed : null;
   const hasText = !!(r.parkRegs || r.troutRegs);
+  /* A closure on one reach only (partClosed in tiers.js): the stream keeps its
+     class and its place on the map, and only this row says part of it is shut.
+     The closure sentence and the reach are the booklet's own words. The card
+     points to "the rules below" for the reach only where that text states it;
+     otherwise it gives the reach itself. */
+  const partWin = !closed && s && s.partClosed && s.partClosed.length ? s.partClosed : null;
+  const edge = wins => wins.some(([a,b]) => m === (a===1 ? 12 : a-1) || m === (b%12)+1);   // the month either side
+  const sent = t => /[.!?]$/.test(t) ? t : t + ".";
   let dot = "", head = "", sub = "";
   if(closed && inWindow(m, closed)){
     dot = "#9a4a2e"; head = "Closed season";
     sub = `Closed ${winText(closed)}${s.why ? " — "+s.why : ""}`;
-  } else if(closed && closed.some(([a,b]) => m === (a===1 ? 12 : a-1) || m === (b%12)+1)){
+  } else if(closed && edge(closed)){
     dot = "#c48a17"; head = "Season opens or closes this month";
     sub = `Closed ${winText(closed)}. Check the exact date in the rules below.`;
   } else if(closed){
     dot = "#2f7d4f"; head = "In season"; sub = `Closed ${winText(closed)}`;
+  } else if(partWin){
+    const w = winText(partWin), reach = s.partReach ? fbEsc(s.partReach) : "", why = s.partWhy ? fbEsc(s.partWhy) : "";
+    const plain = ((r.parkRegs || "") + " " + (r.troutRegs || "")).replace(/<[^>]*>/g, " ").replace(/&amp;/g, "&").replace(/\s+/g, " ");
+    const inRules = !!s.partReach && plain.includes(s.partReach);
+    if(inWindow(m, partWin)){
+      dot = "#c48a17"; head = "Part of this stream is closed";
+      sub = `Closed ${w} on part of this stream${reach ? ": "+sent(reach) : "."}${why ? " "+sent(why) : ""} The rest is open.`+
+            (inRules ? " The rules below give the reach." : "");
+    } else if(edge(partWin)){
+      dot = "#c48a17"; head = "Part of this stream opens or closes this month";
+      sub = `Closed ${w} on part of this stream` +
+            (reach && !inRules ? `: ${sent(reach)} Check the exact date in the rules below.` : ". Check the exact date and reach in the rules below.");
+    } else {
+      dot = "#2f7d4f"; head = "In season"; sub = `Part of this stream closes ${w}${reach ? ": "+sent(reach) : "."}`;
+    }
   } else if(openAllYear(r)){
     dot = "#2f7d4f"; head = "Open all year";
   } else if(!hasText){
@@ -4032,7 +4055,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v15";
+const APP_VERSION = "flyroutes-v16";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){

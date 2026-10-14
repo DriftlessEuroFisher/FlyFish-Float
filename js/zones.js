@@ -2750,7 +2750,7 @@ const ZONES = [
     ]
   },
   {
-    id:"ut", kind:"state", count:34,
+    id:"ut", kind:"state", count:73,
     label:"Utah", short:"Utah", sub:"Green River, the Provo & the Wasatch",
     bounds:[[37.2887,-112.8500],[41.9995,-109.0643]],
     rings:[

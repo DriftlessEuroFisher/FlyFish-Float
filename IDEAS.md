@@ -115,8 +115,15 @@ without scrolling past a repeat.
 ### Rulebook streams, every western state — `building`
 Every stream with its own entry in the state's 2026 regulations, one state
 per session (CLAUDE.md, "Rulebook streams"). Montana done (93, 7d267c5),
-Colorado done (181, 29dc687). Next: Utah (~30), then California, Oregon,
-Washington, and New Mexico, Arizona, Nevada, Idaho and Wyoming.
+Colorado done (181, 29dc687), Utah done (39, 2026-10-13, uncommitted). Next:
+California, Oregon, Washington, and New Mexico, Arizona, Nevada, Idaho and
+Wyoming.
+- **Utah, for the owner to decide:** whether to build the streams named only
+  inside other entries (Dolores, Dirty Devil, lower Duchesne, Brush Creek,
+  San Rafael, the Huntington and UM Creek forks…, full list in
+  `west2/skipped_ut.txt`), and whether to add season windows on four
+  reach-qualified closures (Swan, Duck Fork, Gooseberry, Otter Creeks).
+  Fix `priceriver` and `strawberryriver` sheets (see CLAUDE.md).
 
 ### Welcome card and guided tour — `done` (5327238, 2026-10-07)
 Owner's request: welcome new users, say honestly which regions get the most
@@ -142,7 +149,177 @@ tested. Proposed, awaiting the owner's answer:
    CLAUDE.md rule that trout regulations drive the line colour, but only in
    the pilot regions.
 
-### Float leaderboards — `ready` (decided 2026-10-07; build in a fresh session)
+### Server roadmap: accounts, community access points, admin — `refining` (raised 2026-10-13)
+**Source:** the owner's eight-step list. It has two purposes: build the app
+out, and **learn skills reusable for small-business client tools**. So each
+step ends with a short "what we did and why" note in `supabase/README.md`
+(RLS, auth flow, storage policies, deploy), written so it can be lifted into a
+client project. Claude explains the reasoning as it builds. One step per
+session, finished before the next (CLAUDE.md, "How we work").
+
+**This consolidates and supersedes** *Community access points with on-site
+verification*, *Top-rated access areas* (viable now that there are accounts)
+and the account half of *Angler profile*. It is the shared base for *Float
+leaderboards*, which reuses step 1's login and profile instead of building
+its own. *Waypoints with photos* stays a separate, on-phone-only idea.
+
+**Decisions this takes (the "fork in the road", branch 2):** the app gains a
+small server, so CLAUDE.md's "no backend" rule is rewritten when step 1
+ships: the app stays a static, no-build site, and only accounts and
+community content talk to Supabase. **The signed-out app stays fully
+usable.** Login is needed only to submit, rate, verify or post. The Field
+Book stays on the phone.
+
+**Already in place:** a Supabase project (`kbdrxtyacmihabwadzzz`), the
+publishable key in `js/config.js`, the insert-only `reports` table, the
+keep-alive workflow and a `supabase/` folder of SQL files. **Reuse the
+project; don't create a second one.** Remember the project grants no table
+access by default: every table needs an explicit `grant` plus RLS.
+
+**Refinements to the order.** Steps 1–8 stay in the owner's order, with one
+recommendation:
+- **Step 4 (deploy and domain) should be decided first, even if built
+  later.** Supabase's login redirect URLs and the email sender both need the
+  final domain, and every origin change costs users their on-phone data
+  (see step 4).
+
+#### 1. Login and profiles — `ready`
+- **Supabase Auth, email only.** Sign-up, login and logout from one form.
+  **Recommend a 6-digit email code, not a clickable magic link.** On an
+  iPhone, a link in the mail app opens Safari, and a home-screen web app has
+  separate storage from Safari, so the session would land in the wrong place
+  and the installed app would stay signed out. A code typed into the app
+  avoids that. Email + password is the alternative; it means we store and
+  reset passwords. Owner to choose. Google/Apple sign-in is later.
+- **Profile:** a `profiles` table keyed to the auth user: `display_name`,
+  `created_at`. Created by a database trigger on sign-up. **Only the display
+  name is ever visible to other users; the email never is.** Owners can edit
+  their own row only (RLS).
+- **UI:** an account button in the header beside the Field Book; a sheet for
+  sign-in, profile and sign-out. Include **delete my account** (privacy,
+  and a skill clients will ask for).
+- **Session:** `supabase-js` from a pinned CDN script (no build step), or
+  plain `fetch` like the report form. `sw.js` must not intercept Supabase
+  calls.
+- **Teaches:** auth flow, RLS, triggers, why the anon key is safe.
+- **Builder:** `build-opus-xhigh` (login and permissions).
+
+#### 2. User-submitted access points — `refining`
+- **Table `access_points`:** `id`, `user_id` (default `auth.uid()`),
+  `river_id` (nullable), `name`, `lat`, `lng`, `type` (launch, parking,
+  bridge, wade access), `notes`, `status`, `created_at`. RLS: read what is
+  visible; insert as yourself; edit or delete your own while unverified.
+- **Pick the location by tapping the map or "use my location"**, then snap to
+  the nearest mapped river within a stated distance (the existing
+  nearest-river logic) and **check the point against PAD-US**. Warn when the
+  land is private or unknown.
+- **Trespass is the real risk** (from the earlier community-pin note), so
+  these ship with the first public pin, not after it:
+  - Report button on every pin; hide automatically after N reports.
+  - A landowner removal path (an email link).
+  - Short community guidelines and terms.
+  - Rate limits per user per day, and CAPTCHA on sign-up.
+- **Moderation before step 8 exists:** new pins are `pending`, visible only
+  to their author and to you. Approve them in the Supabase dashboard until
+  the admin view is built.
+- **Verification** (needed by step 7's emails) is its own sub-design: 2–3
+  other users within ~100 yd on site, Verified / Disputed, last-verified date.
+  A browser can't prove where it is, so this raises the bar and isn't
+  security. Decide the rules before step 7.
+- **Builder:** `build-opus-xhigh` (permissions, a costly mistake).
+
+#### 3. Photos — `refining`
+- **Supabase Storage bucket**, path `{user_id}/{access_point_id}/{uuid}.jpg`;
+  table `photos` (`access_point_id`, `user_id`, `kind`: launch / parking /
+  bridge, `path`, `created_at`). Storage policy: you may write only inside
+  your own folder; cap the file size and allow images only.
+- **Resize on the phone before upload** (canvas, about 1600 px, JPEG).
+  Redrawing on a canvas also **strips EXIF, which carries GPS**, so a photo
+  can't leak where someone lives. State this on the upload button.
+- **Free-tier limits:** 1 GB storage and 5 GB a month of downloads, which
+  shapes how large photos can be. `sw.js` shouldn't cache them heavily.
+- Photos are `pending` like pins, with a report button, and admins can
+  delete one.
+- **Builder:** `build-opus-high`.
+
+#### 4. Deploy: Vercel, private repo, custom domain — `refining` (needs the owner's call)
+The app is a static site today on **GitHub Pages at a sub-path**, with every
+URL relative. Findings that change the plan:
+- **Moving origin costs users their phone data.** `localStorage` (Field Book,
+  floats, welcome flag), the offline tile cache and the home-screen install
+  are all per origin. A new domain means export, import and reinstall. **Do
+  it once, early, before more testers accumulate data.** Ship a "we've moved"
+  banner with Export on the old site first, and leave it up.
+- **Private repo:** GitHub Pages on a private repo needs a paid GitHub plan,
+  which is one reason to move. Vercel deploys from a private repo for free.
+- **Vercel Hobby is for personal, non-commercial use.** Fine for this app;
+  client tools would need Pro or another host. Netlify and Cloudflare Pages
+  are comparable.
+- **No build step stays.** Project preset "Other", no build command, output
+  directory is the repo root. A `vercel.json` sets headers (`sw.js` must not
+  be cached long) and nothing else.
+- Check the private repo first: nothing secret in `js/config.js` (publishable
+  key only) or in git history. **Pushing to main deploys.** The keep-alive
+  workflow stays in GitHub.
+- **Domain:** a few dollars a year. Needed before email (step 7) because the
+  sender domain has to be verified.
+- **Builder:** `build-opus-high` (service worker and origin).
+
+#### 5. Map of access points — `ready` (small, once 2 is in)
+Not a new map: a layer on the existing Leaflet map. **A ninth Map Icons chip,
+"Community access"**, in `LAYER_CHIPS`, off by default like the rest. Loaded
+by bounding box from zoom 11 straight from Supabase (RLS filters), cached for
+a few minutes. Verified pins draw solid, unverified with a dashed ring.
+River focus shows a river's own pins. Offline, show the last fetch. Once
+verified, Float Mode could use them as ramps.
+- **Builder:** `build-sonnet-high` (follows the existing layer pattern).
+
+#### 6. Search and filters — `refining`
+- **By river:** reuse the report form's river autocomplete.
+- **By rating:** needs a `ratings` table (one per user per point), distinct
+  from verification. Show the average with the count, and "no ratings yet"
+  rather than a blank.
+- **By distance:** straight-line from the location dot. If location is off,
+  say so instead of guessing. Sort by nearest. Drive time stays the separate
+  *Shuttle times* idea.
+- Also filter by type, craft (boat or wade) and verified. It lives in a "Find
+  access" sheet, not a toolbar.
+- **Builder:** `build-opus-high`.
+
+#### 7. Notifications and email — `refining` (blocked on step 2's verification rules and step 4's domain)
+- Triggers: your point verified, disputed or hidden; your photo removed.
+- **Supabase's built-in email is rate-limited and meant for testing.** For
+  real use it needs custom SMTP, such as Resend's free tier, on the verified
+  domain. Mechanism: database trigger → Edge Function → email.
+- Opt-in per type with an unsubscribe link, instant or a daily digest.
+  Emails never go to other users.
+- **An in-app notification list is the no-email alternative.** Web push on
+  iPhone works only for home-screen installs and is its own project.
+- **Builder:** `build-opus-high`.
+
+#### 8. Admin dashboard and roles — `refining`
+- **Roles** in a `user_roles` table: user, moderator (trusted verifier,
+  later) and admin. **Never store roles in `user_metadata`, which users can
+  edit.** Policies use a `security definer` `is_admin()` function, so a
+  non-admin's query returns nothing. Hiding a button isn't protection.
+- **`admin.html`** as a separate page (still no build). It shows:
+  - the moderation queue: pending pins and photos, reports, and the existing
+    `reports` table, which needs an admin read policy;
+  - counts only for usage: sign-ups, submissions a week, active users. No
+    third-party analytics.
+- **Never put the `service_role` key in the app** (CLAUDE.md). Anything that
+  needs it goes in an Edge Function. Turn on two-factor sign-in for your
+  admin account.
+- **Builder:** `build-opus-xhigh`.
+
+**Cross-cutting:** RLS and explicit grants on every table; migrations as SQL
+files in `supabase/`; a privacy policy and terms before any public content;
+free projects pause after about a week idle (the keep-alive covers that);
+update CLAUDE.md at the end of each step.
+
+### Float leaderboards — `ready` (decided 2026-10-07; build in a fresh session, after server step 1)
+**Update 2026-10-13:** reuses the login and profile from *Server roadmap*
+step 1 instead of its own sign-in.
 - **Problem:** make floating fun: who has floated the most miles on each river
   around Jackson, Pinedale and Swan Valley, and overall. To be expanded later.
 - **Decisions (2026-10-07):** this takes the server branch of *The fork in the
@@ -305,7 +482,7 @@ phone app. **Fit:** strong / medium / weak.
 - **Alternative:** the tiers already are picks. Add a "My notes" field per
   river (on the phone), and let your own picks become the expert layer.
 
-#### Top-rated access areas — `new` · fit: weak
+#### Top-rated access areas — `refining` · now step 6 of the *Server roadmap* · fit: weak without accounts, medium with them
 - **Problem:** ratings by other users need accounts and a server.
 - **Alternative:** personal stars on access points, stored on the phone, and
   sort by your own ratings.
@@ -534,7 +711,7 @@ the end of this batch.
   messages — it can't be done from a page on a phone that may have no
   signal.
 
-#### Community access points with on-site verification — `new` · fit: needs a server
+#### Community access points with on-site verification — `refining` · superseded by *Server roadmap* above (steps 2, 3, 5, 7); kept for the original notes · fit: needs a server
 - **Proposal (as written):** user pins with type, craft, parking, land
   status, photos, notes → Unverified; 2–3 independent verifiers physically
   within ~100 yd → Verified; Disputed on disagreement; last-verified dates,
