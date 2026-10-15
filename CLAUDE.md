@@ -1285,6 +1285,21 @@ Per-water ☆ Favourite / ✓ Fished / notes, on rivers **and lakes**, stored
   "now"** onto a typed-in or edited trip (editing the day or time turns a
   trip `manual`). An Undo toast (`#fbtoast`) follows each tap, and the
   Trips list edits, deletes and adds past trips.
+- **v2 part 2 (2026-10-15): a tap trip carries `cond`**, what the app
+  already had in memory at the tap (`fbSnapshot`): `cond.wx` = the NWS
+  hourly **forecast** period containing `at` (`{t,u,ws,wd,sf,s}`, shown as
+  "Forecast …", no gusts), and for rivers `cond.flow` = the primary gauge
+  `{g,cfs,time,st?,wtF?}` under the sheet's 24 h rule (`st` only for a real
+  bucket, `wtF` only for a fresh temperature; ungauged → none). No new
+  network calls. **Late forecast:** if it wasn't loaded, an in-memory
+  `fbWxPending` entry is settled by `fbWxSettle(pt)` at the end of
+  `wxLoad` — filled only if the trip is still the same tap and under 60
+  minutes old, else dropped (the row reads "Forecast loading…" meanwhile).
+  Editing day/time deletes `cond`; manual and migrated trips read
+  "Conditions not recorded". **Lakes:** an optional user-typed
+  "Water temp °F" (32–95) in the trip form, stored as `t.wtUser` on the
+  trip, not in `cond`, and allowed on manual trips because it's the user's
+  own reading. Shown in the Trips list by `fbCondHTML`.
 - Lake favourites and notes are keyed **`"lake:"+id`** in `rivers`, so a lake
   can't collide with a river. `fbShowRow(water, force, kind)` serves both;
   `openLake` shows the lake's own row (it used to leave the last river's).

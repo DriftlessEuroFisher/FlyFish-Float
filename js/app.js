@@ -1243,7 +1243,25 @@ let tierFilter = {gold:true, "1":true, "2":true, "3":false};
    src:"tap"|"manual"|"migrated", at, note?}. `at` is the epoch ms of the
    tap and is null for anything else: a later conditions snapshot belongs
    only to a trip logged at the water, never to one typed in afterwards.
-   `floats` belongs to float.js and is carried through untouched. */
+   `floats` belongs to float.js and is carried through untouched.
+
+   Part 2 (2026-10-15): a tap trip may carry `cond`, what the app knew at
+   the moment of the tap (fbSnapshot), and nothing else ever does:
+     cond.wx   = {t, u, ws, wd, sf, s} — the NWS hourly *forecast* period
+                 containing `at` (s = its start). A forecast, never a
+                 reading, and the Trips list says so.
+     cond.flow = {g, cfs, time, st?:{cls,label}, wtF?} — rivers only, the
+                 primary gauge's reading if it passes the 24 h rule; `st`
+                 only when there was a real status bucket, `wtF` (°F) only
+                 for a fresh water temperature. Ungauged → no `flow`.
+   An empty `cond` is left off. If the forecast wasn't loaded yet, the tap
+   leaves an in-memory pending fill (fbWxPending, never persisted): the next
+   forecast fetch for that point fills `cond.wx` only while the trip still
+   exists, is still that same tap and is under an hour old. Editing a trip's
+   day or time deletes `cond` — no backfilling "now" onto another moment.
+   `wtUser` (°F, lakes only) is the user's own typed water temperature. It
+   lives on the trip, not in `cond`, because it isn't the app's snapshot and
+   is allowed on any trip. */
 const FB_KEY = "fieldBook", FB_V1_KEY = "fieldBook_v1";
 let fbState = {v:2, rivers:{}, trips:[]};
 try{
@@ -1302,9 +1320,10 @@ function fbTrips(kind, water){
   return fbState.trips.filter(t => t.kind===kind && t.water===water).reverse()
     .sort((a,b) => fbTripSort(b).localeCompare(fbTripSort(a)));
 }
-function fbAddTrip(kind, water, day, time, src, at, note){
+function fbAddTrip(kind, water, day, time, src, at, note, wtUser){
   const t = {id:fbNewId(), kind, water, day, time:time||null, src, at:at||null};
   if(note && note.trim()) t.note = note.trim().slice(0, 500);
+  if(kind==="lake" && wtUser!=null && isFinite(wtUser)) t.wtUser = wtUser;
   fbState.trips.push(t);
   fbPersist();
   return t;
@@ -1314,18 +1333,22 @@ function fbDelTrip(id){
   fbState.trips = fbState.trips.filter(t => t.id!==id);
   if(fbState.trips.length!==n) fbPersist();
 }
-/* Only day, time and note can change. Moving a trip's day or time makes it a
-   manual entry: whatever was true at the moment of the tap no longer
-   describes it. */
+/* Only day, time, note and (lakes) the user's water temp can change. Moving a
+   trip's day or time makes it a manual entry: whatever was true at the moment
+   of the tap no longer describes it, so its conditions snapshot goes too.
+   A note or a water temp alone leaves a tap trip a tap trip. */
 function fbEditTrip(id, patch){
   const t = fbState.trips.find(x => x.id===id); if(!t) return null;
   if("day" in patch || "time" in patch){
     const day = "day" in patch ? patch.day : t.day, time = "time" in patch ? (patch.time||null) : t.time;
-    if(day!==t.day || time!==t.time){ t.day = day; t.time = time; t.src = "manual"; t.at = null; }
+    if(day!==t.day || time!==t.time){ t.day = day; t.time = time; t.src = "manual"; t.at = null; delete t.cond; }
   }
   if("note" in patch){
     const n = (patch.note||"").trim().slice(0, 500);
     if(n) t.note = n; else delete t.note;
+  }
+  if("wtUser" in patch && t.kind==="lake"){
+    if(patch.wtUser!=null && isFinite(patch.wtUser)) t.wtUser = patch.wtUser; else delete t.wtUser;
   }
   fbPersist();
   return t;
@@ -3382,6 +3405,7 @@ function wxLoad(target){
     }catch(e){ wxFailedAt[pt.id] = Date.now(); }
     finally{ delete wxBusy[pt.id]; }
     wxFill(target);
+    fbWxSettle(pt);           // here, not in a caller: a tap may be waiting on a fetch the sheet started
   })();
 }
 /* Only into the sheet it was asked for: the placeholder carries the river's
@@ -3391,6 +3415,74 @@ function wxFill(target){
   if(!el) return;
   const html = wxCardHTML(target);
   if(html) el.outerHTML = html; else el.remove();
+}
+
+/* ---------- Field Book: conditions at the tap ----------
+   What the app already knew when ✓ Fished was tapped — nothing is fetched
+   for it beyond what the sheet's own forecast load does. The forecast is the
+   hour containing the tap; the flow is the primary gauge under the same 24 h
+   rule the flow card uses, so an old number is never saved as that day's. */
+const FB_WX_LATE_MS = 60*60*1000;    // a forecast that arrives later than this no longer describes the tap
+const FB_ST_REAL = ["vlow","low","avg","high","vhigh"];
+const fbWxPending = [];              // {tripId, ptId, at} — this page only, never stored
+function fbWxTarget(kind, water){
+  return kind==="lake" ? {key:"lake:"+water.id, pt:wxLakePoint(water)}
+                       : {key:"river:"+water.id, pt:wxRiverPoint(water)};
+}
+function fbWxPeriodAt(pt, at){
+  const url = wxURLKnown(pt), fc = url ? wxCached(url) : null;
+  const p = fc && fc.periods.find(p => new Date(p.s).getTime() <= at && at < new Date(p.e).getTime());
+  return p ? {t:p.t, u:p.u, ws:p.ws, wd:p.wd, sf:p.sf, s:p.s} : null;
+}
+function fbSnapshot(kind, water, at){
+  const cond = {};
+  const wx = fbWxPeriodAt(fbWxTarget(kind, water).pt, at);
+  if(wx) cond.wx = wx;
+  if(kind==="river" && water.gauges.length){
+    const pg = primaryGaugeOf(water), f = flows[pg];
+    if(f && f.cfs!=null && !readingIsOld(f)){
+      const flow = {g:pg, cfs:Math.round(f.cfs), time:f.time};
+      const st = statusOf(pg);
+      if(FB_ST_REAL.includes(st.cls)) flow.st = {cls:st.cls, label:st.label};
+      const tp = temps[pg];
+      if(tp && tp.c!=null && !readingIsOld(tp)) flow.wtF = Math.round(tp.c * 9/5 + 32);
+      cond.flow = flow;
+    }
+  }
+  return Object.keys(cond).length ? cond : null;
+}
+/* Called once per tap. A forecast that isn't here yet is waited for only if
+   a fetch is actually going — otherwise nothing would ever settle it and the
+   row would say "loading" for an hour. */
+function fbSnapTrip(t, kind, water){
+  const cond = fbSnapshot(kind, water, t.at);
+  if(cond){ t.cond = cond; fbPersist(); }
+  if(cond && cond.wx) return;
+  const target = fbWxTarget(kind, water);
+  if(wxURLKnown(target.pt) === null) return;                  // outside NWS coverage
+  wxLoad(target);
+  if(wxBusy[target.pt.id]) fbWxPending.push({tripId:t.id, ptId:target.pt.id, at:t.at});
+}
+const fbWxIsPending = id => fbWxPending.some(p => p.tripId===id);
+/* A forecast fetch for this point has finished, well or badly. Every trip
+   waiting on it is filled or let go now, so none waits on a fetch that
+   will never come. */
+function fbWxSettle(pt){
+  const rows = new Set();
+  for(let i = fbWxPending.length - 1; i >= 0; i--){
+    const p = fbWxPending[i];
+    if(p.ptId !== pt.id) continue;
+    fbWxPending.splice(i, 1);
+    const t = fbState.trips.find(x => x.id===p.tripId);
+    if(!t) continue;
+    rows.add(t.kind + "|" + t.water);           // its row stops saying "Forecast loading…" either way
+    if(t.src!=="tap" || t.at!==p.at || (t.cond && t.cond.wx) || Date.now() - p.at >= FB_WX_LATE_MS) continue;
+    const wx = fbWxPeriodAt(pt, p.at);
+    if(!wx) continue;
+    t.cond = Object.assign(t.cond || {}, {wx});
+    fbPersist();
+  }
+  if(fbRowPaint && rows.has(fbRowFor)) fbRowPaint();
 }
 
 const wxTop = ws => Math.max(0, ...(String(ws).match(/\d+/g) || ["0"]).map(Number));   // "10 to 15 mph" -> 15
@@ -3904,15 +3996,45 @@ function fbRowHTML(e, trips, kind){
 }
 /* The date/time/note inputs shared by Edit and "+ Add a past trip". max=today
    is a hint to the picker; save checks it again because a typed date can
-   ignore it. */
-function fbTripFormHTML(t){
+   ignore it. A lake trip also takes the user's own water temperature: a lake
+   has no gauge, so the thermometer in their pocket is the only reading. */
+const FB_WT_MIN = 32, FB_WT_MAX = 95;
+function fbTripFormHTML(t, kind){
+  const wt = kind==="lake"
+    ? `<label><span>Water temp °F</span><input type="number" inputmode="decimal" step="any" min="${FB_WT_MIN}" max="${FB_WT_MAX}" class="fbt-wt" value="${t.wtUser!=null ? fbEsc(t.wtUser) : ""}" placeholder="Optional"></label>`
+    : "";
   return `<div class="fbt-form">`+
     `<label><span>Date</span><input type="date" class="fbt-day" max="${fbToday()}" value="${fbEsc(t.day)}" required></label>`+
-    `<label><span>Time</span><input type="time" class="fbt-time" value="${fbEsc(t.time||"")}"></label>`+
+    `<label><span>Time</span><input type="time" class="fbt-time" value="${fbEsc(t.time||"")}"></label>`+ wt +
     `<label class="fbt-wide"><span>Note</span><input type="text" class="fbt-note" maxlength="500" value="${fbEsc(t.note||"")}" placeholder="Optional"></label>`+
     `<div class="fbt-err" aria-live="polite"></div>`+
     `<div class="fbt-acts"><button type="button" class="fbt-btn fbt-primary" data-act="save">Save</button>`+
     `<button type="button" class="fbt-btn" data-act="cancel">Cancel</button></div></div>`;
+}
+/* The conditions under a trip in the Trips list. The forecast line starts
+   with "Forecast" because it is what NWS expected for that hour, not what
+   anyone measured; the gauge line is a real reading. A trip typed in later
+   says outright that nothing was recorded, so a blank is never mistaken for
+   "nothing notable". */
+function fbCondHTML(t){
+  const lines = [], c = t.cond || {};
+  const line = (txt, title) => `<span class="fbt-cond"${title ? ` title="${fbEsc(title)}"` : ""}>${fbEsc(txt)}</span>`;
+  if(t.src==="tap"){
+    if(c.wx){
+      const w = c.wx, wind = wxTop(w.ws)===0 ? "calm" : `${w.wd} ${w.ws}`.trim();
+      const hr = wxHour(w);
+      lines.push(line([`Forecast ${w.t}°${w.u}`, `Wind ${wind}`, w.sf].filter(Boolean).join(" · "),
+        `National Weather Service hourly forecast${hr ? " for the hour from " + hr : ""}`));
+    }else if(fbWxIsPending(t.id)) lines.push(line("Forecast loading…"));
+    if(c.flow){
+      const f = c.flow, g = GAUGES[f.g];
+      lines.push(line(["Gauge " + f.cfs.toLocaleString() + " CFS", f.st && f.st.label, f.wtF!=null && `Water ${f.wtF}°F`].filter(Boolean).join(" · "),
+        g ? `${g.label} gauge` : ""));
+    }
+    if(!lines.length) lines.push(line("No conditions available at the time"));
+  }else lines.push(line("Conditions not recorded"));
+  if(t.wtUser!=null) lines.push(line(`Water ${t.wtUser}°F (your reading)`));
+  return lines.join("");
 }
 function fbShowRow(water, force, kind){
   kind = kind || "river";
@@ -3938,16 +4060,16 @@ function fbShowRow(water, force, kind){
     if(!list.classList.contains("show")) return;
     const trips = fbTrips(kind, water.id);
     list.innerHTML = trips.map(t => {
-      if(t.id === editing) return `<div class="fbt-row" data-trip="${fbEsc(t.id)}">${fbTripFormHTML(t)}</div>`;
+      if(t.id === editing) return `<div class="fbt-row" data-trip="${fbEsc(t.id)}">${fbTripFormHTML(t, kind)}</div>`;
       const when = fbDateText(t.day) + " · " + (t.time ? fbTimeText(t.time) : "time not recorded");
       const acts = t.id === confirming
         ? `<span class="fbt-ask">Delete this trip?</span><button type="button" class="fbt-btn fbt-danger" data-act="yes">Yes</button><button type="button" class="fbt-btn" data-act="no">No</button>`
         : `<button type="button" class="fbt-btn" data-act="edit">Edit</button><button type="button" class="fbt-btn" data-act="del">Delete</button>`;
       return `<div class="fbt-row" data-trip="${fbEsc(t.id)}"><div class="fbt-main"><span class="fbt-when">${fbEsc(when)}</span>`+
-        (t.note ? `<span class="fbt-note">${fbEsc(t.note)}</span>` : "")+
+        (t.note ? `<span class="fbt-note">${fbEsc(t.note)}</span>` : "")+ fbCondHTML(t)+
         `</div><div class="fbt-acts">${acts}</div></div>`;
     }).join("") + (adding
-      ? `<div class="fbt-row fbt-add" data-trip="">${fbTripFormHTML({day:fbToday(), time:null})}</div>`
+      ? `<div class="fbt-row fbt-add" data-trip="">${fbTripFormHTML({day:fbToday(), time:null}, kind)}</div>`
       : `<button type="button" class="fbt-btn fbt-addb" data-act="add">+ Add a past trip</button>`);
   }
   const paint = () => {
@@ -3966,6 +4088,7 @@ function fbShowRow(water, force, kind){
   // Not a toggle: every tap is another trip, and the toast's Undo is the way back.
   fishB.addEventListener("click", () => {
     const t = fbAddTrip(kind, water.id, fbToday(), fbNowHM(), "tap", Date.now());
+    fbSnapTrip(t, kind, water);
     paint();
     fbToast(`Trip logged · ${fbDateText(t.day)}, ${fbTimeText(t.time)}`, () => {
       fbDelTrip(t.id);
@@ -3995,8 +4118,18 @@ function fbShowRow(water, force, kind){
       if(!fbValidDay(day)){ err.textContent = "Pick a date."; return; }
       if(day > fbToday()){ err.textContent = "That date hasn't happened yet."; return; }
       if(time && !fbValidTime(time)){ err.textContent = "That time isn't valid."; return; }
-      if(tid) fbEditTrip(tid, {day, time:time||null, note});
-      else fbAddTrip(kind, water.id, day, time||null, "manual", null, note);
+      const patch = {day, time:time||null, note};
+      const wtIn = rowEl.querySelector(".fbt-wt");
+      if(wtIn){
+        // badInput: the field holds text that isn't a number, which .value reports as ""
+        const raw = wtIn.value.trim().replace(",", "."), v = raw==="" ? null : Number(raw);
+        if(wtIn.validity.badInput || (v!==null && !(isFinite(v) && v>=FB_WT_MIN && v<=FB_WT_MAX))){
+          err.textContent = `Water temp should be ${FB_WT_MIN}–${FB_WT_MAX} °F.`; return;
+        }
+        patch.wtUser = v===null ? null : Math.round(v*10)/10;
+      }
+      if(tid) fbEditTrip(tid, patch);
+      else fbAddTrip(kind, water.id, day, time||null, "manual", null, note, patch.wtUser);
       editing = null; adding = false;
     }
     paint();                  // no auto-focus: on an iPhone it would throw the date wheel up unasked
@@ -4283,7 +4416,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v17";
+const APP_VERSION = "flyroutes-v18";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){

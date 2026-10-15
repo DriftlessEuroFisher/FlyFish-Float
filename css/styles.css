@@ -762,6 +762,9 @@ details.morefold{margin:-4px 0 6px}
 .fbt-main{flex:1 1 140px;min-width:0;display:flex;flex-direction:column;gap:1px}
 .fbt-when{font-size:13px;font-weight:600;color:var(--txt)}
 .fbt-note{font-size:12px;color:var(--txt-dim);line-height:1.35;overflow-wrap:anywhere}
+/* Conditions saved with a trip: quieter than the note, and allowed to wrap —
+   a forecast line runs past 375 px with a long NWS phrase in it. */
+.fbt-cond{font-size:12px;color:var(--txt-dim);line-height:1.35;overflow-wrap:anywhere}
 .fbt-acts{display:flex;align-items:center;gap:6px;flex:0 0 auto;margin-left:auto}
 .fbt-ask{font-size:12.5px;font-weight:600;color:var(--txt)}
 .fbt-btn{min-height:36px;padding:0 12px;border-radius:var(--radius);border:1px solid var(--line);background:var(--paper);

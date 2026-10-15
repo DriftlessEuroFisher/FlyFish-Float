@@ -215,8 +215,10 @@ the pilot rule it ships everywhere at once)
   fact** with a date and time picker. If so, conditions can't be a snapshot
   of now (see part 2).
 
-**2. Conditions saved with each trip.** Temperature, wind, sky and so on,
-taken at the moment of the tap.
+**2. Conditions saved with each trip.** — `done` (2026-10-15, uncommitted;
+built as `t.cond` + lake `t.wtUser`, see CLAUDE.md Field Book; a forecast
+that loads after the tap is filled in only within the hour, this session)
+Temperature, wind, sky and so on, taken at the moment of the tap.
 - **Reuse what exists:** the wind & weather card already pulls the NWS
   hourly forecast for the river or lake (`api.weather.gov`, cached 30 min).
   A trip stores a small snapshot from it: temp, wind speed and direction,
