@@ -125,6 +125,277 @@ Wyoming.
   reach-qualified closures (Swan, Duck Fork, Gooseberry, Otter Creeks).
   Fix `priceriver` and `strawberryriver` sheets (see CLAUDE.md).
 
+### Lake depth charts — `new` (raised 2026-10-14)
+**Proposal:** a depth chart on the lake sheet for the main lakes in the pilot
+regions, then the same for other regions once it has been used for real.
+Follows the pilot rule in CLAUDE.md: build and refine it in the pilot
+regions first.
+- **Why it fits:** on still water, depth is what the fish are doing. The lake
+  sheet today has no gauge and no CFS (ice-off, temperature and wind decide
+  the day), so depth is the one fixed fact about a lake worth having on a
+  phone at the ramp.
+- **Phase 1 — pilot lakes.** *Pilot West:* the lakes in and around Jackson,
+  Teton Valley and Swan Valley. *Pilot Central:* the main lakes near Des
+  Moines, plus any NE Iowa Driftless impoundments. *Parks:* Yellowstone Lake
+  and the other Yellowstone and Grand Teton lakes. Which lakes count as
+  "main" is the owner's call. **Not yet checked** which of these are in
+  `LAKES` today (the 31 are Yellowstone's nine, Crater Lake and nine
+  Idaho/Montana/Utah/Colorado/Oregon reservoirs), so some may need adding
+  first.
+- **Phase 2 — everywhere else,** one region at a time, after a week of real
+  use of phase 1.
+- **Open questions (nothing researched yet):**
+  - **Source per lake.** Depth data comes from state agencies and the parks,
+    and coverage will be uneven. Look for each state's lake bathymetry or
+    contour layer first, and for a lake with none, show no chart rather than
+    a guess. Same rule as "never fabricate a flow number".
+  - **Form:** contour lines drawn on the lake outline, a shaded depth ramp,
+    or a numeric strip (max and mean depth, depth at the ramp). The shaded
+    ramp is probably the most legible at phone size.
+  - **Storage:** a chart per lake is too big for `rivers-data.js`. The
+    static tiled-data approach (`data/<layer>/`, `makeTiledLayer()`) already
+    handles this and works offline through `sw.js`.
+  - **Layer:** its own chip under Map Icons, or part of the lake sheet only.
+  - **Datum and date:** water levels move and reservoirs draw down, so the
+    sheet should say what level the soundings were taken at and the survey
+    date, with the source credited.
+- **Related:** *Thousands of trout lakes* (the wider lake list) and *3D
+  maps* (hillshade). A depth layer would sit on the same lake outlines.
+
+### Bridge access: only bridges over mapped water — `new` (raised 2026-10-14)
+**Proposal:** the bridge layer should mark only bridges that cross a river or
+stream that is on this map. Follow-up to *Bridge access points* (done,
+`data/bridges/`).
+- **Why:** the layer holds 129,214 bridges in the 18 states, kept by "route
+  over a waterway, open, public". That includes every bridge over a creek
+  nobody fishes here. On a phone, a pin that isn't on one of this app's
+  rivers says nothing about where to go, and it hides the ones that are.
+- **Today:** the build (`~/.cache/flyfish-osm/bridges/build.py`) filters on
+  the NBI record alone and drops canals, ditches, drains, spillways and
+  laterals. It never looks at the drawn river lines.
+- **Open questions (not decided, nothing built):**
+  - **Where to filter:** at build time (smaller tiles, but a new river means
+    a rebuild) or at draw time against the rivers in view. The 4,000-tile
+    cap and the offline cache favour build time.
+  - **"Part of the map":** the drawn line (geometry runs 22–80 m off the
+    real channel in places) or a distance from it. The ramp and parking
+    builds use 300–400 m. NBI coordinates are the structure's, so pick a
+    tolerance, then check it on a handful of known bridges.
+  - **Lakes:** do bridges over mapped lakes count, or rivers only?
+  - **Rivers that aren't the focus:** with Class 3 rivers hidden by default,
+    do bridges over those still show? The simplest reading is that any
+    mapped river counts, tier or not.
+  - **Naming:** NBI "feature carried/crossed" names are messy. Matching by
+    name alone is unsafe (Clear Creek and Pine Creek repeat all over), so
+    use distance.
+- **Check after:** count bridges before and after per state, and spot-check
+  a few rivers in the pilot regions (Jackson Hole, the NE Iowa Driftless,
+  Des Moines) to confirm the access bridges people use are still there.
+
+### Fished more than once, lake trips with a breadcrumb track, and Field Book pages — `refining` (raised 2026-10-14; privacy, screen-on and forecast decided)
+Four connected parts. Build them in this order, one per session.
+
+**1. "Fished" works every time.** — `done` (2026-10-15, uncommitted; past trips can be logged after the fact, with no conditions) — all regions (pure UI and storage, so per
+the pilot rule it ships everywhere at once)
+- **Today:** the button is a toggle. `fbState.rivers[id]` holds
+  `fished:true` and one `fishedOn` date (`fbSet`, app.js), so a second trip
+  overwrites the first and a second tap un-fishes it.
+- **Wanted:** each tap on a river or lake records **one trip** with the date
+  *and time*, plus the conditions (part 2). The button then reads something
+  like "Fished 3× · last Oct 12", and the Field Book keeps every trip.
+- **Data:** a `fbState.trips` list beside `fbState.floats`, each
+  `{id, kind:"river"|"lake", water, start, end?, craft?, ramp?, track?,
+  conditions?, note?}`. Existing `fished` + `fishedOn` migrate to one trip
+  with a date and no time. **No export of trips** (decided, below), so there
+  is no import merge to write. `fbState.v` is checked as `1` on load, so
+  bump it deliberately or a phone's saved Field Book won't load.
+- **A mistaken tap needs an undo** now that a tap adds something: a short
+  "Added — Undo" toast, plus delete and edit (date/time, note) on the
+  water's page. Also decide whether a trip can be **logged after the
+  fact** with a date and time picker. If so, conditions can't be a snapshot
+  of now (see part 2).
+
+**2. Conditions saved with each trip.** Temperature, wind, sky and so on,
+taken at the moment of the tap.
+- **Reuse what exists:** the wind & weather card already pulls the NWS
+  hourly forecast for the river or lake (`api.weather.gov`, cached 30 min).
+  A trip stores a small snapshot from it: temp, wind speed and direction,
+  sky. **No gusts**, because the feed doesn't carry them.
+- **Rivers:** also store the primary gauge's CFS, its status bucket and the
+  gauge water temperature, under the same 24-hour freshness rule as the
+  sheet. An ungauged creek stores none, and that is correct.
+- **Lakes have no gauge**, so no water temperature unless the user types it
+  in. An optional field is cheap.
+- **DECIDED 2026-10-14: the NWS forecast for that hour is enough.** The
+  owner doesn't need it detailed. Label it as the forecast, not a measured
+  reading, and keep it small (temp, wind, sky). No station observations.
+- **Never backfill with now.** A trip logged after the fact shows
+  "conditions not recorded" rather than today's weather.
+
+**3. Trips with a breadcrumb track, on lakes and on rivers** — modelled on
+Float Mode (`js/float.js`).
+**DECIDED 2026-10-14: the first release covers only the pilot lakes in
+Central Iowa and Pilot West.** Not Yellowstone, and not the other regions,
+until it has been used for real there. Parts 1 and 2 ship everywhere.
+- **Pilot West lakes already mapped** (in `LAKES`): in Grand Teton, Jackson,
+  Jenny, Leigh, Phelps, Taggart, String, Two Ocean, Emma Matilda, Bradley,
+  Swan, Bearpaw and Elk Ranch Reservoir; and Soda Lake. Which of these
+  count as "pilot" is the owner's call. Henrys Lake (Island Park, ID) is
+  mapped but not in the listed pilot area.
+- **Central Iowa: Big Creek Lake and Saylorville Lake** (owner's pick,
+  2026-10-14). Neither is mapped: the 31 `LAKES` entries are all in the
+  West. Both have to be **added first**, with outline, regulations,
+  ramps and an agency link, before a trip can be recorded on one. Same
+  pattern as the other lakes (`openLake` reads its heading and agency from
+  a `park` row, which for these is a state row, Iowa DNR). That is a data
+  job of its own and should land before this part. Saylorville is on the
+  Des Moines River, which `desmoines` already maps, so its outflow and
+  inflow should line up with that line. Check ramp sources (Iowa DNR
+  paddling access, as for the Des Moines pilot) rather than guessing pins.
+- **River tracks** (below) follow the same limit: start with the Pilot West
+  float rivers and the Central Iowa water trails, not every river.
+**DECIDED 2026-10-14: river trips get a track too**, so a user can see where
+they floated before. Lakes and rivers share one recorder, one stored track
+format and one page layout; they differ only in what the page draws under
+the track.
+- **Flow:** the lake sheet gets a **Start fishing** button next to Fished.
+  A planner asks **ramp** (launch point) and **craft** (canoe, kayak, boat,
+  float tube, shore). A live panel runs and records the track. **End**
+  saves the trip. Ramp choices come from the ramp pins near the lake.
+  **Not checked:** whether lakes have pins today. If not, offer the nearest
+  mapped access, else "other" and the start position.
+- **Rivers (decided).** The trip button on a river sheet starts the same
+  recorder, asking **craft** (drift boat, raft, canoe, kayak, float tube,
+  wading, bank) and **put-in**. On a float section it is the existing
+  **Start float**, and the two should become one flow, not two buttons that
+  each record a trip.
+  - **Float Mode logs `{t, a}` today** (time, fraction along the section)
+    and stores no coordinates. With location storage now allowed, new floats
+    keep real coordinates as well. **Keep `a`:** it is what drives the
+    ETA, miles done and the medians from past floats. Floats already saved
+    have no coordinates, so draw them as a stretch of the river line
+    between their start and end fractions rather than dropping them.
+  - **Show the track over the river line.** On a river most of the value is
+    the **stretch** covered, not the squiggle: a drift boat's track is
+    the river. So the river page also shades the river line by how many
+    trips covered each part, which gives a "floated / not floated" view.
+  - **Wading is a different track.** A wading or bank trip is a walk along
+    one bank, often in a canyon where phone GPS drifts tens of metres.
+    Record it, draw it, and don't claim more precision than the phone has.
+    Stops matter most here (the run someone fished for an hour).
+  - **Only rivers with a drawn line can be shaded** against it. Rivers
+    drawn in pieces (`coords` as a list of pieces) must be handled through
+    `flatCoords()`, and a gap in the line must not become a covered stretch.
+- **Track:** latitude/longitude samples with a time, thinned by distance so
+  it stays small, drawn as a line. Record when the phone was **stopped** too,
+  since stops are where the fishing happened.
+- **DECIDED 2026-10-14, privacy: the app may store location.** A lake has
+  no line to project onto, so a lake track keeps real coordinates. The user
+  is told **it is stored on their phone**, and the wording must not promise
+  "never sent". **DECIDED 2026-10-14: trip and track location will be stored
+  in the Supabase database, which the owner will build out later** (see the
+  *Server roadmap*, which needs login first). So:
+  - **Now:** tracks live on the phone only, in the Field Book. Change the
+    "coordinates are never stored or sent" wording in the location card, the
+    tour, the legend and CLAUDE.md to say what is true: **location for lake
+    trips is saved on this phone.** The plain location dot still stores
+    nothing.
+  - **Later, in Supabase** (the same project as the report form,
+    `kbdrxtyacmihabwadzzz`): needs the user signed in (*Server roadmap* step
+    1, Supabase Auth), and the sentence updated to say what leaves the
+    phone. Don't upload anything before that wording exists. Rules for the
+    tables, to settle when they are built:
+    - **Not the report form's policy.** `reports` is insert-only so the
+      public key can never read anything back. Trip tables must be
+      **read and written by their owner only** (row-level security on
+      `auth.uid()`), because a track shows where someone fishes. Every table
+      needs an explicit `grant` (this project grants nothing by default).
+      Never put the service_role key in the app.
+    - **Size:** a track is many points. Store one row per trip with the
+      thinned line as one compact value (the app already uses encoded
+      polylines for rivers), not one row per point.
+    - **Phone first, then sync.** The phone stays the working copy, so a
+      trip recorded with no signal is kept and uploaded later, and the
+      Field Book works signed out. Decide how a trip is matched between
+      phone and database (the trip `id` already planned) and what wins on
+      a conflict.
+    - **Open decisions:** whether upload is automatic for signed-in users or
+      per trip; whether any of it is ever visible to other users (private,
+      or pooled as anonymous fish data, which the parked "pooled float
+      tracks" idea assumes); and delete: a user can delete a trip and
+      **delete my account** removes their tracks.
+    - Until then, trips stay on the phone only, and with Export removed a
+      phone has no backup. The database is what would fix that.
+  - **DECIDED 2026-10-14: no export for now.** Users can't export their
+    data yet, so trips, tracks and the trip image are **not** added to the
+    Field Book export, and there is no "save as image" or share button on a
+    lake or river page. It may come back later, and it should come back
+    with a note that the file shows where someone fishes. **The existing
+    Field Book Export button was removed 2026-10-14** (Import of old files
+    still works), so the phone holds the only copy of a user's Field Book.
+- **iPhone limits. DECIDED 2026-10-14: force the screen on while tracking**
+  (the Wake Lock `float.js` already uses, but not an option the user can
+  untick here). A web app is not given location once the screen locks or the
+  app is backgrounded, so tell the user once when they start: keep the app
+  open, the screen stays on, and switching apps or locking the phone pauses
+  the track. Re-request the lock when the app returns to the foreground,
+  since iOS drops it. Draw gaps as gaps, not as a straight line across the
+  lake. Battery is a real cost on a long day, so say so.
+  **Storage:** `localStorage` is small, and many long tracks may not fit.
+  Thin hard, and consider IndexedDB for tracks. Not measured.
+
+**4. The Field Book as pages.** The user's idea: each water fished adds a
+page they can flip through.
+- **Front page** keeps the stats: trips, waters fished, days on the water,
+  distance paddled or motored, this year against all time, most-fished
+  water, longest trip, a count by region. The existing tabs (Favourites,
+  Fished, Notes, Research, Offline, Floats) stay reachable from it.
+- **One page per river or lake fished,** flipped by swipe or arrows, in
+  order of most recent trip. The page is built from `BOOK_SECTIONS`, which
+  is the extension point for this.
+- **Lake page:** an image of the lake outline with **every trip's track
+  drawn together**, and a list of trips by date and time with craft, ramp
+  and conditions. **Tap a trip** and its track highlights while the others
+  fade. **Tap off it** and all tracks show again, so the user sees where
+  they have been and where they haven't.
+- **River page (decided: has tracks):** the river drawn as a line with every
+  trip's track over it, and the list of trips with date, time, craft,
+  conditions and the gauge reading at each. Tap a trip and its track
+  highlights; tap off and all tracks show. Shading by stretch (above) shows
+  which sections are fished most and which have never been.
+- **The image:** draw the lake outline and tracks on a canvas from the data
+  already in the app, not a screenshot of map tiles. That works offline, so
+  it is legible in the parking lot. It is view-only for now: no save or share
+  (see the export decision above).
+
+**More detailed ways to show a lake** (the user asked for ideas). None of
+this is decided:
+- **Unfished water:** on a lake, shade the part farther than, say, 100 m
+  from any track. On a river, the same idea is the unshaded stretches of the
+  line (never floated or waded). This is what answers "where haven't I been?", so it is
+  probably the first one to build.
+- **Colour the track** by speed (paddling, trolling, drifting, stopped) or
+  by time of day.
+- **Mark stops** as dots sized by minutes stopped.
+- **Filter the page** by season, craft, wind or temperature band, so "my
+  tracks on windy days" is one tap.
+- **"Fish on" marks:** an optional one-tap marker dropped where a fish was
+  caught, kept separate from the track. This is what turns the aggregate
+  into "where to find more fish". It is an extra tap while fishing, so it is
+  optional.
+- **Compare two trips** side by side with their conditions.
+- **Depth underneath,** once *Lake depth charts* above exists, so tracks sit
+  on contours.
+
+**Open questions for the owner:** what goes to the database and who can see
+it (above); which Pilot West lakes are in the first release (Central Iowa is
+Big Creek and Saylorville); whether Start float and the new river
+trip button become one flow (proposed: yes); and where the Big Creek and
+Saylorville outlines and rules come from, since neither is mapped yet.
+**When built,** this touches location and storage,
+which the project rules class as the careful tier. Plan it at Max and build
+it at xhigh.
+
 ### Welcome card and guided tour — `done` (5327238, 2026-10-07)
 Owner's request: welcome new users, say honestly which regions get the most
 attention, offer a tour of the header buttons, zoom, location, the left-side
@@ -316,6 +587,99 @@ verified, Float Mode could use them as ramps.
 files in `supabase/`; a privacy policy and terms before any public content;
 free projects pause after about a week idle (the keep-alive covers that);
 update CLAUDE.md at the end of each step.
+
+### Photo points: a game for photos at bridges, launches and parking — `new` (raised 2026-10-14)
+**Proposal:** once a user has a profile, they earn **points** for taking a
+photo of the river or lake from a bridge, a launch or landing, or a parking
+lot, so every access point on the map ends up with a picture of what the
+water looks like there. A photo only counts if its **location is verified**.
+- **Problem it solves here:** from a parking lot, deciding where to go, a
+  pin says *there is a bridge* and nothing about what is under it. A photo
+  answers "can I wade it, is it a ditch, is the ramp usable, how big is
+  the water" before the drive. It also fills the access layers (the NBI
+  bridges, parking, launches) with content no data source has.
+- **Builds on the Server roadmap:** needs **login and profiles** (step 1),
+  and is the game layer on **Photos** (step 3) and the verification rules
+  in step 2. It shares the points and leaderboard thinking with *Float
+  leaderboards*. Don't build before step 1 exists.
+- **Which sites count.** Bridges (`data/bridges/`), parking, campsites and
+  trailheads (`data/poi/`), ramps and wade access (`RAMPS`), and lake
+  launches. The bridge follow-up above (*only bridges over mapped water*)
+  decides which bridges are eligible, so do it first; otherwise people earn
+  points for creeks the app doesn't cover.
+
+**Verification** (the hard part)
+- **A browser can't prove where it is.** Say so, as step 2 does: this raises
+  the bar and isn't security. A friendly local game can accept that.
+- **Take the photo inside the app** with the camera, not from the photo
+  library, and read the phone's location at the moment of capture. Require
+  a good GPS accuracy and a position within a set distance of the site (a
+  starting point is 100 m; bridges and lots differ). Store the capture
+  position, accuracy and time with the photo. Not decided: whether the
+  in-app camera or the phone's camera input is used, since each has trade-offs
+  on iPhone that need testing.
+- **EXIF is not the check.** Step 3 strips EXIF by redrawing on a canvas,
+  so a photo's own GPS never reaches the server. Verification uses the
+  position read at capture.
+- **The server has to know the sites.** If the phone sends "I'm at bridge
+  X" with its own coordinates, nothing checks that bridge X is there. The
+  database needs the site list (129k bridges plus the pins; it is not large)
+  so a database function can compute the distance, and the phone sends only
+  a site id and the capture position.
+- **Also check:** one photo per user per site per period, a daily cap, a
+  plausible speed between consecutive photos, and the photo must not be a
+  re-upload of one already there. Photos are `pending` until approved.
+- **Safe to claim:** "taken within N m of this bridge, on this date". Not
+  safe: "this proves the photo shows this river".
+
+**Points** (to decide; a starting sketch)
+- More for a **first photo** at a site, then a smaller amount for a
+  **refresh** once the newest photo is over a year old, since a river
+  changes after a flood.
+- A bonus for completing a set: every access on one river, or every bridge
+  in a county. Coverage is the point, so reward the sites with no photo.
+- A small bonus when the photo is tied to **what the water was doing**: the
+  gauge reading at capture time is stored with it. A photo that says
+  "Raccoon River, 1,900 CFS" is more useful than one with no number. The
+  app already has the flow card for this.
+- Leaderboards by region and by season, display name only, opt-in, as
+  *Float leaderboards* does. Badges are cheap and a good reward. No money
+  or prizes.
+- Guard against farming: points only for pending-approved photos, no points
+  for a rejected one, and a cap per day.
+
+**Where photos show**
+- On the access pin's popup and on the river or lake sheet as a short
+  gallery, newest first, each labelled with date and the flow at capture.
+  Offline, show none (don't let `sw.js` cache them heavily).
+- **Resize on the phone** to about 1600 px before upload, as step 3 says.
+  **Free-tier limit:** 1 GB of storage, which is a few thousand photos at
+  roughly 300 KB each. Photos are the thing that will fill it, so size and
+  count need a plan before this is public.
+
+**Risks to design for, not around**
+- **Safety:** points for standing on a bridge deck or road shoulder invite
+  people into traffic. Say so in the prompt, and consider limiting photos
+  to a pull-off or the bridge approach. Don't reward speed.
+- **Trespass:** only public sites count (NBI public ownership, PAD-US check,
+  the same warning step 2 plans). A launch on private land earns nothing.
+- **People and plates:** photos may catch faces and number plates. Terms say
+  so, there is a report button, and an admin can delete.
+- **Rights:** the user grants the app the right to display the photo. Needs
+  the terms and privacy policy step 2 already lists.
+- **The photo is stored in Supabase,** so the location rule above applies:
+  the capture position leaves the phone, and the sentence the user sees
+  must say so before their first upload.
+
+**Rollout:** pilot regions first, per the project rule: the Central Iowa
+water trails and the NE Iowa Driftless (many bridges, few photos) and Pilot
+West. Expand once a week of real use turns up nothing wrong.
+**Open questions for the owner:** what points are worth and whether there are
+badges; private to the user or shown to everyone, and whether a photo is
+shown before approval; the verify distance per site type; and whether this
+is part of the same game as the float leaderboards or a second one.
+**Builder when built:** `build-opus-xhigh` (location, permissions, user
+content).
 
 ### Float leaderboards — `ready` (decided 2026-10-07; build in a fresh session, after server step 1)
 **Update 2026-10-13:** reuses the login and profile from *Server roadmap*

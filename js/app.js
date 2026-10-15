@@ -908,7 +908,8 @@ function openLake(id){
      the state lakes. A lake that names none reads as Yellowstone's, the first
      lakes this sheet was written for. */
   const pk = PARK_INFO[k.park] || PARK_INFO.yellowstone;
-  $("#sh-sub").textContent = (STATE_NAME[k.state] || k.state) + pk.sub + " · lake";
+  $("#sh-sub").textContent = lakePlace(k);
+  fbShowRow(k, false, "lake");          // the lake's own Field Book row, never the last river's
   sheet.classList.add("open");
   delete body.dataset.river;            // renderSheet's fold memory is per river; this is a lake
   const wx = {key:"lake:" + k.id, pt:wxLakePoint(k)};    // on a lake the wind is the forecast that matters
@@ -1233,27 +1234,102 @@ let tierFilter = {gold:true, "1":true, "2":true, "3":false};
    lower it would still be in its temporal dead zone (same trap as PARK_INFO).
    Every read and write is wrapped: in a private window storage can throw, and
    then the book simply works for the session and is gone on reload. Nothing
-   here is ever sent anywhere. */
-const FB_KEY = "fieldBook";
-let fbState = {v:1, rivers:{}};
+   here is ever sent anywhere.
+
+   v2 (2026-10-15): "Fished" is a list of trips, not a flag. `rivers` holds
+   favourite / notes / updated per water — rivers by id, lakes as "lake:"+id
+   so a lake can never collide with a river of the same id. `trips` holds
+   {id, kind:"river"|"lake", water, day:"YYYY-MM-DD", time:"HH:MM"|null,
+   src:"tap"|"manual"|"migrated", at, note?}. `at` is the epoch ms of the
+   tap and is null for anything else: a later conditions snapshot belongs
+   only to a trip logged at the water, never to one typed in afterwards.
+   `floats` belongs to float.js and is carried through untouched. */
+const FB_KEY = "fieldBook", FB_V1_KEY = "fieldBook_v1";
+let fbState = {v:2, rivers:{}, trips:[]};
 try{
-  const saved = JSON.parse(localStorage.getItem(FB_KEY)||"null");
-  if(saved && saved.v===1 && saved.rivers && typeof saved.rivers==="object") fbState = saved;
+  const raw = localStorage.getItem(FB_KEY);
+  const saved = JSON.parse(raw||"null");
+  if(saved && saved.rivers && typeof saved.rivers==="object"){
+    if(saved.v===2){ if(!Array.isArray(saved.trips)) saved.trips = []; fbState = saved; }
+    else if(saved.v===1) fbState = fbMigrateV1(saved, raw);
+  }
+  // anything else: start empty, and leave the stored key alone until a write
 }catch(e){}
+/* v1 → v2. The untouched v1 string is copied aside first (once; it is never
+   deleted), then each `fished:true` becomes one trip on its `fishedOn` day.
+   v1 never recorded a time, so there is none. Everything else — favourites,
+   notes, `updated`, floats — is carried over exactly. */
+function fbMigrateV1(saved, raw){
+  try{ if(localStorage.getItem(FB_V1_KEY)===null) localStorage.setItem(FB_V1_KEY, raw); }catch(e){}
+  const rivers = {}, trips = [];
+  for(const [id, e] of Object.entries(saved.rivers)){
+    if(!e || typeof e!=="object"){ rivers[id] = e; continue; }
+    const {fished, fishedOn, ...rest} = e;
+    rivers[id] = rest;
+    if(fished===true) trips.push({id:fbNewId(), kind:"river", water:id,
+      day:fbValidDay(fishedOn) ? fishedOn : fbToday(), time:null, src:"migrated", at:null});
+  }
+  const st = Object.assign({}, saved, {v:2, rivers, trips});
+  try{ localStorage.setItem(FB_KEY, JSON.stringify(st)); }catch(e){}
+  return st;
+}
 function fbPersist(){ try{ localStorage.setItem(FB_KEY, JSON.stringify(fbState)); }catch(e){} }
 function fbGet(id){
   const e = fbState.rivers[id];
-  return e ? e : {fav:false, fished:false, fishedOn:null, notes:"", updated:0};
+  return e ? e : {fav:false, notes:"", updated:0};
 }
 function fbSet(id, patch){
   const e = Object.assign({}, fbGet(id), patch, {updated:Date.now()});
-  if(!e.fav && !e.fished && !(e.notes||"").trim()) delete fbState.rivers[id];   // nothing left to keep
+  if(!e.fav && !(e.notes||"").trim()) delete fbState.rivers[id];   // nothing left to keep (trips live apart)
   else fbState.rivers[id] = e;
   fbPersist();
   return e;
 }
 function fbAll(){ return fbState.rivers; }
 function fbIsFav(id){ const e = fbState.rivers[id]; return !!(e && e.fav); }
+
+/* Trips. Newest first by the day and time the user sees; a tie (two taps in
+   one minute, or two days with no time) goes to the one logged later. */
+function fbNewId(){ return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+function fbValidDay(s){
+  const m = /^(\d{4})-(\d\d)-(\d\d)$/.exec(s||""); if(!m) return false;
+  const d = new Date(+m[1], +m[2]-1, +m[3]);
+  return d.getFullYear()===+m[1] && d.getMonth()===+m[2]-1 && d.getDate()===+m[3];
+}
+const fbValidTime = s => /^([01]\d|2[0-3]):[0-5]\d$/.test(s||"");
+const fbTripSort = t => t.day + (t.time||"");
+function fbTrips(kind, water){
+  return fbState.trips.filter(t => t.kind===kind && t.water===water).reverse()
+    .sort((a,b) => fbTripSort(b).localeCompare(fbTripSort(a)));
+}
+function fbAddTrip(kind, water, day, time, src, at, note){
+  const t = {id:fbNewId(), kind, water, day, time:time||null, src, at:at||null};
+  if(note && note.trim()) t.note = note.trim().slice(0, 500);
+  fbState.trips.push(t);
+  fbPersist();
+  return t;
+}
+function fbDelTrip(id){
+  const n = fbState.trips.length;
+  fbState.trips = fbState.trips.filter(t => t.id!==id);
+  if(fbState.trips.length!==n) fbPersist();
+}
+/* Only day, time and note can change. Moving a trip's day or time makes it a
+   manual entry: whatever was true at the moment of the tap no longer
+   describes it. */
+function fbEditTrip(id, patch){
+  const t = fbState.trips.find(x => x.id===id); if(!t) return null;
+  if("day" in patch || "time" in patch){
+    const day = "day" in patch ? patch.day : t.day, time = "time" in patch ? (patch.time||null) : t.time;
+    if(day!==t.day || time!==t.time){ t.day = day; t.time = time; t.src = "manual"; t.at = null; }
+  }
+  if("note" in patch){
+    const n = (patch.note||"").trim().slice(0, 500);
+    if(n) t.note = n; else delete t.note;
+  }
+  fbPersist();
+  return t;
+}
 
 const tempShown = new Set();          // hidden rivers opened on purpose (search, gauge tap)
 const tierNow = new Map();            // river id → tierOf() for today
@@ -2760,6 +2836,20 @@ function riverPlace(r){
   return (STATE_NAME[r.state] || r.state) + subRegion;
 }
 function riverStateName(r){ return riverPlace(r).split(" · ")[0]; }
+/* "Wyoming · Yellowstone · lake" — the lake sheet's subtitle, shared with the
+   Field Book rows the same way. A lake that names no PARK_INFO row reads as
+   Yellowstone's, the first lakes the sheet was written for. */
+function lakePlace(k){
+  const pk = PARK_INFO[k.park] || PARK_INFO.yellowstone;
+  return (STATE_NAME[k.state] || k.state) + pk.sub + " · lake";
+}
+/* A lake opened from the Field Book is framed the way a river is: in the part
+   of the map the sheet and the controls leave clear (focusFrame). */
+function frameLake(k){
+  const s = lakeShapes[k.id]; if(!s) return;
+  const {tl, br} = focusFrame();
+  goTo(s.poly.getBounds(), null, {paddingTopLeft:tl, paddingBottomRight:br, maxZoom:FOCUS_MAX_ZOOM});
+}
 
 /* opts.fit === false opens the sheet without moving the map — the tour, and
    the tour putting back a river that was open before it. A gauge tap
@@ -3773,57 +3863,143 @@ $("#legend-x").addEventListener("click",closeLegend);
 scrim.addEventListener("click",closeLegend);
 function closeLegend(){scrim.classList.remove("show");legend.classList.remove("show");}
 
-/* ---------- Field Book: river panel row ----------
-   The favourite / fished / notes controls live in #fbrow, a sibling that sits
-   just above #sheetbody, NOT inside it. renderSheet() rewrites #sheetbody's
-   innerHTML every time stats load or a filter changes; a textarea in there
-   would lose its focus and caret mid-sentence. Outside it, nothing re-renders
-   it: fbShowRow() rebuilds it only when the river changes (or after an
-   import), and the buttons update themselves in place. */
-let fbRowFor = null;
+/* ---------- Field Book: river and lake panel row ----------
+   The favourite / fished / notes / trips controls live in #fbrow, a sibling
+   that sits just above #sheetbody, NOT inside it. renderSheet() rewrites
+   #sheetbody's innerHTML every time stats load or a filter changes; a
+   textarea in there would lose its focus and caret mid-sentence. Outside it,
+   nothing re-renders it: fbShowRow() rebuilds it only when the water changes
+   (or after an import), and everything in it updates itself in place.
+   A lake gets the same row; fbRowFor is kind + id, so a river and a lake that
+   happen to share an id are never the same row. */
+let fbRowFor = null, fbRowWater = null, fbRowKind = null, fbRowPaint = null;
 const fbEsc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function fbToday(){ const d = new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
 function fbDateText(iso){
   const m = /^(\d{4})-(\d\d)-(\d\d)$/.exec(iso||""); if(!m) return "";
-  return new Date(+m[1], +m[2]-1, +m[3]).toLocaleDateString([], {month:"short", day:"numeric"});
+  // the year only when it isn't this one: "Oct 12" vs "Oct 12, 2025"
+  const o = {month:"short", day:"numeric"};
+  if(+m[1] !== new Date().getFullYear()) o.year = "numeric";
+  return new Date(+m[1], +m[2]-1, +m[3]).toLocaleDateString([], o);
 }
-function fbRowHTML(e){
+function fbTimeText(hm){
+  if(!fbValidTime(hm)) return "";
+  const [h, m] = hm.split(":");
+  return new Date(2000, 0, 1, +h, +m).toLocaleTimeString([], {hour:"numeric", minute:"2-digit"});
+}
+const fbNowHM = () => { const d = new Date(); return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0"); };
+const fbKeyOf = (kind, id) => kind==="lake" ? "lake:" + id : id;
+function fbFishedLabel(trips){
+  return trips.length ? `✓ Fished ${trips.length}× · ${fbDateText(trips[0].day)}` : "✓ Fished";
+}
+function fbRowHTML(e, trips, kind){
+  const what = kind==="lake" ? "lake" : "river";
   return `<button type="button" class="fb-btn fb-fav${e.fav?" on":""}" aria-pressed="${e.fav}">${e.fav?"★":"☆"} Favorite</button>`+
-    `<button type="button" class="fb-btn fb-fished${e.fished?" on":""}" aria-pressed="${e.fished}">✓ ${e.fished && e.fishedOn ? "Fished · "+fbDateText(e.fishedOn) : "Fished"}</button>`+
+    `<button type="button" class="fb-btn fb-fished${trips.length?" on":""}">${fbEsc(fbFishedLabel(trips))}</button>`+
     `<button type="button" class="fb-btn fb-notes${(e.notes||"").trim()?" has":""}" aria-expanded="false">Notes</button>`+
-    `<div class="fb-ta"><textarea rows="3" maxlength="20000" placeholder="Flies that worked, where you parked, water clarity…" aria-label="Notes for this river"></textarea>`+
-    `<span class="fb-saved" aria-live="polite"></span></div>`;
+    `<button type="button" class="fb-btn fb-tripsb" aria-expanded="false">Trips</button>`+
+    `<div class="fb-ta"><textarea rows="3" maxlength="20000" placeholder="Flies that worked, where you parked, water clarity…" aria-label="Notes for this ${what}"></textarea>`+
+    `<span class="fb-saved" aria-live="polite"></span></div>`+
+    `<div class="fb-trips"></div>`;
 }
-function fbShowRow(r, force){
-  const row = $("#fbrow");
-  if(!force && fbRowFor === r.id) return;
-  fbRowFor = r.id;
-  const id = r.id, e = fbGet(id);
-  row.innerHTML = fbRowHTML(e);
+/* The date/time/note inputs shared by Edit and "+ Add a past trip". max=today
+   is a hint to the picker; save checks it again because a typed date can
+   ignore it. */
+function fbTripFormHTML(t){
+  return `<div class="fbt-form">`+
+    `<label><span>Date</span><input type="date" class="fbt-day" max="${fbToday()}" value="${fbEsc(t.day)}" required></label>`+
+    `<label><span>Time</span><input type="time" class="fbt-time" value="${fbEsc(t.time||"")}"></label>`+
+    `<label class="fbt-wide"><span>Note</span><input type="text" class="fbt-note" maxlength="500" value="${fbEsc(t.note||"")}" placeholder="Optional"></label>`+
+    `<div class="fbt-err" aria-live="polite"></div>`+
+    `<div class="fbt-acts"><button type="button" class="fbt-btn fbt-primary" data-act="save">Save</button>`+
+    `<button type="button" class="fbt-btn" data-act="cancel">Cancel</button></div></div>`;
+}
+function fbShowRow(water, force, kind){
+  kind = kind || "river";
+  const row = $("#fbrow"), rowKey = kind + "|" + water.id;
+  if(!force && fbRowFor === rowKey) return;
+  fbRowFor = rowKey; fbRowWater = water; fbRowKind = kind;
+  const id = fbKeyOf(kind, water.id), e = fbGet(id);
+  row.innerHTML = fbRowHTML(e, fbTrips(kind, water.id), kind);
   const favB = row.querySelector(".fb-fav"), fishB = row.querySelector(".fb-fished"),
-        notesB = row.querySelector(".fb-notes"), box = row.querySelector(".fb-ta"),
-        ta = row.querySelector("textarea"), saved = row.querySelector(".fb-saved");
+        notesB = row.querySelector(".fb-notes"), tripsB = row.querySelector(".fb-tripsb"),
+        box = row.querySelector(".fb-ta"), ta = row.querySelector("textarea"),
+        saved = row.querySelector(".fb-saved"), list = row.querySelector(".fb-trips");
   ta.value = e.notes || "";
   const openNotes = on => { box.classList.toggle("show", on); notesB.setAttribute("aria-expanded", on); };
   openNotes(!!(e.notes||"").trim());
+  // list state: which trip is being edited, which is asking "delete?", and the add form
+  let editing = null, confirming = null, adding = false;
+  const openTrips = on => {
+    list.classList.toggle("show", on); tripsB.setAttribute("aria-expanded", on);
+    if(on) paintTrips();
+  };
+  function paintTrips(){
+    if(!list.classList.contains("show")) return;
+    const trips = fbTrips(kind, water.id);
+    list.innerHTML = trips.map(t => {
+      if(t.id === editing) return `<div class="fbt-row" data-trip="${fbEsc(t.id)}">${fbTripFormHTML(t)}</div>`;
+      const when = fbDateText(t.day) + " · " + (t.time ? fbTimeText(t.time) : "time not recorded");
+      const acts = t.id === confirming
+        ? `<span class="fbt-ask">Delete this trip?</span><button type="button" class="fbt-btn fbt-danger" data-act="yes">Yes</button><button type="button" class="fbt-btn" data-act="no">No</button>`
+        : `<button type="button" class="fbt-btn" data-act="edit">Edit</button><button type="button" class="fbt-btn" data-act="del">Delete</button>`;
+      return `<div class="fbt-row" data-trip="${fbEsc(t.id)}"><div class="fbt-main"><span class="fbt-when">${fbEsc(when)}</span>`+
+        (t.note ? `<span class="fbt-note">${fbEsc(t.note)}</span>` : "")+
+        `</div><div class="fbt-acts">${acts}</div></div>`;
+    }).join("") + (adding
+      ? `<div class="fbt-row fbt-add" data-trip="">${fbTripFormHTML({day:fbToday(), time:null})}</div>`
+      : `<button type="button" class="fbt-btn fbt-addb" data-act="add">+ Add a past trip</button>`);
+  }
   const paint = () => {
-    const c = fbGet(id);
+    const c = fbGet(id), trips = fbTrips(kind, water.id);
     favB.classList.toggle("on", c.fav); favB.setAttribute("aria-pressed", c.fav);
     favB.textContent = (c.fav ? "★" : "☆") + " Favorite";
-    fishB.classList.toggle("on", c.fished); fishB.setAttribute("aria-pressed", c.fished);
-    fishB.textContent = "✓ " + (c.fished && c.fishedOn ? "Fished · "+fbDateText(c.fishedOn) : "Fished");
+    fishB.classList.toggle("on", trips.length > 0);
+    fishB.textContent = fbFishedLabel(trips);
+    paintTrips();
   };
+  fbRowPaint = paint;
   favB.addEventListener("click", () => {
     fbSet(id, {fav:!fbGet(id).fav}); paint();
-    applyFilters();                        // a favourite stays on the map whatever the class filter says
+    if(kind==="river") applyFilters();     // a favourite river stays on the map whatever the class filter says
   });
+  // Not a toggle: every tap is another trip, and the toast's Undo is the way back.
   fishB.addEventListener("click", () => {
-    const on = !fbGet(id).fished;
-    fbSet(id, {fished:on, fishedOn:on ? fbToday() : null}); paint();
+    const t = fbAddTrip(kind, water.id, fbToday(), fbNowHM(), "tap", Date.now());
+    paint();
+    fbToast(`Trip logged · ${fbDateText(t.day)}, ${fbTimeText(t.time)}`, () => {
+      fbDelTrip(t.id);
+      if(fbRowFor === rowKey) fbRowPaint();     // the row may have been rebuilt since (an import)
+    });
   });
   notesB.addEventListener("click", () => {
     const on = !box.classList.contains("show");
     openNotes(on); if(on) ta.focus();
+  });
+  tripsB.addEventListener("click", () => {
+    editing = confirming = null; adding = false;
+    openTrips(!list.classList.contains("show"));
+  });
+  list.addEventListener("click", ev => {
+    const b = ev.target.closest("[data-act]"); if(!b) return;
+    const rowEl = b.closest(".fbt-row"), tid = rowEl ? rowEl.dataset.trip : null, act = b.dataset.act;
+    if(act==="edit"){ editing = tid; confirming = null; adding = false; }
+    else if(act==="del"){ confirming = tid; editing = null; }
+    else if(act==="no"){ confirming = null; }
+    else if(act==="yes"){ fbDelTrip(tid); confirming = null; }
+    else if(act==="add"){ adding = true; editing = confirming = null; }
+    else if(act==="cancel"){ editing = null; adding = false; }
+    else if(act==="save"){
+      const day = rowEl.querySelector(".fbt-day").value, time = rowEl.querySelector(".fbt-time").value,
+            note = rowEl.querySelector(".fbt-note").value, err = rowEl.querySelector(".fbt-err");
+      if(!fbValidDay(day)){ err.textContent = "Pick a date."; return; }
+      if(day > fbToday()){ err.textContent = "That date hasn't happened yet."; return; }
+      if(time && !fbValidTime(time)){ err.textContent = "That time isn't valid."; return; }
+      if(tid) fbEditTrip(tid, {day, time:time||null, note});
+      else fbAddTrip(kind, water.id, day, time||null, "manual", null, note);
+      editing = null; adding = false;
+    }
+    paint();                  // no auto-focus: on an iPhone it would throw the date wheel up unasked
   });
   let t = null;
   ta.addEventListener("input", () => {
@@ -3836,6 +4012,19 @@ function fbShowRow(r, force){
       setTimeout(() => { if(saved.textContent==="Saved") saved.textContent = ""; }, 1600);
     }, 400);
   });
+}
+/* A small app-level toast with one action, for "Trip logged · Undo". Its own
+   element, not float.js's, so the Field Book works without Float Mode. A new
+   toast replaces the old one, and its Undo then belongs to the new trip. */
+function fbToast(msg, undo){
+  const el = $("#fbtoast"); if(!el) return;
+  el.querySelector(".fbt-msg").textContent = msg;
+  const b = el.querySelector("button");
+  b.hidden = !undo;
+  b.onclick = () => { clearTimeout(fbToast.t); el.classList.remove("show"); if(undo) undo(); };
+  el.classList.add("show");
+  clearTimeout(fbToast.t);
+  fbToast.t = setTimeout(() => { el.classList.remove("show"); b.onclick = null; }, 6000);
 }
 
 /* ---------- Field Book: research links ----------
@@ -3992,56 +4181,76 @@ if("serviceWorker" in navigator && (location.protocol==="https:"||location.hostn
 
 const bookEl = $("#book"), bookBody = $("#book-body");
 
-function bookRowsHTML(ids, fishedTab){
-  return ids.map(id => {
-    const r = RIVERS.find(x => x.id===id); if(!r) return "";
-    const e = fbGet(id), k = r.primaryGauge;
+/* A water in the book is {kind, id}: a river by its id, a lake by its LAKES
+   id (stored under "lake:"+id). Waters this build doesn't know are left in
+   storage but not listed. */
+function fbWater(kind, id){
+  const w = kind==="lake" ? (typeof LAKES==="undefined" ? null : LAKES.find(x => x.id===id)) : RIVERS.find(x => x.id===id);
+  return w ? {kind, id, w, key:fbKeyOf(kind, id)} : null;
+}
+// every stored favourite/notes entry, rivers and lakes alike, that passes fn
+const fbWatersWhere = fn => Object.keys(fbAll()).map(k => k.startsWith("lake:") ? fbWater("lake", k.slice(5)) : fbWater("river", k))
+  .filter(x => x && fn(fbAll()[x.key]));
+const fbByName = list => list.sort((a,b) => a.w.name.localeCompare(b.w.name));
+const fbEmpty = t => `<div class="bk-empty">${t}</div>`;
+// a row that opens its water: data-fbopen for a river, data-fblake for a lake
+const fbOpenAttr = x => x.kind==="lake" ? `data-fblake="${fbEsc(x.id)}"` : `data-fbopen="${fbEsc(x.id)}"`;
+const fbPlace = x => x.kind==="lake" ? lakePlace(x.w) : riverPlace(x.w);
+
+function bookRowsHTML(list, fishedLine){
+  return list.map(x => {
+    const e = fbGet(x.key), k = x.kind==="river" ? x.w.primaryGauge : null;
     // Live status chip only when a reading has actually loaded — same
     // statusOf() the flow card uses, so the colours are the gauge's own.
     const st = k && flows[k] && flows[k].cfs!=null ? statusOf(k) : null;
-    const note = (e.notes||"").trim();
-    return `<button type="button" class="bk-row" data-fbopen="${fbEsc(id)}">`+
-      `<span class="bk-main"><span class="bk-name">${fbEsc(r.name)}</span>`+
-      `<span class="bk-place">${fbEsc(riverPlace(r))}</span>`+
-      (fishedTab && e.fishedOn ? `<span class="bk-fished">Fished · ${fbEsc(fbDateText(e.fishedOn))}</span>` : "")+
+    const note = (e.notes||"").trim(), fl = fishedLine ? fishedLine(x) : "";
+    return `<button type="button" class="bk-row" ${fbOpenAttr(x)}>`+
+      `<span class="bk-main"><span class="bk-name">${fbEsc(x.w.name)}</span>`+
+      `<span class="bk-place">${fbEsc(fbPlace(x))}</span>`+
+      (fl ? `<span class="bk-fished">${fbEsc(fl)}</span>` : "")+
       (note ? `<span class="bk-snip">${fbEsc(note.length>90 ? note.slice(0,90).trim()+"…" : note)}</span>` : "")+
       `</span>`+
       (st ? `<span class="badge" style="background:${st.color}">${st.label}</span>` : "")+
       `</button>`;
   }).join("");
 }
-const fbIdsWhere = fn => Object.keys(fbAll()).filter(id => RIVERS.some(r => r.id===id) && fn(fbAll()[id]));
-const fbByName = ids => ids.sort((a,b) => RIVERS.find(r=>r.id===a).name.localeCompare(RIVERS.find(r=>r.id===b).name));
-const fbEmpty = t => `<div class="bk-empty">${t}</div>`;
 
 /* Add a section here to add a tab. render(el) fills the panel; the shell owns
    the tab bar, remembers the last tab, and makes any [data-fbopen] inside
-   it fly to that river. */
+   it fly to that river ([data-fblake] to that lake). */
 const BOOK_SECTIONS = [
   {id:"fav", label:"Favorites", render(el){
-    const ids = fbByName(fbIdsWhere(e => e.fav));
-    el.innerHTML = ids.length ? bookRowsHTML(ids) : fbEmpty("No favorites yet.<br>Tap <b>☆ Favorite</b> on any river to keep it here — and on the map, whatever the class filter says.");
+    const list = fbByName(fbWatersWhere(e => e.fav));
+    el.innerHTML = list.length ? bookRowsHTML(list) : fbEmpty("No favorites yet.<br>Tap <b>☆ Favorite</b> on any river to keep it here — and on the map, whatever the class filter says.");
   }},
   {id:"fished", label:"Fished", render(el){
-    const ids = fbIdsWhere(e => e.fished).sort((a,b) => (fbGet(b).fishedOn||"").localeCompare(fbGet(a).fishedOn||""));
-    el.innerHTML = ids.length ? bookRowsHTML(ids, true) : fbEmpty("Nothing logged yet.<br>Tap <b>✓ Fished</b> on a river after you've been, and it lands here with the date.");
+    // one row per water, the most recently fished first
+    const by = new Map();
+    fbState.trips.forEach(t => {
+      const k = t.kind + "|" + t.water;
+      if(!by.has(k)){ const x = fbWater(t.kind, t.water); if(!x) return; by.set(k, x); }
+    });
+    const list = [...by.values()].map(x => Object.assign(x, {trips:fbTrips(x.kind, x.id)}))
+      .sort((a,b) => fbTripSort(b.trips[0]).localeCompare(fbTripSort(a.trips[0])));
+    el.innerHTML = list.length
+      ? bookRowsHTML(list, x => `${x.trips.length} trip${x.trips.length===1?"":"s"} · last ${fbDateText(x.trips[0].day)}`)
+      : fbEmpty("Nothing logged yet.<br>Tap <b>✓ Fished</b> each time you go — every trip is kept here with its date.");
   }},
   {id:"notes", label:"Notes", render(el){
-    const ids = fbIdsWhere(e => (e.notes||"").trim()).sort((a,b) => fbGet(b).updated - fbGet(a).updated);
-    el.innerHTML = ids.length ? ids.map(id => {
-      const r = RIVERS.find(x => x.id===id);
-      return `<button type="button" class="bk-row" data-fbopen="${fbEsc(id)}"><span class="bk-main">`+
-        `<span class="bk-name">${fbEsc(r.name)}</span><span class="bk-place">${fbEsc(riverPlace(r))}</span>`+
-        `<span class="bk-full">${fbEsc(fbGet(id).notes.trim())}</span></span></button>`;
-    }).join("") : fbEmpty("No notes yet.<br>Tap <b>Notes</b> on any river to jot down flies, parking and water clarity.");
+    const list = fbWatersWhere(e => (e.notes||"").trim()).sort((a,b) => fbGet(b.key).updated - fbGet(a.key).updated);
+    el.innerHTML = list.length ? list.map(x =>
+      `<button type="button" class="bk-row" ${fbOpenAttr(x)}><span class="bk-main">`+
+        `<span class="bk-name">${fbEsc(x.w.name)}</span><span class="bk-place">${fbEsc(fbPlace(x))}</span>`+
+        `<span class="bk-full">${fbEsc(fbGet(x.key).notes.trim())}</span></span></button>`
+    ).join("") : fbEmpty("No notes yet.<br>Tap <b>Notes</b> on any river to jot down flies, parking and water clarity.");
   }},
   {id:"research", label:"Research", render(el){
-    const ids = fbByName(fbIdsWhere(e => e.fav));
+    // rivers only: the research links are built for a river's name and state
+    const list = fbByName(fbWatersWhere(e => e.fav).filter(x => x.kind==="river"));
     let h = `<p class="bk-intro">Research for your favorite rivers — more research tools will appear here.</p>`;
-    h += ids.length ? ids.map(id => {
-      const r = RIVERS.find(x => x.id===id);
-      return `<div class="bk-res"><button type="button" class="bk-name" data-fbopen="${fbEsc(id)}">${fbEsc(r.name)}</button>${researchLinksHTML(r)}</div>`;
-    }).join("") + `<p class="fb-note">Links open outside the app; posts belong to their authors.</p>`
+    h += list.length ? list.map(x =>
+      `<div class="bk-res"><button type="button" class="bk-name" data-fbopen="${fbEsc(x.id)}">${fbEsc(x.w.name)}</button>${researchLinksHTML(x.w)}</div>`
+    ).join("") + `<p class="fb-note">Links open outside the app; posts belong to their authors.</p>`
       : fbEmpty("Favorite a river to get research links for it here.<br>Tap <b>☆ Favorite</b> on any river.");
     el.innerHTML = h;
   }},
@@ -4074,7 +4283,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v16";
+const APP_VERSION = "flyroutes-v17";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){
@@ -4165,6 +4374,15 @@ rpForm.addEventListener("submit", async e => {
 });
 $("#book-tabs").addEventListener("click", e => { const b = e.target.closest("button[data-tab]"); if(b) showBookTab(b.dataset.tab); });
 bookBody.addEventListener("click", e => {
+  const lb = e.target.closest("[data-fblake]");
+  if(lb){
+    const k = typeof LAKES==="undefined" ? null : LAKES.find(x => x.id===lb.dataset.fblake); if(!k) return;
+    closeBook();
+    hideZones();
+    openLake(k.id);
+    frameLake(k);                            // after the sheet opens, so the frame clears it
+    return;
+  }
   const b = e.target.closest("[data-fbopen]"); if(!b) return;
   const r = RIVERS.find(x => x.id===b.dataset.fbopen); if(!r) return;
   closeBook();
@@ -4172,17 +4390,14 @@ bookBody.addEventListener("click", e => {
   openRiver(r.id);                           // frames the river clear of the sheet (focusRiver)
 });
 
-/* Export / import. Import is a merge, never a replace: per river the newer
-   `updated` wins, so restoring an old backup can't wipe newer notes. The
-   file is untrusted input — shape-checked and each entry rebuilt field by
-   field, and rivers this build doesn't know are skipped. */
-$("#book-export").addEventListener("click", () => {
-  const blob = new Blob([JSON.stringify(fbState, null, 2)], {type:"application/json"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob); a.download = `field-book-${fbToday()}.json`;
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-});
+/* Import. The Export button was removed 2026-10-14 (owner: no user data
+   export yet), so this only reads files made before then — all v1. It is a
+   merge, never a replace: per river the newer `updated` wins for favourite
+   and notes, so restoring an old backup can't wipe newer notes. A v1
+   `fished:true` with its `fishedOn` day becomes a migrated trip, unless that
+   river already has a trip that day — so importing the same file twice adds
+   nothing. The file is untrusted input — shape-checked and each entry
+   rebuilt field by field, and rivers this build doesn't know are skipped. */
 $("#book-import").addEventListener("click", () => $("#book-file").click());
 $("#book-file").addEventListener("change", async ev => {
   const f = ev.target.files[0]; ev.target.value = "";
@@ -4191,23 +4406,28 @@ $("#book-file").addEventListener("change", async ev => {
   try{
     const d = JSON.parse(await f.text());
     if(!d || d.v!==1 || !d.rivers || typeof d.rivers!=="object" || Array.isArray(d.rivers)) throw 0;
-    let n = 0;
+    let n = 0, nt = 0;
     const nf = window.floatImport ? floatImport(d.floats) : 0;
     for(const [id, e] of Object.entries(d.rivers)){
       if(!e || typeof e!=="object" || !RIVERS.some(r => r.id===id)) continue;
+      if(e.fished===true && fbValidDay(e.fishedOn) &&
+         !fbState.trips.some(t => t.kind==="river" && t.water===id && t.day===e.fishedOn)){
+        fbState.trips.push({id:fbNewId(), kind:"river", water:id, day:e.fishedOn, time:null, src:"migrated", at:null});
+        nt++;
+      }
       const inc = {
-        fav: e.fav===true, fished: e.fished===true,
-        fishedOn: e.fished===true && /^\d{4}-\d\d-\d\d$/.test(e.fishedOn||"") ? e.fishedOn : null,
+        fav: e.fav===true,
         notes: typeof e.notes==="string" ? e.notes.slice(0,20000) : "",
         updated: Number.isFinite(e.updated) ? e.updated : 0,
       };
-      if(!inc.fav && !inc.fished && !inc.notes.trim()) continue;
+      if(!inc.fav && !inc.notes.trim()) continue;
       if(inc.updated > fbGet(id).updated){ fbState.rivers[id] = inc; n++; }
     }
     fbPersist(); applyFilters();
-    if(curRiver){ const r = RIVERS.find(x => x.id===curRiver); if(r) fbShowRow(r, true); }
+    if(fbRowWater) fbShowRow(fbRowWater, true, fbRowKind);
     showBookTab(bookTab);
-    msg.textContent = (n||nf) ? "Imported " + [n&&`${n} river${n===1?"":"s"}`, nf&&`${nf} float${nf===1?"":"s"}`].filter(Boolean).join(" and ") + "." : "Nothing newer to import.";
+    const parts = [n&&`${n} river${n===1?"":"s"}`, nt&&`${nt} trip${nt===1?"":"s"}`, nf&&`${nf} float${nf===1?"":"s"}`].filter(Boolean);
+    msg.textContent = parts.length ? "Imported " + (parts.length > 1 ? parts.slice(0,-1).join(", ") + " and " + parts[parts.length-1] : parts[0]) + "." : "Nothing newer to import.";
   }catch(e){ msg.textContent = "That file isn't a Field Book export."; }
 });
 

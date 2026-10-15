@@ -1276,14 +1276,30 @@ stream-access rule and the entry says so (`quote:null`) instead of guessing.
 Skipped for national-park rivers — federal land, not the state's streambed law.
 
 ### Field Book (book icon in the header)
-Per-river ☆ Favourite / ✓ Fished (date) / notes, stored **on the phone only**
-in `localStorage.fieldBook` (`fbGet`/`fbSet`/`fbAll`). The row lives in
+Per-water ☆ Favourite / ✓ Fished / notes, on rivers **and lakes**, stored
+**on the phone only** in `localStorage.fieldBook` (`fbGet`/`fbSet`/`fbAll`).
+- **v2 (2026-10-15): ✓ Fished logs a trip on every tap**, never a toggle.
+  `fbState.trips` holds `{id, kind, water, day, time, src, at, note?}`, and
+  `src` is `tap` / `manual` / `migrated`. Only `tap` trips carry `at`, and
+  part 2's conditions snapshot must attach only to those, **never backfill
+  "now"** onto a typed-in or edited trip (editing the day or time turns a
+  trip `manual`). An Undo toast (`#fbtoast`) follows each tap, and the
+  Trips list edits, deletes and adds past trips.
+- Lake favourites and notes are keyed **`"lake:"+id`** in `rivers`, so a lake
+  can't collide with a river. `fbShowRow(water, force, kind)` serves both;
+  `openLake` shows the lake's own row (it used to leave the last river's).
+- **v1 data migrates on load**: the original string is copied once to
+  `localStorage.fieldBook_v1` (never deleted) and each `fished` becomes a
+  `migrated` trip with no time. Import still reads old v1 files the same
+  way, skipping a trip that already exists on that day. The row lives in
 `#fbrow`, *outside* `#sheetbody`, so `renderSheet` re-running doesn't steal
 focus from the notes box. Favourites are always visible on the map
 (`tierShown`). The page is a tab registry, **`BOOK_SECTIONS`** — a new research
 feature is one more entry. Tabs: Favourites, Fished, Notes, Research (Reddit
 and web-search *links* — posts are their authors', so link, don't copy),
-Offline. Export/import JSON is the only backup. Notes are escaped (`fbEsc`).
+Offline. **There is no Export button** (removed 2026-10-14, owner's decision:
+no user data export yet), so the phone holds the only copy. Import of an old
+backup file still works. Notes are escaped (`fbEsc`).
 
 ### Offline — `sw.js`
 Service worker at the repo root; every URL relative because the site is at a
@@ -1591,7 +1607,7 @@ left/done, ETA, pace, stopped time, keep-screen-on).
   Progress is fraction-along × the section's official `miles`.
 - **No coordinates are stored.** The log is `{t, a}` (time, fraction along);
   the location feature's promise holds. Finished floats live in
-  `fbState.floats` and come through Field Book export/import.
+  `fbState.floats`; they came through Field Book import while export existed.
 - Baseline ETA is `floatEstimate()` ÷ the `CRAFT` factor (guesses), replaced
   by the median of your completed floats on that section. Never show a water
   speed — gauges report discharge, not velocity.

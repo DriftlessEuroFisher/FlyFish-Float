@@ -71,7 +71,7 @@
   // part: which half of the tour a step belongs to, for the "Map · 3 / 11" counter (counted from these tags).
   // check/finish cards carry no part and no number. skip(): true when the step has nothing to say right now.
   const STEPS = [
-    {part:"Map", sel:["#btn-book"], title:"Field Book", text:"Your favorites, rivers you’ve fished, notes, research links and offline map saving. It’s all stored only on your phone — export it to back it up."},
+    {part:"Map", sel:["#btn-book"], title:"Field Book", text:"Your favorites, rivers you’ve fished, notes, research links and offline map saving. It’s all stored only on your phone."},
     {part:"Map", sel:["#btn-legend"], title:"Map key & help", text:"A key to the river colours, map icons, flow status and rankings. How the data was built is folded underneath, and this is where you can replay the tour."},
     {part:"Map", sel:["#btn-report"], title:"The report flag", text:"Tell us anything the app gets wrong — or right — or ask for more detail on your area. Interested in continued testing? Say so in a report and we’ll build out your home water."},
     {part:"Map", sel:["#btn-refresh", "#updated"], title:"Live flows", text:"Readings come live from USGS gauges. Tap refresh to update them; the time beside it shows when they last updated."},
@@ -93,7 +93,7 @@
     {part:"River", sheet:true, sel:["#sheetbody .flowcard"], title:"Live flow", text:"Right-now CFS from the gauge, compared with the 7-year median for this week of the year. The label (like “Around average”) says how it compares; where a good-flow range is set it shows too. Many small creeks — most of the NE Iowa Driftless — have no gauge. Those say so in one line, with the nearest gauged river folded underneath as a rough guide, rather than guessing a number."},
     {part:"River", sheet:true, sel:["#sheetbody .sec"], title:"Float sections", text:"Each stretch lists its launch and take-out, river miles and a float-time estimate — scaled to today’s flow when there’s a reading, otherwise for a typical day."},
     {part:"River", sheet:true, sel:["#sheetbody .floatgo"], title:"Start float", text:"On eligible sections this opens a planner, then a live tracker with miles left and your ETA. We won’t start one now.", scrollTo:"mid"},
-    {part:"River", sheet:true, sel:["#fbrow"], title:"Your Field Book row", text:"☆ Favorite a river, mark it ✓ Fished, and keep notes. Saved on this phone only."},
+    {part:"River", sheet:true, sel:["#fbrow"], title:"Your Field Book row", text:"☆ Favorite a river, tap ✓ Fished each time you go, and keep notes. Saved on this phone only."},
     {part:"River", sheet:true, sel:["#sheetbody .rp-link"], title:"Report from any river", text:"Something off on this river? This opens a report already filled in with its name."},
     {finish:true, title:"That’s it.", text:"Tap the flag any time — good or bad, we want to hear it."},
   ];

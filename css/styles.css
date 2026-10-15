@@ -734,7 +734,9 @@ details.morefold{margin:-4px 0 6px}
 /* ---------- Field Book ---------- */
 /* Row above the sheet body; buttons are 44px tall for a thumb. Teal marks
    "on" — orange stays reserved for live flow data. */
-#fbrow{flex:0 0 auto;display:flex;flex-wrap:wrap;gap:8px;padding:10px 14px 8px;border-bottom:1px solid var(--line)}
+/* It may shrink and scroll: with Notes and Trips both open it can be taller
+   than a 62vh sheet, and it must stay inside the sheet rather than run off it. */
+#fbrow{flex:0 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-wrap:wrap;gap:8px;padding:10px 14px 8px;border-bottom:1px solid var(--line)}
 .fb-btn{min-height:44px;padding:0 12px;border-radius:var(--radius);border:1px solid var(--line);background:var(--paper-2);
   color:var(--txt-dim);font-size:13.5px;font-weight:600;white-space:nowrap;flex:1 1 auto}
 .fb-btn.on{background:var(--river);border-color:var(--river);color:#fff}
@@ -750,6 +752,41 @@ details.morefold{margin:-4px 0 6px}
 .fb-links a{display:flex;align-items:center;min-height:40px;padding:0 12px;background:var(--paper-2);border:1px solid var(--line);
   border-radius:var(--radius);color:var(--river);font-size:13px;font-weight:600;text-decoration:none}
 .fb-note{font-size:10.5px;color:var(--txt-dim);margin:2px 0 4px}
+/* Trips list under the row. It scrolls inside itself so a long history can't
+   squeeze the sheet body to nothing; buttons stay 36px+ for a thumb. */
+.fb-btn[hidden]{display:none}
+.fb-trips{display:none;flex:1 0 100%;max-height:min(240px,32vh);overflow-y:auto;-webkit-overflow-scrolling:touch}
+.fb-trips.show{display:block}
+.fbt-row{display:flex;align-items:center;flex-wrap:wrap;gap:6px 8px;background:var(--paper-2);border:1px solid var(--line);
+  border-radius:var(--radius);padding:6px 6px 6px 10px;margin-bottom:6px}
+.fbt-main{flex:1 1 140px;min-width:0;display:flex;flex-direction:column;gap:1px}
+.fbt-when{font-size:13px;font-weight:600;color:var(--txt)}
+.fbt-note{font-size:12px;color:var(--txt-dim);line-height:1.35;overflow-wrap:anywhere}
+.fbt-acts{display:flex;align-items:center;gap:6px;flex:0 0 auto;margin-left:auto}
+.fbt-ask{font-size:12.5px;font-weight:600;color:var(--txt)}
+.fbt-btn{min-height:36px;padding:0 12px;border-radius:var(--radius);border:1px solid var(--line);background:var(--paper);
+  color:var(--txt);font-size:13px;font-weight:600;white-space:nowrap}
+.fbt-btn:active{transform:scale(.97)}
+.fbt-primary{background:var(--river);border-color:var(--river);color:#fff}
+.fbt-danger{background:#8a2a24;border-color:#8a2a24;color:#fff}
+.fbt-addb{width:100%;min-height:40px;border-style:dashed;color:var(--river)}
+.fbt-form{flex:1 0 100%;display:flex;flex-wrap:wrap;gap:6px 8px;padding:2px 4px 2px 0}
+.fbt-form label{display:flex;flex-direction:column;gap:2px;flex:1 1 130px;font-size:11px;font-weight:600;color:var(--txt-dim)}
+.fbt-form label.fbt-wide{flex-basis:100%}
+.fbt-form input{min-height:38px;font:inherit;font-size:16px;color:var(--txt);background:#fff;border:1px solid var(--line);
+  border-radius:var(--radius);padding:0 8px;width:100%}
+.fbt-form input:focus{outline:2px solid var(--river-dim);border-color:var(--river)}
+.fbt-err{flex:1 0 100%;font-size:12px;color:#8a2a24;min-height:0}
+.fbt-err:empty{display:none}
+.fbt-form .fbt-acts{margin-left:0}
+/* "Trip logged · Undo" — same look as Float Mode's toast, plus one action. */
+#fbtoast{position:fixed;z-index:1340;left:50%;transform:translateX(-50%);bottom:max(80px,calc(70px + env(safe-area-inset-bottom)));max-width:92vw;
+  background:var(--ink);color:#f2ece0;font-size:12.5px;font-weight:600;border-radius:99px;padding:4px 6px 4px 16px;box-shadow:var(--shadow);
+  display:none;align-items:center;gap:10px;white-space:nowrap}
+#fbtoast.show{display:flex}
+#fbtoast button{min-height:36px;padding:0 14px;border-radius:99px;background:var(--ink-2);border:1px solid #3a4f43;color:var(--river-dim);font-weight:700;font-size:13px}
+#fbtoast button[hidden]{display:none}
+#fbtoast:has(button[hidden]){padding-right:16px}
 
 #book{position:fixed;z-index:1600;inset:0;display:none;flex-direction:column;background:var(--paper);
   padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}

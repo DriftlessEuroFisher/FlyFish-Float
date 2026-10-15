@@ -56,15 +56,16 @@
   <div id="fbrow"></div>
   <div id="sheetbody"></div>
 </aside>
+<div id="fbtoast" role="status"><span class="fbt-msg"></span><button type="button" hidden>Undo</button></div>
 
 <section id="book" role="dialog" aria-label="Field Book">
   <div id="book-head"><h2>Field Book</h2><button class="x" id="book-x" aria-label="Close Field Book">✕</button></div>
   <div id="book-tabs" role="tablist"></div>
   <div id="book-body"></div>
   <div id="book-foot">
-    <div class="bk-btns"><button type="button" id="book-export">Export</button><button type="button" id="book-import">Import</button><span id="book-msg" aria-live="polite"></span></div>
+    <div class="bk-btns"><button type="button" id="book-import">Import</button><span id="book-msg" aria-live="polite"></span></div>
     <input type="file" id="book-file" accept="application/json,.json" hidden>
-    <p>Saved on this phone only. Export to back it up.</p>
+    <p>Saved on this phone only.</p>
   </div>
 </section>
 
