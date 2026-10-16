@@ -748,6 +748,7 @@ details.morefold{margin:-4px 0 6px}
   background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);padding:9px 10px}
 .fb-ta textarea:focus{outline:2px solid var(--river-dim);border-color:var(--river)}
 .fb-saved{position:absolute;right:10px;bottom:8px;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--river);pointer-events:none}
+.fb-saved.warn{color:#8a2a24}   /* same red as .fbt-err: the note did not save */
 .fb-links{display:flex;flex-direction:column;gap:6px;margin-bottom:6px}
 .fb-links a{display:flex;align-items:center;min-height:40px;padding:0 12px;background:var(--paper-2);border:1px solid var(--line);
   border-radius:var(--radius);color:var(--river);font-size:13px;font-weight:600;text-decoration:none}

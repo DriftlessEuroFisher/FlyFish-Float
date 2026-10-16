@@ -437,7 +437,11 @@ function floatBusy(){ return !!F; }                    // running, or an unfinis
 function flSave(){
   if(!F) return;
   const o = {id:F.id, section:F.section, river:F.river, craft:F.craft, start:F.start, planned:F.planned, log:F.log};
-  try{ localStorage.setItem(FLOAT_KEY, JSON.stringify(o)); }catch(e){}
+  // lsSetSafe (app.js) clears caches first if the phone's storage is full
+  try{
+    const str = JSON.stringify(o);
+    if(typeof lsSetSafe === "function") lsSetSafe(FLOAT_KEY, str); else localStorage.setItem(FLOAT_KEY, str);
+  }catch(e){}
 }
 function flWakeWanted(){ try{ return localStorage.getItem("floatWake") !== "off"; }catch(e){ return true; } }
 async function flWakeAcquire(){
@@ -603,9 +607,16 @@ function flEnd(stale){
     completed:Math.max(a, flRoute ? flAlong/flRoute.len : 0) >= 0.9,
   };
   if(!Array.isArray(fbState.floats)) fbState.floats = [];
-  fbState.floats.push(rec); fbPersist();
+  fbState.floats.push(rec);
+  let ok = fbPersist();
   flFinish();
-  flToast(rec.completed ? "Float saved to your Field Book" : "Float saved (not finished, so it won't shape estimates)");
+  /* Ending drops the live float's own key, which may be just the room the
+     book needed. If it still doesn't fit the record stays in memory, where
+     the book's next successful write takes it along, and nobody is told
+     it was saved. */
+  if(!ok) ok = fbPersist();
+  if(!ok){ if(typeof fbToast === "function") fbToast("Float not saved — this phone's storage is full"); else flToast("Float not saved — this phone's storage is full"); }
+  else flToast(rec.completed ? "Float saved to your Field Book" : "Float saved (not finished, so it won't shape estimates)");
   if(typeof bookEl !== "undefined" && bookEl.classList.contains("show")) showBookTab(bookTab);
 }
 
@@ -654,8 +665,10 @@ BOOK_SECTIONS.splice(Math.max(0, BOOK_SECTIONS.findIndex(s => s.id === "fished")
 bookBody.addEventListener("click", e => {
   const b = e.target.closest("[data-fldel]"); if(!b) return;
   if(!confirm("Delete this float from your Field Book?")) return;
-  fbState.floats = (fbState.floats || []).filter(x => x.id !== b.dataset.fldel);
-  fbPersist(); showBookTab("floats");
+  const before = fbState.floats;
+  fbState.floats = (before || []).filter(x => x.id !== b.dataset.fldel);
+  if(!fbPersist()){ fbState.floats = before; if(typeof fbSaveWarn === "function") fbSaveWarn(); }   // still there on reload, so still listed
+  showBookTab("floats");
 });
 
 /* Import is untrusted input: every field rebuilt, unknown sections skipped,

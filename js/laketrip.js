@@ -276,8 +276,12 @@ function ltResetMem(){
 function ltSave(){
   if(!LT) return true;
   const o = {v:1, lake:LT.lake, craft:LT.craft, ramp:LT.ramp, start:LT.start, trip:LT.trip, segs:LT.segs};
-  try{ localStorage.setItem(LT_KEY, JSON.stringify(o)); ltSaveFailed = false; return true; }
-  catch(e){ ltSaveFailed = true; return false; }
+  // lsSetSafe (app.js) clears caches first if the phone's storage is full
+  try{
+    const str = JSON.stringify(o);
+    if(typeof lsSetSafe === "function" ? lsSetSafe(LT_KEY, str) : (localStorage.setItem(LT_KEY, str), true)){ ltSaveFailed = false; return true; }
+  }catch(e){}
+  ltSaveFailed = true; return false;
 }
 
 /* No opt-out, unlike a float: a locked screen is a gap in the track. */

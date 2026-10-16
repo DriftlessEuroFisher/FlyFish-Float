@@ -142,8 +142,94 @@ function gaugesInRegion(reg){ return Object.keys(GAUGES).filter(k => GAUGE_REGIO
 const mem = {};
 const store = {
   get(k){ try { return JSON.parse(localStorage.getItem(k)); } catch(e){ return mem[k] ?? null; } },
-  set(k,v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){ mem[k]=v; } },
+  set(k,v){ const s = JSON.stringify(v); if(!lsSetSafe(k, s)) mem[k]=v; },
 };
+
+/* ---------- making room in localStorage ----------
+   The Field Book (`fieldBook`) shares this origin's ~5 MB (iOS Safari) with
+   caches the app can always fetch again, and it is the only copy of the
+   user's trips: there is no export. Left alone the caches only grow — a new
+   `stats:` key per gauge every week, a river's geometry for every river ever
+   looked at — until the book's next write throws and the trip is lost on
+   reload. So every write goes through lsSetSafe(): when a write doesn't fit,
+   caches are deleted, oldest and least useful first, until it does.
+
+   Only keys under these prefixes are ever deleted. Everything else — the
+   book and its v1 copy, a live float or lake trip, offline areas, settings,
+   the report draft, the API key — is the user's and is never touched. */
+const LS_CACHE_PREFIXES = ["nhdfine:", "nhd:", "stats:", "nwsFc:", "agname:", "temp:", "meta:", "flow:", "nwsPt:"];
+const LS_ROOM_BYTES = 512*1024;              // freed per batch; one write rarely needs more
+const GEOM_CACHE_MS = 1000*60*60*24*30;      // nhd:/nhdfine: geometry is refetched after this
+const lsCacheKind = k => LS_CACHE_PREFIXES.find(p => k.startsWith(p)) || null;
+/* The week-and-years tag a stats key ends with this week. Any other tag is a
+   past week (or a different STAT_YEARS) that will never be read again. */
+function statsWeekTag(){
+  const now = new Date();
+  return `${now.getFullYear()}w${Math.floor(dayOfYear(now)/7)}:y${STAT_YEARS}`;
+}
+/* A geometry cache's save time, read off the end of the string — store.set
+   writes {g, t}, so `t` is last — rather than parsing 60 KB to get one
+   number. 0 (unknown) sorts as oldest. */
+function lsGeomTime(v){ const m = /"t":(\d+)\}$/.exec(v || ""); return m ? +m[1] : 0; }
+/* Deletes cache keys until at least `minBytes` (string length × 2, which is
+   how browsers count) are freed, or no cache is left. Returns bytes freed.
+   Order: dead weight first (past weeks' stats, geometry past its 30 days),
+   then refined geometry oldest first (the biggest and the most easily
+   refetched), then base geometry, then this week's stats, then the rest. */
+function lsMakeRoom(minBytes){
+  minBytes = minBytes || LS_ROOM_BYTES;
+  let freed = 0;
+  try{
+    const tag = statsWeekTag(), now = Date.now(), cand = [];
+    for(let i = localStorage.length - 1; i >= 0; i--){
+      const k = localStorage.key(i), kind = k && lsCacheKind(k);
+      if(!kind) continue;
+      if(kind === "stats:"){ cand.push({k, rank:k.endsWith(":"+tag) ? 3 : 0, t:0}); continue; }
+      if(kind === "nhd:" || kind === "nhdfine:"){
+        const t = lsGeomTime(localStorage.getItem(k));
+        cand.push({k, rank:now - t >= GEOM_CACHE_MS ? 0 : kind === "nhdfine:" ? 1 : 2, t});
+        continue;
+      }
+      // short-lived forecasts before the small, long-lived lookups
+      cand.push({k, rank:4 + ["nwsFc:", "temp:", "flow:", "meta:", "agname:", "nwsPt:"].indexOf(kind), t:0});
+    }
+    cand.sort((a, b) => a.rank - b.rank || a.t - b.t);
+    for(const c of cand){
+      if(freed >= minBytes) break;
+      const v = localStorage.getItem(c.k);
+      localStorage.removeItem(c.k);
+      freed += (c.k.length + (v ? v.length : 0)) * 2;
+    }
+  }catch(e){}
+  return freed;
+}
+/* setItem that makes room when the write doesn't fit. Returns whether the
+   value landed; callers holding the user's data must not pretend it did. */
+function lsSetSafe(k, s){
+  for(;;){
+    try{ localStorage.setItem(k, s); return true; }
+    catch(e){ if(!lsMakeRoom()) return false; }   // nothing left to delete: it really is full
+  }
+}
+/* Once per launch, a few seconds in: clear what will never be read again, so
+   the caches don't wait for a failed write to be trimmed. The keys are
+   listed first and removed after: removing while walking localStorage.key(i)
+   skips keys in Chrome, even walking backwards (40 of 300 survived a test). */
+function lsPrune(){
+  try{
+    const tag = statsWeekTag(), now = Date.now(), dead = [];
+    for(let i = 0; i < localStorage.length; i++){
+      const k = localStorage.key(i);
+      if(!k) continue;
+      if(k.startsWith("stats:")){ if(!k.endsWith(":"+tag)) dead.push(k); }
+      else if(k.startsWith("nhd:") || k.startsWith("nhdfine:")){
+        if(now - lsGeomTime(localStorage.getItem(k)) >= GEOM_CACHE_MS) dead.push(k);
+      }
+    }
+    dead.forEach(k => localStorage.removeItem(k));
+  }catch(e){}
+}
+setTimeout(lsPrune, 4000);
 
 const flows = {};   // gaugeKey -> {cfs, time, fetchedAt, stale}
 const temps = {};   // gaugeKey -> {c, time, fetchedAt}  water temperature (00010), USGS only
@@ -351,8 +437,7 @@ async function fetchLatestBatch(keys){
 }
 
 function statsCacheKey(key){
-  const now = new Date();
-  return `stats:${GAUGES[key].site}:${now.getFullYear()}w${Math.floor(dayOfYear(now)/7)}:y${STAT_YEARS}`;
+  return `stats:${GAUGES[key].site}:${statsWeekTag()}`;
 }
 
 /* Day-of-year median for many gauges at once.
@@ -1338,23 +1423,39 @@ function fbMigrateV1(saved, raw){
   try{ localStorage.setItem(FB_KEY, JSON.stringify(st)); }catch(e){}
   return st;
 }
-/* Returns whether the write landed. Most callers can ignore it (the book then
-   just lives for the session), but saving a recorded lake trip can't: a track
-   is the biggest thing the book holds, and if the phone's storage is full the
-   trip must stay live rather than vanish (laketrip.js). */
+/* Returns whether the write landed. lsSetSafe() first deletes caches to make
+   room, so a false here means the phone's storage is full of things that
+   aren't caches. Then no caller may say "saved": the change is undone in
+   memory, so what the screen shows is what a reload will show, and the user
+   is told (fbSaveWarn). A recorded lake trip is the exception — it can't be
+   recreated, so it stays live rather than vanish (laketrip.js). */
 function fbPersist(){
-  try{ localStorage.setItem(FB_KEY, JSON.stringify(fbState)); return true; }
+  try{ return lsSetSafe(FB_KEY, JSON.stringify(fbState)); }
   catch(e){ return false; }
+}
+const FB_FULL_MSG = "Couldn't save — this phone's storage is full";
+let fbWarnAt = 0;
+// once per 10 s: typing in a full book shouldn't strobe the toast
+function fbSaveWarn(){
+  if(Date.now() - fbWarnAt < 10000) return;
+  fbWarnAt = Date.now();
+  fbToast(FB_FULL_MSG);
 }
 function fbGet(id){
   const e = fbState.rivers[id];
   return e ? e : {fav:false, notes:"", updated:0};
 }
+// Returns the saved entry, or null when it couldn't be written (and nothing changed).
 function fbSet(id, patch){
+  const prev = fbState.rivers[id];
   const e = Object.assign({}, fbGet(id), patch, {updated:Date.now()});
   if(!e.fav && !(e.notes||"").trim()) delete fbState.rivers[id];   // nothing left to keep (trips live apart)
   else fbState.rivers[id] = e;
-  fbPersist();
+  if(!fbPersist()){
+    if(prev) fbState.rivers[id] = prev; else delete fbState.rivers[id];
+    fbSaveWarn();
+    return null;
+  }
   return e;
 }
 function fbAll(){ return fbState.rivers; }
@@ -1379,13 +1480,20 @@ function fbAddTrip(kind, water, day, time, src, at, note, wtUser){
   if(note && note.trim()) t.note = note.trim().slice(0, 500);
   if(kind==="lake" && wtUser!=null && isFinite(wtUser)) t.wtUser = wtUser;
   fbState.trips.push(t);
-  fbPersist();
+  if(!fbPersist()){                    // not saved, so not logged
+    fbState.trips = fbState.trips.filter(x => x !== t);
+    fbSaveWarn();
+    return null;
+  }
   return t;
 }
+// false when the delete couldn't be written; the trip is then still there
 function fbDelTrip(id){
-  const n = fbState.trips.length;
-  fbState.trips = fbState.trips.filter(t => t.id!==id);
-  if(fbState.trips.length!==n) fbPersist();
+  const before = fbState.trips;
+  fbState.trips = before.filter(t => t.id!==id);
+  if(fbState.trips.length===before.length) return true;
+  if(!fbPersist()){ fbState.trips = before; fbSaveWarn(); return false; }
+  return true;
 }
 /* Only day, time, note and (lakes) the user's water temp can change. Moving a
    trip's day or time makes it a manual entry: whatever was true at the moment
@@ -1394,7 +1502,8 @@ function fbDelTrip(id){
    keeps its day and time whatever the patch says: they are when the track
    was recorded, and its point times count from that moment. */
 function fbEditTrip(id, patch){
-  const t = fbState.trips.find(x => x.id===id); if(!t) return null;
+  const i = fbState.trips.findIndex(x => x.id===id); if(i < 0) return null;
+  const t = fbState.trips[i], prev = JSON.parse(JSON.stringify(t));   // to put back if it can't be saved
   if(("day" in patch || "time" in patch) && !t.track){
     const day = "day" in patch ? patch.day : t.day, time = "time" in patch ? (patch.time||null) : t.time;
     if(day!==t.day || time!==t.time){ t.day = day; t.time = time; t.src = "manual"; t.at = null; delete t.cond; }
@@ -1406,7 +1515,7 @@ function fbEditTrip(id, patch){
   if("wtUser" in patch && t.kind==="lake"){
     if(patch.wtUser!=null && isFinite(patch.wtUser)) t.wtUser = patch.wtUser; else delete t.wtUser;
   }
-  fbPersist();
+  if(!fbPersist()){ fbState.trips[i] = prev; fbSaveWarn(); return false; }   // false: not saved
   return t;
 }
 
@@ -2682,7 +2791,7 @@ async function loadRealRiver(r){
   layer.tried = true;
   const ck = "nhd:"+r.id;
   const cached = store.get(ck);
-  if(cached && cached.g && (Date.now()-(cached.t||0) < 1000*60*60*24*30)){
+  if(cached && cached.g && (Date.now()-(cached.t||0) < GEOM_CACHE_MS)){
     layer.line.setLatLngs(cached.g); layer.real = true; return;
   }
   const bb = bboxOf(flatCoords(r.coords));
@@ -2845,7 +2954,7 @@ async function refineRiver(r){
   layer.refining = true;
   const ck = "nhdfine:" + r.id;
   const cached = store.get(ck);
-  if(cached && cached.g && (Date.now() - (cached.t || 0) < 1000*60*60*24*30)){
+  if(cached && cached.g && (Date.now() - (cached.t || 0) < GEOM_CACHE_MS)){
     layer.line.setLatLngs(cached.g);
     layer.refined = true; layer.refining = false;
     syncFlow();
@@ -3533,14 +3642,22 @@ function fbSnapshot(kind, water, at){
 /* Called once per tap. A forecast that isn't here yet is waited for only if
    a fetch is actually going — otherwise nothing would ever settle it and the
    row would say "loading" for an hour. */
+/* Returns false only when there were conditions and the book couldn't take
+   them; the trip itself (already saved) is kept without them. A live lake
+   trip isn't in the book yet — laketrip.js saves it with its own key. */
 function fbSnapTrip(t, kind, water){
+  let ok = true;
   const cond = fbSnapshot(kind, water, t.at);
-  if(cond){ t.cond = cond; fbPersist(); }
-  if(cond && cond.wx) return;
+  if(cond){
+    t.cond = cond;
+    if(fbState.trips.includes(t) && !fbPersist()){ delete t.cond; ok = false; }
+  }
+  if(!ok || (cond && cond.wx)) return ok;
   const target = fbWxTarget(kind, water);
-  if(wxURLKnown(target.pt) === null) return;                  // outside NWS coverage
+  if(wxURLKnown(target.pt) === null) return ok;               // outside NWS coverage
   wxLoad(target);
   if(wxBusy[target.pt.id]) fbWxPending.push({tripId:t.id, ptId:target.pt.id, at:t.at});
+  return ok;
 }
 const fbWxIsPending = id => fbWxPending.some(p => p.tripId===id);
 /* A forecast fetch for this point has finished, well or badly. Every trip
@@ -3560,8 +3677,10 @@ function fbWxSettle(pt){
     if(t.src!=="tap" || t.at!==p.at || (t.cond && t.cond.wx) || Date.now() - p.at >= FB_WX_LATE_MS) continue;
     const wx = fbWxPeriodAt(pt, p.at);
     if(!wx) continue;
-    t.cond = Object.assign(t.cond || {}, {wx});
-    if(live) lakeTripSaveLive(); else fbPersist();
+    const prev = t.cond;
+    t.cond = Object.assign({}, prev || {}, {wx});
+    if(live) lakeTripSaveLive();
+    else if(!fbPersist()){ if(prev) t.cond = prev; else delete t.cond; fbSaveWarn(); }
   }
   if(fbRowPaint && rows.has(fbRowFor)) fbRowPaint();
 }
@@ -4199,9 +4318,11 @@ function fbShowRow(water, force, kind){
   // Not a toggle: every tap is another trip, and the toast's Undo is the way back.
   fishB.addEventListener("click", () => {
     const t = fbAddTrip(kind, water.id, fbToday(), fbNowHM(), "tap", Date.now());
-    fbSnapTrip(t, kind, water);
+    // never "Trip logged" for a trip a reload would lose; always said, whatever the rate limit
+    if(!t){ paint(); fbWarnAt = Date.now(); fbToast(FB_FULL_MSG); return; }
+    const condOk = fbSnapTrip(t, kind, water);
     paint();
-    fbToast(`Trip logged · ${fbDateText(t.day)}, ${fbTimeText(t.time)}`, () => {
+    fbToast(`Trip logged · ${fbDateText(t.day)}, ${fbTimeText(t.time)}` + (condOk ? "" : " · conditions not saved, storage full"), () => {
       fbDelTrip(t.id);
       if(fbRowFor === rowKey) fbRowPaint();     // the row may have been rebuilt since (an import)
     });
@@ -4252,18 +4373,20 @@ function fbShowRow(water, force, kind){
         }
         patch.wtUser = v===null ? null : Math.round(v*10)/10;
       }
-      if(tid) fbEditTrip(tid, patch);
-      else if(patch.day) fbAddTrip(kind, water.id, patch.day, patch.time, "manual", null, note, patch.wtUser);
+      // Not saved: leave the form open with what was typed, so nothing is lost and it can be tried again
+      const done = tid ? fbEditTrip(tid, patch) !== false
+                 : !patch.day || !!fbAddTrip(kind, water.id, patch.day, patch.time, "manual", null, note, patch.wtUser);
+      if(!done){ err.textContent = FB_FULL_MSG + "."; return; }
       editing = null; adding = false;
     }
     paint();                  // no auto-focus: on an iPhone it would throw the date wheel up unasked
   });
   let t = null;
   ta.addEventListener("input", () => {
-    saved.textContent = "";
+    saved.textContent = ""; saved.classList.remove("warn");
     clearTimeout(t);
     t = setTimeout(() => {
-      fbSet(id, {notes:ta.value});
+      if(!fbSet(id, {notes:ta.value})){ saved.textContent = "Not saved — storage full"; saved.classList.add("warn"); return; }
       notesB.classList.toggle("has", !!ta.value.trim());
       saved.textContent = "Saved";
       setTimeout(() => { if(saved.textContent==="Saved") saved.textContent = ""; }, 1600);
@@ -4540,7 +4663,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v19";
+const APP_VERSION = "flyroutes-v20";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){
@@ -4664,6 +4787,7 @@ $("#book-file").addEventListener("change", async ev => {
     const d = JSON.parse(await f.text());
     if(!d || d.v!==1 || !d.rivers || typeof d.rivers!=="object" || Array.isArray(d.rivers)) throw 0;
     let n = 0, nt = 0;
+    const before = JSON.stringify(fbState);     // put back whole if the merge can't be saved
     const nf = window.floatImport ? floatImport(d.floats) : 0;
     for(const [id, e] of Object.entries(d.rivers)){
       if(!e || typeof e!=="object" || !RIVERS.some(r => r.id===id)) continue;
@@ -4680,7 +4804,13 @@ $("#book-file").addEventListener("change", async ev => {
       if(!inc.fav && !inc.notes.trim()) continue;
       if(inc.updated > fbGet(id).updated){ fbState.rivers[id] = inc; n++; }
     }
-    fbPersist(); applyFilters();
+    if((n || nt || nf) && !fbPersist()){
+      fbState = JSON.parse(before);
+      fbPersist();     // floatImport may have saved its part already; the old book is smaller, so it fits
+      msg.textContent = "Nothing was imported: this phone's storage is full.";
+      return;
+    }
+    applyFilters();
     if(fbRowWater) fbShowRow(fbRowWater, true, fbRowKind);
     showBookTab(bookTab);
     const parts = [n&&`${n} river${n===1?"":"s"}`, nt&&`${nt} trip${nt===1?"":"s"}`, nf&&`${nf} float${nf===1?"":"s"}`].filter(Boolean);

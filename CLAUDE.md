@@ -1328,6 +1328,21 @@ Per-water ☆ Favourite / ✓ Fished / notes, on rivers **and lakes**, stored
   "Water temp °F" (32–95) in the trip form, stored as `t.wtUser` on the
   trip, not in `cond`, and allowed on manual trips because it's the user's
   own reading. Shown in the Trips list by `fbCondHTML`.
+- **Storage full (2026-10-16).** The book shares localStorage (~5 MB on
+  iOS) with caches, and `stats:` gained a key per gauge per week, never
+  deleted. Every write now goes through **`lsSetSafe()`**, which on a quota
+  error calls `lsMakeRoom()` and retries. That deletes **only** keys under
+  `LS_CACHE_PREFIXES` (`nhdfine:`, `nhd:`, `stats:`, `nwsFc:`, `temp:`,
+  `flow:`, `meta:`, `agname:`, `nwsPt:`): stale ones first, then the oldest
+  refined geometry. `lsPrune()` clears past-week stats and geometry older
+  than 30 days 4 s after launch. **When a book save still fails, the change
+  is rolled back in memory and the user is told** ("Couldn't save — this
+  phone's storage is full"). Never show "Trip logged" or "Saved" for
+  something a reload would lose. A new disposable cache must use one of those
+  prefixes (or add its own); a new piece of user data must not. Trap: removing
+  keys while walking `localStorage.key(i)` skips keys in Chromium, even
+  walking backwards, so list them first and delete after. The older
+  `wxPrune()` still has this bug and leaves some forecasts behind.
 - Lake favourites and notes are keyed **`"lake:"+id`** in `rivers`, so a lake
   can't collide with a river. `fbShowRow(water, force, kind)` serves both;
   `openLake` shows the lake's own row (it used to leave the last river's).
