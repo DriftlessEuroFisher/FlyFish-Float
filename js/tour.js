@@ -77,7 +77,7 @@
     {part:"Map", sel:["#btn-refresh", "#updated"], title:"Live flows", text:"Readings come live from USGS gauges. Tap refresh to update them; the time beside it shows when they last updated."},
     {part:"Map", sel:[".leaflet-control-zoom"], title:"Zooming", text:"Use + and −, or double-tap to zoom in. Double-tap and drag with one finger for smooth zoom, and tap with two fingers to zoom out."},
     {part:"Map", id:"locate", sel:["#btn-locate"], title:"Your location",
-      text:() => "The blue dot shows where you are while you drive and fish. Your location never leaves this phone — it isn’t saved or sent anywhere." + (LOC_DENIED() ? " " + LOC_BLOCKED() : ""),
+      text:() => "The blue dot shows where you are while you drive and fish. The blue dot isn’t saved. If you record a lake trip, its track is saved on this phone, in your Field Book." + (LOC_DENIED() ? " " + LOC_BLOCKED() : ""),
       enter(){ if(typeof zonesShown !== "undefined" && zonesShown && typeof hideZones === "function"){ hideZones(); state.hid = true; } },
       extra(){ return LOC_ON() ? [["Turn on location", () => { locPrefSet("on"); if(locState === "off") locStart("following"); next(); }, "tt-primary"],
                                  ["Not now", () => { locPrefSet("off"); next(); }]] : null; }},

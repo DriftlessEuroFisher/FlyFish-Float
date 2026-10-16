@@ -345,6 +345,75 @@ the track.
   **Storage:** `localStorage` is small, and many long tracks may not fit.
   Thin hard, and consider IndexedDB for tracks. Not measured.
 
+**3a. First release: lake tracks on Big Creek and Saylorville — `done`
+(2026-10-16, uncommitted; built as specced, plus the lake's pins hide
+while recording except the launch; see CLAUDE.md "Lake trips". Planned 2026-10-16, owner's scope: lakes only, these two lakes only; build
+with `build-opus-xhigh`).** River tracks and the Float Mode merge are 3b, a
+later session. Spec:
+- **Where:** a new `js/laketrip.js`, loaded after `float.js`. Add it to
+  `SHELL` in `sw.js` and bump `VERSION` and `APP_VERSION` together.
+  `LAKETRIP_LAKES = ["bigcreeklake","saylorvillelake"]` is the pilot gate.
+- **Button:** a **Start fishing** button sits next to ✓ Fished in the lake's
+  Field Book row (`fbShowRow`, kind `lake`), only for pilot lakes. **One
+  recorder at a time:** while a float runs, the button says so and does
+  nothing. While a lake trip runs, Start float does the same, and the lake
+  button reads "Trip running".
+- **Planner** (a sheet like Float Mode's): **launch** = that lake's pins
+  (`RAMPS.filter(p => p.lake === id)`), nearest to the last fix first if one
+  is in memory, else by name, plus "Where I am now". **Craft:** canoe,
+  kayak, boat, float tube, shore. The last choice is remembered
+  (`localStorage.lakeCraft`). Plain copy before Start: the screen stays on;
+  locking the phone or switching apps pauses the track; it uses battery;
+  **the track is saved on this phone, in your Field Book.**
+- **Start** is the tap iOS needs, so it calls `locStart("following")` if
+  location is off. It takes the Wake Lock **with no opt-out**, re-requests it
+  on `visibilitychange` → visible, and logs the trip's conditions through
+  the existing `fbSnapTrip` with `at` = start time.
+- **Recording:** `locFix` also calls `window.lakeOnFix(pos)`. Drop fixes
+  with accuracy over 50 m. Log a point when it is ≥15 m from the last
+  logged point, or 60 s have passed (that is how stops are kept). **A gap
+  over 2 minutes between accepted fixes starts a new segment**, and a gap is
+  drawn as a gap, never as a line across the water. The live trip is saved
+  to `localStorage.lakeTripActive` on every logged point, restored on
+  reload, and treated as stale after 18 h (save it or discard it), like
+  `flRestore`. While a trip runs, the locate button cycles follow/free and
+  never turns off, same as a float (`locToggle`).
+- **Live panel** (collapsible, like a float's): elapsed time, distance,
+  moving vs stopped time, the age of the last fix, and a "Paused, the app
+  was in the background" line after a gap. **End** confirms first. The
+  track so far is drawn on the map in its own pane.
+- **Saved form:** the trip goes in `fbState.trips` as a normal `kind:"lake"`
+  `src:"tap"` trip (day/time/at from the start), plus `track:{craft, ramp,
+  end, km, movMin, stopMin, segs, tt, stops}`. `segs` is a list of encoded
+  polylines at 1e5 (write an encoder next to `decodePolyline`). `tt` is the
+  seconds since start for each point, delta-encoded the same way. `stops` is
+  `[{lat, lng, t, min}]` for every stretch slower than 0.4 mph lasting at
+  least 3 min. **localStorage, not IndexedDB:** a 4-hour trip thinned at
+  15 m is a few KB encoded. **But `fbPersist` swallows quota errors
+  today.** Make it report failure. If End can't save, say so and keep the
+  live trip instead of deleting it.
+- **In the trip list:** a tracked trip reads "Tracked · 2h 14m · 3.1 mi ·
+  Kayak · from 100th St. Boat Ramp", with its conditions, and a **Show on
+  map** button that draws that track over the lake (stops as dots) until
+  the sheet closes. **Day and time can't be edited on a tracked trip**
+  (they are the recording's own). The note and water temp can. Delete
+  removes the track with it. The stats page and the all-trips image are
+  part 4.
+- **No export, and no upload.** Field Book import of old files must not
+  choke on trips with `track`.
+- **Privacy wording, everywhere it is now false:** the tour's location step
+  (`tour.js:80`), the `#locask` card text (`app.js` ~5780, "never saved
+  or sent anywhere"), the location comment (`app.js` ~5638), the header
+  comment in `float.js`, and CLAUDE.md
+  (Location, and Float Mode's "No coordinates are stored"). New line: *"The
+  blue dot isn't saved. If you record a lake trip, its track is saved on
+  this phone, in your Field Book."* Don't promise "never sent".
+- **Verify:** in the preview, with geolocation stubbed to walk a path
+  across Big Creek Lake, including a 3-minute gap and a 5-minute stop.
+  Check that the gap is a gap, the stop is a dot, a reload mid-trip
+  resumes, End saves, Show on map draws it, and Delete removes it. Then
+  check that Start float and lake trip block each other.
+
 **4. The Field Book as pages.** The user's idea: each water fished adds a
 page they can flip through.
 - **Front page** keeps the stats: trips, waters fished, days on the water,

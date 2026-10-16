@@ -1360,8 +1360,47 @@ Locate button bottom-right. On first launch a card (`#locask`) asks once,
 and "Turn on" is the tap that triggers iOS's own prompt. A page can't change
 iOS settings itself. After that, `localStorage.locPref="on"` starts the dot
 on launch in **`located`** mode (dot shown, map not moved). "Not now" is
-permanent. Denied → the pill gives the iPhone Settings path. Coordinates are
-never stored or sent.
+permanent. Denied → the pill gives the iPhone Settings path. The blue dot
+isn't saved. A lake trip's track is saved on this phone, in the Field Book
+(`laketrip.js`). Don't promise "never sent": trips are planned to sync once
+accounts exist.
+
+### Lake trips — `js/laketrip.js` (Field Book part 3a, 2026-10-16)
+**Start fishing** in a pilot lake's Field Book row records a GPS track.
+Pilot gate: `LAKETRIP_LAKES` = `bigcreeklake`, `saylorvillelake`. Modelled on
+Float Mode, and loaded after float.js (it is in `SHELL`, v19).
+- **One recorder at a time.** `lakeTripBusy()` / `floatBusy()` count a trip
+  that is running *or* unfinished. The lake button reads "Float running" or
+  "Trip running", and Start float reads "🛶 Lake trip running". Each refuses
+  with a toast.
+- **Planner:** launch is "Where I am now" plus the lake's `RAMPS` pins,
+  nearest first with distance when a fix is in memory. The nearest is
+  preselected only within 0.5 km. Crafts are canoe, kayak, boat, float tube
+  and shore (`localStorage.lakeCraft`). Start refuses when location is
+  blocked; it is the iOS gesture (`locStart("following")`).
+- **Recording** (`locFix` → `lakeOnFix`): fixes over 50 m accuracy are
+  dropped, and a point is logged at ≥15 m or 60 s. More than 2 min between
+  accepted fixes starts a new segment, and a gap is never drawn or counted.
+  A stop is ≥3 min slower than 0.4 mph. Wake Lock has no opt-out. The live
+  trip is in `localStorage.lakeTripActive`; a reload resumes it, and after
+  18 h it gets a Save/Discard card. **While recording, `syncMarkers()` hides
+  that lake's pins except the chosen launch** (`lakeTripPinKeep()`): Big
+  Creek's 49 pins otherwise bury the track. Locate cycles follow/free and
+  never turns off mid-trip.
+- **Saved form:** an ordinary `src:"tap"` lake trip (day, time, `at` and
+  `cond` from the Start tap) plus `track:{craft, ramp, end, km, movMin,
+  stopMin, segs, tt, stops}`. `segs` and `tt` are parallel lists, one
+  string per segment: `encodePolyline` at 1e5, and `encodeDeltas` of whole
+  seconds since `at` (both next to `decodePolyline` in app.js). A test trip
+  of 35 points was about 600 bytes. **`fbPersist()` returns true/false**,
+  and an End that can't write keeps the trip live.
+- **Trips list:** "Tracked · 2h 14m · 3.1 mi · Kayak · from …", Show/Hide on
+  map (`lakeTripPane`, cleared when the sheet closes or another water
+  opens). There are no day/time inputs (`fbEditTrip` refuses them too), and
+  Delete takes the track with it. No export, no upload.
+- **Not checked on a real iPhone yet:** whether Wake Lock holds, what
+  happens when the screen locks, and how real GPS jitter fares against the
+  15 m and 0.4 mph rules.
 
 ### Gestures and controls
 - **Single taps on rivers, lakes, zones and public land wait 250 ms**
@@ -1648,8 +1687,8 @@ left/done, ETA, pace, stopped time, keep-screen-on).
   (braids rejoin mid-segment). Ramps must snap within 1.5 km or the planner
   says it can't trace the section — **don't raise that limit; fix the ramp.**
   Progress is fraction-along × the section's official `miles`.
-- **No coordinates are stored.** The log is `{t, a}` (time, fraction along);
-  the location feature's promise holds. Finished floats live in
+- **A float stores no coordinates.** The log is `{t, a}` (time, fraction
+  along). Lake trips do store a track, and the location wording says so. Finished floats live in
   `fbState.floats`; they came through Field Book import while export existed.
 - Baseline ETA is `floatEstimate()` ÷ the `CRAFT` factor (guesses), replaced
   by the median of your completed floats on that section. Never show a water

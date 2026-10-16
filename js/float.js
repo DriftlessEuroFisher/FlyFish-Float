@@ -9,8 +9,12 @@
 
    What is stored, and what is not: the active float lives in
    localStorage.floatActive and finished ones in fbState.floats. Both hold
-   only {time, fraction-along-the-river} pairs — never a coordinate. The
-   location feature promises coordinates are never stored; this keeps it. */
+   only {time, fraction-along-the-river} pairs — never a coordinate. (A lake
+   trip, laketrip.js, is different: it saves its track on this phone, and
+   the location wording says so. A float still keeps no position.)
+
+   One recorder at a time: a float and a lake trip each refuse to start
+   while the other is running (floatBusy / lakeTripBusy). */
 
 const FLOAT_RIVERS  = ["snake","teton","southfork","green"];   // add "newfork" here later
 const FLOAT_EXCLUDE = ["s7"];   // Snake River Canyon West Table → Sheep Gulch: whitewater, not a fishing float
@@ -382,10 +386,15 @@ function flClosePlanner(clearRoute){
   if(clearRoute && !F) flClearRoute();
   flSec = null;
 }
+/* Is a lake trip (laketrip.js) recording, or waiting to be saved? Then a
+   float can't start: the two would log the same fixes as two trips and
+   stack their panels over the bottom of the screen. */
+const flLakeBusy = () => typeof lakeTripBusy === "function" && lakeTripBusy();
 function floatOpenPlanner(id){
   const s = SECTIONS.find(x => x.id === id);
   if(!s || !floatEligible(s)) return;
   if(F){ flToast("A float is already in progress"); flRenderLive(); return; }
+  if(flLakeBusy()){ flToast("A lake trip is running — end it before starting a float"); return; }
   flSec = s;
   flRoute = floatBuildRoute(s); flRouteErr = flRoute.error || null;
   flRenderPlanner();
@@ -424,6 +433,7 @@ const flLive = document.body.appendChild(document.createElement("section"));
 flLive.id = "floatlive"; flLive.className = "floatcard"; flLive.setAttribute("aria-label","Float in progress");
 
 function floatActiveNow(){ return !!F && !F.stale; }   // a declaration, so app.js can see it on window
+function floatBusy(){ return !!F; }                    // running, or an unfinished one waiting to be saved
 function flSave(){
   if(!F) return;
   const o = {id:F.id, section:F.section, river:F.river, craft:F.craft, start:F.start, planned:F.planned, log:F.log};
@@ -441,6 +451,7 @@ document.addEventListener("visibilitychange", () => {
 
 function flStart(){
   if(!flSec || !flRoute || flRoute.error || F) return;
+  if(flLakeBusy()){ flToast("A lake trip is running — end it before starting a float"); return; }
   const n = floatPlanNumbers(flSec, flCraft(flSec));
   F = {id:Math.random().toString(36).slice(2,10) + Date.now().toString(36), section:flSec.id, river:flSec.river,
        craft:flCraft(flSec), start:Date.now(), planned:{lo:n.lo, hi:n.hi, mid:n.mid}, log:[]};
@@ -451,6 +462,7 @@ function flStart(){
   if(locState === "off") locStart("following");
   flWakeAcquire();
   flBeginLive();
+  if(fbRowGoPaint) fbRowGoPaint();     // an open lake row now reads "Float running"
 }
 function flBeginLive(){
   flRenderLive(); flLive.classList.add("show");
@@ -567,6 +579,7 @@ function flFinish(){
   try{ localStorage.removeItem(FLOAT_KEY); }catch(e){}
   flClearRoute();
   flLive.classList.remove("show"); flLive.innerHTML = "";
+  if(fbRowGoPaint) fbRowGoPaint();     // a lake's "Float running" button can start a trip again
 }
 function flEnd(stale){
   if(!F) return;

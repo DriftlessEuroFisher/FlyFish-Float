@@ -29,6 +29,42 @@ function decodePolyline(str){
   }
   return out;
 }
+/* The other direction, for lake-trip tracks (js/laketrip.js): a recorded
+   track is stored in the same format at 1e5 (about a metre), so a four-hour
+   trip is a few KB in the Field Book rather than a long JSON array. One
+   string per segment of the track: a gap is never encoded as a join. */
+function polyEncNum(v){
+  let n = v < 0 ? ~(v << 1) : (v << 1), s = "";
+  while(n >= 0x20){ s += String.fromCharCode((0x20 | (n & 0x1f)) + 63); n >>= 5; }
+  return s + String.fromCharCode(n + 63);
+}
+function encodePolyline(pts){
+  let lat = 0, lng = 0, out = "";
+  for(const p of pts){
+    const la = Math.round(p[0] * 1e5), lo = Math.round(p[1] * 1e5);
+    out += polyEncNum(la - lat) + polyEncNum(lo - lng);
+    lat = la; lng = lo;
+  }
+  return out;
+}
+/* One dimension of the same scheme: whole numbers stored as differences from
+   the previous one. A track's point times (seconds since the start) go this
+   way, so a point every minute costs a character or two. */
+function encodeDeltas(nums){
+  let prev = 0, out = "";
+  for(const v of nums){ const n = Math.round(v); out += polyEncNum(n - prev); prev = n; }
+  return out;
+}
+function decodeDeltas(str){
+  const out = []; let i = 0, v = 0;
+  while(i < str.length){
+    let b, shift = 0, res = 0;
+    do { b = str.charCodeAt(i++) - 63; res |= (b & 31) << shift; shift += 5; } while(b >= 32);
+    v += (res & 1) ? ~(res >> 1) : (res >> 1);
+    out.push(v);
+  }
+  return out;
+}
 RIVERS.forEach(r => {
   if(r.cz && !r.coords) r.coords = Array.isArray(r.cz) ? r.cz.map(decodePolyline) : decodePolyline(r.cz);
   delete r.cz;
@@ -1261,7 +1297,18 @@ let tierFilter = {gold:true, "1":true, "2":true, "3":false};
    day or time deletes `cond` — no backfilling "now" onto another moment.
    `wtUser` (°F, lakes only) is the user's own typed water temperature. It
    lives on the trip, not in `cond`, because it isn't the app's snapshot and
-   is allowed on any trip. */
+   is allowed on any trip.
+
+   Part 3a (2026-10-16): a lake trip recorded with Start fishing (laketrip.js)
+   is an ordinary tap trip — day, time and `at` from the moment Start was
+   tapped, `cond` snapped then — plus `track`:
+     {craft, ramp, end, km, movMin, stopMin, segs, tt, stops}
+   `segs` is a list of encoded polylines, one per stretch the phone was
+   recording (a gap is a new segment, never a join), `tt` the matching list
+   of point times in seconds since `at`, delta-encoded the same way, and
+   `stops` [{lat, lng, t, min}]. A tracked trip's day and time are the
+   recording's own and can't be edited; its note and water temp can. This
+   is a real position history, kept on this phone only. */
 const FB_KEY = "fieldBook", FB_V1_KEY = "fieldBook_v1";
 let fbState = {v:2, rivers:{}, trips:[]};
 try{
@@ -1291,7 +1338,14 @@ function fbMigrateV1(saved, raw){
   try{ localStorage.setItem(FB_KEY, JSON.stringify(st)); }catch(e){}
   return st;
 }
-function fbPersist(){ try{ localStorage.setItem(FB_KEY, JSON.stringify(fbState)); }catch(e){} }
+/* Returns whether the write landed. Most callers can ignore it (the book then
+   just lives for the session), but saving a recorded lake trip can't: a track
+   is the biggest thing the book holds, and if the phone's storage is full the
+   trip must stay live rather than vanish (laketrip.js). */
+function fbPersist(){
+  try{ localStorage.setItem(FB_KEY, JSON.stringify(fbState)); return true; }
+  catch(e){ return false; }
+}
 function fbGet(id){
   const e = fbState.rivers[id];
   return e ? e : {fav:false, notes:"", updated:0};
@@ -1336,10 +1390,12 @@ function fbDelTrip(id){
 /* Only day, time, note and (lakes) the user's water temp can change. Moving a
    trip's day or time makes it a manual entry: whatever was true at the moment
    of the tap no longer describes it, so its conditions snapshot goes too.
-   A note or a water temp alone leaves a tap trip a tap trip. */
+   A note or a water temp alone leaves a tap trip a tap trip. A tracked trip
+   keeps its day and time whatever the patch says: they are when the track
+   was recorded, and its point times count from that moment. */
 function fbEditTrip(id, patch){
   const t = fbState.trips.find(x => x.id===id); if(!t) return null;
-  if("day" in patch || "time" in patch){
+  if(("day" in patch || "time" in patch) && !t.track){
     const day = "day" in patch ? patch.day : t.day, time = "time" in patch ? (patch.time||null) : t.time;
     if(day!==t.day || time!==t.time){ t.day = day; t.time = time; t.src = "manual"; t.at = null; delete t.cond; }
   }
@@ -1940,7 +1996,11 @@ function syncMarkers(){
   const z = map.getZoom();
   RAMPS.forEach(p=>{
     const m = rampMarkers[p.id], g = groupFor(p);
-    const show = rampPassesFilter(p) && (!focusId || (!!p.river && p.river === focusId)) && z >= minZoomFor(p);
+    // While a lake trip records, that lake's pins would bury the track (Big Creek
+    // has 49), so only the launch the user picked stays: it is the way back.
+    const lt = typeof lakeTripPinKeep === "function" ? lakeTripPinKeep() : null;
+    const show = rampPassesFilter(p) && (!focusId || (!!p.river && p.river === focusId)) && z >= minZoomFor(p)
+      && !(lt && p.lake === lt.lake && p.id !== lt.ramp);
     const has = g.hasLayer(m);
     if(show && !has) g.addLayer(m);
     else if(!show && has) g.removeLayer(m);
@@ -3492,14 +3552,16 @@ function fbWxSettle(pt){
     const p = fbWxPending[i];
     if(p.ptId !== pt.id) continue;
     fbWxPending.splice(i, 1);
-    const t = fbState.trips.find(x => x.id===p.tripId);
+    let t = fbState.trips.find(x => x.id===p.tripId), live = false;
+    // a lake trip still recording isn't in the book until End; laketrip.js holds it
+    if(!t && typeof lakeTripLiveTrip === "function"){ t = lakeTripLiveTrip(p.tripId); live = !!t; }
     if(!t) continue;
     rows.add(t.kind + "|" + t.water);           // its row stops saying "Forecast loading…" either way
     if(t.src!=="tap" || t.at!==p.at || (t.cond && t.cond.wx) || Date.now() - p.at >= FB_WX_LATE_MS) continue;
     const wx = fbWxPeriodAt(pt, p.at);
     if(!wx) continue;
     t.cond = Object.assign(t.cond || {}, {wx});
-    fbPersist();
+    if(live) lakeTripSaveLive(); else fbPersist();
   }
   if(fbRowPaint && rows.has(fbRowFor)) fbRowPaint();
 }
@@ -3834,7 +3896,7 @@ function sectionHTML(s){
     <div class="shuttle"><b>Shuttle/outfitters:</b> ${s.shuttle}</div>
     <button class="zoom" data-zoom="${s.id}">Show on map →</button>
     ${canFloat ? `<div class="floatbtns">
-      <button class="zoom floatgo" data-float="${s.id}">🛶 Start float</button>
+      <button class="zoom floatgo" data-float="${s.id}">${typeof lakeTripBusy === "function" && lakeTripBusy() ? "🛶 Lake trip running" : "🛶 Start float"}</button>
       <a class="zoom shuttle-link" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=${put.pos[0]},${put.pos[1]}&destination=${take.pos[0]},${take.pos[1]}">Shuttle directions →</a>
     </div>` : typeof s.level === "string" && typeof floatEligible === "function"
       ? `<div class="nofloat">Start float is offered on DNR Beginner and Intermediate sections without a dam.</div>` : ""}
@@ -3983,7 +4045,7 @@ function closeLegend(){scrim.classList.remove("show");legend.classList.remove("s
    (or after an import), and everything in it updates itself in place.
    A lake gets the same row; fbRowFor is kind + id, so a river and a lake that
    happen to share an id are never the same row. */
-let fbRowFor = null, fbRowWater = null, fbRowKind = null, fbRowPaint = null;
+let fbRowFor = null, fbRowWater = null, fbRowKind = null, fbRowPaint = null, fbRowGoPaint = null;
 const fbEsc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function fbToday(){ const d = new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
 function fbDateText(iso){
@@ -4003,10 +4065,13 @@ const fbKeyOf = (kind, id) => kind==="lake" ? "lake:" + id : id;
 function fbFishedLabel(trips){
   return trips.length ? `✓ Fished ${trips.length}× · ${fbDateText(trips[0].day)}` : "✓ Fished";
 }
-function fbRowHTML(e, trips, kind){
+/* `tracks`: this lake records trips (laketrip.js's pilot lakes), so Start
+   fishing sits next to ✓ Fished. Its label is set by paint(). */
+function fbRowHTML(e, trips, kind, tracks){
   const what = kind==="lake" ? "lake" : "river";
   return `<button type="button" class="fb-btn fb-fav${e.fav?" on":""}" aria-pressed="${e.fav}">${e.fav?"★":"☆"} Favorite</button>`+
     `<button type="button" class="fb-btn fb-fished${trips.length?" on":""}">${fbEsc(fbFishedLabel(trips))}</button>`+
+    (tracks ? `<button type="button" class="fb-btn fb-lakego">Start fishing</button>` : "")+
     `<button type="button" class="fb-btn fb-notes${(e.notes||"").trim()?" has":""}" aria-expanded="false">Notes</button>`+
     `<button type="button" class="fb-btn fb-tripsb" aria-expanded="false">Trips</button>`+
     `<div class="fb-ta"><textarea rows="3" maxlength="20000" placeholder="Flies that worked, where you parked, water clarity…" aria-label="Notes for this ${what}"></textarea>`+
@@ -4018,13 +4083,17 @@ function fbRowHTML(e, trips, kind){
    ignore it. A lake trip also takes the user's own water temperature: a lake
    has no gauge, so the thermometer in their pocket is the only reading. */
 const FB_WT_MIN = 32, FB_WT_MAX = 95;
+/* A tracked trip has no date or time inputs: those are when the track was
+   recorded (fbEditTrip refuses to change them too). */
 function fbTripFormHTML(t, kind){
   const wt = kind==="lake"
     ? `<label><span>Water temp °F</span><input type="number" inputmode="decimal" step="any" min="${FB_WT_MIN}" max="${FB_WT_MAX}" class="fbt-wt" value="${t.wtUser!=null ? fbEsc(t.wtUser) : ""}" placeholder="Optional"></label>`
     : "";
-  return `<div class="fbt-form">`+
-    `<label><span>Date</span><input type="date" class="fbt-day" max="${fbToday()}" value="${fbEsc(t.day)}" required></label>`+
-    `<label><span>Time</span><input type="time" class="fbt-time" value="${fbEsc(t.time||"")}"></label>`+ wt +
+  const when = t.track
+    ? `<div class="fbt-fixed">Recorded ${fbEsc(fbDateText(t.day))}${t.time ? " · " + fbEsc(fbTimeText(t.time)) : ""}. The date and time are the recording's own.</div>`
+    : `<label><span>Date</span><input type="date" class="fbt-day" max="${fbToday()}" value="${fbEsc(t.day)}" required></label>`+
+      `<label><span>Time</span><input type="time" class="fbt-time" value="${fbEsc(t.time||"")}"></label>`;
+  return `<div class="fbt-form">`+ when + wt +
     `<label class="fbt-wide"><span>Note</span><input type="text" class="fbt-note" maxlength="500" value="${fbEsc(t.note||"")}" placeholder="Optional"></label>`+
     `<div class="fbt-err" aria-live="polite"></div>`+
     `<div class="fbt-acts"><button type="button" class="fbt-btn fbt-primary" data-act="save">Save</button>`+
@@ -4058,14 +4127,20 @@ function fbCondHTML(t){
 function fbShowRow(water, force, kind){
   kind = kind || "river";
   const row = $("#fbrow"), rowKey = kind + "|" + water.id;
-  if(!force && fbRowFor === rowKey) return;
+  // same water: keep the row (and anything half-typed in it), but a float or
+  // lake trip may have started or ended since, so its Start label is redone
+  if(!force && fbRowFor === rowKey){ if(fbRowGoPaint) fbRowGoPaint(); return; }
+  // a track shown from this row's list belongs to this water's sheet
+  if(fbRowFor !== rowKey && typeof lakeTripHideShown === "function") lakeTripHideShown();
   fbRowFor = rowKey; fbRowWater = water; fbRowKind = kind;
   const id = fbKeyOf(kind, water.id), e = fbGet(id);
-  row.innerHTML = fbRowHTML(e, fbTrips(kind, water.id), kind);
+  const tracks = kind==="lake" && typeof lakeTripPilot === "function" && lakeTripPilot(water.id);
+  row.innerHTML = fbRowHTML(e, fbTrips(kind, water.id), kind, tracks);
   const favB = row.querySelector(".fb-fav"), fishB = row.querySelector(".fb-fished"),
         notesB = row.querySelector(".fb-notes"), tripsB = row.querySelector(".fb-tripsb"),
         box = row.querySelector(".fb-ta"), ta = row.querySelector("textarea"),
-        saved = row.querySelector(".fb-saved"), list = row.querySelector(".fb-trips");
+        saved = row.querySelector(".fb-saved"), list = row.querySelector(".fb-trips"),
+        goB = row.querySelector(".fb-lakego");
   ta.value = e.notes || "";
   const openNotes = on => { box.classList.toggle("show", on); notesB.setAttribute("aria-expanded", on); };
   openNotes(!!(e.notes||"").trim());
@@ -4081,10 +4156,16 @@ function fbShowRow(water, force, kind){
     list.innerHTML = trips.map(t => {
       if(t.id === editing) return `<div class="fbt-row" data-trip="${fbEsc(t.id)}">${fbTripFormHTML(t, kind)}</div>`;
       const when = fbDateText(t.day) + " · " + (t.time ? fbTimeText(t.time) : "time not recorded");
+      // a recorded track: its own summary line, and a button to draw it over the lake
+      const tracked = !!(t.track && typeof t.track === "object");
+      const shown = tracked && typeof lakeTripShownId === "function" && lakeTripShownId() === t.id;
+      const showB = tracked && typeof lakeTripToggleShow === "function"
+        ? `<button type="button" class="fbt-btn${shown ? " fbt-primary" : ""}" data-act="show" aria-pressed="${shown}">${shown ? "Hide on map" : "Show on map"}</button>` : "";
       const acts = t.id === confirming
-        ? `<span class="fbt-ask">Delete this trip?</span><button type="button" class="fbt-btn fbt-danger" data-act="yes">Yes</button><button type="button" class="fbt-btn" data-act="no">No</button>`
-        : `<button type="button" class="fbt-btn" data-act="edit">Edit</button><button type="button" class="fbt-btn" data-act="del">Delete</button>`;
+        ? `<span class="fbt-ask">Delete this trip${tracked ? " and its track" : ""}?</span><button type="button" class="fbt-btn fbt-danger" data-act="yes">Yes</button><button type="button" class="fbt-btn" data-act="no">No</button>`
+        : showB + `<button type="button" class="fbt-btn" data-act="edit">Edit</button><button type="button" class="fbt-btn" data-act="del">Delete</button>`;
       return `<div class="fbt-row" data-trip="${fbEsc(t.id)}"><div class="fbt-main"><span class="fbt-when">${fbEsc(when)}</span>`+
+        (tracked ? `<span class="fbt-track">${fbEsc(typeof lakeTripSummary === "function" ? lakeTripSummary(t) : "Tracked")}</span>` : "")+
         (t.note ? `<span class="fbt-note">${fbEsc(t.note)}</span>` : "")+ fbCondHTML(t)+
         `</div><div class="fbt-acts">${acts}</div></div>`;
     }).join("") + (adding
@@ -4097,9 +4178,20 @@ function fbShowRow(water, force, kind){
     favB.textContent = (c.fav ? "★" : "☆") + " Favorite";
     fishB.classList.toggle("on", trips.length > 0);
     fishB.textContent = fbFishedLabel(trips);
+    paintGo();
     paintTrips();
   };
-  fbRowPaint = paint;
+  // "Start fishing", or why it can't right now: one recorder at a time
+  function paintGo(){
+    if(!goB || typeof lakeTripButton !== "function") return;
+    const s = lakeTripButton(water.id);
+    goB.textContent = s.label;
+    goB.classList.toggle("on", s.state === "running");
+    goB.classList.toggle("busy", s.state === "blocked");
+  }
+  paintGo();
+  fbRowPaint = paint; fbRowGoPaint = paintGo;
+  if(goB) goB.addEventListener("click", () => { if(typeof lakeTripOpenPlanner === "function") lakeTripOpenPlanner(water.id); });
   favB.addEventListener("click", () => {
     fbSet(id, {fav:!fbGet(id).fav}); paint();
     if(kind==="river") applyFilters();     // a favourite river stays on the map whatever the class filter says
@@ -4128,16 +4220,29 @@ function fbShowRow(water, force, kind){
     if(act==="edit"){ editing = tid; confirming = null; adding = false; }
     else if(act==="del"){ confirming = tid; editing = null; }
     else if(act==="no"){ confirming = null; }
-    else if(act==="yes"){ fbDelTrip(tid); confirming = null; }
+    else if(act==="yes"){
+      // the track goes with the trip, and off the map if it was drawn
+      if(typeof lakeTripShownId === "function" && lakeTripShownId() === tid) lakeTripHideShown();
+      fbDelTrip(tid); confirming = null;
+    }
+    else if(act==="show"){
+      const tr = fbState.trips.find(x => x.id===tid);
+      if(tr && typeof lakeTripToggleShow === "function") lakeTripToggleShow(tr, water);
+    }
     else if(act==="add"){ adding = true; editing = confirming = null; }
     else if(act==="cancel"){ editing = null; adding = false; }
     else if(act==="save"){
-      const day = rowEl.querySelector(".fbt-day").value, time = rowEl.querySelector(".fbt-time").value,
+      const dayIn = rowEl.querySelector(".fbt-day"), timeIn = rowEl.querySelector(".fbt-time"),
             note = rowEl.querySelector(".fbt-note").value, err = rowEl.querySelector(".fbt-err");
-      if(!fbValidDay(day)){ err.textContent = "Pick a date."; return; }
-      if(day > fbToday()){ err.textContent = "That date hasn't happened yet."; return; }
-      if(time && !fbValidTime(time)){ err.textContent = "That time isn't valid."; return; }
-      const patch = {day, time:time||null, note};
+      const patch = {note};
+      // a tracked trip's form has no date or time: they are the recording's own
+      if(dayIn){
+        const day = dayIn.value, time = timeIn ? timeIn.value : "";
+        if(!fbValidDay(day)){ err.textContent = "Pick a date."; return; }
+        if(day > fbToday()){ err.textContent = "That date hasn't happened yet."; return; }
+        if(time && !fbValidTime(time)){ err.textContent = "That time isn't valid."; return; }
+        patch.day = day; patch.time = time||null;
+      }
       const wtIn = rowEl.querySelector(".fbt-wt");
       if(wtIn){
         // badInput: the field holds text that isn't a number, which .value reports as ""
@@ -4148,7 +4253,7 @@ function fbShowRow(water, force, kind){
         patch.wtUser = v===null ? null : Math.round(v*10)/10;
       }
       if(tid) fbEditTrip(tid, patch);
-      else fbAddTrip(kind, water.id, day, time||null, "manual", null, note, patch.wtUser);
+      else if(patch.day) fbAddTrip(kind, water.id, patch.day, patch.time, "manual", null, note, patch.wtUser);
       editing = null; adding = false;
     }
     paint();                  // no auto-focus: on an iPhone it would throw the date wheel up unasked
@@ -4435,7 +4540,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v18";
+const APP_VERSION = "flyroutes-v19";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){
@@ -5635,9 +5740,12 @@ new MutationObserver(iconNudge).observe(document.body, {attributes:true, attribu
    "Not now" is permanent on purpose — nagging every launch is how an app
    gets deleted; the button still works any time.
 
-   The position is never stored or sent anywhere: it lives in this closure
-   for as long as the dot is drawn, not in localStorage, not in a URL, and
-   not in anything the analytics script can see. */
+   The blue dot itself isn't saved: its position lives in this closure for as
+   long as the dot is drawn, not in localStorage, not in a URL, and not in
+   anything the analytics script can see. The one exception is a lake trip
+   the user starts on purpose (laketrip.js): its track is saved on this
+   phone, in the Field Book. Don't promise "never sent" anywhere — trips are
+   planned to sync to the owner's database once accounts exist. */
 const locatePane = map.createPane("locatePane");
 locatePane.style.zIndex = 650;      // above the markers: it must never hide under a gauge
 locatePane.style.pointerEvents = "none";
@@ -5723,6 +5831,7 @@ function locFix(pos){
     goTo(ll, map.getZoom());
   }
   if(window.floatOnFix) floatOnFix(pos);   // float.js: tracks progress down the river
+  if(window.lakeOnFix) lakeOnFix(pos);     // laketrip.js: records a lake trip's track
 }
 function locError(e){
   if(e.code === 1){ locStop(); locPerm = "denied"; locBlockedSay(); }
@@ -5747,8 +5856,8 @@ function locToggle(){
   } else if(locState === "located"){
     locSetState("following");
     if(locLast) goTo(locLast, map.getZoom());
-  } else if(window.floatActiveNow && floatActiveNow()){
-    // mid-float the dot is the whole point: tapping cycles follow/free, never off
+  } else if((window.floatActiveNow && floatActiveNow()) || (window.lakeTripActiveNow && lakeTripActiveNow())){
+    // mid-float or mid-lake-trip the dot is the whole point: tapping cycles follow/free, never off
     locSetState("located");
   } else { locPrefSet("off"); locStop(); }
 }
@@ -5777,7 +5886,7 @@ const zoomCtl = L.control.zoom({position:"bottomright"}).addTo(map);
 const locAsk = document.body.appendChild(document.createElement("div"));
 locAsk.id = "locask"; locAsk.setAttribute("role", "dialog"); locAsk.setAttribute("aria-label", "Show where you are");
 locAsk.innerHTML = `<div class="la-ic">${LOC_ICON}</div><div class="la-body"><h3>Show where you are?</h3>
-  <p>See your position on the map while you drive and fish. Your location stays on this phone \u2014 it\u2019s never saved or sent anywhere.</p>
+  <p>See your position on the map while you drive and fish. The blue dot isn\u2019t saved. If you record a lake trip, its track is saved on this phone, in your Field Book.</p>
   <div class="la-btns"><button type="button" id="la-yes">Turn on location</button><button type="button" id="la-no">Not now</button></div></div>`;
 document.getElementById("la-yes").addEventListener("click", () => {
   locAsk.classList.remove("show"); locPrefSet("on");

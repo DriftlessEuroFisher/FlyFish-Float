@@ -927,6 +927,27 @@ details.morefold{margin:-4px 0 6px}
 .fl-del{flex:0 0 auto;width:44px;height:44px;margin:-6px -8px -6px 0;border-radius:9px;font-size:24px;line-height:1;color:var(--txt-dim)}
 .fl-del:active{background:#f0dcda;color:#8a2a24}
 
+/* ---------- Lake trips (js/laketrip.js) ----------
+   The planner and live panel reuse Float Mode's card (.floatcard, fp-*,
+   fl-*); only what a lake adds is here. */
+.lp-launch select{flex:1;min-width:0;max-width:72%;min-height:44px;font:inherit;font-size:16px;padding:0 8px;
+  border:1px solid var(--line);border-radius:9px;background:var(--paper-2);color:var(--txt)}
+.lp-craft{grid-auto-flow:row;grid-template-columns:repeat(6,1fr);margin-bottom:8px}   /* five crafts: three over two */
+.lp-craft button{grid-column:span 2}
+.lp-craft button:nth-child(4){grid-column:2 / span 2}
+.lp-info{list-style:none;background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);padding:8px 12px;margin:0 0 10px;font-size:12.5px;line-height:1.4;color:var(--txt-dim)}
+.lp-info li+li{margin-top:3px}
+.lp-info b{color:var(--txt)}
+.lt-status{font-size:12.5px;color:var(--txt-dim);margin:4px 0;line-height:1.4}
+.lt-status .warn{color:#8a2a24;font-weight:700}
+/* Start fishing in the lake's Field Book row: an action, not an on/off, so
+   it is outlined in teal; filled while a trip runs; dimmed while a float does. */
+.fb-btn.fb-lakego{color:var(--river);border-color:var(--river)}
+.fb-btn.fb-lakego.on{background:var(--river);color:#fff}
+.fb-btn.fb-lakego.busy{color:var(--txt-dim);border-color:var(--line);opacity:.7}
+.fbt-track{font-size:12.5px;font-weight:600;color:var(--river);line-height:1.35;overflow-wrap:anywhere}
+.fbt-fixed{flex:1 0 100%;font-size:12px;color:var(--txt-dim);line-height:1.35}
+
 /* ---------- Report an issue ---------- */
 #report{position:fixed;z-index:1700;left:50%;top:max(10px,env(safe-area-inset-top));transform:translateX(-50%);display:none;flex-direction:column;
   width:min(94vw,440px);max-height:calc(100vh - 20px);max-height:calc(100dvh - 20px);background:var(--paper);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
