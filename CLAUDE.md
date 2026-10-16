@@ -171,7 +171,7 @@ like an app, not a browser tab.
 
 ## Rivers covered
 
-1,095 rivers and 31 lakes. Full list and gauge IDs live in `js/rivers-data.js`; this file
+1,095 rivers and 34 lakes. Full list and gauge IDs live in `js/rivers-data.js`; this file
 doesn't duplicate it since the code is the source of truth. Rivers carry a
 `region` field — `"driftless"` and `"northshore"` on the two small-stream
 sub-regions, absent on the original western rivers *and* on the two
@@ -265,6 +265,34 @@ DNR's ~700 Paddling Routes.
   - The South Fork Iowa reach was taken because its length matches the
     DNR's.
   - Three sections use a pin assigned to another river.
+
+### Central Iowa lakes: Big Creek and Saylorville (2026-10-15)
+The first lakes outside the West, and the Pilot Central lakes for Field Book
+trip tracks. Pipeline: `~/.cache/flyfish-osm/iowa/lakes/build.py` (run with
+the venv python, `-I`; `--dry`, `--show`, `--refetch`). Fences "iowa lakes"
+in `LAKES` and "iowa lake access" at the end of `RAMPS`. Byte-identical on re-run.
+- **Outlines:** Big Creek is the DNR Fishing Atlas lakes layer (layer 2,
+  `BIC77`, `src:"iadnr"`, credited by `openLake`). **Saylorville isn't in
+  that layer** (only a centroid, `SAY77`), so it is NHD, which draws it at
+  average elevation (833 ft); the blurb says so. Both DP-simplified at 25 m.
+  Lakes carry `dnrCode`.
+- **Regs:** neither lake has a section of its own in the 2026 Iowa booklet.
+  Each shows the group rules that name it (Big Creek: 18-inch black bass, p. 9;
+  15-inch walleye with one over 20, p. 12. Saylorville: 15-inch black bass,
+  p. 9; 15/30 catfish, p. 10), then the statewide limits for the species the
+  DNR lists, verbatim with pages. **Open:** the DNR page says 15-inch
+  smallmouth at Big Creek; the booklet's 18-inch rule covers all black bass.
+- **`PARK_INFO.iowa`** is a state row with **no `zone`** (it would build an
+  empty "ia" set; the Iowa card stays 109). Iowa rivers never read it.
+- **Lake access pins carry `lake:"<id>"` and no `river`.** Tapping one opens
+  the lake; `syncMarkers` hides them while any river is focused. DNR layer-3
+  Boat Ramp / Fishing Access / Parking within 300 m of the ring (49 at Big
+  Creek, 7 at Saylorville); fish attractors (129) and cleaning stations are
+  skipped. Two Saylorville points were already Des Moines pins and weren't
+  duplicated. Big Creek's 49 pins clump until about zoom 13.
+- **The `desmoines` line starts inside Saylorville**, ~11 km below the
+  lake's head, and runs down the lake to the dam. `wt_desmoineswebster`
+  stops 2.5 km above the lake. No river geometry was changed.
 
 ### Northeast Iowa comes from the Iowa DNR, not NHD
 

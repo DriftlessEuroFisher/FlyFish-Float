@@ -159,6 +159,10 @@ regions first.
   - **Datum and date:** water levels move and reservoirs draw down, so the
     sheet should say what level the soundings were taken at and the survey
     date, with the source credited.
+- **Iowa DNR has bathymetry** (found 2026-10-15): Fishing Atlas MapServer
+  layer 1, "Bathymetry (selected lakes)". Big Creek Lake (BIC77) has 33
+  contour lines at 10 levels, 5–50 ft; the DNR page gives 51 ft max (2019).
+  Saylorville has none there. A good first source for Pilot Central.
 - **Related:** *Thousands of trout lakes* (the wider lake list) and *3D
   maps* (hillshade). A depth layer would sit on the same lake outlines.
 
@@ -195,7 +199,7 @@ stream that is on this map. Follow-up to *Bridge access points* (done,
 ### Fished more than once, lake trips with a breadcrumb track, and Field Book pages — `refining` (raised 2026-10-14; privacy, screen-on and forecast decided)
 Four connected parts. Build them in this order, one per session.
 
-**1. "Fished" works every time.** — `done` (2026-10-15, uncommitted; past trips can be logged after the fact, with no conditions) — all regions (pure UI and storage, so per
+**1. "Fished" works every time.** — `done` (be70c8e, 2026-10-15; past trips can be logged after the fact, with no conditions) — all regions (pure UI and storage, so per
 the pilot rule it ships everywhere at once)
 - **Today:** the button is a toggle. `fbState.rivers[id]` holds
   `fished:true` and one `fishedOn` date (`fbSet`, app.js), so a second trip
@@ -215,7 +219,7 @@ the pilot rule it ships everywhere at once)
   fact** with a date and time picker. If so, conditions can't be a snapshot
   of now (see part 2).
 
-**2. Conditions saved with each trip.** — `done` (2026-10-15, uncommitted;
+**2. Conditions saved with each trip.** — `done` (368c996, 2026-10-15;
 built as `t.cond` + lake `t.wtUser`, see CLAUDE.md Field Book; a forecast
 that loads after the tap is filled in only within the hour, this session)
 Temperature, wind, sky and so on, taken at the moment of the tap.
@@ -245,15 +249,10 @@ until it has been used for real there. Parts 1 and 2 ship everywhere.
   count as "pilot" is the owner's call. Henrys Lake (Island Park, ID) is
   mapped but not in the listed pilot area.
 - **Central Iowa: Big Creek Lake and Saylorville Lake** (owner's pick,
-  2026-10-14). Neither is mapped: the 31 `LAKES` entries are all in the
-  West. Both have to be **added first**, with outline, regulations,
-  ramps and an agency link, before a trip can be recorded on one. Same
-  pattern as the other lakes (`openLake` reads its heading and agency from
-  a `park` row, which for these is a state row, Iowa DNR). That is a data
-  job of its own and should land before this part. Saylorville is on the
-  Des Moines River, which `desmoines` already maps, so its outflow and
-  inflow should line up with that line. Check ramp sources (Iowa DNR
-  paddling access, as for the Des Moines pilot) rather than guessing pins.
+  2026-10-14). **Added 2026-10-15** (uncommitted): `bigcreeklake` and
+  `saylorvillelake` in `LAKES`, 56 Iowa DNR access pins carrying `lake:`,
+  and a `PARK_INFO.iowa` row (CLAUDE.md, "Central Iowa lakes"). Ramp choice
+  for the trip planner can read `RAMPS.filter(p => p.lake === id)`.
 - **River tracks** (below) follow the same limit: start with the Pilot West
   float rivers and the Central Iowa water trails, not every river.
 **DECIDED 2026-10-14: river trips get a track too**, so a user can see where

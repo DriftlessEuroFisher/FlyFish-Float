@@ -925,7 +925,7 @@ function openLake(id){
       `<span style="font-size:11.5px">${k.regs}</span>` +
       `<div style="font-size:10.5px;color:var(--txt-dim);margin-top:8px">${pk.lakeNote || pk.note}</div>` +
     `</div>` +
-    `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Lake outline: ${k.src==="osm" ? "OpenStreetMap" : k.src==="wgfd" ? "Wyoming Game &amp; Fish's lakes map (NHDPlus HR)" : "USGS NHD waterbodies"}. Verify regulations with ${pk.regBody}.</p>` +
+    `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Lake outline: ${k.src==="osm" ? "OpenStreetMap" : k.src==="wgfd" ? "Wyoming Game &amp; Fish's lakes map (NHDPlus HR)" : k.src==="iadnr" ? "Iowa DNR Fishing Atlas lakes layer" : "USGS NHD waterbodies"}. Verify regulations with ${pk.regBody}.</p>` +
     `<div class="rp-wrap"><button type="button" class="rp-link" data-report="${fbEsc(k.id)}">Report an issue with this lake</button></div>`;
   wxLoad(wx);
 }
@@ -1625,6 +1625,21 @@ Object.assign(PARK_INFO, {
     footer:`🎣 <b>Idaho</b>: any person 14 years of age or older must buy a fishing licence. Rules are set by region; a water's special rule replaces the regional general rule for the items it lists.`,
     ungauged:"No live gauge on this water."},
 });
+/* Iowa as a state row -- used by the central Iowa lakes (Big Creek, Saylorville)
+   through their `park` field. Iowa's rivers never reach it: their region is
+   "driftless" or none, and they name their agency through stateLicence() and
+   regBodyFor(). No `zone`, unlike Idaho's: refreshZoneCounts() would build an
+   "ia" set of rivers whose region is "iowa", which is none of them. `sub` is
+   "" so lakePlace() reads "Iowa · lake". Every licence word is quoted from the
+   2026 booklet, page given. */
+Object.assign(PARK_INFO, {
+  iowa: {sub:"", heading:"Regulations", badge:"Iowa DNR · 2026",
+    note:`From the Iowa DNR's <b>2026 Iowa Fishing Regulations</b>: every rule in the booklet that names this water, then the statewide limits it falls back to, word for word. Read the current booklet and the signs at the access before you fish.`,
+    lakeNote:`From the Iowa DNR's <b>2026 Iowa Fishing Regulations</b>: the rules that name this lake, then the statewide limits for the fish the DNR lists here, word for word. Read the current booklet and the signs at the access before you fish.`,
+    licence:`<b>Iowa fishing licence</b> — “Iowa residents and nonresidents 16 years and older must have a valid fishing license on their person while fishing, and have paid all applicable fees.” (p. 3)`,
+    regBody:"the Iowa DNR",
+    footer:`🎣 <b>Iowa</b>, from the 2026 booklet: “Iowa residents and nonresidents 16 years and older must have a valid fishing license on their person while fishing, and have paid all applicable fees.” (p. 3) “When fishing by hook-and-line, you cannot use more than two lines or more than two hooks on each line when still fishing or trolling.” “You can use a third line if you have a valid third line fishing permit.” (p. 6) “You cannot possess live Gizzard Shad at any lake.” (p. 5)`},
+});
 
 /* Michigan, South Dakota, New Mexico, Arizona and Nevada, plus the two of
    their parks with trout water. Each sheet quotes the state's own booklet. */
@@ -1903,7 +1918,8 @@ RAMPS.forEach(p=>{
   const m = L.marker(p.pos,{icon:apIcon(p,"")});
   m.bindPopup(`<b>${p.name}</b><br><span style="font-size:11px">${p.kind==="parking" ? "Parking" : roleWord(p.role)} · ${p.note}</span>`+
     (p.src ? `<br><span style="font-size:10.5px;color:var(--txt-dim)">Source: ${p.src}</span>` : ""));
-  m.on("click",()=>{ openRiver(p.river, null, {at:p.pos}); });
+  // A lake's access (Big Creek, Saylorville) carries `lake` and no `river`: its pin opens the lake's sheet.
+  m.on("click",()=>{ if(p.lake) openLake(p.lake); else openRiver(p.river, null, {at:p.pos}); });
   rampMarkers[p.id]=m;
 });
 function groupFor(p){ return p.role==="wade" ? wadeLayer : rampLayer; }
@@ -1916,12 +1932,15 @@ function minZoomFor(p){ return p.role==="wade" ? WADE_MIN_ZOOM : RAMP_MIN_ZOOM; 
    do I get on this water?" — put-ins and take-outs included, since focus
    switches both groups on. The zoom gates still apply to the focused river:
    showing its pins at any zoom put eighteen of them on the Snake at zoom 7,
-   one clump sitting on the very line they were meant to explain. */
+   one clump sitting on the very line they were meant to explain. A lake's
+   pins have no river, so they step aside for every river's focus; with no
+   focus (a lake's own sheet ends one) they follow the same chips and zoom
+   gates as the rest. */
 function syncMarkers(){
   const z = map.getZoom();
   RAMPS.forEach(p=>{
     const m = rampMarkers[p.id], g = groupFor(p);
-    const show = rampPassesFilter(p) && (!focusId || p.river === focusId) && z >= minZoomFor(p);
+    const show = rampPassesFilter(p) && (!focusId || (!!p.river && p.river === focusId)) && z >= minZoomFor(p);
     const has = g.hasLayer(m);
     if(show && !has) g.addLayer(m);
     else if(!show && has) g.removeLayer(m);
