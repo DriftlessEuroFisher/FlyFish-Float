@@ -89,10 +89,23 @@ const REFRESH_MS = 15 * 60 * 1000;
    calls each (~1,190) is ~1,360 per load against a 1,000/hour budget, which
    is why the header used to read "flows unavailable".
 
-   Everything below asks for MANY SITES PER REQUEST instead. Same data,
-   measured at 67 requests for a full cold load instead of ~1,530 — 7 for
-   every latest value on the map, 56 for the whole history backfill, 4 for
-   metadata. A steady-state refresh is 7.
+   Everything below asks for MANY SITES PER REQUEST instead, and asks for
+   history only where the map is looking:
+     - latest values: every gauge on the map, 50 a request, nearest the
+       middle of the view first — 17 requests for 833 gauges, on load and
+       on every REFRESH_MS refresh.
+     - history: 7 requests (one per year) for each 30 gauges, only for the
+       gauges in view from zoom 8 and an opened river's, with favourites and
+       nearby gauges riding in spare room (loadViewStats(), statsRiders()).
+       Cached for the week.
+     - metadata: those same gauges, alongside their history. Cached for good.
+   Measured against a stubbed API on 2026-10-17, on a phone-sized screen: a
+   cold load sitting on the chooser is 17 requests. Entering Wyoming adds
+   none, zooming to Jackson Hole 8, then Des Moines another 8; tapping the
+   Snake from the Wyoming view is 8 with the view it frames. The old
+   whole-map history backfill had grown to 322 for a cold load (32 latest,
+   273 history, 17 metadata), so three loads an hour from one phone ran out
+   the budget.
 
    A free API key from https://api.waterdata.usgs.gov/signup/ raises the
    limit. To use one:  localStorage.setItem("usgsApiKey", "<your key>")
@@ -112,30 +125,14 @@ const siteOf = key => GAUGES[key].site;
 const KEY_BY_SITE = {};
 Object.keys(GAUGES).forEach(k => { KEY_BY_SITE[GAUGES[k].site] = k; });
 
-/* Which region each gauge belongs to. Batches are built per region so the
-   water you're actually looking at loads first and the rest trickles in —
-   see refreshAll(). */
-// The far-western states and their parks batch by STATE, not by region tag:
-// every park and state is its own region, and a bucket of one gauge still
-// costs a latest call and seven history calls of its own -- thirty small
-// buckets roughly doubled a cold load against the 1,000/hour budget.
-const STATE_BUCKET = new Set(["CA","OR","WA","MT","CO","UT","AK","MI","SD","NM","AZ","NV"]);
-function regionOfRiver(r){
-  if(STATE_BUCKET.has(r.state) && r.region!=="yellowstone" && r.region!=="grandteton") return "w-"+r.state;
-  if(r.region) return r.region;               // "driftless" | "northshore"
-  if(r.state==="ID" || r.state==="WY") return "west";
-  if(r.state==="IA") return "ciowa";
-  return "uppermidwest";                      // MN/WI big water + Northwoods
-}
-const GAUGE_REGION = {};
-RIVERS.forEach(r => (r.gauges||[]).forEach(g => {
-  if(!GAUGE_REGION[g]) GAUGE_REGION[g] = regionOfRiver(r);
-}));
-// A gauge listed in GAUGES but not referenced by any river would otherwise
-// belong to no region and never be fetched at all. Park it in "other".
-Object.keys(GAUGES).forEach(k => { if(!GAUGE_REGION[k]) GAUGE_REGION[k] = "other"; });
-const REGION_KEYS = [...new Set(Object.values(GAUGE_REGION))];
-function gaugesInRegion(reg){ return Object.keys(GAUGES).filter(k => GAUGE_REGION[k] === reg); }
+/* Batches used to be built per region (and per state out west), nearest
+   region first. Every bucket then paid for itself however small it was:
+   Teton Valley's two gauges cost a latest request and seven history
+   requests of their own, and so did Swan Valley's two. Across 22 buckets
+   the whole map's history came to 273 requests where one line of chunks
+   needs 196. Now gauges are put in one line, nearest the middle of the map
+   first (gaugesNearestFirst()), and chunked across region lines, so the
+   nearby water still loads first. */
 
 /* ---------- tiny storage layer (works even where localStorage
    is unavailable, e.g. sandboxed previews) ---------- */
@@ -267,8 +264,9 @@ function fetchJSON(url, timeout=12000){
    REST API instead: live discharge in CFS, same as the USGS gauges, and the
    same 7-year day-of-year median built from DWR's daily means. Batched by
    comma-separated abbrev, verified against DWR's own station metadata, and
-   CORS-open. DWR allows 1,000 requests a day per client; a cold load is
-   one latest call and seven history calls per 40 stations. */
+   CORS-open. DWR allows 1,000 requests a day per client; a load is one
+   latest call per 40 stations, and seven history calls per 40 of them that
+   come into view (loadViewStats()). */
 const DWR_BASE = "https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/";
 const isDWR = key => GAUGES[key] && GAUGES[key].site.startsWith("CODWR-");
 const dwrAbbrev = key => GAUGES[key].site.slice(6);
@@ -446,21 +444,32 @@ function statsCacheKey(key){
    day window around today's date in each of the last STAT_YEARS years — but
    the loop is inverted. It used to be one request per gauge per year
    (170 x 7 = ~1,190 calls). Now it's one request per year per chunk of
-   sites: 7 years x ceil(n/30) chunks, so 56 calls for the whole map. */
+   sites: 7 requests carry 30 gauges. Which gauges are asked for, and when,
+   is loadViewStats()'s decision, plus an opened river's own (openRiver).
+
+   A gauge already being fetched for another caller is waited on, not asked
+   for again. The view loader and an opened river's sheet often want the
+   same gauges at the same moment, and each ask is seven requests. */
+const statsInflight = new Map();     // gaugeKey -> promise of the fetch carrying it
 async function fetchStatsBatch(keys){
-  const dwrWant = keys.filter(k => isDWR(k) && stats[k] === undefined);
-  if(dwrWant.length) await fetchDWRStats(dwrWant);
-  keys = keys.filter(k=>!isDWR(k));
-  const want = keys.filter(k => stats[k] === undefined);
-  if(!want.length) return;
-  // serve whatever is already cached, request only the rest
-  const need = [];
-  want.forEach(k=>{
+  // serve whatever is known, cached or already on its way; request only the rest
+  const need = [], waits = new Set();
+  new Set(keys).forEach(k=>{
+    if(stats[k] !== undefined) return;
+    if(statsInflight.has(k)){ waits.add(statsInflight.get(k)); return; }
     const c = store.get(statsCacheKey(k));
     if(c) stats[k] = c; else need.push(k);
   });
-  if(!need.length) return;
-
+  // Colorado DWR's gauges answer from another host, so the two run side by side
+  [[need.filter(isDWR), fetchDWRStats], [need.filter(k=>!isDWR(k)), fetchUSGSStats]].forEach(([ks, fetchFn])=>{
+    if(!ks.length) return;
+    const p = fetchFn(ks).finally(()=>ks.forEach(k=>statsInflight.delete(k)));
+    ks.forEach(k=>statsInflight.set(k, p));
+    waits.add(p);
+  });
+  await Promise.all(waits);
+}
+async function fetchUSGSStats(need){
   const now = new Date();
   const iso = d => d.toISOString().slice(0,10);
   const vals = {};                       // gaugeKey -> number[]
@@ -508,6 +517,11 @@ async function fetchStatsBatch(keys){
     store.set(statsCacheKey(k), s);
   });
 }
+/* History saved on this phone earlier in the week costs no request, so it is
+   all read back at once: a status shows wherever the phone already knows the
+   median, in view or not (a favourite's chip in the Field Book, say). Only
+   what's missing waits for loadViewStats(). */
+Object.keys(GAUGES).forEach(k=>{ const c = store.get(statsCacheKey(k)); if(c) stats[k] = c; });
 
 /* Verify the hardcoded site IDs against monitoring-location metadata
    instead of trusting them blindly — batched, lazy and cached. */
@@ -543,7 +557,14 @@ async function verifyGaugesBatch(keys){
         meta[k] = {name: p.monitoring_location_name || GAUGES[k].label, verified:true};
         store.set("meta:"+GAUGES[k].site, meta[k]);
       });
-    }catch(e){ /* fall through to the unverified default below */ }
+    }catch(e){
+      /* Backed off (a 429): nothing was checked, so nothing is marked, and
+         these are asked again after the cooldown — the same rule as the
+         history. "(unverified)" is for a site the metadata didn't confirm,
+         never for one that wasn't asked. Any other failure falls through to
+         the unverified default below. */
+      if(apiPaused()) break;
+    }
     group.forEach(k=>{
       if(!meta[k]) meta[k] = {name: GAUGES[k].label, verified:false};
     });
@@ -1881,11 +1902,11 @@ Object.assign(PARK_INFO, {
 });
 
 /* Wyoming Area 1 (the Snake River drainage), for the streams drawn from Wyoming
-   Game & Fish's own Fishing Guide map. Wyoming rivers carry no `region` (the
-   region drives request bucketing and other behaviour), so this row is found
-   through `parkRegsSrc:"wgfd"` instead -- and it has no `zone`, because
-   refreshZoneCounts() would otherwise count it as Wyoming's set. Soda Lake
-   reads it through its `park` field like the other state lakes. */
+   Game & Fish's own Fishing Guide map. Wyoming rivers carry no `region` (a
+   region picks a PARK_INFO row and the behaviour that comes with it), so this
+   row is found through `parkRegsSrc:"wgfd"` instead -- and it has no `zone`,
+   because refreshZoneCounts() would otherwise count it as Wyoming's set. Soda
+   Lake reads it through its `park` field like the other state lakes. */
 Object.assign(PARK_INFO, {
   wgfd: {sub:"", heading:"Regulations", labelZoom:8, badge:"WGFD · Chapter 46 · 2026",
     note:`From the Wyoming Game and Fish Commission's <b>Chapter 46, Fishing Regulations</b>, effective January 1, 2026 — Area 1, the Snake River drainage: this water's own entry where it has one, then the rules for every stream and water in Area 1, word for word. Wyoming re-issues Chapter 46; check the current regulations at wgfd.wyo.gov before you fish.`,
@@ -2293,8 +2314,9 @@ publicLand.on("remove", () => { publicLand.clearLayers(); padusKey = null; });
    the curated gauges get.
 
    - OFF by default. Each 1-degree cell is a request against the 1,000/hour
-     anonymous budget, and the curated gauges already cost ~67 on a cold load.
-     Nobody pays for this until they ask for it.
+     anonymous budget, and the curated gauges already cost 17 a load plus
+     their history for whatever is in view. Nobody pays for this until they
+     ask for it.
    - Cached per 1-degree cell, and whole cells are fetched, not the viewport.
      A viewport bbox is different on every pan, so nothing would ever be
      reused; a cell is the same request however you arrive at it, so panning
@@ -3088,9 +3110,17 @@ async function openRiver(id, focusGauge, opts){
   }
   // lazy-load stats + metadata for this river's gauges, then repaint.
   // Batched across the river's gauges: opening the Mississippi Headwaters
-  // (6 gauges) is 2 requests, not 48.
-  await Promise.all([fetchStatsBatch(r.gauges), verifyGaugesBatch(r.gauges)]);
-  if(curRiver===id){ renderSheet(r); repaintGauges(); }
+  // (6 gauges) is 8 requests, not 48, and none when the view already
+  // brought its history in (loadViewStats). An ungauged creek's card shows
+  // the nearest gauged river's status instead, where it shows one at all
+  // (noGaugeHTML), so that gauge's history is the one it needs.
+  const near = !r.gauges.length && nearShowsClass(r) && nearestGaugedRiver(r);
+  const own = near ? [near.primaryGauge] : r.gauges;
+  // The spare room carries the gauges around where the river is about to be
+  // framed, so the view that frame brings needn't pay for a chunk of its own.
+  const riders = statsRiders(own, (opts && opts.at) || GAUGE_POS[r.primaryGauge] || midCoord(r.coords));
+  await Promise.all([fetchStatsBatch(own.concat(riders)), verifyGaugesBatch(r.gauges.concat(riders))]);
+  paintStatus();                       // the sheet, the dots and this river's current
   if(focusGauge) map.panTo(GAUGE_POS[focusGauge]);
 }
 
@@ -3911,18 +3941,20 @@ function nearestGaugedRiver(r){
   });
   return best;
 }
+/* No stream-level class on Driftless water. These creeks have no gauge,
+   so any "Below average / Around average" badge here is a classification
+   of a *different* stream several valleys over — it reads as this creek's
+   level whether or not the caption says otherwise. The raw number stays
+   as a regional-wetness hint; the judgement call doesn't. (openRiver asks
+   the same question: where no badge shows, no history is fetched for it.) */
+const nearShowsClass = r => r.region !== "driftless" && r.region !== "doorcounty";
 function noGaugeHTML(r){
   const near = nearestGaugedRiver(r);
   let proxy = "";
   if(near){
     const k = near.primaryGauge, f = flows[k], st = statusOf(k);
     const cfs = f && f.cfs!=null ? Math.round(f.cfs).toLocaleString()+" CFS" : "—";
-    /* No stream-level class on Driftless water. These creeks have no gauge,
-       so any "Below average / Around average" badge here is a classification
-       of a *different* stream several valleys over — it reads as this creek's
-       level whether or not the caption says otherwise. The raw number stays
-       as a regional-wetness hint; the judgement call doesn't. */
-    const showClass = r.region !== "driftless" && r.region !== "doorcounty";
+    const showClass = nearShowsClass(r);
     const badge = showClass
       ? ` <span class="badge" style="background:${st.color};vertical-align:middle">${st.label}</span>`
       : "";
@@ -4086,6 +4118,7 @@ function applyFilters(){
   syncGaugeDots(); syncLabels(); syncFlow(); refreshZoneCounts();
   syncMarkers();
   if(curRiver) renderSheet(RIVERS.find(r=>r.id===curRiver));
+  statsSoon();                         // a class switched on can bring gauges into view that need history
 }
 /* The Other rivers the view gate lets through right now (see tierShown). */
 function otherViewSet(){
@@ -4663,7 +4696,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v20";
+const APP_VERSION = "flyroutes-v21";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){
@@ -4819,18 +4852,15 @@ $("#book-file").addEventListener("change", async ev => {
 });
 
 /* ---------- refresh loop ----------
-   Ordered by region, nearest first. The region you're looking at is fetched
-   and painted before anything else, then the rest fill in behind it. With
-   batching that's ~4 requests for every latest value on the map instead of
-   170, so a refresh comfortably fits the API's hourly budget. */
-function regionsByDistance(){
-  const c = map.getCenter();
-  const score = reg => {
-    const pts = gaugesInRegion(reg).map(k=>GAUGE_POS[k]).filter(Boolean);
-    if(!pts.length) return Infinity;
-    return Math.min(...pts.map(p=>Math.hypot(p[0]-c.lat, (p[1]-c.lng)*0.73)));
-  };
-  return REGION_KEYS.slice().sort((a,b)=>score(a)-score(b));
+   Latest values for every gauge on the map, nearest the middle of the map
+   first and painted as each chunk lands, so the water you're looking at
+   colours in before the rest of the country: 17 requests for 833 gauges,
+   where per-region batches took 32. The history behind the status buckets
+   is fetched separately, only for where the map is looking (loadViewStats). */
+function gaugesNearestFirst(keys, at){
+  const c = at ? L.latLng(at) : map.getCenter(), sq = Math.cos(c.lat*Math.PI/180);
+  const d = k => { const p = GAUGE_POS[k]; return p ? Math.hypot(p[0]-c.lat, (p[1]-c.lng)*sq) : Infinity; };
+  return keys.map(k => [d(k), k]).sort((a,b) => a[0]-b[0]).map(x => x[1]);
 }
 function paintFlows(){
   const anyLive = Object.values(flows).some(f=>f && !f.stale);
@@ -4838,37 +4868,116 @@ function paintFlows(){
   $("#netpill").classList.toggle("show", !anyLive && anyData);
   $("#updwhen").textContent = anyLive ? new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})
     : (anyData ? "cached" : "unavailable");
+  paintStatus();
+}
+/* Everything a status bucket feeds, without touching the header's "flows"
+   time: history arriving later (loadViewStats, openRiver) is not a newer
+   reading, and the header shouldn't say it is. */
+function paintStatus(){
   repaintGauges();
   if(typeof syncFlow === "function") syncFlow();   // speeds follow the new readings
   if(curRiver) renderSheet(RIVERS.find(r=>r.id===curRiver));
 }
 async function refreshAll(manual){
   const btn=$("#btn-refresh"); btn.classList.add("spin");
-  for(const reg of regionsByDistance()){
-    for(const group of chunk(gaugesInRegion(reg), MAX_SITES_LATEST)){
-      await fetchLatestBatch(group);
-    }
-    paintFlows();          // nearest region shows up without waiting for the rest
+  const keys = gaugesNearestFirst(Object.keys(GAUGES));
+  // Colorado DWR's gauges answer from another host with its own budget: one request, alongside
+  const dwr = keys.filter(isDWR);
+  const dwrDone = dwr.length ? fetchLatestBatch(dwr).then(paintFlows) : null;
+  for(const group of chunk(keys.filter(k=>!isDWR(k)), MAX_SITES_LATEST)){
+    await fetchLatestBatch(group);
+    paintFlows();          // the nearest water shows up without waiting for the rest
   }
+  await dwrDone;
   btn.classList.remove("spin");
-
-  // Historical medians backfill the same way — region by region, nearest
-  // first — so status badges upgrade from a bare CFS reading to a real
-  // comparison. 56 requests for the whole map rather than ~1,190.
-  if(!refreshAll.statsKicked){
-    refreshAll.statsKicked = true;
-    (async()=>{
-      for(const reg of regionsByDistance()){
-        await fetchStatsBatch(gaugesInRegion(reg));
-        paintFlows();
-        await new Promise(r=>setTimeout(r, 400));
-      }
-      verifyGaugesBatch(Object.keys(GAUGES)).then(()=>{
-        if(curRiver) renderSheet(RIVERS.find(r=>r.id===curRiver));
-      });
-    })();
-  }
+  statsSoon();             // history for wherever the map is now
 }
+
+/* ---------- history where the map is looking ----------
+   The 7-year median behind a status bucket matters only where a status is
+   drawn: the speed of the current on the rivers (from FLOW_MIN_ZOOM), the
+   gauge dots, an open river's sheet and the Field Book's chips. Fetching it
+   for every gauge on the map at the first open of each week had grown to 273
+   of a cold load's 322 requests, for a country the opening chooser doesn't
+   colour at all.
+
+   So history is fetched for the gauges in the padded view, from
+   STATS_MIN_ZOOM: one level before the current starts to move, so the
+   speeds are ready when you get there (and where the Other rivers and the
+   all-gauges layer start). The state views the chooser lands on (zoom
+   5.5–7.25 on a phone) fetch nothing; there only the Gauges dots, if switched
+   on, show a status, and a dot whose history isn't on the phone yet stays
+   grey until you zoom in. Never while the chooser is up. An opened river
+   fetches its own (openRiver). Nearest the middle of the map first, one
+   chunk at a time, and the view is read again after every chunk, so moving
+   on drops the rest of a view you've left.
+
+   A chunk costs STAT_YEARS requests whether it carries one gauge or thirty,
+   so one with room left takes riders (statsRiders). */
+const STATS_MIN_ZOOM = 8;            // compare with >= : zoom is fractional
+const STATS_VIEW_PAD = 0.5;
+const GAUGE_RIVERS = {};             // gauge key -> the rivers that list it
+RIVERS.forEach(r => (r.gauges||[]).forEach(g => (GAUGE_RIVERS[g] = GAUGE_RIVERS[g] || []).push(r)));
+let statsTimer = null, statsRunning = false;
+/* Gauges the loader has asked for this session. An answer leaves a median,
+   or null, in `stats`; a gauge it couldn't get (a DWR failure) isn't asked
+   for again on every pan. One the back-off cut short is taken out again, so
+   it is asked once the cooldown is over. */
+const statsAsked = new Set();
+
+/* Does this gauge still need its history, and would anything show it? One
+   that has stopped reporting has nothing to compare (statusOf() reads "Not
+   reporting" whatever the median), and one whose rivers are all filtered out
+   by class has no dot and no current on screen (syncGaugeDots). */
+function statsWanted(k){
+  if(stats[k] !== undefined || statsInflight.has(k) || statsAsked.has(k)) return false;
+  const f = flows[k];
+  if(f && !f.stale && readingIsOld(f)) return false;
+  return (GAUGE_RIVERS[k] || []).some(tierShown);
+}
+/* Spare room in a chunk of history that is going out anyway. Seven requests
+   carry thirty gauges as cheaply as one, so the room is filled: favourites
+   first (the Field Book's chips), then the gauges nearest `at` that still
+   want history, which the next look around usually does. Nothing is fetched
+   only to fill a chunk: no riders unless one of `keys` needs the network. */
+function statsRiders(keys, at){
+  const size = batchSupported ? MAX_SITES_DAILY : 1;
+  const going = keys.filter(k => !isDWR(k) && stats[k] === undefined && !statsInflight.has(k)).length;
+  const room = going ? (size - going % size) % size : 0;
+  const have = new Set(keys), out = [];
+  if(!room) return out;
+  const favs = Object.keys(fbAll()).filter(fbIsFav).map(id => (RIVERS.find(r => r.id === id) || {}).primaryGauge);
+  for(const k of favs.concat(gaugesNearestFirst(Object.keys(GAUGES).filter(statsWanted), at))){
+    if(out.length >= room) break;
+    if(k && !isDWR(k) && !have.has(k) && statsWanted(k)){ out.push(k); have.add(k); }
+  }
+  return out;
+}
+async function loadViewStats(){
+  if(statsRunning) return;           // the pass under way reads the view again after its chunk
+  statsRunning = true;
+  try{
+    while(!apiPaused() && !zonesShown && map.getZoom() >= STATS_MIN_ZOOM && map.getSize().x){
+      const view = map.getBounds().pad(STATS_VIEW_PAD);
+      const inView = gaugesNearestFirst(Object.keys(GAUGES).filter(k =>
+        GAUGE_POS[k] && view.contains(GAUGE_POS[k]) && statsWanted(k)));
+      if(!inView.length) break;
+      // Colorado DWR: another host with its own budget, fetched alongside
+      const dwr = inView.filter(isDWR);
+      if(dwr.length){ dwr.forEach(k => statsAsked.add(k)); fetchStatsBatch(dwr).then(paintStatus); }
+      const group = inView.filter(k => !isDWR(k)).slice(0, batchSupported ? MAX_SITES_DAILY : 1);
+      if(!group.length) continue;
+      group.push(...statsRiders(group));       // the gauges just beyond the view: the next pan
+      group.forEach(k => statsAsked.add(k));
+      await Promise.all([fetchStatsBatch(group), verifyGaugesBatch(group)]);
+      if(apiPaused()) group.forEach(k => { if(stats[k] === undefined) statsAsked.delete(k); });
+      paintStatus();
+    }
+  }finally{ statsRunning = false; }
+}
+function statsSoon(){ clearTimeout(statsTimer); statsTimer = setTimeout(loadViewStats, 800); }
+map.on("moveend", statsSoon);
+
 $("#btn-refresh").addEventListener("click",()=>refreshAll(true));
 window.addEventListener("online",()=>refreshAll());
 setInterval(refreshAll, REFRESH_MS);
@@ -5297,6 +5406,7 @@ function hideZones(){
   if(typeof syncFlow === "function") syncFlow();
   if(typeof syncLakes === "function") syncLakes();
   if(typeof syncClosures === "function") syncClosures();
+  statsSoon();                        // Change Region can close the chooser without moving the map
 }
 
 buildZones();

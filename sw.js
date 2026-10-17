@@ -8,7 +8,7 @@
      and a background fetch refreshes it, so a rebuilt layer reaches phones
      on the next visit instead of never.
    Every URL here is relative: the site lives at a sub-path on GitHub Pages. */
-const VERSION = "flyroutes-v20";
+const VERSION = "flyroutes-v21";
 const TILES_BROWSE = "tiles-browse", TILES_SAVED = "tiles-saved", DATA_TILES = "data-tiles";
 const TOPO = "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/";
 const LEAFLET = [
@@ -30,24 +30,37 @@ self.addEventListener("activate", e => {
     .then(() => self.clients.claim()));
 });
 
-// A dead connection can hang for a minute; on patchy signal the cache is better than waiting.
-function fetchTimeout(req, ms){
-  return new Promise((ok, no) => {
-    const t = setTimeout(() => no(new Error("timeout")), ms);
-    fetch(req).then(r => { clearTimeout(t); ok(r); }, e => { clearTimeout(t); no(e); });
-  });
-}
-async function networkFirst(req, isNav){
-  const cache = await caches.open(VERSION);
-  try{
-    const res = await fetchTimeout(req, NET_TIMEOUT);
-    if(res.ok) cache.put(req, res.clone());
-    return res;
-  }catch(err){
-    const hit = await cache.match(req, {ignoreSearch:true}) || (isNav ? await cache.match("index.html") : null);
-    if(hit) return hit;
-    throw err;
-  }
+// A dead connection can hang for a minute; on patchy signal the cache is better
+// than waiting. But slow is not dead: rivers-data.js is ~3.7 MB and misses 4 s on
+// a weak bar of signal. So the timeout only decides what the page gets *now*.
+// The fetch keeps going and its answer is stored when it lands (waitUntil keeps
+// the worker alive for it), or a slow phone would run new app.js against old
+// data forever. With nothing cached there is no fallback worth having, so the
+// page waits for the network instead of failing.
+function networkFirst(e, isNav){
+  const req = e.request;
+  const cacheP = caches.open(VERSION);
+  const net = fetch(req);
+  // Clone synchronously, before the page can start reading the body.
+  e.waitUntil(net.then(res => {
+    if(!res.ok) return;
+    const copy = res.clone();
+    return cacheP.then(c => c.put(req, copy));
+  }).catch(() => {}));
+  let t;
+  const timeout = new Promise(ok => { t = setTimeout(ok, NET_TIMEOUT, "timeout"); });
+  const cached = async () => {
+    const cache = await cacheP;
+    return await cache.match(req, {ignoreSearch:true}) || (isNav ? await cache.match("index.html") : null);
+  };
+  return (async () => {
+    let res;
+    try{ res = await Promise.race([net, timeout]); }
+    catch(err){ const hit = await cached(); if(hit) return hit; throw err; }   // offline
+    finally{ clearTimeout(t); }
+    if(res!=="timeout") return res;
+    return await cached() || net;                                              // slow
+  })();
 }
 async function cacheFirst(req){
   const cache = await caches.open(VERSION);
@@ -92,7 +105,7 @@ self.addEventListener("fetch", e => {
   if(req.url.startsWith(TOPO)){ e.respondWith(tile(req)); return; }
   if(url.origin===self.location.origin && /\/data\/[^/]+\/[^/]+\.json$/.test(url.pathname)){ e.respondWith(dataTile(req)); return; }
   if(url.origin===self.location.origin || LEAFLET.includes(req.url)){
-    e.respondWith(networkFirst(req, req.mode==="navigate")); return;
+    e.respondWith(networkFirst(e, req.mode==="navigate")); return;
   }
   if(url.hostname==="fonts.googleapis.com" || url.hostname==="fonts.gstatic.com"){
     e.respondWith(cacheFirst(req)); return;

@@ -880,7 +880,7 @@ gives the run order). Fenced in the data files as "wyoming wgfd streams".
   Region-less Wyoming streams reach the `PARK_INFO.wgfd` row through
   `parkRegsSrc:"wgfd"`; the rules card, footer and ungauged copy fall back
   to `PARK_INFO[r.parkRegsSrc]`. **Don't give these streams a `region`**:
-  region drives request bucketing.
+  a region picks a `PARK_INFO` row and the behaviour that comes with it.
 - **Grand Teton creeks run as far as the trout do.** Pacific, Spread,
   Ditch, Lake, Granite, Pilgrim and Arizona continue on WGFD's line where
   WGFD rates the outside water as trout water. They are modelled like the
@@ -1362,7 +1362,12 @@ backup file still works. Notes are escaped (`fbEsc`).
 ### Offline — `sw.js`
 Service worker at the repo root; every URL relative because the site is at a
 GitHub Pages sub-path. App files are **network-first with a 4 s timeout** (so
-updates still arrive, and dead signal falls back to cache). USGS Topo tiles
+updates still arrive, and dead signal falls back to cache). **The timeout only
+decides what the page gets now** (2026-10-17): the fetch keeps going under
+`e.waitUntil` and is cached when it lands. Before that, a 3.7 MB
+`rivers-data.js` on slow signal was thrown away every time and could stay old
+for good while `app.js` updated. With nothing cached, the page waits for the
+network instead of failing. USGS Topo tiles
 are cached while browsing (`tiles-browse`, ~2,500) and saved on purpose from
 the Field Book's Offline tab (`tiles-saved`, `localStorage.offlineAreas`,
 capped at 4,000 tiles per area). **Only USGS Topo is ever cached** —
@@ -1954,27 +1959,39 @@ the header used to read "flows unavailable".
 Everything now asks for **many sites per request** — `monitoring_location_id`
 takes a comma-separated list and each returned feature carries its own
 `monitoring_location_id`, so one response demultiplexes back out per gauge.
-Measured against a stubbed API, a full cold load is **67 requests instead of
-~1,530**: 7 latest, 56 daily, 4 metadata. A steady-state refresh is 7.
+**Rebuilt 2026-10-17.** With 833 USGS gauges in 22 region buckets, a cold
+load had grown to **322** requests (32 latest, 273 history, 17 metadata), so
+three loads an hour from one IP used up the budget. Measured against a
+stubbed API on a phone screen, it is now:
+- **Cold load on the chooser: 17.** Latest values only.
+- **Zoom into an area: about 8** (7 history + 1 metadata per 30 gauges).
+- **15-minute refresh: 17.**
 
-- `fetchLatestBatch(keys)` — up to `MAX_SITES_LATEST` (50) sites per call.
-- `fetchStatsBatch(keys)` — the loop is inverted versus the old code: one
-  request per year-window per chunk of `MAX_SITES_DAILY` (30) sites, so
-  7 × ceil(n/30) rather than 7 × n.
-- `verifyGaugesBatch(keys)` — same idea against monitoring-locations.
-
-**Ordered by region, nearest first.** `regionsByDistance()` sorts the
-buckets (`west`, `ciowa`, `driftless`, `northshore`, `uppermidwest`, the
-park and valley regions, and one `w-XX` bucket per far-western state, from
-`regionOfRiver()`) by distance from the map centre, and `paintFlows()` runs
-after each one — so the water you're looking at colours in before the rest
-of the country is fetched.
-
-**The far-western states batch by state, not by region tag**
-(`STATE_BUCKET`: CA, OR, WA, MT, CO, UT, AK, MI, SD, NM, AZ, NV). Every park and every state is
-its own `region`, and a bucket holding one gauge still costs its own latest
-call and seven history calls; thirty small buckets roughly doubled a cold
-load. Yellowstone and Grand Teton keep their own buckets as before.
+- `fetchLatestBatch(keys)`: every gauge goes in one list, nearest the map
+  centre first (`gaugesNearestFirst`), 50 per call, with a repaint after
+  each chunk. Colorado DWR stations go alongside in one call.
+- `fetchStatsBatch(keys)`: 7 requests (one per year) per chunk of
+  `MAX_SITES_DAILY` (30). `statsInflight` stops the same gauge being asked
+  for twice at once.
+- **History only where it's drawn: `loadViewStats()`.** It covers the
+  gauges in the view padded by 0.5, from `STATS_MIN_ZOOM` (8, one level
+  before the current moves). It is debounced on `moveend`, never runs while
+  the chooser is up, and reads the view again after each chunk. `openRiver`
+  fetches its own river's gauges. `statsRiders()` fills a chunk's spare
+  room with favourites, then the nearest gauges; it never fetches just to
+  fill a chunk. Skipped (`statsWanted`): gauges that have stopped reporting
+  and gauges whose rivers are all filtered out. History saved earlier in the
+  week is read back at startup with no requests.
+- **Verify is lazy.** It runs with each history chunk and in `openRiver`,
+  never for all 833 at launch. A gauge that was never checked, or whose
+  check hit a 429, shows no "(unverified)" tag.
+- **Region buckets are gone** (`regionOfRiver`, `STATE_BUCKET`,
+  `regionsByDistance`). A bucket paid in full however small it was: Teton
+  Valley's two gauges cost 8 calls on their own.
+- **Known gap:** with the Gauges icon on, dots below zoom 8 stay grey unless
+  their history is already saved on the phone.
+- `paintStatus()` repaints dots, the current and the sheet without changing
+  the header's "flows" time. Only new readings (`paintFlows`) change it.
 
 Two things to preserve if you touch this:
 
