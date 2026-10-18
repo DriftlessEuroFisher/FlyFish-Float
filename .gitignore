@@ -11,3 +11,9 @@
 /*.pdf
 /reference/
 /scratch/
+
+# Private project notes — kept in this folder for Claude and the owner,
+# never published (the repo is public for GitHub Pages).
+/CLAUDE.md
+/IDEAS.md
+/.claude/
