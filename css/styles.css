@@ -1,18 +1,25 @@
 /* ============================================================
-   DESIGN TOKENS — "river gauge field instrument" direction
-   Ink-spruce chrome, cool gauge-paper panels, glacial-teal water,
-   survey-flagging orange reserved for the live readout only.
+   DESIGN TOKENS — TrailWaterMaps brand: "Iron / Bone"
+   Iron chrome (#1f1915, the parent icon's ground), warm Bone paper
+   panels, Saddle leather for links and secondary accents, River blue
+   for water. Survey-flagging orange stays reserved for the live data
+   readout only, and every colour that carries meaning (flow status,
+   trout classes, tiers, hazards, public land) is left as it was.
+   Type: Barlow Condensed 700 for the wordmark and headings, Barlow
+   for body and UI, IBM Plex Mono for flows, coordinates and data.
    ============================================================ */
 :root{
-  --ink:#16261f;            /* dark spruce ink (app chrome) */
-  --ink-2:#23362d;
-  --paper:#eef1ec;          /* cool gauge-paper */
-  --paper-2:#ffffff;
-  --line:#cdd5cb;
-  --txt:#1d2a23;
-  --txt-dim:#5c6b60;
-  --river:#1f6f8b;          /* glacial teal */
-  --river-dim:#9cc3cf;
+  --ink:#1f1915;            /* Iron (app chrome) */
+  --ink-2:#2e2620;
+  --paper:#f4eee4;          /* Bone */
+  --paper-2:#fffcf6;
+  --line:#d6ccc0;
+  --txt:#2a211b;
+  --txt-dim:#5e534a;
+  --river:#236b8f;          /* River */
+  --river-dim:#a3c4d6;
+  --saddle:#8b532f;          /* leather accent */
+  --link:#985535;            /* Saddle, tuned for text */
   --flag:#e8590c;           /* survey flagging orange — live data only */
   /* flow status ramp: dry bank -> green -> blue -> red */
   --st-vlow:#8a5a2b;
@@ -22,56 +29,66 @@
   --st-vhigh:#b3261e;
   --st-na:#7a857d;
   --radius:10px;
-  --shadow:0 4px 18px rgba(15,30,22,.18);
+  --shadow:0 4px 18px rgba(31,25,21,.18);
   --sheet-h:62vh;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden}
 body{
-  font-family:"Public Sans",system-ui,sans-serif;
+  font-family:"Barlow",system-ui,sans-serif;
   color:var(--txt);background:var(--paper);
   font-size:15px;line-height:1.45;
 }
 button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
-.disp{font-family:"Barlow Condensed","Public Sans",sans-serif;letter-spacing:.02em}
+.disp{font-family:"Barlow Condensed","Barlow",sans-serif;letter-spacing:.02em}
 
 /* ---------- App bar ---------- */
 #appbar{
   position:fixed;inset:0 0 auto 0;z-index:1200;
-  background:var(--ink);color:#e8efe9;
+  background:var(--ink);color:#f4eee4;
   display:flex;align-items:center;gap:10px;
   padding:max(8px,env(safe-area-inset-top)) 12px 8px 14px;
   box-shadow:0 2px 10px rgba(0,0,0,.35);
 }
 #appbar h1{
+  display:flex;align-items:center;gap:9px;
   font-family:"Barlow Condensed",sans-serif;font-weight:700;
   font-size:19px;line-height:1.05;letter-spacing:.04em;text-transform:uppercase;
 }
+/* The brand mark, in Bone. Stroke 11 of 108 units: the brand's 8.5–9 goes
+   to mush below 2 px, and at 26 px tall that is where it would land. */
+#appbar .brandmark{
+  flex:0 0 auto;width:26px;height:26px;
+  fill:none;stroke:var(--paper);stroke-width:11;stroke-linecap:round;stroke-linejoin:round;
+}
+#appbar .wordmark{display:block;min-width:0}
 #appbar h1 small{
-  display:block;font-family:"Public Sans",sans-serif;font-weight:500;
-  font-size:10.5px;letter-spacing:.08em;color:#9fb3a6;text-transform:uppercase;margin-top:2px;
+  display:block;font-family:"Barlow",system-ui,sans-serif;font-weight:500;
+  font-size:10.5px;letter-spacing:.08em;color:#b3a596;text-transform:uppercase;margin-top:2px;
 }
 #appbar .spacer{flex:1}
 /* On a phone the tagline took a second and third line — about a fifth of
-   an iPhone screen. Title only. At 375 px the buttons leave ~110 px, which
-   cut the name to "DELANOIT'S FL…" on one line, so it may break once
-   instead: two tight lines fit inside the 38 px buttons, so the bar is no
-   taller than one line would make it. */
+   an iPhone screen. Title only. At 375 px the mark and the buttons leave
+   too little for "TRAILWATERMAPS" on one line, so the name may break once,
+   after "TRAILWATER" (the <wbr> in index.html; it is one word, so without
+   it the line would clip): two tight lines fit inside the 38 px buttons,
+   so the bar is no taller than one line would make it. */
 @media (max-width:767px){
   #appbar{gap:8px}
-  #appbar h1{min-width:0;flex:0 1 auto;font-size:16px;line-height:1;letter-spacing:.02em}
+  #appbar h1{min-width:0;flex:0 1 auto;gap:7px;font-size:16px;line-height:1;letter-spacing:.02em}
+  #appbar .brandmark{width:24px;height:24px}
   #appbar h1 small{display:none}
 }
 #updated{
-  font-family:"IBM Plex Mono",monospace;font-size:10px;color:#9fb3a6;
+  font-family:"IBM Plex Mono",monospace;font-size:10px;color:#b3a596;
   text-align:right;line-height:1.3;white-space:nowrap;
 }
 #updated b{color:var(--flag);font-weight:600}
 .iconbtn{
   width:38px;height:38px;border-radius:9px;flex:0 0 auto;
-  display:grid;place-items:center;background:var(--ink-2);color:#dfe9e1;
-  border:1px solid #3a4f43;font-size:17px;
+  display:grid;place-items:center;background:var(--ink-2);color:#ece4d8;
+  border:1px solid #4a3d33;font-size:17px;
 }
 .iconbtn:active{transform:scale(.94)}
 .iconbtn.spin svg{animation:spin 1s linear infinite}
@@ -89,9 +106,9 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
   flex:0 0 auto;display:flex;align-items:center;gap:6px;
   background:var(--paper-2);border:1px solid var(--line);
   border-radius:99px;padding:7px 13px;font-size:12.5px;font-weight:600;
-  color:var(--txt-dim);box-shadow:0 1px 4px rgba(15,30,22,.12);
+  color:var(--txt-dim);box-shadow:0 1px 4px rgba(31,25,21,.12);
 }
-.chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.chip.on{background:var(--ink);border-color:var(--ink);color:var(--paper)}
 .chip .dot{width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.6}
 
 /* ---------- Map ---------- */
@@ -222,7 +239,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 #sheet{
   position:fixed;z-index:1300;left:0;right:0;bottom:0;
   background:var(--paper);border-radius:18px 18px 0 0;
-  box-shadow:0 -8px 30px rgba(10,20,14,.35);
+  box-shadow:0 -8px 30px rgba(31,25,21,.35);
   max-height:88vh;height:var(--sheet-h);
   transform:translateY(110%);transition:transform .28s cubic-bezier(.3,.9,.3,1);
   display:flex;flex-direction:column;
@@ -231,13 +248,13 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 #sheet.open{transform:translateY(0)}
 #sheet.tall{height:88vh}
 #grab{padding:9px 0 4px;display:grid;place-items:center;flex:0 0 auto;touch-action:none}
-#grab::before{content:"";width:42px;height:5px;border-radius:3px;background:#b9c4ba}
+#grab::before{content:"";width:42px;height:5px;border-radius:3px;background:#c9bcab}
 #sheetbody{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 14px 24px;flex:1}
 #sheethead{display:flex;align-items:flex-start;gap:10px;padding:2px 14px 10px;border-bottom:1px solid var(--line);flex:0 0 auto}
 #sheethead .swatch{width:14px;height:14px;border-radius:4px;margin-top:6px;flex:0 0 auto}
 #sheethead h2{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:24px;line-height:1.05;text-transform:uppercase;letter-spacing:.02em}
 #sheethead .sub{font-size:11.5px;color:var(--txt-dim);margin-top:2px}
-#sheethead .x{margin-left:auto;width:32px;height:32px;border-radius:8px;background:#e0e6df;color:var(--txt-dim);font-size:16px;flex:0 0 auto}
+#sheethead .x{margin-left:auto;width:32px;height:32px;border-radius:8px;background:#e8dfd2;color:var(--txt-dim);font-size:16px;flex:0 0 auto}
 
 @media (min-width:900px){
   #sheet{left:auto;right:14px;bottom:14px;top:calc(110px + env(safe-area-inset-top));
@@ -250,7 +267,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 /* ---------- Flow card (signature element: the staff gauge) ---------- */
 .flowcard{
   background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);
-  padding:12px;margin:12px 0;box-shadow:0 1px 4px rgba(15,30,22,.08);
+  padding:12px;margin:12px 0;box-shadow:0 1px 4px rgba(31,25,21,.08);
 }
 .flowcard .gname{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--txt-dim)}
 .flowrow{display:flex;align-items:baseline;gap:8px;margin-top:4px;flex-wrap:wrap}
@@ -288,7 +305,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
    hours wear the warning amber, strong wind a darker brown-amber. Teal,
    orange, closure red and the trout-class colours are all spoken for. */
 .wxcard{background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);
-  padding:12px;margin:12px 0;box-shadow:0 1px 4px rgba(15,30,22,.08)}
+  padding:12px;margin:12px 0;box-shadow:0 1px 4px rgba(31,25,21,.08)}
 .wxcard .gname{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--txt-dim)}
 .wx-now{margin-top:5px;font-size:13px;line-height:1.4;color:var(--txt)}
 .wx-now b{font-family:"IBM Plex Mono",monospace;font-weight:600;color:var(--ink)}
@@ -343,14 +360,14 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 /* Iowa water-trail designation, between the class line and the blurb */
 .wtrow{margin:8px 2px 0;font-size:12px;line-height:1.4;color:var(--txt-dim)}
 .wtrow b{color:var(--txt)}
-.wtrow a{color:var(--river);font-weight:700;white-space:nowrap}
+.wtrow a{color:var(--link);font-weight:700;white-space:nowrap}
 .sec .shuttle{margin-top:6px;font-size:11.5px;color:var(--txt-dim)}
 .sec .shuttle b{color:var(--txt)}
 .sec .zoom{margin-top:8px;font-size:12px;font-weight:700;color:var(--river)}
 .fishnote{background:var(--paper-2);border:1px dashed var(--line);border-radius:var(--radius);padding:10px 12px;font-size:12.5px;color:var(--txt-dim);margin-bottom:9px}
 
 /* ---------- Legend & modal ---------- */
-#scrim{position:fixed;inset:0;z-index:1400;background:rgba(12,22,16,.5);display:none}
+#scrim{position:fixed;inset:0;z-index:1400;background:rgba(31,25,21,.5);display:none}
 #scrim.show{display:block}
 #legend{
   position:fixed;z-index:1500;left:50%;top:50%;transform:translate(-50%,-50%);
@@ -363,7 +380,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .lg-row{display:flex;align-items:center;gap:10px;margin:7px 0;font-size:13px}
 .lg-line{width:30px;height:4px;border-radius:2px;flex:0 0 auto}
 .lg-note{font-size:11.5px;color:var(--txt-dim);margin:10px 0 4px}
-#legend .x{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:8px;background:#e0e6df;font-size:15px}
+#legend .x{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:8px;background:#e8dfd2;font-size:15px}
 /* The key: swatch-led one-liners in a 2-column grid; the long notes live in the fold */
 .lg-actions{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:2px}
 #legend > h2{margin-bottom:2px}
@@ -408,7 +425,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 #netpill.show{display:block}
 
 /* skeleton shimmer */
-.skel{position:relative;overflow:hidden;background:#dde3dc;border-radius:6px;color:transparent !important}
+.skel{position:relative;overflow:hidden;background:#e6ddd0;border-radius:6px;color:transparent !important}
 .skel::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);animation:sh 1.2s infinite}
 @keyframes sh{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
 
@@ -425,13 +442,13 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
   font:700 12px "Barlow Condensed",sans-serif; letter-spacing:.06em; text-transform:uppercase;
   padding:8px 11px; border-radius:9px; cursor:pointer;
   border:1px solid var(--line); background:var(--paper-2); color:var(--txt);
-  box-shadow:0 1px 4px rgba(15,30,22,.2);
+  box-shadow:0 1px 4px rgba(31,25,21,.2);
 }
 #btn-far{
   font:700 12px "Barlow Condensed",sans-serif; letter-spacing:.06em; text-transform:uppercase;
   padding:8px 11px; border-radius:9px; cursor:pointer;
   border:1px solid var(--line); background:var(--paper-2); color:var(--txt);
-  box-shadow:0 1px 4px rgba(15,30,22,.2);
+  box-shadow:0 1px 4px rgba(31,25,21,.2);
 }
 #btn-far{ display:none; margin-top:6px; }
 body.zones-open #btn-far{ display:block; }
@@ -450,7 +467,7 @@ body.zones-open #jump{ display:block; }
   font:700 12px "Barlow Condensed",sans-serif; letter-spacing:.06em; text-transform:uppercase;
   padding:8px 11px; border-radius:9px; cursor:pointer; display:flex; align-items:center; gap:4px;
   border:1px solid var(--line); background:var(--paper-2); color:var(--txt);
-  box-shadow:0 1px 4px rgba(15,30,22,.2);
+  box-shadow:0 1px 4px rgba(31,25,21,.2);
 }
 #jump-btn .mcaret{ display:inline-block; margin-left:4px; transition:transform .15s; }
 #jump-btn[aria-expanded="true"]{ background:var(--paper); }
@@ -460,7 +477,7 @@ body.zones-open #jump{ display:block; }
   -webkit-overflow-scrolling:touch; overscroll-behavior:contain; }
 #jumplist[hidden]{ display:none; }
 #jumplist button{ display:block; width:100%; text-align:left; cursor:pointer;
-  font:600 12.5px 'Public Sans',sans-serif; line-height:1.25; color:var(--txt);
+  font:600 12.5px 'Barlow',system-ui,sans-serif; line-height:1.25; color:var(--txt);
   padding:8px 8px; min-height:36px; border-radius:8px; }
 #jumplist button:hover, #jumplist button:active{ background:var(--paper-2); }
 #jumplist .jl-group{ font:700 11px "Barlow Condensed",sans-serif; letter-spacing:.07em;
@@ -472,12 +489,12 @@ body.zones-open #jump{ display:block; }
   transform:translate(-50%,-50%);
   width:144px; text-align:center;
   padding:6px 9px; border-radius:10px;
-  background:rgba(21,36,31,.92); color:#f2ece0;
+  background:rgba(31,25,21,.92); color:#f4eee4;
   border:1px solid rgba(255,255,255,.22);
   box-shadow:0 3px 10px rgba(0,0,0,.35);
   cursor:pointer; pointer-events:auto;
 }
-.zone-card:hover{ background:rgba(21,36,31,.99); border-color:rgba(255,255,255,.45); }
+.zone-card:hover{ background:rgba(31,25,21,.99); border-color:rgba(255,255,255,.45); }
 /* Only the parks carry a card now, and each wears a crest: the arrowhead
    silhouette reads as "national park" long before the name is legible. Laid
    out as a row so the badge doesn't make the card taller — layoutZoneCards()
@@ -523,7 +540,7 @@ body.zones-open #jump{ display:block; }
   display:block; margin-top:1px; font:500 9px "IBM Plex Mono",monospace;
   letter-spacing:.14em; color:#4a6675;
 }
-.zone-tip{ font-family:"Public Sans",sans-serif; }
+.zone-tip{ font-family:"Barlow",system-ui,sans-serif; }
 
 /* while the chooser is up, the river furniture would just be noise */
 body.zones-open .leaflet-rivers-pane,
@@ -562,7 +579,7 @@ body.zones-open .leaflet-zone-pane{ opacity:1; }
 /* menu buttons match #btn-zones; panels open under their button */
 #chipbar .menubtn{font:700 13px "Barlow Condensed",sans-serif;letter-spacing:.06em;text-transform:uppercase;
   min-height:40px;padding:0 12px;border-radius:9px;cursor:pointer;display:flex;align-items:center;gap:4px;
-  border:1px solid var(--line);background:var(--paper-2);color:var(--txt);box-shadow:0 1px 4px rgba(15,30,22,.2)}
+  border:1px solid var(--line);background:var(--paper-2);color:var(--txt);box-shadow:0 1px 4px rgba(31,25,21,.2)}
 #chipbar .menubtn .mcaret{display:inline-block;margin-left:4px;transition:transform .15s}
 #chipbar .menubtn[aria-expanded="true"] .mcaret{transform:rotate(180deg)}
 #chipbar .menubtn[aria-expanded="true"]{background:var(--paper)}
@@ -570,7 +587,7 @@ body.zones-open .leaflet-zone-pane{ opacity:1; }
   box-shadow:var(--shadow);max-height:calc(100vh - 330px);max-height:calc(100dvh - 330px);overflow:auto;
   -webkit-overflow-scrolling:touch}
 #chipbar .menupanel[hidden]{display:none}
-#chipbar .menupanel button{font:600 13px 'Public Sans',sans-serif;padding:0 12px;min-height:40px;min-width:150px;
+#chipbar .menupanel button{font:600 13px 'Barlow',system-ui,sans-serif;padding:0 12px;min-height:40px;min-width:150px;
   border-radius:9px;border:1px solid var(--line);background:var(--paper-2);color:var(--txt-dim);text-align:left;
   cursor:pointer}
 #chipbar .menupanel button::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;
@@ -587,14 +604,14 @@ body.zones-open .leaflet-zone-pane{ opacity:1; }
    breathes outward; with reduced motion it is a still ring instead. */
 #chipbar .menubtn.nudge{border-color:var(--river);animation:iconnudge 2.2s ease-out infinite}
 @keyframes iconnudge{
-  0%  {box-shadow:0 0 0 0 rgba(31,111,139,.55),0 1px 4px rgba(15,30,22,.2)}
-  70% {box-shadow:0 0 0 10px rgba(31,111,139,0),0 1px 4px rgba(15,30,22,.2)}
-  100%{box-shadow:0 0 0 0 rgba(31,111,139,0),0 1px 4px rgba(15,30,22,.2)}
+  0%  {box-shadow:0 0 0 0 rgba(35,107,143,.55),0 1px 4px rgba(31,25,21,.2)}
+  70% {box-shadow:0 0 0 10px rgba(35,107,143,0),0 1px 4px rgba(31,25,21,.2)}
+  100%{box-shadow:0 0 0 0 rgba(35,107,143,0),0 1px 4px rgba(31,25,21,.2)}
 }
 @media (prefers-reduced-motion:reduce){
-  #chipbar .menubtn.nudge{box-shadow:0 0 0 3px rgba(31,111,139,.45),0 1px 4px rgba(15,30,22,.2)}
+  #chipbar .menubtn.nudge{box-shadow:0 0 0 3px rgba(35,107,143,.45),0 1px 4px rgba(31,25,21,.2)}
 }
-body.touring #chipbar .menubtn.nudge{animation:none;box-shadow:0 1px 4px rgba(15,30,22,.2);border-color:var(--line)}
+body.touring #chipbar .menubtn.nudge{animation:none;box-shadow:0 1px 4px rgba(31,25,21,.2);border-color:var(--line)}
 #icontip{position:fixed;z-index:1150;display:none;align-items:flex-start;background:var(--paper-2);color:var(--txt);
   border:1px solid var(--line);border-left:3px solid var(--river);border-radius:11px;box-shadow:var(--shadow)}
 #icontip.show{display:flex}
@@ -633,7 +650,7 @@ body.touring #icontip,body.zones-open #icontip{display:none}
   width:44px; height:44px; border-radius:50%; padding:0; cursor:pointer;
   display:flex; align-items:center; justify-content:center;
   border:1px solid var(--line); background:var(--paper-2); color:var(--txt-dim);
-  box-shadow:0 1px 4px rgba(15,30,22,.2);
+  box-shadow:0 1px 4px rgba(31,25,21,.2);
 }
 #btn-locate:hover{ background:var(--paper); }
 #btn-locate.located{ color:var(--river); border-color:var(--river); }
@@ -659,7 +676,7 @@ body.touring #icontip,body.zones-open #icontip{display:none}
 #locpill{
   position:fixed;z-index:1260;left:50%;transform:translateX(-50%);
   bottom:max(70px,calc(56px + env(safe-area-inset-bottom)));max-width:90vw;text-align:center;
-  background:var(--ink);color:#f2ece0;font-size:12px;font-weight:600;
+  background:var(--ink);color:#f4eee4;font-size:12px;font-weight:600;
   border-radius:99px;padding:7px 14px;box-shadow:var(--shadow);display:none;
 }
 #locpill.show{display:block}
@@ -677,7 +694,7 @@ body.touring #icontip,body.zones-open #icontip{display:none}
 #locask h3{font-family:"Barlow Condensed",sans-serif;font-size:20px;text-transform:uppercase;letter-spacing:.04em;line-height:1.1;margin-bottom:4px}
 #locask p{font-size:13px;line-height:1.4;color:var(--txt-dim)}
 #locask .la-btns{display:flex;gap:8px;margin-top:11px}
-#locask .la-btns button{min-height:42px;padding:0 14px;border-radius:9px;font-size:14px;font-weight:600;background:#e0e6df;color:var(--txt)}
+#locask .la-btns button{min-height:42px;padding:0 14px;border-radius:9px;font-size:14px;font-weight:600;background:#e8dfd2;color:var(--txt)}
 #locask .la-btns #la-yes{flex:1;background:var(--river);color:#fff}
 
 /* "Rules today" card — first thing in the sheet. Status dots are muted brick /
@@ -716,7 +733,7 @@ details.rulesfull{margin-bottom:9px}
 .rg-sp{margin-top:4px}
 .rg-sub{font-weight:700;color:var(--txt);margin:2px 0 4px}
 .rg-src{font-size:10.5px;color:var(--txt-dim);margin-top:8px}
-.rg-src a{color:var(--river)}
+.rg-src a{color:var(--link)}
 .rg-law{font-size:12px;line-height:1.4}
 .rg-law blockquote{margin:6px 0 2px;padding-left:9px;border-left:2px solid var(--line);font-size:11.5px;line-height:1.4;color:var(--txt-dim)}
 details.morefold{margin:-4px 0 6px}
@@ -777,7 +794,7 @@ details.morefold{margin:-4px 0 6px}
 .fbt-form{flex:1 0 100%;display:flex;flex-wrap:wrap;gap:6px 8px;padding:2px 4px 2px 0}
 .fbt-form label{display:flex;flex-direction:column;gap:2px;flex:1 1 130px;font-size:11px;font-weight:600;color:var(--txt-dim)}
 .fbt-form label.fbt-wide{flex-basis:100%}
-.fbt-form input{min-height:38px;font:inherit;font-size:16px;color:var(--txt);background:#fff;border:1px solid var(--line);
+.fbt-form input{min-height:38px;font:inherit;font-size:16px;color:var(--txt);background:var(--paper-2);border:1px solid var(--line);
   border-radius:var(--radius);padding:0 8px;width:100%}
 .fbt-form input:focus{outline:2px solid var(--river-dim);border-color:var(--river)}
 .fbt-err{flex:1 0 100%;font-size:12px;color:#8a2a24;min-height:0}
@@ -785,10 +802,10 @@ details.morefold{margin:-4px 0 6px}
 .fbt-form .fbt-acts{margin-left:0}
 /* "Trip logged · Undo" — same look as Float Mode's toast, plus one action. */
 #fbtoast{position:fixed;z-index:1340;left:50%;transform:translateX(-50%);bottom:max(80px,calc(70px + env(safe-area-inset-bottom)));max-width:92vw;
-  background:var(--ink);color:#f2ece0;font-size:12.5px;font-weight:600;border-radius:99px;padding:4px 6px 4px 16px;box-shadow:var(--shadow);
+  background:var(--ink);color:#f4eee4;font-size:12.5px;font-weight:600;border-radius:99px;padding:4px 6px 4px 16px;box-shadow:var(--shadow);
   display:none;align-items:center;gap:10px;white-space:nowrap}
 #fbtoast.show{display:flex}
-#fbtoast button{min-height:36px;padding:0 14px;border-radius:99px;background:var(--ink-2);border:1px solid #3a4f43;color:var(--river-dim);font-weight:700;font-size:13px}
+#fbtoast button{min-height:36px;padding:0 14px;border-radius:99px;background:var(--ink-2);border:1px solid #4a3d33;color:var(--river-dim);font-weight:700;font-size:13px}
 #fbtoast button[hidden]{display:none}
 #fbtoast:has(button[hidden]){padding-right:16px}
 
@@ -799,11 +816,11 @@ details.morefold{margin:-4px 0 6px}
   #book{inset:auto 14px 14px auto;top:calc(110px + env(safe-area-inset-top));width:420px;border-radius:14px;
     box-shadow:var(--shadow);overflow:hidden;padding:0}
 }
-#book-head{display:flex;align-items:center;gap:10px;padding:12px 14px 8px;background:var(--ink);color:#e8efe9;flex:0 0 auto}
+#book-head{display:flex;align-items:center;gap:10px;padding:12px 14px 8px;background:var(--ink);color:#f4eee4;flex:0 0 auto}
 #book-head h2{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:24px;line-height:1.05;text-transform:uppercase;letter-spacing:.04em}
-#book-head .x{margin-left:auto;width:40px;height:40px;border-radius:9px;background:var(--ink-2);border:1px solid #3a4f43;color:#dfe9e1;font-size:16px}
+#book-head .x{margin-left:auto;width:40px;height:40px;border-radius:9px;background:var(--ink-2);border:1px solid #4a3d33;color:#ece4d8;font-size:16px}
 #book-tabs{display:flex;background:var(--ink);padding:0 8px;flex:0 0 auto}
-#book-tabs button{flex:1;min-height:42px;padding:0 4px;font-size:13px;font-weight:600;color:#9fb2a6;border-bottom:3px solid transparent}
+#book-tabs button{flex:1;min-height:42px;padding:0 4px;font-size:13px;font-weight:600;color:#b3a596;border-bottom:3px solid transparent}
 #book-tabs button.on{color:#fff;border-bottom-color:var(--river-dim)}
 #book-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px 20px}
 .bk-row{display:flex;align-items:flex-start;gap:10px;width:100%;text-align:left;background:var(--paper-2);border:1px solid var(--line);
@@ -830,13 +847,13 @@ details.morefold{margin:-4px 0 6px}
 .rc-law{margin-top:4px}
 .rc-law summary{font-size:11.5px;color:var(--river);cursor:pointer;min-height:28px;display:flex;align-items:center}
 .rc-law blockquote{margin:4px 0 6px;padding-left:9px;border-left:2px solid var(--line);font-size:11.5px;line-height:1.4;color:var(--txt-dim)}
-.rc-law a{color:var(--river)}
+.rc-law a{color:var(--link)}
 
 /* Field Book: Offline tab */
 .of-bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden;margin:8px 0 4px}
 .of-bar>i{display:block;height:100%;width:0;background:var(--river)}
 .of-box{background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);padding:10px 12px;margin:10px 0}
-.of-box input[type=text]{width:100%;min-height:40px;font-size:14px;padding:0 8px;border:1px solid var(--line);border-radius:var(--radius);background:#fff;margin:6px 0}
+.of-box input[type=text]{width:100%;min-height:40px;font-size:14px;padding:0 8px;border:1px solid var(--line);border-radius:var(--radius);background:var(--paper-2);margin:6px 0}
 .of-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
 .of-area{display:flex;align-items:center;gap:8px;background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);padding:8px 10px;margin-bottom:8px}
 .of-area .of-main{flex:1;min-width:0}
@@ -876,7 +893,7 @@ details.morefold{margin:-4px 0 6px}
 .fp-head{display:flex;gap:10px;align-items:flex-start}
 .fp-head>div{flex:1;min-width:0}
 .fp-head h3{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:21px;line-height:1.1;text-transform:uppercase;letter-spacing:.02em}
-.fp-head .x{width:40px;height:40px;border-radius:9px;background:#e0e6df;color:var(--txt-dim);font-size:16px;flex:0 0 auto}
+.fp-head .x{width:40px;height:40px;border-radius:9px;background:#e8dfd2;color:var(--txt-dim);font-size:16px;flex:0 0 auto}
 .fp-meta{font-size:12px;color:var(--txt-dim);margin-top:2px}
 .fp-ends{font-size:12.5px;margin:8px 0;line-height:1.5}
 .fp-ends .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:baseline}
@@ -901,7 +918,7 @@ details.morefold{margin:-4px 0 6px}
 .fl-btns .end{background:#3a1d1a;border-color:#3a1d1a;color:#fff}
 .fl-head{display:flex;align-items:center;gap:8px}
 .fl-title{flex:1;min-width:0;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:17px;text-transform:uppercase;letter-spacing:.02em;line-height:1.1}
-.fl-min{width:44px;height:36px;border-radius:9px;background:#e0e6df;color:var(--txt-dim);font-size:13px}
+.fl-min{width:44px;height:36px;border-radius:9px;background:#e8dfd2;color:var(--txt-dim);font-size:13px}
 .fl-eta{display:flex;align-items:baseline;justify-content:space-between;margin:6px 0 4px}
 .fl-eta .lbl{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--txt-dim)}
 .fl-eta .big{font-size:32px;font-weight:600;color:var(--flag);line-height:1}
@@ -918,11 +935,11 @@ details.morefold{margin:-4px 0 6px}
 .fl-note{font-size:10.5px;color:var(--txt-dim);margin:4px 0 8px;line-height:1.4}
 .floatcard.collapsed{padding:6px;max-height:none;gap:6px}
 .floatcard.collapsed.show{display:flex}
-.fl-pill{flex:1;display:flex;align-items:center;justify-content:space-between;min-height:46px;padding:0 14px;border-radius:10px;background:var(--ink);color:#f2ece0;font-size:14px;font-weight:600}
+.fl-pill{flex:1;display:flex;align-items:center;justify-content:space-between;min-height:46px;padding:0 14px;border-radius:10px;background:var(--ink);color:#f4eee4;font-size:14px;font-weight:600}
 .fl-pill .mono{color:#ffb27a}
 .fl-pillend{min-height:46px;padding:0 14px;border-radius:10px;background:var(--river);color:#fff;font-weight:700;font-size:13.5px}
 #floattoast{position:fixed;z-index:1340;left:50%;transform:translateX(-50%);bottom:max(80px,calc(70px + env(safe-area-inset-bottom)));max-width:90vw;
-  background:var(--ink);color:#f2ece0;font-size:12.5px;font-weight:600;border-radius:99px;padding:8px 16px;box-shadow:var(--shadow);display:none;text-align:center}
+  background:var(--ink);color:#f4eee4;font-size:12.5px;font-weight:600;border-radius:99px;padding:8px 16px;box-shadow:var(--shadow);display:none;text-align:center}
 #floattoast.show{display:block}
 .fl-row .bk-main{gap:3px}
 .fl-del{flex:0 0 auto;width:44px;height:44px;margin:-6px -8px -6px 0;border-radius:9px;font-size:24px;line-height:1;color:var(--txt-dim)}
@@ -953,9 +970,9 @@ details.morefold{margin:-4px 0 6px}
 #report{position:fixed;z-index:1700;left:50%;top:max(10px,env(safe-area-inset-top));transform:translateX(-50%);display:none;flex-direction:column;
   width:min(94vw,440px);max-height:calc(100vh - 20px);max-height:calc(100dvh - 20px);background:var(--paper);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
 #report.show{display:flex}
-#report-head{display:flex;align-items:center;gap:10px;padding:12px 14px 10px;background:var(--ink);color:#e8efe9;flex:0 0 auto}
+#report-head{display:flex;align-items:center;gap:10px;padding:12px 14px 10px;background:var(--ink);color:#f4eee4;flex:0 0 auto}
 #report-head h2{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:22px;text-transform:uppercase;letter-spacing:.04em}
-#report-head .x{margin-left:auto;width:40px;height:40px;border-radius:9px;background:var(--ink-2);border:1px solid #3a4f43;color:#dfe9e1;font-size:16px}
+#report-head .x{margin-left:auto;width:40px;height:40px;border-radius:9px;background:var(--ink-2);border:1px solid #4a3d33;color:#ece4d8;font-size:16px}
 #report-body{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px calc(16px + env(safe-area-inset-bottom))}
 #report label{display:block;font-size:12px;font-weight:700;color:var(--txt-dim);margin:10px 0 4px}
 #report input[type=text],#report input[type=email],#report textarea{width:100%;font:inherit;font-size:16px;color:var(--txt);background:var(--paper-2);
@@ -966,10 +983,10 @@ details.morefold{margin:-4px 0 6px}
 #rp-msg{font-size:12.5px;color:var(--st-vhigh);margin-top:10px;min-height:0}
 #rp-actions{margin-top:12px}
 #rp-send,.rp-close{width:100%;min-height:46px;border-radius:var(--radius);background:var(--river);color:#fff;font-size:15px;font-weight:700}
-#rp-send:disabled{background:#9fb2a6}
+#rp-send:disabled{background:#b3a596}
 #rp-off{font-size:12.5px;color:var(--txt-dim);text-align:center}
 #rp-done p{font-size:15px;margin:6px 0 14px;overflow-wrap:anywhere}
-.rp-link,.rp-open{min-height:40px;padding:0 4px;background:none;color:var(--river);font-size:12.5px;font-weight:600;text-decoration:underline}
+.rp-link,.rp-open{min-height:40px;padding:0 4px;background:none;color:var(--link);font-size:12.5px;font-weight:600;text-decoration:underline}
 .rp-open{display:block;margin:0 0 6px}
 .rp-wrap{margin-top:12px;text-align:center}
 
@@ -978,19 +995,19 @@ details.morefold{margin:-4px 0 6px}
    spotlight is one ring whose giant box-shadow dims the rest of the screen;
    #tour-block sits under it to swallow taps so the demo can't be driven. */
 #welcome{position:fixed;inset:0;z-index:1800;display:none;align-items:center;justify-content:center;padding:16px;
-  background:rgba(12,22,16,.62);overflow-y:auto}
+  background:rgba(31,25,21,.62);overflow-y:auto}
 #welcome.show{display:flex}
 #welcome .wl-card{width:100%;max-width:420px;margin:auto;background:var(--paper);border-radius:16px;padding:20px 18px 16px;box-shadow:var(--shadow);border-top:4px solid var(--river)}
 #welcome h2{font-family:"Barlow Condensed",sans-serif;font-size:26px;line-height:1.05;text-transform:uppercase;letter-spacing:.03em;color:var(--ink);margin-bottom:10px}
 #welcome p{font-size:14px;line-height:1.45;color:var(--txt);margin:0 0 10px}
 #welcome .wl-btns{display:flex;flex-direction:column;gap:8px;margin-top:14px}
-#welcome .wl-btns button{min-height:46px;border-radius:10px;font-size:15px;font-weight:700;background:#e0e6df;color:var(--txt)}
+#welcome .wl-btns button{min-height:46px;border-radius:10px;font-size:15px;font-weight:700;background:#e8dfd2;color:var(--txt)}
 #welcome .wl-btns #wl-go{background:var(--river);color:#fff}
 #tour-block{position:fixed;inset:0;z-index:1810;display:none}
 #tour-block.show{display:block}
-#tour-block.dim{background:rgba(12,22,16,.62)}
+#tour-block.dim{background:rgba(31,25,21,.62)}
 #tour-ring{position:fixed;z-index:1820;display:none;pointer-events:none;border-radius:12px;
-  box-shadow:0 0 0 9999px rgba(12,22,16,.62);outline:2px solid #fff;outline-offset:-1px}
+  box-shadow:0 0 0 9999px rgba(31,25,21,.62);outline:2px solid #fff;outline-offset:-1px}
 @media (prefers-reduced-motion:no-preference){ #tour-ring{transition:left .18s,top .18s,width .18s,height .18s} }
 #tour-tip{position:fixed;z-index:1830;display:none;background:var(--paper);color:var(--txt);border-radius:14px;
   padding:12px 14px 12px;box-shadow:var(--shadow);border-top:3px solid var(--river)}
@@ -1001,9 +1018,9 @@ details.morefold{margin:-4px 0 6px}
 #tour-tip h3{font-family:"Barlow Condensed",sans-serif;font-size:21px;line-height:1.1;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
 #tour-tip .tt-text{font-size:13.5px;line-height:1.4;color:var(--txt)}
 #tour-tip .tt-extra{display:none;gap:8px;margin-top:10px}
-#tour-tip .tt-extra button{flex:1;min-height:42px;border-radius:9px;font-size:14px;font-weight:600;background:#e0e6df;color:var(--txt)}
+#tour-tip .tt-extra button{flex:1;min-height:42px;border-radius:9px;font-size:14px;font-weight:600;background:#e8dfd2;color:var(--txt)}
 #tour-tip .tt-nav{display:flex;gap:8px;margin-top:10px}
-#tour-tip .tt-nav button{flex:1;min-height:44px;border-radius:9px;font-size:14.5px;font-weight:700;background:#e0e6df;color:var(--txt)}
+#tour-tip .tt-nav button{flex:1;min-height:44px;border-radius:9px;font-size:14.5px;font-weight:700;background:#e8dfd2;color:var(--txt)}
 #tour-tip .tt-nav .tt-next{background:var(--river);color:#fff}
 #tour-tip .tt-nav button:disabled{opacity:.4}
 #tour-tip .tt-primary{background:var(--river) !important;color:#fff !important}

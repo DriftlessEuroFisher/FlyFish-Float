@@ -3,22 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#15241f">
-<title>DeLanoit's Fly Routes — the West, the Rockies &amp; the Upper Midwest</title>
+<meta name="theme-color" content="#1f1915">
+<title>TrailWaterMaps — the West, the Rockies &amp; the Upper Midwest</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TrailWater">
 </head>
 <body>
 
 <header id="appbar">
-  <h1>DeLanoit's Fly Routes<small>18 states · 42 national parks · Driftless · North Shore · live USGS flows</small></h1>
+  <!-- The 1b "Rocking TW" mark: T and W share one top bar over a line of
+       water. Stroked thicker than the brand's 8.5 because at 26 px one unit
+       is a quarter of a pixel. <wbr> lets a phone break the one-word name
+       after "TrailWater" instead of clipping it. -->
+  <h1><svg class="brandmark" viewBox="-4 -4 108 108" aria-hidden="true" focusable="false"><path d="M8 12H44M24 12V62M44 12L56 62L68 32L80 62L92 12M10 88Q20 80 30 88T50 88T70 88T90 88"/></svg><span class="wordmark">TrailWater<wbr>Maps<small>18 states · 42 national parks · Driftless · North Shore · live USGS flows</small></span></h1>
   <div class="spacer"></div>
   <div id="updated">flows<br><b id="updwhen">loading…</b></div>
   <button class="iconbtn" id="btn-refresh" aria-label="Refresh flows" title="Refresh flows">

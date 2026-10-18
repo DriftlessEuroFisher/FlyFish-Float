@@ -1,12 +1,12 @@
 {
-  "name": "DeLanoit's Fly Routes",
-  "short_name": "Fly Routes",
-  "description": "Live USGS flow conditions, public land and access for the trout and float rivers of Idaho, Wyoming, Iowa, Minnesota and Wisconsin.",
+  "name": "TrailWaterMaps",
+  "short_name": "TrailWater",
+  "description": "Live USGS flow conditions, regulations, public land and access for trout and float water across 18 states and 42 national parks.",
   "start_url": "index.html",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#eef1ec",
-  "theme_color": "#15241f",
+  "background_color": "#f4eee4",
+  "theme_color": "#1f1915",
   "icons": [
     { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
     { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }

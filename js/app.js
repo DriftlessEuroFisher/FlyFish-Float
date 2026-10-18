@@ -3318,7 +3318,7 @@ function rulesCardHTML(r){
       `<div><div class="rc-head">${head}</div>${sub ? `<div class="rc-sub">${sub}</div>` : ""}</div></div>` : "")+
     `<div class="rc-lic${head ? "" : " rc-lead"}">${lic}</div>`+
     accessLawHTML(r)+
-    (tags.length ? `<div class="rc-tags"><span class="rc-lab">Named in this river's rules:</span>${tags.map(t=>`<span class="tierbadge" style="--tc:#5a6f66">${t.replace("&","&amp;")}${part ? " · part of stream" : ""}</span>`).join("")}</div>` : "")+
+    (tags.length ? `<div class="rc-tags"><span class="rc-lab">Named in this river's rules:</span>${tags.map(t=>`<span class="tierbadge" style="--tc:#6b5c50">${t.replace("&","&amp;")}${part ? " · part of stream" : ""}</span>`).join("")}</div>` : "")+
     damWarnHTML(r)+
     `</div>`;
 }
@@ -4696,7 +4696,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v21";
+const APP_VERSION = "flyroutes-v23";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){
