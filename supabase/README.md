@@ -254,6 +254,24 @@ if one has moved, search the dashboard for the **setting** name in bold.
 
 ### Traps worth knowing
 
+Found doing the checklist for real (2026-10-19):
+
+- **Templates can't be edited until custom SMTP is on.** Supabase now locks
+  the email templates behind custom SMTP, so do steps 5–6 (Resend, SMTP)
+  before step 3 (templates). Until then every email carries a link, not a
+  code, and the app's code sign-in can't work.
+- **Each template has a Save changes button at the bottom of its page.** An
+  edited template that looks right in the preview is not in use until saved;
+  reopen the page to confirm the new subject stuck.
+- **Resend's DNS records are CNAMEs now** (`send` and `rsend` →
+  `*.forge.rmta.net`, plus the `resend._domainkey` TXT), not the MX/SPF pair
+  older guides show. Follow Resend's own list.
+- **In Cloudflare they must be DNS only (grey cloud).** Proxied, Cloudflare
+  answers with its own web servers and Resend never verifies. The DKIM TXT
+  verified at once; the two CNAMEs sat at "pending" until unproxied.
+- **The Resend API key is shown once,** in the pop-up right after Create.
+  Missed it: delete that key and create another.
+
 - **Before custom SMTP is set,** Supabase's built-in email only delivers to
   members of your Supabase organization and only a few an hour. A tester's
   address gets "Email address not authorized" (the app says "Sign-in email
