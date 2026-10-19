@@ -153,8 +153,11 @@ const store = {
 
    Only keys under these prefixes are ever deleted. Everything else — the
    book and its v1 copy, a live float or lake trip, offline areas, settings,
-   the report draft, the API key — is the user's and is never touched. */
-const LS_CACHE_PREFIXES = ["nhdfine:", "nhd:", "stats:", "nwsFc:", "agname:", "temp:", "meta:", "flow:", "nwsPt:"];
+   the report draft, the API key — is the user's and is never touched.
+   `metrics:` is the queue of usage stats not yet sent (js/metrics.js): it
+   can't be fetched again, but it is worth less to the user than anything
+   else here, so it goes first. */
+const LS_CACHE_PREFIXES = ["nhdfine:", "nhd:", "stats:", "nwsFc:", "agname:", "temp:", "meta:", "flow:", "nwsPt:", "metrics:"];
 const LS_ROOM_BYTES = 512*1024;              // freed per batch; one write rarely needs more
 const GEOM_CACHE_MS = 1000*60*60*24*30;      // nhd:/nhdfine: geometry is refetched after this
 const lsCacheKind = k => LS_CACHE_PREFIXES.find(p => k.startsWith(p)) || null;
@@ -170,9 +173,10 @@ function statsWeekTag(){
 function lsGeomTime(v){ const m = /"t":(\d+)\}$/.exec(v || ""); return m ? +m[1] : 0; }
 /* Deletes cache keys until at least `minBytes` (string length × 2, which is
    how browsers count) are freed, or no cache is left. Returns bytes freed.
-   Order: dead weight first (past weeks' stats, geometry past its 30 days),
-   then refined geometry oldest first (the biggest and the most easily
-   refetched), then base geometry, then this week's stats, then the rest. */
+   Order: dead weight first (unsent usage stats, past weeks' stats, geometry
+   past its 30 days), then refined geometry oldest first (the biggest and the
+   most easily refetched), then base geometry, then this week's stats, then
+   the rest. */
 function lsMakeRoom(minBytes){
   minBytes = minBytes || LS_ROOM_BYTES;
   let freed = 0;
@@ -181,6 +185,7 @@ function lsMakeRoom(minBytes){
     for(let i = localStorage.length - 1; i >= 0; i--){
       const k = localStorage.key(i), kind = k && lsCacheKind(k);
       if(!kind) continue;
+      if(kind === "metrics:"){ cand.push({k, rank:0, t:0}); continue; }
       if(kind === "stats:"){ cand.push({k, rank:k.endsWith(":"+tag) ? 3 : 0, t:0}); continue; }
       if(kind === "nhd:" || kind === "nhdfine:"){
         const t = lsGeomTime(localStorage.getItem(k));
@@ -1053,6 +1058,7 @@ function openLake(id){
   $("#sh-sub").textContent = lakePlace(k);
   fbShowRow(k, false, "lake");          // the lake's own Field Book row, never the last river's
   sheet.classList.add("open");
+  if(typeof Metrics !== "undefined") Metrics.track("lake_open", k.id, k.name);
   delete body.dataset.river;            // renderSheet's fold memory is per river; this is a lake
   const wx = {key:"lake:" + k.id, pt:wxLakePoint(k)};    // on a lake the wind is the forecast that matters
   body.innerHTML =
@@ -2144,6 +2150,7 @@ Object.keys(GAUGE_POS).forEach(key=>{
   const m = L.marker(GAUGE_POS[key],{icon:gIcon(key), zIndexOffset:300}).addTo(gaugeLayer);
   m.on("click",()=>{
     const r = RIVERS.find(rv=>rv.gauges.includes(key));
+    if(typeof Metrics !== "undefined") Metrics.track("gauge_tap", key);
     if(r) openRiver(r.id, key);
   });
   gaugeDots[key]=m;
@@ -2442,6 +2449,7 @@ function agPopupHTML(f, key){
 
 function agOpen(m){
   const f = m._ag, key = "ag:"+f.id;
+  if(typeof Metrics !== "undefined") Metrics.track("gauge_tap", f.id);
   // the reading we already have, so statusOf() can compare it
   flows[key] = {cfs:f.cfs, time:f.time, fetchedAt:Date.now(), stale:false};
   const refresh = () => { if(m.isPopupOpen && m.isPopupOpen()) m.getPopup().setContent(agPopupHTML(f, key)); };
@@ -3100,6 +3108,7 @@ async function openRiver(id, focusGauge, opts){
   $("#sh-sub").textContent = riverPlace(r);
   fbShowRow(r);
   sheet.classList.add("open");
+  if(typeof Metrics !== "undefined" && !(opts && opts.demo)) Metrics.track("river_open", r.id, r.name);   // the tour's Snake is a demo
   loadRealRiver(r);                    // snap this river to exact USGS linework
   const floating = typeof floatActiveNow === "function" && floatActiveNow();
   focusRiver(r, !focusGauge && !(opts && opts.fit === false) && !floating, opts && opts.at);
@@ -4346,6 +4355,7 @@ function fbShowRow(water, force, kind){
   if(goB) goB.addEventListener("click", () => { if(typeof lakeTripOpenPlanner === "function") lakeTripOpenPlanner(water.id); });
   favB.addEventListener("click", () => {
     fbSet(id, {fav:!fbGet(id).fav}); paint();
+    if(typeof Metrics !== "undefined" && fbIsFav(id)) Metrics.track("favourite_add", kind);   // only a favourite that saved
     if(kind==="river") applyFilters();     // a favourite river stays on the map whatever the class filter says
   });
   // Not a toggle: every tap is another trip, and the toast's Undo is the way back.
@@ -4353,6 +4363,7 @@ function fbShowRow(water, force, kind){
     const t = fbAddTrip(kind, water.id, fbToday(), fbNowHM(), "tap", Date.now());
     // never "Trip logged" for a trip a reload would lose; always said, whatever the rate limit
     if(!t){ paint(); fbWarnAt = Date.now(); fbToast(FB_FULL_MSG); return; }
+    if(typeof Metrics !== "undefined") Metrics.track("trip_logged", kind);
     const condOk = fbSnapTrip(t, kind, water);
     paint();
     fbToast(`Trip logged · ${fbDateText(t.day)}, ${fbTimeText(t.time)}` + (condOk ? "" : " · conditions not saved, storage full"), () => {
@@ -4570,6 +4581,7 @@ async function offDownload(el, ctl, p, name, done){
   const areas = offAreas();
   areas.unshift({id:"a"+Date.now().toString(36), name, bounds:p.b, zmin:p.zmin, zmax:p.zmax, count:urls.length-failed, saved:Date.now()});
   offSave(areas);
+  if(typeof Metrics !== "undefined") Metrics.track("offline_save");
   done();
   if(failed) el.querySelector("#of-ctl").insertAdjacentHTML("beforeend", `<p class="fb-note" style="color:#9a4a2e">${offFmt(failed)} tiles couldn't be downloaded (saved the rest). Try again with a better signal.</p>`);
 }
@@ -4683,6 +4695,7 @@ function showBookTab(id){
   bookBody.scrollTop = 0;
 }
 function openBook(){
+  if(typeof Metrics !== "undefined") Metrics.track("fieldbook_open");
   $("#book-tabs").innerHTML = BOOK_SECTIONS.map(s => `<button type="button" role="tab" data-tab="${s.id}">${s.label}</button>`).join("");
   $("#book-msg").textContent = "";
   showBookTab(bookTab);
@@ -4696,7 +4709,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v24";
+const APP_VERSION = "flyroutes-v25";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){
@@ -4779,6 +4792,7 @@ rpForm.addEventListener("submit", async e => {
         SUPABASE.anonKey.startsWith("sb_") ? {} : {Authorization:`Bearer ${SUPABASE.anonKey}`}),
       body:JSON.stringify({river_id:rpRiverId, river_name:name || null, issue, email:email || null, app_version:APP_VERSION})});
     if(!res.ok) throw new Error(res.status);
+    if(typeof Metrics !== "undefined") Metrics.track("report_sent");
     done();
   }catch(err){
     msg.textContent = "Couldn't send — check your signal and try again.";
@@ -5049,6 +5063,7 @@ function goTo(target, zoom, opts){
 const zoneCards = [];   // {zone, marker, poly}
 
 function enterZone(z){
+  if(typeof Metrics !== "undefined") Metrics.track("zone_pick", z.id, z.label);
   hideZones();
   goTo(L.latLngBounds(z.bounds).pad(0.08));
 }
@@ -5455,6 +5470,7 @@ zoneCtl.onAdd = function(){
   list.addEventListener("click", e => {
     const b = e.target.closest("[data-jump]"); if(!b) return;
     const r = REGIONS[+b.dataset.jump][1];
+    if(typeof Metrics !== "undefined") Metrics.track("zone_pick", REGIONS[+b.dataset.jump][0]);
     hideZones();
     goTo(L.latLng(r[0], r[1]), r[2]);         // never map.setView: see goTo()
   });
@@ -5616,6 +5632,7 @@ tierCtl.onAdd = function(){
   // A chip tap is the user's choice for the whole chip; syncIconLayers()
   // then puts every one of its layers where that choice says.
   d.querySelectorAll("[data-layer]").forEach(b => b.addEventListener("click", ()=>{
+    if(typeof Metrics !== "undefined" && !chipOn(b.dataset.layer)) Metrics.track("layer_on", b.dataset.layer);
     iconUserSet(b.dataset.layer, !chipOn(b.dataset.layer));
     syncIconLayers();
   }));

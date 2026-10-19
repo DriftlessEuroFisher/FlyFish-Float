@@ -182,6 +182,10 @@ $$;
 -- reports are not linked to accounts and are not touched.
 -- Any future table that references auth.users must say what happens on
 -- delete (cascade or set null), or this delete will fail.
+-- KEEP THIS FUNCTION IDENTICAL IN auth.sql AND metrics.sql, so running
+-- either file again leaves the same function behind. The usage-stats
+-- delete is skipped while public.events doesn't exist (before metrics.sql
+-- has been run).
 -- ---------------------------------------------------------------------------
 create or replace function public.delete_my_account()
 returns void
@@ -195,6 +199,17 @@ begin
   if uid is null then
     raise exception 'not signed in' using errcode = '42501';
   end if;
+  -- Usage stats: every event sent signed in as this user, and every event,
+  -- signed in or not, from any phone that ever sent one signed in as them.
+  -- The phone makes itself a new id afterwards (js/metrics.js), so what it
+  -- sends from then on isn't joined to the history erased here.
+  if pg_catalog.to_regclass('public.events') is not null then
+    delete from public.events
+     where user_id = uid
+        or device_id in (select e.device_id from public.events e where e.user_id = uid);
+  end if;
+  -- Cascades to profiles, user_roles and Supabase's own sessions, refresh
+  -- tokens and identities. Issue reports are not linked to accounts.
   delete from auth.users where id = uid;
 end;
 $$;

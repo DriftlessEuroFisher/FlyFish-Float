@@ -461,6 +461,7 @@ function flStart(){
        craft:flCraft(flSec), start:Date.now(), planned:{lo:n.lo, hi:n.hi, mid:n.mid}, log:[]};
   flAlong = 0; flLastT = 0; flOff = false; flGotFix = false; flCollapsed = false;
   flSave();
+  if(typeof Metrics !== "undefined") Metrics.track("float_start");
   flPlan.classList.remove("show"); flSec = null;
   // The tap on Start is the user gesture iOS wants before asking for location.
   if(locState === "off") locStart("following");
@@ -576,7 +577,8 @@ function floatOnFix(pos){
   flRenderLive();
 }
 
-function flFinish(){
+function flFinish(){                  // every way a float ends: saved, nothing recorded, or discarded
+  if(typeof Metrics !== "undefined") Metrics.track("float_end");
   clearInterval(flTimer); flTimer = null;
   flWakeRelease();
   F = null; flAlong = 0; flLastT = 0; flRoute = null; flOff = false; flGotFix = false;

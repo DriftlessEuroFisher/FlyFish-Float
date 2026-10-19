@@ -318,6 +318,7 @@ function ltStart(){
   // the conditions at the start, from what the app already has — exactly as ✓ Fished does
   fbSnapTrip(trip, "lake", k);
   ltSave();
+  if(typeof Metrics !== "undefined") Metrics.track("laketrip_start");
   ltBeginLive();
   ltDraw();
   ltRowPaint();
@@ -475,7 +476,8 @@ ltLive.addEventListener("click", e => {
 });
 
 /* ---------- end ---------- */
-function ltFinish(){
+function ltFinish(){                  // every way a trip ends: saved, nothing recorded, or discarded
+  if(typeof Metrics !== "undefined") Metrics.track("laketrip_end");
   clearInterval(ltTimer); ltTimer = null;
   ltWakeRelease();
   LT = null; ltResetMem();

@@ -5,7 +5,10 @@
    Signing in changes nothing else in the app: the Field Book stays on this
    phone, and rivers, floats, lake trips and reports work the same signed in
    or out. Accounts are here for what comes next (IDEAS.md, Server roadmap).
-   Nothing is fetched until the sheet is opened while signed in. */
+   Nothing is fetched until the sheet is opened while signed in.
+
+   The sheet also holds the "Share usage stats" switch (js/metrics.js),
+   signed in or out. */
 
 (function(){
   if(typeof Auth === "undefined" || typeof signInForm === "undefined") return;
@@ -13,7 +16,6 @@
         body = document.getElementById("account-body");
   if(!btn || !sheet || !body || !Auth.on()) return;      // the button stays hidden
   const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-  const PRIVACY = `<p class="ac-foot"><a href="privacy.html" target="_blank" rel="noopener">Privacy</a></p>`;
   let flash = "";          // one line for the next render: "Signed out", "Your account is deleted"…
   let loadSeq = 0;         // a profile answer for an older render is dropped
 
@@ -28,6 +30,21 @@
 
   function flashHTML(){ const h = flash ? `<p class="ac-flash" role="status">${esc(flash)}</p>` : ""; flash = ""; return h; }
 
+  /* The usage-stats switch, the same signed in or out. Off clears whatever
+     is waiting to be sent (Metrics.setOff). */
+  const hasStats = () => typeof Metrics !== "undefined";
+  function statsHTML(){
+    if(!hasStats()) return "";
+    return `<div class="ac-stats">
+        <label class="ac-switch"><input type="checkbox" id="ac-stats"${Metrics.isOff() ? "" : " checked"}><span>Share usage stats</span></label>
+        <p class="rp-note">Which rivers, lakes and regions you open and which features you use, with a random ID for this phone, and your account while you're signed in. Turning it off stops it and deletes anything not yet sent.</p>
+      </div>`;
+  }
+  function wireStats(){
+    const t = body.querySelector("#ac-stats");
+    if(t) t.addEventListener("change", () => Metrics.setOff(!t.checked));
+  }
+
   function render(){
     paintButton();
     const s = Auth.session();
@@ -35,8 +52,9 @@
     if(!s){
       body.innerHTML = flashHTML() +
         `<p class="ac-intro">Signing in is optional. It's only needed for features still to come, like sharing access points, and your Field Book stays on this phone either way.</p>
-        <div id="ac-signin"></div>` + PRIVACY;
+        <div id="ac-signin"></div>` + statsHTML();
       signInForm(body.querySelector("#ac-signin"), {id:"ac"});   // success arrives through Auth.onChange below
+      wireStats();
       return;
     }
     body.innerHTML = flashHTML() + `
@@ -49,19 +67,22 @@
       </form>
       <p class="ac-msg" id="ac-msg" role="status" aria-live="polite"></p>
       <button type="button" class="ac-btn" id="ac-out">Sign out</button>
+      ${statsHTML()}
       <div class="ac-danger">
         <button type="button" class="ac-dangerlink" id="ac-del" aria-expanded="false">Delete my account…</button>
         <div class="ac-confirm" id="ac-del-box" hidden>
-          <p><b>Delete your account?</b> This permanently removes your account and your profile (your email address and display name) from our server. It can't be undone.</p>
+          <p><b>Delete your account?</b> This permanently removes your account, your profile (your email address and display name) and the usage stats linked to it from our server. It can't be undone.</p>
           <p>It doesn't touch the Field Book on this phone (favorites, trips, notes and lake tracks all stay), and it doesn't delete issue reports you've already sent.</p>
           <p class="ac-msg" id="ac-del-msg" role="status" aria-live="polite"></p>
           <div class="ac-confirm-btns"><button type="button" class="ac-del-yes" id="ac-del-yes">Delete my account</button><button type="button" id="ac-del-no">Cancel</button></div>
         </div>
-      </div>` + PRIVACY;
+      </div>`;
     const q = s => body.querySelector(s);
+    wireStats();
     q("#ac-name-form").addEventListener("submit", saveName);
     q("#ac-out").addEventListener("click", () => {
       flash = "Signed out. Your Field Book is still on this phone.";
+      if(typeof Metrics !== "undefined") Metrics.track("signout");    // sent at once, while the token is still here
       Auth.signOut();                         // fires onChange, which re-renders
     });
     q("#ac-del").addEventListener("click", () => {
@@ -133,6 +154,7 @@
     const yes = body.querySelector("#ac-del-yes"), no = body.querySelector("#ac-del-no"), m = body.querySelector("#ac-del-msg");
     yes.disabled = no.disabled = true; yes.textContent = "Deleting…"; m.textContent = "";
     try{
+      if(hasStats()) await Metrics.forgetDevice();   // the server erases this phone's stats; it starts again under a new id
       await Auth.rpc("delete_my_account");
       flash = "Your account is deleted. The Field Book on this phone is untouched.";
       Auth.signOut({remote:false});           // its sessions went with it

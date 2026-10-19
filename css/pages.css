@@ -1,6 +1,6 @@
-/* Standalone pages (privacy.html, admin.html). Loaded after styles.css for
-   its brand tokens and the sign-in form, then turns the full-screen map
-   layout back into an ordinary scrolling document. */
+/* Standalone pages (admin.html). Loaded after styles.css for its brand
+   tokens and the sign-in form, then turns the full-screen map layout back
+   into an ordinary scrolling document. */
 html,body{height:auto;overflow:auto}
 body{min-height:100%;background:var(--paper)}
 
@@ -21,10 +21,6 @@ body{min-height:100%;background:var(--paper)}
 .pg-main ul{padding-left:20px;margin:0 0 10px}
 .pg-main li{margin-bottom:6px}
 .pg-main a{color:var(--link)}
-.pg-lead{font-size:16px !important}
-.pg-box{background:var(--paper-2);border:1px solid var(--line);border-radius:12px;padding:12px 16px 4px;margin:10px 0 6px}
-.pg-todo{background:#fde2c8;border-radius:4px;padding:0 4px;font-weight:600}
-.pg-dim{color:var(--txt-dim);font-size:13px !important}
 
 /* ---------- admin.html ---------- */
 .adm-who{flex:0 1 auto;min-width:0;font-size:12px;color:#b3a596;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -65,3 +61,30 @@ body{min-height:100%;background:var(--paper)}
 .adm-more{display:block;width:100%;margin-top:6px}
 .adm-more[hidden]{display:none}
 .adm-empty{text-align:center;color:var(--txt-dim);padding:28px 0}
+
+/* ---------- admin.html: Usage (js/admin.js, supabase/metrics.sql) ---------- */
+.adm-usage{margin:0 0 22px}
+.adm-usage .adm-rhead{margin-bottom:8px}
+.adm-stats-usage{margin:0 0 12px}
+.adm-tile .adm-sub{margin-top:2px;font-size:11px;color:var(--txt-dim)}
+.adm-chart{margin:0 0 6px;background:var(--paper-2);border:1px solid var(--line);border-radius:12px;padding:10px 12px 8px}
+.adm-chart figcaption{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:13.5px;margin-bottom:6px}
+.adm-max{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;color:var(--txt-dim)}
+.adm-chart svg{display:block;width:100%;height:120px;overflow:visible}
+.adm-bar{fill:var(--river)}
+.adm-bar.on{fill:#174a63}
+.adm-hit{fill:transparent;cursor:pointer}
+.adm-base{stroke:var(--line);stroke-width:1;vector-effect:non-scaling-stroke}
+.adm-axis{display:flex;justify-content:space-between;margin-top:4px;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;color:var(--txt-dim)}
+.adm-readout{min-height:1.4em;margin:6px 0 0 !important;font-size:12.5px !important;color:var(--txt)}
+.adm-fold{background:var(--paper-2);border:1px solid var(--line);border-radius:12px;margin:8px 0;padding:0 12px}
+.adm-fold>summary{min-height:44px;display:flex;align-items:center;font-weight:700;font-size:14px;cursor:pointer}
+.adm-fold[open]>summary{border-bottom:1px solid var(--line)}
+.adm-tblwrap{overflow-x:auto;margin:4px 0 10px}
+.adm-tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+.adm-tbl th{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--txt-dim);text-align:left;padding:6px 6px 4px 0}
+.adm-tbl td{padding:6px 6px 6px 0;border-top:1px solid var(--line);vertical-align:top;overflow-wrap:anywhere}
+.adm-tbl .n{text-align:right;white-space:nowrap;font-family:"IBM Plex Mono",ui-monospace,monospace;padding-right:0;padding-left:8px}
+.adm-id-only{font-size:12.5px;color:var(--txt)}
+.adm-empty-sm{padding:12px 0}
+.adm-usage-note{margin-top:8px}

@@ -1,8 +1,8 @@
 # Supabase for TrailWaterMaps
 
-The app is still a static, no-build site. Only accounts and community content
-talk to Supabase (project `kbdrxtyacmihabwadzzz`); maps, flows, weather and the
-Field Book never do. Every file here is pasted into **SQL Editor → New query →
+The app is still a static, no-build site. Only accounts, community content and
+the app's own usage stats talk to Supabase (project `kbdrxtyacmihabwadzzz`);
+maps, flows, weather and the Field Book never do. Every file here is pasted into **SQL Editor → New query →
 Run**, and every one is safe to run again.
 
 | File | What it makes |
@@ -10,10 +10,11 @@ Run**, and every one is safe to run again.
 | `reports.sql` | `reports`: the "Report an issue" form. Anyone may insert; nobody reads through the public key. |
 | `keepalive.sql` | `keepalive()`: called every 3 days by `.github/workflows/supabase-keepalive.yml` so the free project doesn't pause. |
 | `auth.sql` | Accounts (Server roadmap step 1) and admin roles (the base of step 8): `profiles`, `user_roles`, `is_admin()`, `delete_my_account()`, `admin_stats()`, and admin read/triage on `reports`. |
+| `metrics.sql` | Usage stats: `events` (insert-only for the app), `admin_metrics()` for admin.html, and `delete_my_account()` again, now erasing the user's stats. Run it after `auth.sql`. |
 
 The browser side is `js/auth.js` (the sign-in flow over plain `fetch`),
 `js/signin.js` (the email-and-code form), `js/account.js` (the app's account
-sheet) and `admin.html` + `js/admin.js`.
+sheet), `js/metrics.js` (usage stats) and `admin.html` + `js/admin.js`.
 
 ---
 
@@ -133,7 +134,9 @@ non-admin is courtesy; the policies are the protection.
 `delete_my_account()` deletes the caller's row from `auth.users`. Everything
 keyed to it goes too, because each reference says `on delete cascade`:
 `profiles`, `user_roles`, and Supabase's own sessions, refresh tokens and
-identities. Issue reports are not linked to accounts and stay.
+identities. Issue reports are not linked to accounts and stay. Since
+`metrics.sql` it first deletes the user's usage stats (see the metrics step
+below).
 
 **Every future table that references `auth.users` must say what happens on
 delete** (`cascade`, or `set null` to keep the content but drop the author),
@@ -168,6 +171,135 @@ grace period.
 Content-Security-Policy that runs only the site's own script files. It shows
 text strangers typed into the report form to an account that can change data,
 so every field is escaped and no injected markup could run as script.
+
+---
+
+## Step: first-party metrics, what we did and why
+
+Written to be lifted into another project, like the step above.
+
+### What is recorded
+
+`js/metrics.js` records a short, fixed list of events, and the database
+refuses any other `kind`:
+
+| Kind | When | `target` |
+|---|---|---|
+| `launch` | once per page load | |
+| `river_open`, `lake_open` | a river's or lake's sheet opened (not the tour's demo of the Snake; the same water counts once per 30 minutes) | its id, plus its `name` |
+| `region_view` | the state or park under the map centre, once the view has settled for 1.5 s, from zoom 6, not while the chooser is up; once per region per 30 minutes | the zone code, plus its `name` |
+| `zone_pick` | a tap on a chooser zone, or a Jump-to entry | the zone code (with `name`), or the Jump-to label |
+| `layer_on` | a Map Icons chip switched on | the chip id |
+| `gauge_tap` | a gauge dot, or a dot in "Every USGS gauge" | the gauge key or USGS site id |
+| `trip_logged`, `favourite_add` | ✓ Fished tapped; ☆ Favorite switched on (only if the book saved it) | `river` or `lake` |
+| `fieldbook_open`, `float_start`, `float_end`, `laketrip_start`, `laketrip_end`, `offline_save`, `report_sent`, `signin`, `signout`, `tour_start` | as named (`float_end` and `laketrip_end` on every way a float or trip ends: saved, empty, or discarded) | |
+
+Each row also carries the phone's id, the app version, whether it was opened
+from the home screen, and when the phone recorded it. Nothing else: no
+location fix, no Field Book contents, no notes. Feature events deliberately
+don't name the water (which river a trip was logged on), only the kind.
+
+### One lasting random id per phone, and the account when signed in
+
+The owner's decision: count people with a `crypto.randomUUID()` kept in
+`localStorage.metricsDevice`. It is not under a cache prefix, so storage
+clean-up never resets it. While someone is signed in, each event also
+carries their `user_id`, so for that person this is a history of the rivers
+and lakes they open and the regions they look at, linked to their account.
+That is why the safeguards below exist.
+
+An event keeps the account it was recorded under. Events recorded signed out
+and sent later signed in go with `user_id` null; events recorded under an
+account that has since signed out go without one. Sign-out sends the queue
+at once, before the token goes.
+
+### The safeguards
+
+- **An off switch.** "Share usage stats" in the account sheet, signed in or
+  out, on by default. Off (`localStorage.metricsOff = "1"`) means nothing is
+  queued or sent, and the queue is deleted at once.
+- **Delete my account erases the history.** `delete_my_account()` deletes
+  every event with that `user_id`, and every event from any `device_id` that
+  user ever sent signed in, so the anonymous history from their phones goes
+  too. Then the phone makes itself a new id, so what it sends afterwards
+  isn't joined to the erased history. The function is identical in
+  `auth.sql` and `metrics.sql`, and skips the events delete while the table
+  doesn't exist, so re-running either file leaves the same function.
+- **Only admins read it.** The table is insert-only for the app's key; an
+  admin select policy and `admin_metrics()` (which checks `is_admin()`
+  itself) are the only ways in.
+
+### The table and its rules
+
+- Insert-only for `anon` and `authenticated`, with a **column grant**: the
+  app may set `device_id, user_id, kind, target, name, app_version,
+  standalone, client_at` and nothing else, so it can't backdate
+  `created_at`. A `select` grant to `authenticated` exists only so the admin
+  policy can work; RLS returns zero rows to everyone else, and `anon` has no
+  select at all. No update or delete for anyone through the app.
+- The insert policy is `user_id is null or user_id = auth.uid()`: a row can
+  carry no account or your own, never someone else's.
+- Check constraints on every text field (length, no control characters),
+  `kind` from the fixed list, and `client_at` within a day ahead of and 30
+  days behind `created_at`. Measured against `created_at` rather than
+  `now()` on purpose: a check that calls `now()` would fail old rows when a
+  backup is restored.
+- `user_id` references `auth.users` with `on delete set null`, the fallback
+  rule every such table needs, even though `delete_my_account()` deletes the
+  rows first.
+- Indexes on `created_at`, `(kind, created_at)`, `device_id`, and a partial
+  one on `user_id` for the account delete.
+
+### Sending
+
+- The queue is `localStorage["metrics:queue"]`, capped at 300 events. The
+  `metrics:` prefix is in `LS_CACHE_PREFIXES` and ranked first in
+  `lsMakeRoom()`: when the Field Book needs room the unsent stats go before
+  anything else, and a stats write that doesn't fit stays in memory.
+- One POST of a JSON array to `/rest/v1/events` with `Prefer:
+  return=minimal`: about 20 s after launch, whenever 25 are waiting, and when
+  the page is hidden (`keepalive`, at most 100 rows and 48 KB, since keepalive
+  bodies share 64 KB). Signed in it goes through `Auth.authFetch` (token
+  refreshed when nearly out); on page hide, a token within a minute of expiry
+  can't be refreshed in time, so the queue waits for the next launch.
+- `apikey` is always the publishable key; `Authorization` only ever the
+  user's own token. Signed out, rows have no `user_id` key at all; signed
+  in, every row has one, so the keys match across the batch.
+- No signal, a timeout, a 5xx, 408 or 429: the batch goes back in the
+  queue. Any other 4xx: the batch is dropped (one `console.warn`), so a bad
+  row can't wedge the queue. A 404 for the table (`PGRST205`, `42P01`): stats
+  switch off for that page load and the queue is kept, so nothing is lost
+  before `metrics.sql` has been run.
+- It never touches the USGS budget or `apiPaused()`.
+
+### Reading it
+
+`admin.html` has a **Usage** section: a 7, 30 or 90 day window, tiles for
+phones active in the last 24 hours, 7 and 30 days (with how many were
+signed in), launches and returning phones, a bar chart of launches per day
+(inline SVG, no library, inside the page's CSP) with the same numbers as a
+table, then folds for the top 25 rivers, lakes, regions and picks, feature
+use, Map Icons chips, home screen against browser, and app versions. The
+page passes the browser's time zone, so a bar is a local day.
+
+**Names travel with the events.** `admin.html` can't load the app's 3.7 MB
+river data, so the app sends the name it showed alongside the id
+(`name`, on river, lake, region and zone events). It costs about 20 bytes on
+those rows. Where there is no name, the id is shown.
+
+### Size and when to think about retention
+
+Measured on a local Postgres 16 with 100,000 rows: about **240 bytes a row**
+with the indexes, so about 2 KB a launch. The free plan's 500 MB holds
+roughly 200,000 launches: years at 50 a day, about a year at 500 a day,
+about three months at 2,000 a day. `admin_metrics()` over 100,000 rows in
+the window takes about a second. The retention statement is at the bottom of
+`metrics.sql`, commented out.
+
+### What it replaced
+
+A third-party page-view counter (GoatCounter). Its script tag is gone from
+`index.html`, and the app now loads nothing for analytics from anyone else.
 
 ---
 
@@ -239,7 +371,14 @@ if one has moved, search the dashboard for the **setting** name in bold.
    `auth.sql` with your address in it. Open `admin.html` (same browser) and
    you should see the counts and the reports.
 
-9. **Two-factor sign-in.** Now: turn it on for your **supabase.com** account
+9. **Run `metrics.sql`** (after `auth.sql`). SQL Editor → New query → paste
+   the whole file → Run. Until it has run, the app keeps its stats queued on
+   each phone and the admin page's Usage section says it isn't set up. Then
+   open `admin.html`: the Usage section should load (empty at first). Check
+   the size of `public.events` now and then (the query is at the top of the
+   file).
+
+10. **Two-factor sign-in.** Now: turn it on for your **supabase.com** account
    (your account menu → account preferences → security; the exact menu name
    wasn't checked), and for GitHub, Resend and Cloudflare. These protect the
    SQL Editor and the secret keys, which matter more than the app's admin
@@ -247,7 +386,7 @@ if one has moved, search the dashboard for the **setting** name in bold.
    with an authenticator app), with `is_admin()` also requiring the session's
    `aal` claim to be `aal2`.
 
-10. **Try it.** Sign in on your phone; type a wrong code; use **Resend code**;
+11. **Try it.** Sign in on your phone; type a wrong code; use **Resend code**;
     set a display name; sign out. Make a throwaway account with another address
     and delete it from the account sheet, then check Authentication → Users
     that it is gone. Check the email comes from `login@trailwatermaps.com`.

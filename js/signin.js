@@ -89,6 +89,7 @@ function signInForm(root, opts){
     try{
       await Auth.verify(email, c);
       busy = false;
+      if(typeof Metrics !== "undefined") Metrics.track("signin");   // the app's form only: admin.html loads no metrics.js
       if(opts.onSignedIn) opts.onSignedIn();
     }catch(err){
       busy = false; say(err.message);

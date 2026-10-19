@@ -195,7 +195,8 @@
     if(typeof openRiver === "function"){
       // openRiver paints at once, then waits on the stats fetch; don't wait on a slow API.
       // fit:false — the map stays put under the spotlight rather than flying off behind it.
-      await Promise.race([openRiver("snake", null, {fit:false}), new Promise(ok => setTimeout(ok, 5000))]);
+      // demo:true — nobody chose the Snake, so it isn't counted as an open (js/metrics.js).
+      await Promise.race([openRiver("snake", null, {fit:false, demo:true}), new Promise(ok => setTimeout(ok, 5000))]);
     }
     await new Promise(ok => setTimeout(ok, 350));     // let the sheet finish sliding up before anything is measured
   }
@@ -230,6 +231,7 @@
 
   function startTour(){
     if(state.on) return;
+    if(typeof Metrics !== "undefined") Metrics.track("tour_start");
     if(typeof closeLegend === "function") closeLegend();
     if(typeof closeReport === "function") closeReport();
     const sh = sheetEl();
@@ -251,7 +253,7 @@
     document.body.classList.remove("touring");
     const sh = sheetEl();
     if(state.openedSheet){
-      if(state.wasOpen && state.prevRiver && typeof openRiver === "function") openRiver(state.prevRiver, null, {fit:false});
+      if(state.wasOpen && state.prevRiver && typeof openRiver === "function") openRiver(state.prevRiver, null, {fit:false, demo:true});   // putting it back, not a new open
       else { sh.classList.remove("open"); if(typeof curRiver !== "undefined") curRiver = null; }
     }
     if(state.hid && typeof showZones === "function") showZones();
