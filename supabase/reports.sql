@@ -2,7 +2,8 @@
 -- Paste into Supabase: SQL Editor -> New query -> Run.
 -- Anyone may send a report; nobody can read them through the app's public
 -- key. You read them in the dashboard (Table Editor -> reports), which uses
--- your own login, not the anon key.
+-- your own login, not the anon key. Since auth.sql, signed-in admins can also
+-- read them and set their status on admin.html.
 
 create table if not exists public.reports (
   id          bigint generated always as identity primary key,

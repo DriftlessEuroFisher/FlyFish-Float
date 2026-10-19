@@ -91,7 +91,18 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
   border:1px solid #4a3d33;font-size:17px;
 }
 .iconbtn:active{transform:scale(.94)}
+.iconbtn[hidden]{display:none}
 .iconbtn.spin svg{animation:spin 1s linear infinite}
+/* Five header buttons (the account button made five) don't fit a phone at
+   38 px with 8 px gaps: at 375 px the title would be cut. Up to 430 px wide
+   (every iPhone, most Androids) they shrink to 34 px with 5 px gaps, and the
+   spacer gives up its two gaps to an auto margin on the flows readout. */
+@media (max-width:430px){
+  #appbar{gap:5px;padding-left:12px;padding-right:10px}
+  #appbar .spacer{display:none}
+  #updated{margin-left:auto}
+  #appbar .iconbtn{width:34px;height:34px}
+}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* ---------- Filter chips ---------- */
@@ -967,13 +978,13 @@ details.morefold{margin:-4px 0 6px}
 .fbt-fixed{flex:1 0 100%;font-size:12px;color:var(--txt-dim);line-height:1.35}
 
 /* ---------- Report an issue ---------- */
-#report{position:fixed;z-index:1700;left:50%;top:max(10px,env(safe-area-inset-top));transform:translateX(-50%);display:none;flex-direction:column;
+#report,#account{position:fixed;z-index:1700;left:50%;top:max(10px,env(safe-area-inset-top));transform:translateX(-50%);display:none;flex-direction:column;
   width:min(94vw,440px);max-height:calc(100vh - 20px);max-height:calc(100dvh - 20px);background:var(--paper);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
-#report.show{display:flex}
-#report-head{display:flex;align-items:center;gap:10px;padding:12px 14px 10px;background:var(--ink);color:#f4eee4;flex:0 0 auto}
-#report-head h2{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:22px;text-transform:uppercase;letter-spacing:.04em}
-#report-head .x{margin-left:auto;width:40px;height:40px;border-radius:9px;background:var(--ink-2);border:1px solid #4a3d33;color:#ece4d8;font-size:16px}
-#report-body{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px calc(16px + env(safe-area-inset-bottom))}
+#report.show,#account.show{display:flex}
+#report-head,#account-head{display:flex;align-items:center;gap:10px;padding:12px 14px 10px;background:var(--ink);color:#f4eee4;flex:0 0 auto}
+#report-head h2,#account-head h2{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:22px;text-transform:uppercase;letter-spacing:.04em}
+#report-head .x,#account-head .x{margin-left:auto;width:40px;height:40px;border-radius:9px;background:var(--ink-2);border:1px solid #4a3d33;color:#ece4d8;font-size:16px}
+#report-body,#account-body{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px calc(16px + env(safe-area-inset-bottom))}
 #report label{display:block;font-size:12px;font-weight:700;color:var(--txt-dim);margin:10px 0 4px}
 #report input[type=text],#report input[type=email],#report textarea{width:100%;font:inherit;font-size:16px;color:var(--txt);background:var(--paper-2);
   border:1px solid var(--line);border-radius:var(--radius);padding:10px 12px;min-height:44px}
@@ -988,7 +999,55 @@ details.morefold{margin:-4px 0 6px}
 #rp-done p{font-size:15px;margin:6px 0 14px;overflow-wrap:anywhere}
 .rp-link,.rp-open{min-height:40px;padding:0 4px;background:none;color:var(--link);font-size:12.5px;font-weight:600;text-decoration:underline}
 .rp-open{display:block;margin:0 0 6px}
+a.rp-open{display:flex;align-items:center}
 .rp-wrap{margin-top:12px;text-align:center}
+
+/* ---------- Account (js/account.js) and the sign-in form (js/signin.js) ----------
+   The sheet is the report form's card (grouped above). The .si- form is also
+   used by admin.html, so it is styled by class, not under #account. */
+.si-step label,.ac-form label{display:block;font-size:12px;font-weight:700;color:var(--txt-dim);margin:10px 0 4px}
+.si-step input,.ac-form input{width:100%;font:inherit;font-size:16px;color:var(--txt);background:var(--paper-2);
+  border:1px solid var(--line);border-radius:var(--radius);padding:10px 12px;min-height:44px}
+.si-step input:disabled,.ac-form input:disabled{color:var(--txt-dim)}
+.si-step[hidden]{display:none}
+.si-codein{font-family:"IBM Plex Mono",ui-monospace,monospace !important;font-size:22px !important;letter-spacing:.35em;text-align:center}
+.si-go{display:block;width:100%;min-height:46px;margin-top:12px;border-radius:var(--radius);background:var(--river);color:#fff;font-size:15px;font-weight:700}
+.si-go:disabled{background:#b3a596}
+.si-sent{font-size:13.5px;margin:2px 0 2px;overflow-wrap:anywhere}
+.si-links{display:flex;justify-content:space-between;gap:8px;margin-top:6px}
+.si-links button{min-height:40px;padding:0 4px;color:var(--link);font-size:13px;font-weight:600;text-decoration:underline}
+.si-links button:disabled{color:var(--txt-dim);text-decoration:none}
+.si-msg,.ac-msg{font-size:12.5px;color:var(--st-vhigh);margin-top:10px;overflow-wrap:anywhere}
+.si-msg:empty,.ac-msg:empty{display:none}
+.si-msg.ok,.ac-msg.ok{color:var(--st-avg)}
+.ac-intro{font-size:13.5px;line-height:1.45;margin:2px 0 4px}
+.ac-flash{font-size:13px;font-weight:600;color:#1f5a37;background:#e3eee2;border-radius:8px;padding:8px 10px;margin:2px 0 10px}
+.ac-who{background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);padding:10px 12px;margin:2px 0 4px}
+.ac-k{display:block;font-size:11px;font-weight:700;color:var(--txt-dim);text-transform:uppercase;letter-spacing:.06em}
+.ac-email{display:block;font-size:15px;overflow-wrap:anywhere}
+.ac-note{display:block;font-size:11px;color:var(--txt-dim);margin-top:2px}
+.ac-inline{display:flex;gap:8px}
+.ac-inline input{flex:1;min-width:0}
+.ac-inline button{flex:0 0 auto;min-height:44px;padding:0 18px;border-radius:var(--radius);background:var(--river);color:#fff;font-weight:700}
+.ac-inline button:disabled{background:#b3a596}
+.ac-retry{min-height:32px;padding:0 4px;color:var(--link);font-weight:600;text-decoration:underline}
+.ac-btn{display:block;width:100%;min-height:46px;margin-top:14px;border-radius:var(--radius);background:#e8dfd2;color:var(--txt);font-size:15px;font-weight:700}
+.ac-danger{margin-top:18px;padding-top:8px;border-top:1px solid var(--line)}
+.ac-dangerlink{min-height:40px;padding:0 4px;color:var(--st-vhigh);font-size:13px;font-weight:600;text-decoration:underline}
+.ac-confirm{background:#fbeceb;border:1px solid #e3b6b2;border-radius:var(--radius);padding:10px 12px;margin-top:4px}
+.ac-confirm[hidden]{display:none}
+.ac-confirm p{font-size:13px;line-height:1.45;margin-bottom:8px}
+.ac-confirm .ac-msg{margin:0 0 8px}
+.ac-confirm-btns{display:flex;gap:8px}
+.ac-confirm-btns button{flex:1;min-height:44px;border-radius:9px;font-weight:700;background:#e8dfd2;color:var(--txt)}
+.ac-confirm-btns .ac-del-yes{background:var(--st-vhigh);color:#fff}
+.ac-confirm-btns button:disabled{opacity:.6}
+.ac-foot{margin-top:14px;text-align:center}
+.ac-foot a{display:inline-flex;align-items:center;min-height:40px;padding:0 6px;color:var(--link);font-size:12.5px;font-weight:600}
+/* Signed in: a small dot on the person button. */
+#btn-account{position:relative}
+#btn-account.signed-in::after{content:"";position:absolute;top:5px;right:5px;width:8px;height:8px;border-radius:50%;
+  background:var(--river-dim);box-shadow:0 0 0 2px var(--ink-2)}
 
 /* ---------- Welcome card + guided tour (js/tour.js) ----------
    Above everything (the Field Book is 1600, the report form 1700). The

@@ -8,14 +8,14 @@
      and a background fetch refreshes it, so a rebuilt layer reaches phones
      on the next visit instead of never.
    Every URL here is relative: the site lives at a sub-path on GitHub Pages. */
-const VERSION = "flyroutes-v23";
+const VERSION = "flyroutes-v24";
 const TILES_BROWSE = "tiles-browse", TILES_SAVED = "tiles-saved", DATA_TILES = "data-tiles";
 const TOPO = "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/";
 const LEAFLET = [
   "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css",
   "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js",
 ];
-const SHELL = ["./", "index.html", "css/styles.css", "js/app.js", "js/float.js", "js/laketrip.js", "js/tour.js", "js/rivers-data.js", "js/tiers.js",
+const SHELL = ["./", "index.html", "css/styles.css", "js/app.js", "js/float.js", "js/laketrip.js", "js/tour.js", "js/auth.js", "js/signin.js", "js/account.js", "js/rivers-data.js", "js/tiers.js",
   "js/zones.js", "js/access-laws.js", "js/designations.js", "js/config.js", "manifest.json", "icons/icon-192.png", "icons/icon-512.png",
   "icons/apple-touch-icon.png", "icons/favicon.svg", ...LEAFLET];
 const BROWSE_MAX = 2500, TRIM_EVERY = 50, NET_TIMEOUT = 4000;
@@ -113,5 +113,9 @@ self.addEventListener("fetch", e => {
   }
   // Everything else (USGS water, DWR, NHD, Overpass, PAD-US, the National
   // Weather Service, other basemaps, analytics) goes straight to the browser.
+  // So does Supabase (*.supabase.co: sign-in, profiles, reports): it is
+  // another origin, so it never reaches the branches above, and its POSTs and
+  // PATCHes are turned away at the top. Never cache it: an answer about who
+  // is signed in must never come from yesterday.
   // Other tile servers' terms forbid offline caching, so they are never stored.
 });

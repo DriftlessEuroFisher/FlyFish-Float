@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<!-- This page shows text strangers typed into the report form, to an account
+     that can change data. The policy below lets only this site's own script
+     files run, so text that looks like markup can never become code here,
+     and the page can only talk to this site and Supabase. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://*.supabase.co; img-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="theme-color" content="#1f1915">
+<title>Admin — TrailWaterMaps</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/pages.css">
+<link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
+</head>
+<body>
+<header class="pg-bar">
+  <svg class="brandmark" viewBox="-4 -4 108 108" aria-hidden="true" focusable="false"><path d="M8 12H44M24 12V62M44 12L56 62L68 32L80 62L92 12M10 88Q20 80 30 88T50 88T70 88T90 88"/></svg>
+  <h1>Admin<small>TrailWaterMaps</small></h1>
+  <span class="spacer"></span>
+  <span class="adm-who" id="adm-who"></span>
+  <button type="button" id="adm-out" hidden>Sign out</button>
+  <a href="./">Map</a>
+</header>
+<main class="pg-main" id="adm-main"><p class="adm-note">Loading…</p></main>
+<script src="js/config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/signin.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

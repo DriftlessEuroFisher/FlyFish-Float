@@ -37,6 +37,11 @@
   <button class="iconbtn" id="btn-book" aria-label="Field Book" title="Field Book">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C10.3 5.2 7.8 4.5 4 4.5v13c3.8 0 6.3.7 8 2 1.7-1.3 4.2-2 8-2v-13c-3.8 0-6.3.7-8 2zM12 6.5v13"/></svg>
   </button>
+  <!-- Hidden until js/account.js has loaded and accounts are configured, so
+       a failed script never leaves a dead button. -->
+  <button class="iconbtn" id="btn-account" aria-label="Account" title="Account" hidden>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.2" r="3.9"/><path d="M4.6 20.4c1.2-3.8 4-5.9 7.4-5.9s6.2 2.1 7.4 5.9"/></svg>
+  </button>
 </header>
 
 <!-- Filter chips (Everything / Fishing / Floating / Beginner-friendly /
@@ -95,6 +100,11 @@
   </div>
 </section>
 
+<section id="account" role="dialog" aria-label="Account">
+  <div id="account-head"><h2>Account</h2><button class="x" id="account-x" type="button" aria-label="Close">✕</button></div>
+  <div id="account-body"></div>
+</section>
+
 <div id="scrim"></div>
 <div id="legend" role="dialog" aria-label="Legend">
   <button class="x" id="legend-x" aria-label="Close legend">✕</button>
@@ -102,6 +112,7 @@
   <div class="lg-actions">
     <button type="button" class="rp-open" data-report="">Report an issue</button>
     <button type="button" class="rp-open" id="lg-tour">Take the tour</button>
+    <a class="rp-open" href="privacy.html" target="_blank" rel="noopener">Privacy</a>
   </div>
 
   <h3 class="lg-h">River lines</h3>
@@ -235,6 +246,9 @@
 <script src="js/float.js"></script>
 <script src="js/laketrip.js"></script>
 <script src="js/tour.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/signin.js"></script>
+<script src="js/account.js"></script>
 
 <script data-goatcounter="https://mattapps.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
