@@ -1,0 +1,259 @@
+/* ============================================================
+   HOMEPAGE (index.html, served at /). The map itself is app.html at /app.
+   Same brand as the app (css/styles.css): Iron chrome, Bone paper, River
+   for water, Saddle for links; Barlow for text, Barlow Condensed for
+   headings, IBM Plex Mono for data. Mobile first: the page is read on a
+   phone. The layout runs top to bottom: sticky bar, full-bleed hero,
+   tagline, stats, features, three steps, big-type call to action, footer.
+   ============================================================ */
+:root{
+  --iron:#1f1915;            /* app chrome */
+  --iron-2:#2e2620;
+  --bone:#f4eee4;            /* panels */
+  --bone-2:#fffcf6;
+  --line:#d6ccc0;
+  --txt:#2a211b;
+  --txt-dim:#5e534a;
+  --on-iron:#f4eee4;
+  --on-iron-dim:#b3a596;
+  --river:#236b8f;
+  --river-dim:#a3c4d6;
+  --river-deep:#1d5a79;
+  --saddle:#8b532f;
+  --link:#985535;            /* Saddle, tuned for text */
+  --radius:10px;
+  --gutter:16px;
+  --max:1080px;
+  --bar-h:56px;
+  /* Which part of the hero picture stays in view when it is cropped. */
+  --hero-pos:50% 45%;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  margin:0;background:var(--bone);color:var(--txt);
+  font-family:"Barlow",system-ui,sans-serif;font-size:17px;line-height:1.55;
+}
+h1,h2,h3,h4{font-family:"Barlow Condensed","Barlow",sans-serif;font-weight:700;text-transform:uppercase;margin:0}
+p{margin:0 0 14px}
+a{color:var(--link);text-underline-offset:2px}
+:focus-visible{outline:3px solid var(--river);outline-offset:3px;border-radius:4px}
+.bar :focus-visible,.hero :focus-visible,.cta :focus-visible,.foot :focus-visible{outline-color:var(--river-dim)}
+
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--gutter)}
+
+/* ---------- Sticky header ---------- */
+.bar{
+  position:sticky;top:0;z-index:10;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  min-height:var(--bar-h);
+  padding:max(8px,env(safe-area-inset-top)) var(--gutter) 8px;
+  background:var(--iron);color:var(--on-iron);
+  box-shadow:0 2px 10px rgba(0,0,0,.3);
+}
+.brand{
+  display:flex;align-items:center;gap:9px;min-width:0;
+  color:var(--on-iron);text-decoration:none;
+  font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:20px;
+  letter-spacing:.04em;text-transform:uppercase;line-height:1.05;
+}
+/* Stroke 11 of 108 units, as in the app bar: the brand's 9 goes to mush at 26 px. */
+.brandmark{
+  flex:0 0 auto;width:26px;height:26px;
+  fill:none;stroke:currentColor;stroke-width:11;stroke-linecap:round;stroke-linejoin:round;
+}
+.navbtn{
+  display:none;flex:0 0 auto;width:44px;height:44px;margin-right:-6px;padding:0;
+  align-items:center;justify-content:center;
+  background:none;border:0;border-radius:8px;color:var(--on-iron);cursor:pointer;
+}
+.js .navbtn{display:inline-flex}
+.navbtn svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
+.navbtn path{transition:transform .2s,opacity .2s;transform-box:fill-box;transform-origin:center}
+.navbtn[aria-expanded="true"] .b1{transform:translateY(5px) rotate(45deg)}
+.navbtn[aria-expanded="true"] .b2{opacity:0}
+.navbtn[aria-expanded="true"] .b3{transform:translateY(-5px) rotate(-45deg)}
+@media (prefers-reduced-motion:reduce){.navbtn path{transition:none}}
+
+/* The links. Without script they simply sit in the bar; with it, a phone gets
+   a panel that the button opens. */
+.nav{display:flex;flex-wrap:wrap;gap:4px 18px;align-items:center}
+.nav a{color:var(--on-iron);text-decoration:none;font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:18px;letter-spacing:.05em;text-transform:uppercase}
+.nav a:hover{text-decoration:underline;text-underline-offset:6px}
+@media (max-width:899px){
+  .js .nav{
+    display:none;position:absolute;top:100%;left:0;right:0;
+    flex-direction:column;align-items:stretch;gap:0;
+    padding:4px var(--gutter) 18px;background:var(--iron-2);
+    border-top:1px solid rgba(244,238,228,.14);box-shadow:0 14px 24px rgba(0,0,0,.35);
+  }
+  .js .nav.open{display:flex}
+  .js .nav a{display:flex;align-items:center;min-height:52px;font-size:21px;border-bottom:1px solid rgba(244,238,228,.12)}
+  .js .nav .nav-map{
+    justify-content:center;margin-top:16px;min-height:50px;border:0;border-radius:999px;
+    background:var(--river);color:#fff;
+  }
+}
+@media (min-width:900px){
+  .bar{padding-inline:max(var(--gutter),calc((100vw - var(--max)) / 2 + var(--gutter)))}
+  .js .navbtn{display:none}
+  .nav{gap:0 30px}
+  .nav .nav-map{
+    min-height:40px;padding:0 20px;display:inline-flex;align-items:center;
+    border-radius:999px;background:var(--river);color:#fff;
+  }
+  .nav .nav-map:hover{background:var(--river-deep);text-decoration:none}
+}
+
+/* ---------- Pill button (the one call to action) ---------- */
+.pill{
+  display:inline-flex;align-items:center;gap:8px;
+  min-height:54px;padding:0 18px 0 28px;border-radius:999px;
+  background:var(--river);color:#fff;text-decoration:none;
+  font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:21px;
+  letter-spacing:.05em;text-transform:uppercase;line-height:1.1;
+  box-shadow:0 0 0 1px rgba(255,255,255,.22),0 10px 24px -8px rgba(0,0,0,.5);
+}
+.pill:hover{background:var(--river-deep)}
+.pill svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.pill-bone{background:var(--bone);color:var(--iron)}
+.pill-bone:hover{background:#fff}
+
+/* ---------- Hero ---------- */
+.hero{
+  position:relative;isolation:isolate;overflow:hidden;
+  display:flex;align-items:flex-end;
+  min-height:clamp(520px,78vh,760px);min-height:clamp(520px,78svh,760px);
+  background:var(--iron);color:#fff;
+}
+.hero-bg{
+  position:absolute;inset:0;z-index:-2;width:100%;height:100%;
+  object-fit:cover;object-position:var(--hero-pos);
+}
+/* The dark wash that keeps the type readable over a busy map: from the foot
+   up on a phone, from the left across on a wide screen. */
+.hero::before{
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(180deg,rgba(31,25,21,.3) 0%,rgba(31,25,21,.62) 38%,rgba(31,25,21,.93) 100%);
+}
+.hero-in{width:100%;padding-top:48px;padding-bottom:44px}
+.apptile{
+  display:flex;align-items:center;justify-content:center;
+  width:64px;height:64px;margin-bottom:20px;border-radius:15px;background:var(--river);
+  box-shadow:0 0 0 1px rgba(255,255,255,.18),0 8px 20px -6px rgba(0,0,0,.55);
+}
+.apptile svg{width:38px;height:38px;fill:none;stroke:var(--bone);stroke-width:11;stroke-linecap:round;stroke-linejoin:round}
+h1{
+  max-width:9em;font-size:clamp(46px,14vw,96px);line-height:.92;letter-spacing:.005em;
+  margin-bottom:18px;text-shadow:0 2px 18px rgba(0,0,0,.4);
+}
+.sub{max-width:26em;margin:0 0 6px;font-size:19px;line-height:1.4;color:var(--on-iron);text-shadow:0 1px 10px rgba(0,0,0,.5)}
+.hero .pill{margin-top:22px}
+@media (min-width:700px){
+  .hero{align-items:center}
+  .hero::before{background:linear-gradient(90deg,rgba(31,25,21,.92) 0%,rgba(31,25,21,.74) 42%,rgba(31,25,21,.2) 100%)}
+  .hero-in{padding-top:72px;padding-bottom:72px}
+  .sub{font-size:21px;max-width:32em}
+}
+@media (min-width:900px){
+  .hero-in{padding-inline:max(var(--gutter),calc((100vw - var(--max)) / 2 + var(--gutter)));max-width:none}
+}
+
+/* ---------- Tagline band ---------- */
+.tagline{padding:52px 0 44px;text-align:center}
+.big{
+  max-width:17em;margin:0 auto 12px;
+  font-family:"Barlow Condensed",sans-serif;font-weight:700;text-transform:uppercase;
+  font-size:clamp(30px,8.4vw,52px);line-height:1.02;letter-spacing:.01em;text-wrap:balance;
+}
+.works{margin:0 auto;max-width:34em;font-size:15px;color:var(--txt-dim);text-wrap:balance}
+
+/* ---------- Stats ---------- */
+.stats{background:var(--bone-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:40px 0 36px}
+.stats dl{margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:30px 16px;text-align:center}
+.stats div{min-width:0}
+.stats dt{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:clamp(46px,13vw,68px);line-height:1;color:var(--txt)}
+.stats dt::after{content:"";display:block;width:38px;height:3px;margin:10px auto 10px;background:var(--river);border-radius:2px}
+.stats dd{margin:0;font-family:"IBM Plex Mono",ui-monospace,monospace;font-weight:500;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--txt-dim)}
+@media (min-width:700px){.stats dl{grid-template-columns:repeat(4,1fr)}.stats{padding:56px 0 52px}}
+
+/* ---------- Section headings ---------- */
+.head{text-align:center;margin-bottom:12px}
+.kicker{
+  margin:0 0 6px;
+  font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:16px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--river);
+}
+h2{font-size:clamp(36px,10vw,56px);line-height:1;letter-spacing:.01em;margin-bottom:10px}
+.head p:not(.kicker){color:var(--txt-dim);margin:0}
+
+/* ---------- Features: a phone, a label, a title, a short paragraph ---------- */
+.features{padding:64px 0 28px;scroll-margin-top:var(--bar-h)}
+.feature{
+  display:grid;gap:26px;justify-items:center;text-align:center;
+  padding:44px 0 52px;scroll-margin-top:var(--bar-h);
+}
+.feature + .feature{border-top:1px solid var(--line)}
+.copy{max-width:32em;min-width:0}
+.copy h3{font-size:clamp(30px,8vw,40px);line-height:1.02;letter-spacing:.01em;margin-bottom:14px}
+.copy p:last-child{margin-bottom:0}
+.note{
+  text-align:left;background:var(--bone-2);border-left:3px solid var(--saddle);border-radius:0 8px 8px 0;
+  padding:10px 14px;font-size:15px;color:var(--txt)
+}
+.states{font-size:14px;color:var(--txt-dim)}
+.phone{
+  margin:0;width:min(270px,72vw);
+  padding:9px;border-radius:44px;
+  background:#120e0b;
+  box-shadow:0 0 0 1.5px #4a3d33, 0 26px 50px -18px rgba(31,25,21,.55);
+}
+.phone img{display:block;width:100%;height:auto;border-radius:35px;background:var(--bone)}
+@media (min-width:860px){
+  .feature{grid-template-columns:1fr 1fr;gap:72px;align-items:center;text-align:left;padding:64px 0 72px}
+  .feature .phone{width:300px;justify-self:center}
+  .feature:nth-of-type(even) .phone{order:2}
+  .feature:nth-of-type(odd) .copy{justify-self:start}
+  .feature:nth-of-type(even) .copy{justify-self:end}
+}
+
+/* ---------- How it works ---------- */
+.how{background:var(--bone-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:64px 0 56px;scroll-margin-top:var(--bar-h)}
+.steps{list-style:none;counter-reset:step;margin:28px auto 0;padding:0;max-width:640px}
+.steps li{display:flex;align-items:flex-start;gap:18px;padding:22px 0;border-top:1px solid var(--line);scroll-margin-top:var(--bar-h)}
+.steps li:last-child{padding-bottom:0}
+.ico{
+  flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+  width:52px;height:52px;border-radius:50%;background:var(--bone);border:1px solid var(--line);
+}
+.ico svg{width:26px;height:26px;fill:none;stroke:var(--river);stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+.steps h3{font-size:27px;line-height:1.05;letter-spacing:.02em;margin:2px 0 6px}
+.steps h3::before{
+  counter-increment:step;content:counter(step);
+  margin-right:10px;font-family:"IBM Plex Mono",ui-monospace,monospace;font-weight:600;font-size:17px;color:var(--river);
+}
+.steps h3 a{color:inherit;text-decoration-color:var(--river);text-decoration-thickness:2px;text-underline-offset:5px}
+.steps p{margin:0;color:var(--txt-dim)}
+.steps b{color:var(--txt)}
+
+/* ---------- Big-type call to action ---------- */
+.cta{background:var(--river);color:var(--bone);text-align:center;padding:68px 0 72px}
+.giant{
+  margin:0 0 30px;
+  font-family:"Barlow Condensed",sans-serif;font-weight:700;text-transform:uppercase;
+  font-size:clamp(52px,15.4vw,168px);line-height:.88;letter-spacing:.005em;
+}
+
+/* ---------- Footer ---------- */
+.foot{background:var(--iron);color:var(--on-iron-dim);font-size:15px;line-height:1.55;padding:48px 0 max(32px,env(safe-area-inset-bottom))}
+.foot .cols{display:grid;gap:34px}
+.foot h4{font-size:16px;letter-spacing:.12em;color:var(--on-iron);margin-bottom:10px}
+.foot ul{list-style:none;margin:0;padding:0}
+.foot li{margin-bottom:7px}
+.foot a{color:var(--on-iron)}
+.foot .about p{margin:14px 0 0;max-width:24em}
+.foot .legal{margin:36px 0 0;padding-top:20px;border-top:1px solid rgba(244,238,228,.14);font-size:13px;color:var(--on-iron-dim)}
+@media (min-width:860px){
+  .foot .cols{grid-template-columns:1.3fr .8fr 1.5fr;gap:56px}
+}

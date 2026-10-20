@@ -4288,7 +4288,7 @@ function rampPassesFilter(p){
   return true;
 }
 
-/* Chip toolbar removed from index.html for now. filters{} stays at its
+/* Chip toolbar removed from app.html for now. filters{} stays at its
    defaults (everything visible) and the machinery below it — passFilter(),
    riverVisible(), applyFilters() — is untouched, so re-adding the markup
    and this listener is all it takes to get the filters back. */
@@ -4824,7 +4824,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v28";
+const APP_VERSION = "flyroutes-v29";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){

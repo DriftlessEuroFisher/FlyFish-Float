@@ -300,7 +300,8 @@ the window takes about a second. The retention statement is at the bottom of
 ### What it replaced
 
 A third-party page-view counter (GoatCounter). Its script tag is gone from
-`index.html`, and the app now loads nothing for analytics from anyone else.
+`app.html` (the map page, `index.html` until 2026-10-19), and the app now loads
+nothing for analytics from anyone else.
 
 ---
 

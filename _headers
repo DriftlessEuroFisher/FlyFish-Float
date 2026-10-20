@@ -12,6 +12,14 @@
 /index.html
   Cache-Control: no-cache
 
+# The map is app.html. Cloudflare serves it at /app and redirects /app.html
+# there, like index.html at / (now the homepage).
+/app
+  Cache-Control: no-cache
+
+/app.html
+  Cache-Control: no-cache
+
 /admin.html
   Cache-Control: no-cache
   X-Frame-Options: DENY
@@ -31,6 +39,10 @@
   Cache-Control: no-cache
 
 /icons/*
+  Cache-Control: public, max-age=604800
+
+# Homepage screenshots. A new screenshot gets a new file name.
+/img/*
   Cache-Control: public, max-age=604800
 
 /data/*

@@ -71,7 +71,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 /* On a phone the tagline took a second and third line — about a fifth of
    an iPhone screen. Title only. At 375 px the mark and the buttons leave
    too little for "TRAILWATERMAPS" on one line, so the name may break once,
-   after "TRAILWATER" (the <wbr> in index.html; it is one word, so without
+   after "TRAILWATER" (the <wbr> in app.html; it is one word, so without
    it the line would clip): two tight lines fit inside the 38 px buttons,
    so the bar is no taller than one line would make it. */
 @media (max-width:767px){
@@ -396,6 +396,10 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .lg-actions{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:2px}
 #legend > h2{margin-bottom:2px}
 .lg-actions .rp-open{margin:0}
+/* The About link is an <a>, centred like the buttons beside it. On a phone it
+   wraps to a second row, and the 40 px rows are spacing enough without a gap. */
+.lg-actions{row-gap:0}
+.lg-actions .rp-link{display:inline-flex;align-items:center}
 #legend h3.lg-h{font-family:"Barlow Condensed",sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--txt-dim);margin:12px 0 5px;padding-bottom:3px;border-bottom:1px solid var(--line)}
 #legend h3.lg-h small{font-size:11px;font-weight:600;letter-spacing:.03em;text-transform:none}
 .lg-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px 8px}

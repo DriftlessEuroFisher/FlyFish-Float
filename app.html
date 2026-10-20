@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1f1915">
+<title>TrailWaterMaps — the West, the Rockies &amp; the Upper Midwest</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TrailWater">
+</head>
+<body>
+
+<header id="appbar">
+  <!-- The 1b "Rocking TW" mark: T and W share one top bar over a line of
+       water. Stroked thicker than the brand's 8.5 because at 26 px one unit
+       is a quarter of a pixel. <wbr> lets a phone break the one-word name
+       after "TrailWater" instead of clipping it. -->
+  <h1><svg class="brandmark" viewBox="-4 -4 108 108" aria-hidden="true" focusable="false"><path d="M8 12H44M24 12V62M44 12L56 62L68 32L80 62L92 12M10 88Q20 80 30 88T50 88T70 88T90 88"/></svg><span class="wordmark">TrailWater<wbr>Maps<small>18 states · 42 national parks · Driftless · North Shore · live USGS flows</small></span></h1>
+  <div class="spacer"></div>
+  <div id="updated">flows<br><b id="updwhen">loading…</b></div>
+  <button class="iconbtn" id="btn-refresh" aria-label="Refresh flows" title="Refresh flows">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-2.6-6.3M21 4v5h-5"/></svg>
+  </button>
+  <button class="iconbtn" id="btn-report" aria-label="Report an issue" title="Report an issue">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg>
+  </button>
+  <button class="iconbtn" id="btn-legend" aria-label="Legend and help" title="Legend">?</button>
+  <button class="iconbtn" id="btn-book" aria-label="Field Book" title="Field Book">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C10.3 5.2 7.8 4.5 4 4.5v13c3.8 0 6.3.7 8 2 1.7-1.3 4.2-2 8-2v-13c-3.8 0-6.3.7-8 2zM12 6.5v13"/></svg>
+  </button>
+  <!-- Hidden until js/account.js has loaded and accounts are configured, so
+       a failed script never leaves a dead button. -->
+  <button class="iconbtn" id="btn-account" aria-label="Account" title="Account" hidden>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.2" r="3.9"/><path d="M4.6 20.4c1.2-3.8 4-5.9 7.4-5.9s6.2 2.1 7.4 5.9"/></svg>
+  </button>
+</header>
+
+<!-- Filter chips (Everything / Fishing / Floating / Beginner-friendly /
+     float-duration / Class I) removed for now. The filter machinery behind
+     them is still in js/app.js — filters{}, passFilter(), riverVisible(),
+     applyFilters() — so restoring this toolbar is the only step needed to
+     bring them back. -->
+
+<div id="map" role="application" aria-label="River map"></div>
+
+<div id="netpill">⚠ Offline — showing last saved readings</div>
+
+<aside id="sheet" aria-label="River details">
+  <div id="grab"></div>
+  <div id="sheethead">
+    <span class="swatch" id="sw"></span>
+    <div style="flex:1;min-width:0">
+      <h2 id="sh-title">River</h2>
+      <div class="sub" id="sh-sub"></div>
+    </div>
+    <button class="x" id="sheet-x" aria-label="Close panel">✕</button>
+  </div>
+  <div id="fbrow"></div>
+  <div id="sheetbody"></div>
+</aside>
+<div id="fbtoast" role="status"><span class="fbt-msg"></span><button type="button" hidden>Undo</button></div>
+
+<section id="book" role="dialog" aria-label="Field Book">
+  <div id="book-head"><h2>Field Book</h2><button class="x" id="book-x" aria-label="Close Field Book">✕</button></div>
+  <div id="book-tabs" role="tablist"></div>
+  <div id="book-body"></div>
+  <div id="book-foot">
+    <div class="bk-btns"><button type="button" id="book-import">Import</button><span id="book-msg" aria-live="polite"></span></div>
+    <input type="file" id="book-file" accept="application/json,.json" hidden>
+    <p>Saved on this phone only.</p>
+  </div>
+</section>
+
+<section id="report" role="dialog" aria-label="Report an issue">
+  <div id="report-head"><h2>Report an issue</h2><button class="x" id="report-x" type="button" aria-label="Close">✕</button></div>
+  <div id="report-body">
+    <form id="report-form" novalidate autocomplete="off">
+      <label for="rp-river">River or lake</label>
+      <input id="rp-river" type="text" list="rp-list" placeholder="River or lake (optional)" maxlength="120" autocomplete="off" autocapitalize="words">
+      <datalist id="rp-list"></datalist>
+      <label for="rp-issue">What's wrong?</label>
+      <textarea id="rp-issue" rows="5" maxlength="2000" required placeholder="What's wrong? e.g. wrong regulation, line in the wrong place, gauge not updating, access point closed"></textarea>
+      <label for="rp-email">Email</label>
+      <input id="rp-email" type="email" inputmode="email" autocomplete="email" maxlength="200" placeholder="you@example.com (optional)">
+      <p class="rp-note">Optional — only if you'd like a reply. Used for nothing else.</p>
+      <input id="rp-web" class="rp-hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <p id="rp-msg" role="status" aria-live="polite"></p>
+      <div id="rp-actions"><button type="submit" id="rp-send" disabled>Send</button><p id="rp-off" hidden>Reporting isn't switched on yet.</p></div>
+    </form>
+    <div id="rp-done" hidden></div>
+  </div>
+</section>
+
+<section id="account" role="dialog" aria-label="Account">
+  <div id="account-head"><h2>Account</h2><button class="x" id="account-x" type="button" aria-label="Close">✕</button></div>
+  <div id="account-body"></div>
+</section>
+
+<div id="scrim"></div>
+<div id="legend" role="dialog" aria-label="Legend">
+  <button class="x" id="legend-x" aria-label="Close legend">✕</button>
+  <h2>Map key</h2>
+  <div class="lg-actions">
+    <button type="button" class="rp-open" data-report="">Report an issue</button>
+    <button type="button" class="rp-open" id="lg-tour">Take the tour</button>
+    <!-- ?home stops the homepage forwarding a home-screen launch straight
+         back here (see the script at the top of index.html). -->
+    <a class="rp-link" href="./?home">About TrailWaterMaps</a>
+  </div>
+
+  <h3 class="lg-h">River lines</h3>
+  <div class="lg-grid">
+    <div class="lg-ic"><span class="lg-sw" style="background:#7b2d8e"></span>Restrictive regs <i>(IA)</i></div>
+    <div class="lg-ic"><span class="lg-sw" style="background:#0e6f7d"></span>Wild trout <i>(IA, WI I)</i></div>
+    <div class="lg-ic"><span class="lg-sw" style="background:#a8552a"></span>Stocked <i>(IA)</i></div>
+    <div class="lg-ic"><span class="lg-sw" style="background:#5a9ea8"></span>Some wild <i>(WI II)</i></div>
+  </div>
+  <div class="lg-ic lg-wide"><span class="lg-sw" style="background:linear-gradient(90deg,#7b2d8e 50%,#a8552a 50%)"></span>Colour change mid-creek = class changes; tap for miles</div>
+  <div class="lg-ic lg-wide"><span class="lg-sw lg-focus"></span>Gold outline = the river you opened</div>
+  <div class="lg-ic lg-wide"><span class="lg-sw" style="background:#9aa59d"></span>Gray = filtered out</div>
+  <div class="lg-ic lg-wide"><svg class="lg-tape" viewBox="0 0 28 14" width="28" height="14"><path d="M1 7H9M19 7H27" stroke="#1f6f8b" stroke-width="4" stroke-linecap="round"/></svg>Gap in a park river = a lake</div>
+  <div class="lg-note lg-tight">Other rivers keep their own colour.</div>
+
+  <h3 class="lg-h">Rankings</h3>
+  <div class="lg-chips">
+    <span class="lg-chip"><i style="background:#3a7d44"></i>Top pick</span>
+    <span class="lg-chip"><i style="background:#0e6f7d"></i>Worth it</span>
+    <span class="lg-chip"><i style="background:#5a8a8f"></i>Local</span>
+    <span class="lg-chip"><i style="background:#8b9690"></i>Other</span>
+  </div>
+  <div class="lg-note lg-tight">Other is hidden until River Filters &rarr; All. Rankings are this app&rsquo;s own, relative to the region. Gold Medal / Blue Ribbon badges are the agency&rsquo;s.</div>
+  <div class="lg-note lg-tight"><b>Species</b> (River Filters): pick a fish to show only the waters where Wyoming Game &amp; Fish, Idaho Fish &amp; Game, the Iowa DNR or Yellowstone&rsquo;s regulations list it &mdash; so far Iowa, Wyoming, Yellowstone, Grand Teton and the Teton and Swan valleys; everywhere else has no species data yet and hides too.</div>
+
+  <h3 class="lg-h">Icons</h3>
+  <div class="lg-grid">
+    <div class="lg-ic"><span class="lg-i"><span class="ap launch" style="position:relative"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.4 L16.6 11.4 L14.2 15 L6.3 15 Z" fill="#fff" stroke="none"/><path d="M8.2 11.4 L9.5 8.9 L12.2 8.9 L12.4 11.4" fill="#fff" stroke="none"/><path d="M2.6 18.2 q2 -1.7 4 0 t4 0 t4 0 t2.8 0"/><path d="M2.6 21 q2 -1.7 4 0 t4 0 t4 0 t2.8 0"/></svg></span></span>Put-in</div>
+    <div class="lg-ic"><span class="lg-i"><span class="ap takeout" style="position:relative"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.4 L16.6 11.4 L14.2 15 L6.3 15 Z" fill="#fff" stroke="none"/><path d="M8.2 11.4 L9.5 8.9 L12.2 8.9 L12.4 11.4" fill="#fff" stroke="none"/><path d="M2.6 18.2 q2 -1.7 4 0 t4 0 t4 0 t2.8 0"/><path d="M2.6 21 q2 -1.7 4 0 t4 0 t4 0 t2.8 0"/></svg></span></span>Take-out</div>
+    <div class="lg-ic"><span class="lg-i"><span class="ap both" style="position:static"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.4 L16.6 11.4 L14.2 15 L6.3 15 Z" fill="#fff" stroke="none"/><path d="M8.2 11.4 L9.5 8.9 L12.2 8.9 L12.4 11.4" fill="#fff" stroke="none"/><path d="M2.6 18.2 q2 -1.7 4 0 t4 0 t4 0 t2.8 0"/><path d="M2.6 21 q2 -1.7 4 0 t4 0 t4 0 t2.8 0"/></svg></span></span>Ramp, both ways</div>
+    <div class="lg-ic"><span class="lg-i"><span class="ap wade" style="position:static"><svg viewBox="0 0 24 24"><ellipse cx="10.5" cy="12" rx="7" ry="3.1" fill="#fff"/><path d="M16.5 12 L22 8.5 L22 15.5 Z" fill="#fff"/><circle cx="6.6" cy="11.3" r="0.95" fill="#5b6e3a"/></svg></span></span>Wade access</div>
+    <div class="lg-ic"><span class="lg-i"><span class="ap wade" style="position:static"><svg viewBox="0 0 24 24"><path fill="#fff" fill-rule="evenodd" d="M8.2 5 H13.2 A4.3 4.3 0 0 1 13.2 13.6 H11.2 V19 H8.2 Z M11.2 7.5 V11.1 H13 A1.8 1.8 0 0 0 13 7.5 Z"/></svg></span></span>Parking</div>
+    <div class="lg-ic"><span class="lg-i"><span class="gdot" style="position:static;background:var(--st-avg)"></span></span>USGS gauge</div>
+    <div class="lg-ic"><span class="lg-i lg-multi"><svg viewBox="0 0 18 18" width="18" height="18"><polyline points="3,4 8,4 8,9 13,9 13,14 16,14" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="#fff" stroke-width="4.6"/><polyline points="3,4 8,4 8,9 13,9 13,14 16,14" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="#3b4a56" stroke-width="2.2"/></svg><svg viewBox="0 0 18 18" width="18" height="18"><path d="M2 6q2-3 4 0t4 0t4 0M2 12q2-3 4 0t4 0t4 0" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="#fff" stroke-width="4.6"/><path d="M2 6q2-3 4 0t4 0t4 0M2 12q2-3 4 0t4 0t4 0" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="#3b4a56" stroke-width="2.2"/></svg><svg viewBox="0 0 18 18" width="18" height="18"><rect x="2.5" y="6.5" width="13" height="5" rx="1" fill="#3b4a56" stroke="#fff" stroke-width="2"/></svg></span>Falls, rapids, dam</div>
+    <div class="lg-ic"><span class="lg-i"><svg class="lg-tape" viewBox="0 0 28 14" width="28" height="14"><rect x="0" y="2" width="28" height="10" rx="5" fill="#b3261e" fill-opacity=".30"/><line x1="2" y1="7" x2="26" y2="7" stroke="#8c1d16" stroke-width="3.2" stroke-dasharray="2 7" stroke-opacity=".95"/></svg></span>Closed water</div>
+    <div class="lg-ic"><span class="lg-i"><svg viewBox="0 0 18 18" width="18" height="18"><circle cx="9" cy="9" r="5.2" fill="#8a7560" fill-opacity=".95" stroke="#fff" stroke-width="1.6"/></svg></span>Bridge access</div>
+    <div class="lg-ic"><span class="lg-i"><svg viewBox="0 0 18 18" width="18" height="18"><path d="M9 2L1.5 15.5h15z" fill="#0e6b55" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 7.5l-2.6 8h5.2z" fill="#fff"/></svg></span>Campsite</div>
+    <div class="lg-ic"><span class="lg-i"><svg viewBox="0 0 18 18" width="18" height="18"><rect x="8" y="2" width="2" height="15" rx="1" fill="#7a5230" stroke="#fff" stroke-width="1.2"/><path d="M10 3.5h6l1.6 2.2L16 7.9h-6z" fill="#7a5230" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 9.5H2.4L.8 11.7 2.4 13.9H8z" fill="#7a5230" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg></span>Trailhead</div>
+  </div>
+
+  <h3 class="lg-h">Flow status <small>vs. median for the week</small></h3>
+  <div class="lg-row lg-st"><span class="badge" style="background:var(--st-vlow)">Very low</span> &lt; 40%</div>
+  <div class="lg-row lg-st"><span class="badge" style="background:var(--st-low)">Below average</span> 40&ndash;75%</div>
+  <div class="lg-row lg-st"><span class="badge" style="background:var(--st-avg)">Around average</span> 75&ndash;125%</div>
+  <div class="lg-row lg-st"><span class="badge" style="background:var(--st-high)">Above average</span> 125&ndash;180%</div>
+  <div class="lg-row lg-st"><span class="badge" style="background:var(--st-vhigh)">Very high ⚠</span> &gt; 180%</div>
+  <div class="lg-note lg-tight">No gauge &rarr; &ldquo;Ungauged&rdquo;, never a borrowed number.</div>
+
+  <h3 class="lg-h">Public land</h3>
+  <div class="lg-grid">
+    <div class="lg-ic"><span class="lg-i"><span style="display:inline-block;width:20px;height:13px;background:#5fbf62;opacity:.6;border:1.2px solid #1d7a2e"></span></span>State wildlife area</div>
+    <div class="lg-ic"><span class="lg-i"><span style="display:inline-block;width:20px;height:13px;background:#3f8f57;opacity:.6;border:1.2px solid #1f6b3a"></span></span>National forest</div>
+    <div class="lg-ic"><span class="lg-i"><span style="display:inline-block;width:20px;height:13px;background:#4a97ad;opacity:.6;border:1.2px solid #1f6f8b"></span></span>Other federal</div>
+    <div class="lg-ic"><span class="lg-i"><span style="display:inline-block;width:20px;height:13px;background:#6fae70;opacity:.6;border:1.2px solid #2f7d3f"></span></span>State forest / park</div>
+    <div class="lg-ic"><span class="lg-i"><span style="display:inline-block;width:20px;height:13px;background:#93ad6e;opacity:.6;border:1.2px solid #5f7a3a"></span></span>County / city</div>
+    <div class="lg-ic"><span class="lg-i"><span style="display:inline-block;width:20px;height:13px;background:#c8a94e;opacity:.6;border:1.2px solid #9c7a2a"></span></span>Private (easement)</div>
+  </div>
+  <div class="lg-ic lg-wide"><span class="lg-i"><span style="display:inline-block;width:20px;height:13px;background:#c8a94e;opacity:.6;border:1.2px dashed #9c7a2a"></span></span>Dashed outline = restricted (permit, season, limited entry)</div>
+
+  <details class="lg-more">
+    <summary>How this data was built</summary>
+  <div class="lg-note"><b>Map Icons.</b> Every launch starts with <b>no icons</b> on the map, so the rivers read clearly. Open <b>Map Icons</b> (top left) to switch on parking &amp; access, boat ramps, gauges (with every USGS gauge as an option inside), hazards &amp; closures, bridge access, campsites, trailheads and public land; nothing is remembered between launches. Access markers appear as you zoom in — boat ramps from zoom 8, wade access from zoom 9. <b>Zoom in close</b> (zoom 12) and parking &amp; access, boat ramps and trailheads come on by themselves, and go again as you zoom back out — unless you switched one yourself, which then stays the way you left it. The layers button (bottom-left) switches the basemap and the river classes.</div>
+  <div class="lg-note"><b>Opening a river</b> turns the map to it: the river is outlined in <b style="color:#b8860b">gold</b> and the rest of the water fades back, its own access points show — put-ins and take-outs on float water, parking and walk-in access on a creek — parking, bridge access and the falls &amp; dams layer come on, and the gauge dots step aside while the panel shows the flow. Close the panel and the map goes back to how you had it.</div>
+  <h2 style="margin-top:14px">River rankings</h2>
+  <div class="lg-note" style="margin-top:0"><b style="color:#c79a1c">Gold Medal</b> / <b style="color:#1f3f8f">Blue Ribbon</b> badges are the state agency's own designation, not this map's ranking.</div>
+  <div class="lg-note" style="margin-top:0">Every river is ranked <b style="color:#3a7d44">Top pick</b>, <b>Worth it</b>, <b>Local</b> or <b>Other</b> so the map opens on the water worth the drive. Top pick is destination, blue-ribbon water; Other is the rest and is <b>hidden until you tap "All"</b> under <b>River Filters</b> — and hidden again at the next launch. With All on, Other rivers are drawn around wherever you are looking, from zoom 8 in. The scale is <b>relative to the region</b> — a Worth it Driftless creek is a great stream for the Driftless, not a claim it matches the Madison. These are researched rankings, not official ratings.</div>
+  <div class="lg-note"><b>Rankings move with the season.</b> A river drops a step in its off window (spring runoff on the Snake), rises a step when it is at its best, and drops out to Other when it is closed. Tap a river to see why. Live flow status is shown separately, from the gauge.</div>
+  <div class="lg-note"><b>Species.</b> A fish is listed for a water only where a fisheries agency or the park lists it for that water &mdash; WGFD&rsquo;s Fishing Guide map, IDFG&rsquo;s Fishing Planner surveys and stocking, the Iowa DNR&rsquo;s stream, river and lake pages, the maps and fish pages of Yellowstone&rsquo;s 2026 regulations &mdash; or where the water&rsquo;s own regulations have a rule for it, which the river&rsquo;s panel marks; never guessed from the region, and every listing in a panel names its source.</div>
+
+  <h2 style="margin-top:14px">Trout classes &amp; regulations</h2>
+  <div class="lg-note" style="margin-top:0"><b>Northeast Iowa</b> — the Iowa DNR's own <i>regulation</i> class:</div>
+  <div class="lg-row"><span style="display:inline-block;width:22px;height:4px;background:#7b2d8e;vertical-align:middle;margin-right:7px;border-radius:2px"></span> <b>Restrictive regulations</b> — artificial-only and/or catch-and-release; stricter than the statewide trout rules</div>
+  <div class="lg-row"><span style="display:inline-block;width:22px;height:4px;background:#0e6f7d;vertical-align:middle;margin-right:7px;border-radius:2px"></span> <b>Fingerling stocked or natural reproduction</b> — put-and-grow and wild fish</div>
+  <div class="lg-row"><span style="display:inline-block;width:22px;height:4px;background:#a8552a;vertical-align:middle;margin-right:7px;border-radius:2px"></span> <b>Catchable stocked</b> — put-and-take, stocked at catchable size in season</div>
+  <div class="lg-note" style="margin-top:0">The DNR designates a stream reach by reach, so one Iowa creek can <b>change colour part-way along</b> where its designation changes — Waterloo Creek and Bloody Run, for example, each have a purple restrictive reach as well as rust catchable water. Tap the stream for the miles in each class.</div>
+  <div class="lg-note"><b>Door Peninsula</b> — the Wisconsin DNR's <i>biological</i> classification, which is a different question (do the trout reproduce here?) and so keeps its own wording:</div>
+  <div class="lg-row"><span style="display:inline-block;width:22px;height:4px;background:#0e6f7d;vertical-align:middle;margin-right:7px;border-radius:2px"></span> <b>Class I</b> — wild trout sustaining themselves without stocking</div>
+  <div class="lg-row"><span style="display:inline-block;width:22px;height:4px;background:#5a9ea8;vertical-align:middle;margin-right:7px;border-radius:2px"></span> <b>Class II</b> — some natural reproduction, stocked to supplement it</div>
+  <div class="lg-note">Trout streams in these two regions are coloured by the <b>state's own class</b> rather than a per-river hue, because on trout water the rules matter more than telling two neighbouring creeks apart. Tap a stream for its class and the <b>verbatim</b> regulation wording from that state's layer. Rivers outside these two datasets keep their own colour. Regulations change — check the current state trout regulations before you fish. <b>Almost every Door County stream is Great Lakes tributary water</b>, which carries a 10" minimum, a hook-gap limit and a <b>night-fishing closure</b> from September 15 — Logan Creek is the one that runs under ordinary inland trout rules.</div>
+
+  <h2 style="margin-top:14px">Yellowstone National Park</h2>
+  <div class="lg-note" style="margin-top:0">The park is its own zone because it is its own fishery. A <b>park permit</b> is required and a state licence is <b>not valid</b>; tackle is <b>lead-free artificial lures or flies, barbless</b>; <b>all native fish</b> — cutthroat, mountain whitefish, grayling — <b>go back unharmed</b>; and in the Lamar drainage every rainbow, brook trout and cutthroat×rainbow hybrid <b>must be killed</b>. Seasons differ river by river: the Firehole, Madison and lower Gibbon open <b>May 1</b>, the Yellowstone below the lake <b>July 1</b>, and the lake's tributaries <b>July 15</b>. Tap any park river for the reach-level rules, taken from the Park Service's current regulations.</div>
+  <div class="lg-note"><b>Park lines stop at the park line</b>, because the regulations do. A <b>gap</b> in a river here is a <b>lake</b> — the Yellowstone through Yellowstone Lake, the Lewis through Lewis and Shoshone — which is fished as a lake under different rules, so it isn't drawn as river. Nine gauges cover the park's main rivers; everything else is ungauged backcountry.</div>
+
+  <h2 style="margin-top:14px">Grand Teton National Park</h2>
+  <div class="lg-note" style="margin-top:0">Its own zone, but for the opposite reason to Yellowstone's: Grand Teton takes a <b>Wyoming licence</b> and Wyoming regulations, <b>not</b> a park permit. The rule that decides a trip here is the season — <b>park streams are closed December 1 to July 31</b>, so most of this water opens <b>August 1</b>. The five the park exempts are the <b>Snake, Buffalo Fork, Pacific Creek, Gros Ventre and Polecat Creek</b>; everything else is also <b>artificial flies or lures only</b>. Stream creel is three trout, no more than one over sixteen inches.</div>
+  <div class="lg-note">The Snake, the Buffalo Fork and the Gros Ventre are mapped as <b>Jackson Hole</b> rivers rather than duplicated as park entries, since each runs far beyond the boundary — tap one for the park-reach rules. Only about <b>9 km of Pacific Creek, 8 km of Spread Creek and 6 km of the Gros Ventre</b> are actually inside Grand Teton: the park is far smaller east of the Snake than it looks.</div>
+
+  <h2 style="margin-top:14px">Teton Valley &amp; Swan Valley (Idaho)</h2>
+  <div class="lg-note" style="margin-top:0">Two Idaho zones on the Upper Snake: the <b>Teton River</b> and its Teton Range creeks above the canyon, and the <b>South Fork of the Snake</b> from Palisades down to Heise. Idaho Fish &amp; Game runs both around the native cutthroat — <b>no harvest of cutthroat trout</b> and <b>no limit at all on rainbow trout or hybrids</b>, because non-native rainbows displace and interbreed with them. The <b>tributaries close June 1–30</b> while the mainstems stay open. Tap any creek for the state's wording.</div>
+  <div class="lg-note"><b>These lines stop at the Idaho/Wyoming state line.</b> The Teton Range canyons cross into Wyoming part-way up and the regulations change there, so the drawn water ends where the rulebook does — and Teton Valley shows as a label inside the Idaho zone rather than as a zone of its own.</div>
+
+  <h2 style="margin-top:14px">Public land</h2>
+  <div class="lg-note">Public land comes from <b>PAD-US</b>, the USGS Protected Areas Database. Every class is shaded at the <b>same weight</b> — fly fishing has the most generous access rules of any use of public land, so a national forest is no less fishable than a wildlife area and nothing here is emphasised over anything else. The colours only tell you <b>who manages it</b>, because the manager decides the regulations. Covers Minnesota, Wisconsin and Michigan the same as everywhere else on the map. Drawn from zoom 8; at wider zooms only the larger units are shown so the map stays readable, with everything appearing by zoom 12. Closed and unknown-access parcels are left off deliberately. <b>Boundaries are approximate</b> and easements change: check the state's current maps and the signage at the parcel before you cross a fence.</div>
+  <div class="lg-note"><b>Water temperature and weather.</b> Water temperature is the USGS gauge's own reading (parameter 00010), shown only where the gauge reports it and only when it is under a day old. Wind and weather are the <b>National Weather Service hourly forecast</b> at the river's main gauge (or the middle of the river, or the lake), not a measurement.</div>
+  <div class="lg-note"><b>Ungauged streams.</b> Most Driftless spring creeks and North Shore steelhead streams are too small for a USGS gauge. Those rivers show an <b>Ungauged</b> card instead of a flow number — plus the nearest gauged water as a rough regional wetness read, clearly marked as a different stream. The app never borrows another watershed's number and labels it as the creek you tapped. On <b>Driftless</b> water the nearest-gauge reading carries <b>no status class</b> — a "below average" badge there describes a different creek a valley over, and it reads as though it were this one. Judge a spring creek on clarity when you get there.</div>
+  <div class="lg-note"><b>The zones are states.</b> Fishing regulations are written by states, so the state line is the one border that actually changes what you may do — and it's the border the opening chooser draws. <b>National parks keep their own boundary</b> and sit on top of the state they're in, because their rules are their own: Yellowstone spans three states and answers to none of them.</div>
+  <div class="lg-note"><b>Named places that cross state lines are labels, not zones.</b> The <b>Driftless Area</b> is one landscape over four states and four rulebooks; it and the North Shore, Door Peninsula, Teton Valley, Swan Valley and the Central Iowa water trails fade in as map labels between zoom 6 and 11 — named where they are, without pretending to be a rulebook.</div>
+  <div class="lg-note">River lines are color-coded per river and turn <b>gray</b> when filtered out. Tap any river line, ramp, or gauge dot for details.</div>
+  <div class="lg-note">River lines snap to <b>live USGS hydrography</b> (the National Map's high-resolution NHD) when you're online, tracing the true channel — including the Snake's braids. Offline, they fall back to a built-in approximation.</div>
+  <h2 style="margin-top:14px">Lakes</h2>
+  <div class="lg-note" style="margin-top:0">Still water is drawn as a shape rather than a line, sitting <b>under</b> the rivers so an inlet or outlet still reads on top of it, and it <b>shimmers</b> instead of flowing — a lake has no direction to point, and animating one as though it did would be the same mistake as running a river backwards. Tap a lake for its rules. There is no flow number on a lake: ice-off, water temperature and wind decide the day, not CFS.</div>
+  <div class="lg-note"><b>Which lakes.</b> Yellowstone has around 150 and the park's own literature says more than 40% of its waters were historically barren of fish — so these nine are the ones the park's <b>fishing regulations name</b>, which is the only source that tells the two apart. Lake names appear by size: the big ones from zoom 8, ponds not until you're close.</div>
+
+  <h2 style="margin-top:14px">Flow animation</h2>
+  <div class="lg-note" style="margin-top:0">River lines carry a faint travelling highlight that runs <b>downstream</b>, and it moves <b>faster on higher water</b>: a river sitting well above its median visibly runs harder than one scraping along at very low flow. It appears from <b>zoom 9</b> in, only on the water you're looking at, and not at all if your device asks for reduced motion.</div>
+  <div class="lg-note"><b>Speed only means something where there's a gauge.</b> Ungauged water — most Driftless creeks, nearly all of Yellowstone's backcountry, every Door County stream — drifts at one neutral pace shared by all of it. The motion is never standing in for a reading the app doesn't have. And where the fall along a reach was too slight for the elevation model to tell uphill from down (about 3% of mapped river length, mostly short braids and flat spring creeks), that stretch simply doesn't animate rather than guessing a direction.</div>
+
+  <h2 style="margin-top:14px">Flow status</h2>
+  <div class="lg-note">Status compares <b>right-now CFS</b> (USGS latest-continuous) against the <b>historical median for this week of the year</b>, computed from USGS daily values. Float times are estimates scaled by current vs. median flow — always sanity-check at the ramp.</div>
+  <div class="lg-note">Coverage = the major fishable/floatable rivers of Idaho &amp; Wyoming, the Iowa DNR's <b>state water trails</b> across Iowa and ICON's central Iowa (Des Moines area) water trails, the trout streams of the <b>Driftless Area</b> across northeast Iowa, southeast Minnesota, southwest Wisconsin and northwest Illinois, the steelhead/trout tributaries of Minnesota's <b>North Shore</b> of Lake Superior (plus Wisconsin's Bois Brule), the big warmwater float rivers of <b>east-central Minnesota</b> and the St. Croix valley, and the <b>north-central Minnesota lakes country</b> and <b>Wisconsin Northwoods</b> (Mississippi headwaters, Crow Wing, Chippewa, Flambeau, Wisconsin and Wolf Rivers). River lines are simplified for fast loading and are <b>not navigation-grade</b>. Channels in braided rivers move every year.</div>
+  <div class="lg-note"><b>Driftless access.</b> These are walk-and-wade spring creeks, and a large share of the best water crosses private land under a <b>public angling easement</b>: you may fish and walk the stream corridor, but not leave it. Park in the marked pull-offs. Several streams carry catch-and-release or artificial-only stretches that change — always check the current state regulations and easement maps. Iowa requires a <b>trout fee</b> in addition to a fishing license.</div>
+  <div class="lg-note"><b>North Shore access.</b> Mostly state-park and DNR-wayside parking right off Hwy 61 — many parks require a vehicle permit. Runs are snowmelt-driven, so timing shifts year to year; check current DNR steelhead reports before planning around a specific week. A Minnesota <b>trout stamp</b> is required in addition to a license, and the Pigeon River / Grand Portage River cross into international or tribal jurisdiction with their own licensing rules.</div>
+  <h2 style="margin-top:14px">Safety &amp; licences</h2>
+  <div class="lg-note" style="margin-top:0">Mountain water is <b>cold enough to incapacitate</b> even in July. The Snake River Canyon (West Table–Sheep Gulch) is real Class III whitewater. The South Fork is dam-controlled — <b>flows can change with little warning</b>. Iowa rivers have <b>low-head dams</b> — dangerous "drowning machine" hydraulics at the base, at almost any flow.</div>
+  <div class="lg-note">Driftless spring creeks are <b>walk-and-wade</b>, and much of the best water crosses <b>private land under a public angling easement</b> — stay in the stream corridor and park only in the marked pull-offs. North Shore streams are <b>snowmelt-driven and cold</b>, with slick basalt ledges at the falls and gorges — the Pigeon River is the literal US–Canada border, so check jurisdiction before you wade across.</div>
+  <div class="lg-note">In the Northwoods, the <b>Wolf River above Shawano is Class III–IV</b> through the Menominee Reservation (tribal permit required) and the <b>South Fork Flambeau</b> has real drops — scout before you run either.</div>
+  <div class="lg-note">In the western national parks <b>the licence rule changes park to park</b>: Olympic, Mount Rainier and Crater Lake need no state licence, North Cascades needs Washington's, the California parks need California's, and in Glacier the North Fork needs none from park land while the Middle Fork needs Montana's — each river's sheet says which. Rocky Mountain, Black Canyon and Great Sand Dunes take a Colorado licence, and Capitol Reef, Zion and Canyonlands a Utah one.</div>
+  <div class="lg-note">Every Alaska park takes an Alaska licence except Denali's old Mount McKinley park, which needs none; at Katmai, <b>stop fishing whenever a bear is within 50 yards</b>, and the Brooks River is fly fishing only. Alaska's rules change in-season by <b>emergency order</b> — check ADF&amp;G's list before you cast. On Colorado rivers, <b>it is illegal to go onto private land to fish</b>.</div>
+  <div class="lg-note">Each river's Rules card also shows that state's <b>stream-access law</b> — whether you may wade a private streambed.</div>
+  <div class="lg-note">Wear a PFD, scout logjams and dams, and check current regs &amp; licenses with <b>WY Game &amp; Fish</b>, <b>Idaho Fish &amp; Game</b>, <b>Montana FWP</b>, <b>CDFW</b>, <b>ODFW</b>, <b>WDFW</b>, <b>Colorado Parks &amp; Wildlife</b>, <b>Utah DWR</b>, <b>Alaska Fish &amp; Game</b>, the <b>Michigan DNR</b>, <b>SD GFP</b>, <b>New Mexico</b>, <b>Arizona</b> and <b>Nevada</b> wildlife agencies, the <b>Iowa</b>, <b>Minnesota</b>, <b>Wisconsin</b> and <b>Illinois DNR</b>, or the <b>National Park Service</b> before you go.</div>
+  </details>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="js/rivers-data.js"></script>
+<script src="js/tiers.js"></script>
+<script src="js/zones.js"></script>
+<script src="js/access-laws.js"></script>
+<script src="js/designations.js"></script>
+<script src="js/species.js"></script>
+<script src="js/config.js"></script>
+<script src="js/app.js"></script>
+<script src="js/float.js"></script>
+<script src="js/laketrip.js"></script>
+<script src="js/tour.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/signin.js"></script>
+<script src="js/account.js"></script>
+<script src="js/metrics.js"></script>
+</body>
+</html>
