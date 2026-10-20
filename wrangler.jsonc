@@ -1,0 +1,11 @@
+// Cloudflare Worker (static assets only) for trailwatermaps.com.
+// Workers Builds runs `npx wrangler deploy`, which runs build.command first:
+// tools/cf-build.sh copies only the public app files into dist/, so
+// supabase/, tools/ and .github/ are never served. Nothing is transformed.
+// Custom domains (trailwatermaps.com, www) are attached in the dashboard.
+{
+  "name": "trailwatermaps",
+  "compatibility_date": "2026-10-19",
+  "build": { "command": "bash tools/cf-build.sh" },
+  "assets": { "directory": "./dist" }
+}
