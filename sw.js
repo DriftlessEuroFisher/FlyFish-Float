@@ -7,15 +7,18 @@
      stale-while-revalidate: the cached cell answers at once (and offline),
      and a background fetch refreshes it, so a rebuilt layer reaches phones
      on the next visit instead of never.
-   Every URL here is relative: the site lives at a sub-path on GitHub Pages. */
-const VERSION = "flyroutes-v26";
+   Every URL here is relative: the site lives at a sub-path on GitHub Pages.
+   The page is cached as "./", never "index.html": Cloudflare redirects
+   /index.html to /, and a redirected response can't answer a navigation, so
+   an offline launch fell over. */
+const VERSION = "flyroutes-v27";
 const TILES_BROWSE = "tiles-browse", TILES_SAVED = "tiles-saved", DATA_TILES = "data-tiles";
 const TOPO = "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/";
 const LEAFLET = [
   "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css",
   "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js",
 ];
-const SHELL = ["./", "index.html", "css/styles.css", "js/app.js", "js/float.js", "js/laketrip.js", "js/tour.js", "js/auth.js", "js/signin.js", "js/account.js", "js/metrics.js", "js/rivers-data.js", "js/tiers.js",
+const SHELL = ["./", "css/styles.css", "js/app.js", "js/float.js", "js/laketrip.js", "js/tour.js", "js/auth.js", "js/signin.js", "js/account.js", "js/metrics.js", "js/rivers-data.js", "js/tiers.js",
   "js/zones.js", "js/access-laws.js", "js/designations.js", "js/config.js", "manifest.json", "icons/icon-192.png", "icons/icon-512.png",
   "icons/apple-touch-icon.png", "icons/favicon.svg", ...LEAFLET];
 const BROWSE_MAX = 2500, TRIM_EVERY = 50, NET_TIMEOUT = 4000;
@@ -52,7 +55,7 @@ function networkFirst(e, isNav){
   const timeout = new Promise(ok => { t = setTimeout(ok, NET_TIMEOUT, "timeout"); });
   const cached = async () => {
     const cache = await cacheP;
-    return await cache.match(req, {ignoreSearch:true}) || (isNav ? await cache.match("index.html") : null);
+    return await cache.match(req, {ignoreSearch:true}) || (isNav ? await cache.match("./") : null);
   };
   return (async () => {
     let res;

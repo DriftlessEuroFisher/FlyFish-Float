@@ -2,7 +2,7 @@
   "name": "TrailWaterMaps",
   "short_name": "TrailWater",
   "description": "Live USGS flow conditions, regulations, public land and access for trout and float water across 18 states and 42 national parks.",
-  "start_url": "index.html",
+  "start_url": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#f4eee4",
