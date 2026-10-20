@@ -11,7 +11,7 @@
    The page is cached as "./", never "index.html": Cloudflare redirects
    /index.html to /, and a redirected response can't answer a navigation, so
    an offline launch fell over. */
-const VERSION = "flyroutes-v27";
+const VERSION = "flyroutes-v28";
 const TILES_BROWSE = "tiles-browse", TILES_SAVED = "tiles-saved", DATA_TILES = "data-tiles";
 const TOPO = "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/";
 const LEAFLET = [
@@ -19,7 +19,7 @@ const LEAFLET = [
   "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js",
 ];
 const SHELL = ["./", "css/styles.css", "js/app.js", "js/float.js", "js/laketrip.js", "js/tour.js", "js/auth.js", "js/signin.js", "js/account.js", "js/metrics.js", "js/rivers-data.js", "js/tiers.js",
-  "js/zones.js", "js/access-laws.js", "js/designations.js", "js/config.js", "manifest.json", "icons/icon-192.png", "icons/icon-512.png",
+  "js/zones.js", "js/access-laws.js", "js/designations.js", "js/species.js", "js/config.js", "manifest.json", "icons/icon-192.png", "icons/icon-512.png",
   "icons/apple-touch-icon.png", "icons/favicon.svg", ...LEAFLET];
 const BROWSE_MAX = 2500, TRIM_EVERY = 50, NET_TIMEOUT = 4000;
 let puts = 0;
