@@ -218,7 +218,7 @@ at once, before the token goes.
 - **No user switch while the app is in testing** (owner's decision,
   2026-10-19): every phone sends. A privacy page disclosing the stats is
   needed before public launch. Local dev hosts (localhost, 127.0.0.1, [::1],
-  `*.localhost`, `*.test`) never send.
+  `*.localhost`, `*.test`, `*.pages.dev`) never send.
 - **Delete my account erases the history.** `delete_my_account()` deletes
   every event with that `user_id`, and every event from any `device_id` that
   user ever sent signed in, so the anonymous history from their phones goes
@@ -339,9 +339,10 @@ if one has moved, search the dashboard for the **setting** name in bold.
    opens Safari instead of the home-screen app.
 
 4. **Site URL.** Authentication → **URL Configuration** → **Site URL**:
-   `https://driftlesseurofisher.github.io/FlyFish-Float/`. Code sign-in
-   doesn't redirect anywhere, but Supabase puts this in its emails. Change it
-   when the app moves to trailwatermaps.com.
+   `https://trailwatermaps.com`. Code sign-in doesn't redirect anywhere, but
+   Supabase puts this in its emails. Keep
+   `https://driftlesseurofisher.github.io/FlyFish-Float/` in the **Redirect
+   URLs** list while GitHub Pages still runs, and remove it when it stops.
 
 5. **Resend, on trailwatermaps.com.** (This only adds email records; the site
    stays on GitHub Pages and nothing about it moves.)

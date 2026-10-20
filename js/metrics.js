@@ -13,7 +13,7 @@
    and the phone then makes itself a new id (forgetDevice).
 
    There is no user switch during testing (owner, 2026-10-19): every phone
-   sends. Local dev hosts (localhost, 127.0.0.1, [::1], *.localhost, *.test)
+   sends. Local dev hosts (localhost, 127.0.0.1, [::1], *.localhost, *.test, *.pages.dev (Cloudflare previews))
    never record or send, so previews can't post to the live project. Nothing
    is sent while js/config.js names no Supabase project.
 
@@ -54,7 +54,8 @@ const Metrics = (() => {
   const devHost = (() => {
     const h = String(location.hostname || "").toLowerCase();
     return h === "localhost" || h === "127.0.0.1" || h === "[::1]" || h === "::1" ||
-      h.endsWith(".localhost") || h.endsWith(".test");
+      h.endsWith(".localhost") || h.endsWith(".test") ||
+      h.endsWith(".pages.dev");   // Cloudflare preview deploys
   })();
   const recording = () => configured() && !devHost;
   // Phones that switched stats off before the switch was removed start sending again.

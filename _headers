@@ -1,0 +1,37 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(self)
+
+/sw.js
+  Cache-Control: no-cache
+
+/
+  Cache-Control: no-cache
+
+/index.html
+  Cache-Control: no-cache
+
+/admin.html
+  Cache-Control: no-cache
+  X-Frame-Options: DENY
+
+# Cloudflare serves admin.html at /admin too (pretty URLs).
+/admin
+  Cache-Control: no-cache
+  X-Frame-Options: DENY
+
+/manifest.json
+  Cache-Control: no-cache
+
+/js/*
+  Cache-Control: no-cache
+
+/css/*
+  Cache-Control: no-cache
+
+/icons/*
+  Cache-Control: public, max-age=604800
+
+/data/*
+  Cache-Control: public, max-age=3600

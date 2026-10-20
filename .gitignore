@@ -17,3 +17,6 @@
 /CLAUDE.md
 /IDEAS.md
 /.claude/
+
+# Cloudflare Pages build output (tools/cf-build.sh), regenerated on every deploy.
+/dist/
