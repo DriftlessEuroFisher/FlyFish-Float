@@ -12,9 +12,10 @@
    Only admins can read it; deleting the account erases it (server side),
    and the phone then makes itself a new id (forgetDevice).
 
-   The off switch is localStorage.metricsOff = "1" ("Share usage stats" in
-   the account sheet). Off: nothing is queued or sent, and the queue is
-   cleared. Nothing is sent while js/config.js names no Supabase project.
+   There is no user switch during testing (owner, 2026-10-19): every phone
+   sends. Local dev hosts (localhost, 127.0.0.1, [::1], *.localhost, *.test)
+   never record or send, so previews can't post to the live project. Nothing
+   is sent while js/config.js names no Supabase project.
 
    The queue is localStorage "metrics:queue", which is under a cache prefix
    (LS_CACHE_PREFIXES in app.js): when the Field Book needs room,
@@ -30,7 +31,7 @@
    and keeps the queue. None of this touches the USGS budget or apiPaused(). */
 
 const Metrics = (() => {
-  const QKEY = "metrics:queue", DEV = "metricsDevice", OFF = "metricsOff";
+  const QKEY = "metrics:queue", DEV = "metricsDevice";
   const KINDS = new Set(["launch", "river_open", "lake_open", "region_view", "zone_pick",
     "fieldbook_open", "trip_logged", "favourite_add", "float_start", "float_end",
     "laketrip_start", "laketrip_end", "offline_save", "report_sent", "signin", "signout",
@@ -49,13 +50,15 @@ const Metrics = (() => {
   const REGION_SETTLE_MS = 1500, REGION_MIN_ZOOM = 6;
 
   const configured = () => typeof SUPABASE !== "undefined" && !!SUPABASE.url && !!SUPABASE.anonKey;
-  let offMem = null;                    // the switch, when storage can't hold it
-  function optedOut(){
-    if(offMem !== null) return offMem;
-    try{ return localStorage.getItem(OFF) === "1"; }catch(e){ return false; }
-  }
   let sessionOff = false;               // the events table isn't there: quiet until the next launch (the queue is kept)
-  const recording = () => configured() && !optedOut();
+  const devHost = (() => {
+    const h = String(location.hostname || "").toLowerCase();
+    return h === "localhost" || h === "127.0.0.1" || h === "[::1]" || h === "::1" ||
+      h.endsWith(".localhost") || h.endsWith(".test");
+  })();
+  const recording = () => configured() && !devHost;
+  // Phones that switched stats off before the switch was removed start sending again.
+  try{ localStorage.removeItem("metricsOff"); }catch(e){}
   const canSend = () => recording() && !sessionOff;
 
   /* ---------- ids ---------- */
@@ -300,16 +303,7 @@ const Metrics = (() => {
   }
   if(typeof map !== "undefined") map.on("moveend", () => { clearTimeout(regionT); regionT = setTimeout(regionCheck, REGION_SETTLE_MS); });
 
-  /* ---------- the switch, and forgetting ---------- */
-  function setOff(off){
-    offMem = null;
-    if(off){
-      clearQueue(); seen.clear(); regionLast = null;
-      try{ if(!lsWrite(OFF, "1")) offMem = true; }catch(e){ offMem = true; }
-    } else {
-      try{ localStorage.removeItem(OFF); }catch(e){ offMem = false; }
-    }
-  }
+  /* ---------- forgetting ---------- */
   /* Before "Delete my account": the server erases every event from this
      phone's id, so the phone stops using it. Anything queued (recorded under
      the old id) is dropped, a send already on its way is given a few
@@ -326,5 +320,5 @@ const Metrics = (() => {
 
   track("launch");
 
-  return {track, flush, isOff:optedOut, setOff, forgetDevice, KINDS};
+  return {track, flush, forgetDevice, KINDS};
 })();

@@ -215,9 +215,10 @@ at once, before the token goes.
 
 ### The safeguards
 
-- **An off switch.** "Share usage stats" in the account sheet, signed in or
-  out, on by default. Off (`localStorage.metricsOff = "1"`) means nothing is
-  queued or sent, and the queue is deleted at once.
+- **No user switch while the app is in testing** (owner's decision,
+  2026-10-19): every phone sends. A privacy page disclosing the stats is
+  needed before public launch. Local dev hosts (localhost, 127.0.0.1, [::1],
+  `*.localhost`, `*.test`) never send.
 - **Delete my account erases the history.** `delete_my_account()` deletes
   every event with that `user_id`, and every event from any `device_id` that
   user ever sent signed in, so the anonymous history from their phones goes
