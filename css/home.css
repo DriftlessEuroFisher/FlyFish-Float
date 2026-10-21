@@ -237,6 +237,53 @@ h2{font-size:clamp(36px,10vw,56px);line-height:1;letter-spacing:.01em;margin-bot
 .steps p{margin:0;color:var(--txt-dim)}
 .steps b{color:var(--txt)}
 
+/* ---------- News: the pinned banner and the latest three (js/home-news.js) ----------
+   Both start hidden and stay hidden on any failure, so nothing here may
+   give them a display that beats [hidden]. */
+.hn-banner[hidden],.hnews[hidden]{display:none}
+.hn-banner{background:var(--saddle);color:#fff}
+.hn-banner .wrap{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;padding-top:12px;padding-bottom:13px;font-size:16px;line-height:1.4}
+.hn-banner a{color:#fff;font-weight:600;text-decoration-thickness:1px;overflow-wrap:anywhere}
+.hn-banner :focus-visible{outline-color:#fff}
+.hn-tag{
+  font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:15px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--bone);opacity:.9
+}
+.hn-bsum{flex-basis:100%;color:rgba(255,255,255,.88);font-size:15px;overflow-wrap:anywhere}
+@media (min-width:700px){.hn-bsum{flex-basis:auto}}
+
+.hnews{padding:60px 0 56px;border-top:1px solid var(--line)}
+.hn-list{list-style:none;margin:26px 0 0;padding:0;display:grid;gap:16px}
+.hn-card{
+  position:relative;display:flex;flex-direction:column;min-width:0;overflow:hidden;
+  background:var(--bone-2);border:1px solid var(--line);border-radius:12px;
+}
+.hn-card:hover{border-color:var(--river-dim)}
+.hn-img{display:block;width:100%;aspect-ratio:16/9;height:auto;object-fit:cover;background:#e8dfd2}
+.hn-txt{padding:14px 16px 16px}
+.hn-meta{
+  display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;margin:0 0 8px;
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-weight:500;font-size:12.5px;
+  letter-spacing:.04em;text-transform:uppercase;color:var(--txt-dim);
+}
+.hn-kind{
+  display:inline-block;padding:1px 9px 2px;border-radius:999px;background:var(--iron-2);color:var(--bone);
+  font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:13.5px;letter-spacing:.08em;
+}
+.hn-kind-announcement{background:var(--saddle)}
+.hn-kind-blog{background:var(--river)}
+.hn-card h3{font-size:clamp(24px,6.6vw,28px);line-height:1.05;letter-spacing:.01em;margin:0 0 8px;overflow-wrap:anywhere}
+.hn-card h3 a{color:var(--txt);text-decoration:none}
+/* The title link covers the whole card, so the card is one tap target. */
+.hn-card h3 a::after{content:"";position:absolute;inset:0}
+.hn-card h3 a:focus-visible{outline:none}
+.hn-card:focus-within{outline:3px solid var(--river);outline-offset:2px}
+.hn-sum{margin:0;color:var(--txt-dim);font-size:16px;line-height:1.45;overflow-wrap:anywhere}
+.hn-out{margin:8px 0 0;font-size:14px;font-weight:600;color:var(--link)}
+.hn-all{margin:22px 0 0;text-align:center}
+.hn-all a{display:inline-flex;align-items:center;min-height:44px;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:20px;letter-spacing:.05em;text-transform:uppercase}
+@media (min-width:760px){.hn-list{grid-template-columns:repeat(3,1fr)}}
+
 /* ---------- Big-type call to action ---------- */
 .cta{background:var(--river);color:var(--bone);text-align:center;padding:68px 0 72px}
 .giant{

@@ -1,11 +1,32 @@
-// Cloudflare Worker (static assets only) for trailwatermaps.com.
+// Cloudflare Worker for trailwatermaps.com: static assets, plus a small
+// Worker script for the news pages.
 // Workers Builds runs `npx wrangler deploy`, which runs build.command first:
 // tools/cf-build.sh copies only the public app files into dist/, so
 // supabase/, tools/ and .github/ are never served. Nothing is transformed.
 // Custom domains (trailwatermaps.com, www) are attached in the dashboard.
+//
+// worker/index.js runs ONLY for the paths in run_worker_first (the server-
+// rendered news pages, feed, sitemap and robots.txt). Everything else
+// (/, /app, /admin, js/, css/, data/ …) is served straight from dist/ as
+// before. wrangler bundles worker/ (and the js/postmd.js it imports) itself;
+// worker/ is not copied into dist/ and is never served as a file.
+// run_worker_first as a list of paths needs Wrangler 4.20 or newer.
 {
   "name": "trailwatermaps",
   "compatibility_date": "2026-10-19",
+  "main": "worker/index.js",
   "build": { "command": "bash tools/cf-build.sh" },
-  "assets": { "directory": "./dist" }
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": ["/news", "/news/*", "/sitemap.xml", "/robots.txt"]
+  },
+  // Public by design, the same values as js/config.js: the publishable key
+  // only says which project; row-level security decides what it may read.
+  // Never put a service_role or sb_secret_ key here.
+  "vars": {
+    "SUPABASE_URL": "https://kbdrxtyacmihabwadzzz.supabase.co",
+    "SUPABASE_KEY": "sb_publishable_DqfPce_UmTyHAfrnky9gQg_w2N0DmFK",
+    "SITE_URL": "https://trailwatermaps.com"
+  }
 }

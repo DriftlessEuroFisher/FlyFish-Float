@@ -89,18 +89,22 @@ const Auth = (() => {
   }
   window.addEventListener("storage", e => { if(e.key === KEY || e.key === null) changed(); });
 
-  /* ---------- talking to Supabase ---------- */
+  /* ---------- talking to Supabase ----------
+     opts.body is sent as JSON. opts.raw is sent as it is (a Blob: a photo
+     upload to Storage, js/admin.js), with its Content-Type from
+     opts.headers. opts.timeout overrides TIMEOUT_MS. */
   async function send(path, opts){
     opts = opts || {};
     if(!on()) throw new AuthError("off", MSG.off);
     if(navigator.onLine === false) throw new AuthError("offline", MSG.offline);
+    const raw = opts.raw !== undefined;
     const headers = Object.assign({apikey:SUPABASE.anonKey}, opts.headers || {});
-    if(opts.body !== undefined) headers["Content-Type"] = "application/json";
+    if(opts.body !== undefined && !raw) headers["Content-Type"] = "application/json";
     if(opts.token) headers.Authorization = "Bearer " + opts.token;
-    const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), TIMEOUT_MS);
+    const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), opts.timeout || TIMEOUT_MS);
     try{
       return await fetch(SUPABASE.url + path, {method:opts.method || "GET", headers, cache:"no-store", signal:ctl.signal,
-        body:opts.body === undefined ? undefined : JSON.stringify(opts.body)});
+        body:raw ? opts.raw : opts.body === undefined ? undefined : JSON.stringify(opts.body)});
     }catch(e){
       // No answer at all. A paused free project often fails this way too:
       // its error page comes back without CORS headers, so the browser

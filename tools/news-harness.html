@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>News harness</title>
+<!-- Local test page for the news Worker, which can't run here without
+     wrangler. Serve the repo with the "site" launch config
+     (tools/devserver.py) and open /tools/news-harness.html.
+     It runs js/postmd.js against hostile Markdown, worker/render.js against
+     sample posts, and worker/index.js itself against a stubbed Supabase,
+     edge cache and assets binding. ?view=<name> shows one rendered page full
+     screen (list, post, post-hostile, news-body, notfound, unavailable).
+     tools/ is not in the publish list, so this is never served live. -->
+<style>
+  body{font:14px/1.45 system-ui,sans-serif;margin:16px;color:#2a211b;background:#f4eee4}
+  h1{font-size:20px;margin:0 0 8px} h2{font-size:16px;margin:22px 0 6px}
+  table{border-collapse:collapse;width:100%;background:#fffcf6}
+  td,th{border:1px solid #d6ccc0;padding:4px 6px;vertical-align:top;text-align:left;font-size:12.5px}
+  td.pass{color:#1f5a37;font-weight:700} td.fail{color:#b3261e;font-weight:700}
+  pre{white-space:pre-wrap;word-break:break-all;margin:0;font-size:11.5px}
+  #summary{font-weight:700;font-size:15px} nav a{margin-right:10px}
+</style>
+</head>
+<body>
+<h1>News harness</h1>
+<p id="summary">Running…</p>
+<nav>Views: <a href="?view=list">list</a><a href="?view=list-empty">empty list</a><a href="?view=post">post</a><a href="?view=post-hostile">hostile post</a><a href="?view=news-body">news with body</a><a href="?view=notfound">404</a><a href="?view=unavailable">503</a></nav>
+<div id="out"></div>
+<script src="../js/postmd.js"></script>
+<script type="module" src="news-harness.js"></script>
+</body>
+</html>

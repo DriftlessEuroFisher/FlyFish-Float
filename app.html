@@ -23,8 +23,9 @@
   <!-- The 1b "Rocking TW" mark: T and W share one top bar over a line of
        water. Stroked thicker than the brand's 8.5 because at 26 px one unit
        is a quarter of a pixel. <wbr> lets a phone break the one-word name
-       after "TrailWater" instead of clipping it. -->
-  <h1><svg class="brandmark" viewBox="-4 -4 108 108" aria-hidden="true" focusable="false"><path d="M8 12H44M24 12V62M44 12L56 62L68 32L80 62L92 12M10 88Q20 80 30 88T50 88T70 88T90 88"/></svg><span class="wordmark">TrailWater<wbr>Maps<small>18 states · 42 national parks · Driftless · North Shore · live USGS flows</small></span></h1>
+       after "TrailWater" instead of clipping it. The logo links home; ?home
+       stops the homepage forwarding a home-screen launch back here. -->
+  <h1><a class="brandlink" href="./?home" title="TrailWaterMaps home"><svg class="brandmark" viewBox="-4 -4 108 108" aria-hidden="true" focusable="false"><path d="M8 12H44M24 12V62M44 12L56 62L68 32L80 62L92 12M10 88Q20 80 30 88T50 88T70 88T90 88"/></svg><span class="wordmark">TrailWater<wbr>Maps<small>18 states · 42 national parks · Driftless · North Shore · live USGS flows</small></span></a></h1>
   <div class="spacer"></div>
   <div id="updated">flows<br><b id="updwhen">loading…</b></div>
   <button class="iconbtn" id="btn-refresh" aria-label="Refresh flows" title="Refresh flows">

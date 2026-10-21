@@ -1,0 +1,131 @@
+/* ============================================================
+   NEWS PAGES (/news, /news/<slug>), built on the server by worker/index.js
+   and worker/render.js. Loaded after css/home.css, whose bar, brand, pill
+   and footer they reuse, so the news pages look like the homepage.
+
+   Also loaded by admin.html for the post editor's preview, over the app's
+   css/styles.css instead of home.css. So everything here is scoped to its
+   own classes, and uses only the colour tokens both files define (--river,
+   --line, --txt, --txt-dim, --link, --saddle), with Bone and Iron written
+   out. Same brand: Iron chrome, Bone paper, River for water, Saddle for
+   links; Barlow text, Barlow Condensed headings, IBM Plex Mono for dates.
+   ============================================================ */
+
+/* Paragraph-level rules carry .news-main in front so they also win over
+   admin.html's `.pg-main p` in the preview (the preview box is a
+   .news-main too). */
+
+/* ---------- the bar: logo and one pill ---------- */
+.bar-news .nav{flex-wrap:nowrap}
+.bar-news .nav .nav-map{
+  display:inline-flex;align-items:center;min-height:40px;padding:0 16px;border-radius:999px;
+  background:var(--river);color:#fff;font-size:17px;white-space:nowrap;
+}
+.bar-news .nav .nav-map:hover{background:#1d5a79;text-decoration:none}
+@media (max-width:380px){.bar-news .brand{font-size:17px}.bar-news .nav .nav-map{padding:0 12px;font-size:16px}}
+
+.news-main{max-width:760px;margin:0 auto;padding:26px var(--gutter,16px) 60px;min-width:0}
+.news-main h1{
+  max-width:none;margin:0 0 10px;text-shadow:none;text-wrap:balance;overflow-wrap:anywhere;
+  font-family:"Barlow Condensed","Barlow",sans-serif;font-weight:700;text-transform:uppercase;
+  font-size:clamp(38px,11vw,62px);line-height:.95;letter-spacing:.005em;color:var(--txt);
+}
+
+/* ---------- the list ---------- */
+.news-main .news-intro{color:var(--txt-dim);margin:0 0 18px;max-width:34em}
+.news-filter{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 6px}
+.news-filter a{
+  display:inline-flex;align-items:center;min-height:40px;padding:0 15px;border-radius:999px;
+  border:1px solid var(--line);background:#fffcf6;color:var(--txt);text-decoration:none;
+  font-weight:600;font-size:15px;
+}
+.news-filter a[aria-current="page"]{background:#1f1915;border-color:#1f1915;color:#f4eee4}
+.news-list{list-style:none;margin:10px 0 0;padding:0}
+.news-list > li{border-top:1px solid var(--line)}
+.news-list > li:last-child{border-bottom:1px solid var(--line)}
+.ncard{display:flex;gap:14px;align-items:flex-start;padding:18px 0}
+.ncard-txt{flex:1;min-width:0}
+.ncard-img{
+  order:2;flex:0 0 96px;width:96px;height:96px;object-fit:cover;border-radius:8px;
+  background:#e8dfd2;border:1px solid var(--line);
+}
+.ncard h2{
+  margin:0 0 6px;font-family:"Barlow Condensed","Barlow",sans-serif;font-weight:700;text-transform:uppercase;
+  font-size:clamp(23px,6.4vw,29px);line-height:1.05;letter-spacing:.01em;overflow-wrap:anywhere;
+}
+.ncard h2 a{color:var(--txt);text-decoration:none}
+.ncard h2 a:hover{text-decoration:underline;text-decoration-color:var(--river);text-decoration-thickness:2px}
+.news-main .ncard-sum{margin:0;color:var(--txt-dim);font-size:16px;line-height:1.45;overflow-wrap:anywhere}
+.news-main .ncard-out{margin:6px 0 0;font-size:14px;font-weight:600;color:var(--link)}
+.news-main .news-empty{margin:28px 0;color:var(--txt-dim)}
+.news-pager{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:22px 0 0}
+.news-pager a{display:inline-flex;align-items:center;min-height:44px;padding:0 6px;font-weight:600}
+.news-pageno{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:13px;color:var(--txt-dim)}
+@media (min-width:700px){
+  .ncard{gap:22px;padding:22px 0}
+  .ncard-img{order:0;flex-basis:220px;width:220px;height:147px}
+}
+
+/* ---------- kind tag and date: cards, posts, the homepage cards ---------- */
+.news-main .post-meta{
+  display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;margin:0 0 8px;
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12.5px;font-weight:500;
+  letter-spacing:.04em;text-transform:uppercase;color:var(--txt-dim);
+}
+.nkind{
+  display:inline-block;padding:1px 9px 2px;border-radius:999px;background:#2e2620;color:#f4eee4;
+  font-family:"Barlow Condensed","Barlow",sans-serif;font-weight:700;font-size:13.5px;letter-spacing:.08em;
+}
+.nkind-announcement{background:var(--saddle)}
+.nkind-blog{background:var(--river)}
+
+/* ---------- one post ---------- */
+.post{min-width:0}
+.news-main .post-back{margin:0 0 18px;font-size:15px}
+.news-main .post-back a{font-weight:600}
+.news-main .post-lede{margin:0 0 6px;font-size:20px;line-height:1.45;color:var(--txt-dim);overflow-wrap:anywhere}
+.post-cover{margin:20px calc(-1 * var(--gutter,16px)) 24px}
+/* A tall phone photo would otherwise fill two screens before the first
+   word: capped, and cropped to the middle. */
+.post-cover img{display:block;width:100%;height:auto;max-height:75vh;max-height:75svh;object-fit:cover;background:#e8dfd2}
+@media (min-width:700px){
+  .post-cover{margin:24px 0 28px}
+  .post-cover img{border-radius:10px}
+}
+
+/* The body, as PostMD writes it: p, h2, h3, strong, em, a, ul, ol, li,
+   blockquote, figure, img, br. Sizes are set here in full rather than
+   inherited, so the editor preview over the app's stylesheet matches. */
+.post-body{font-family:"Barlow",system-ui,sans-serif;font-size:18px;line-height:1.65;color:var(--txt);overflow-wrap:anywhere}
+.post-body p{margin:0 0 16px;font-size:inherit;line-height:inherit}
+.post-body h2,.post-body h3{
+  font-family:"Barlow Condensed","Barlow",sans-serif;font-weight:700;text-transform:uppercase;
+  letter-spacing:.02em;color:var(--txt);max-width:none;
+}
+.post-body h2{font-size:29px;line-height:1.08;margin:32px 0 10px}
+.post-body h3{font-size:22px;line-height:1.12;margin:26px 0 8px}
+.post-body strong{font-weight:600}
+.post-body a{color:var(--link);text-underline-offset:2px}
+.post-body ul,.post-body ol{margin:0 0 16px;padding-left:26px}
+.post-body li{margin:0 0 6px;font-size:inherit;line-height:inherit}
+.post-body blockquote{
+  margin:0 0 18px;padding:12px 16px 2px;border-left:3px solid var(--saddle);border-radius:0 8px 8px 0;
+  background:#fffcf6;color:var(--txt);
+}
+.post-body figure{margin:24px 0}
+.post-body img{display:block;max-width:100%;height:auto;border-radius:8px;background:#e8dfd2}
+.post-body p img{display:inline-block;vertical-align:middle}
+.news-main .post-orig{margin:26px 0 0;padding-top:18px;border-top:1px solid var(--line);font-size:17px}
+.news-main .post-orig a{font-weight:600;color:var(--link)}
+
+/* ---------- not found / couldn't load ---------- */
+.news-msg{padding-top:48px;padding-bottom:72px}
+.news-msg p{color:var(--txt-dim)}
+.news-msg .pill{margin-top:8px}
+
+/* ---------- a shorter footer than the homepage's ---------- */
+.foot-news{padding-top:36px}
+.foot-news .wrap{display:grid;gap:18px}
+.foot-links{display:flex;flex-wrap:wrap;gap:4px 22px;list-style:none;margin:0;padding:0}
+.foot-links a{display:inline-flex;align-items:center;min-height:40px}
+.foot-news .legal{margin-top:8px}

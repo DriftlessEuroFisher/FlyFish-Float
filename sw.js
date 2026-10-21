@@ -13,8 +13,12 @@
    redirects /app.html to /app, and a redirected response can't answer a
    navigation, so an offline launch fell over (v27, when it was index.html
    and "./"). Home-screen installs from before v28 launch "/", so an offline
-   navigation that finds nothing of its own gets the cached map. */
-const VERSION = "flyroutes-v29";
+   navigation that finds nothing of its own gets the cached map.
+   The news pages (/news, /news/…, /sitemap.xml, /robots.txt) are built on
+   the server by the Cloudflare Worker (worker/index.js) and are never
+   handled here: not cached into the shell, and never answered with the
+   cached map when offline. The browser fetches them itself. */
+const VERSION = "flyroutes-v30";
 const TILES_BROWSE = "tiles-browse", TILES_SAVED = "tiles-saved", DATA_TILES = "data-tiles";
 const TOPO = "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/";
 const LEAFLET = [
@@ -105,10 +109,19 @@ async function tile(req){
   return res;
 }
 
+// Paths the Worker builds, relative to this worker's scope (the site may sit
+// at a sub-path): no respondWith, so the browser goes to the network as if
+// there were no service worker. The homepage links to them, and once the
+// map has been opened this worker controls the whole origin.
+const SERVER_PAGES = /^(news(\/.*)?|sitemap\.xml|robots\.txt)$/;
+const SCOPE_PATH = new URL(self.registration ? self.registration.scope : "./", self.location.href).pathname;
+
 self.addEventListener("fetch", e => {
   const req = e.request;
   if(req.method!=="GET") return;
   const url = new URL(req.url);
+  if(url.origin===self.location.origin && url.pathname.startsWith(SCOPE_PATH) &&
+     SERVER_PAGES.test(url.pathname.slice(SCOPE_PATH.length))) return;
   if(req.url.startsWith(TOPO)){ e.respondWith(tile(req)); return; }
   if(url.origin===self.location.origin && /\/data\/[^/]+\/[^/]+\.json$/.test(url.pathname)){ e.respondWith(dataTile(req)); return; }
   if(url.origin===self.location.origin || LEAFLET.includes(req.url)){

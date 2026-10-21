@@ -11,10 +11,13 @@ Run**, and every one is safe to run again.
 | `keepalive.sql` | `keepalive()`: called every 3 days by `.github/workflows/supabase-keepalive.yml` so the free project doesn't pause. |
 | `auth.sql` | Accounts (Server roadmap step 1) and admin roles (the base of step 8): `profiles`, `user_roles`, `is_admin()`, `delete_my_account()`, `admin_stats()`, and admin read/triage on `reports`. |
 | `metrics.sql` | Usage stats: `events` (insert-only for the app), `admin_metrics()` for admin.html, and `delete_my_account()` again, now erasing the user's stats. Run it after `auth.sql`. |
+| `posts.sql` | News, blog posts and announcements: `posts` (public read of published posts, admin write) and the `post-images` Storage bucket for their photos. Run it after `auth.sql`. |
 
 The browser side is `js/auth.js` (the sign-in flow over plain `fetch`),
 `js/signin.js` (the email-and-code form), `js/account.js` (the app's account
-sheet), `js/metrics.js` (usage stats) and `admin.html` + `js/admin.js`.
+sheet), `js/metrics.js` (usage stats), `js/home-news.js` (the homepage's
+news cards) and `admin.html` + `js/admin.js`. The `/news` pages are built on
+the server by the Cloudflare Worker in `worker/`.
 
 ---
 
@@ -305,6 +308,87 @@ nothing for analytics from anyone else.
 
 ---
 
+## Step: news and blog, what we did and why
+
+Written to be lifted into another project, like the steps above.
+
+### One table, three kinds
+
+`posts` holds the owner's **announcements** (short notices; one can be pinned
+as the homepage banner until a date), **blog** posts (the owner's own
+articles), and **news** links (someone else's article with a one-line
+summary). A news link with no body of its own has no page and no slug: the
+list links straight out to the article. Give it a body and it gets a page
+like a blog post. The table's check constraints hold those rules, so a row
+can't be half one kind and half another.
+
+### Who can read what: RLS does it, not the pages
+
+- **Anyone** (the `anon` role, the publishable key alone) reads rows where
+  `status = 'published' and published_at <= now()`. That is the only rule
+  the public pages rely on: a draft or a scheduled post can't leak, whatever
+  a page asks for. **Scheduling needs nothing to run**: a post dated next
+  Tuesday simply starts matching the policy next Tuesday.
+- **Admins** (`public.is_admin()`, from `auth.sql`) read and write every row.
+- **Grants**: revoke first, then grant `select` on every column *except*
+  `author_id` to `anon` and `authenticated`, and `insert`/`update` on the
+  editable columns only. Two consequences worth knowing:
+  - **With one column withheld, `select=*` is refused** ("permission denied
+    for table posts"), and so is an insert or update with
+    `Prefer: return=representation` unless the request names its columns
+    (`?select=id,title,...`). Every request in this project names them.
+  - Nobody can set `id`, `created_at`, `updated_at` or `author_id` through
+    the API. `author_id` defaults to `auth.uid()`; a trigger keeps
+    `updated_at` current and fills in `published_at` if a post is published
+    without one.
+- `author_id` references `auth.users` **on delete set null**: deleting the
+  account keeps the post. Without that, `delete_my_account()` would fail for
+  anyone who has written a post.
+
+### Photos: a public Storage bucket, written only by admins
+
+`post-images` is created by `posts.sql` (an `insert into storage.buckets`,
+re-run safe): **public**, 2 MB a file, JPEG/WebP/PNG only. Public means the
+file's URL (`/storage/v1/object/public/post-images/<path>`) works for anyone
+without a policy, which is what Google and link previews need. Policies on
+`storage.objects` let only admins upload, replace, delete or list in that
+bucket. The editor resizes on the device first (canvas, 1600 px long edge,
+JPEG 0.85, usually 200–600 KB) and names every file
+`<year>/<random uuid>.jpg`, so an unpublished post's photo can't be guessed.
+Upload is a plain `POST /storage/v1/object/post-images/<path>` with the
+photo as the body, `apikey` = the publishable key and `Authorization` = the
+admin's own token, exactly like every other admin call.
+
+**Nothing deletes photos yet.** Removing a cover or deleting a post leaves the
+file in the bucket (it may be used in another post). Tidy up in Storage →
+post-images if it ever matters.
+
+### The public pages are rendered on the server
+
+The owner wanted posts indexed by Google and shared links to show a title and
+a photo. Link-preview crawlers don't run JavaScript, so a page filled in by
+script would preview as an empty shell. So `/news`, `/news/<slug>`,
+`/news/feed.xml`, `/sitemap.xml` and `/robots.txt` are built by a small
+Cloudflare Worker (`worker/index.js`, templates in `worker/render.js`) that
+reads Supabase with the publishable key and returns finished HTML with Open
+Graph, Twitter card and JSON-LD tags. Everything else on the site is still
+the static files, served without the Worker. Pages are cached at the edge
+for 5 minutes, and the last good copy is served if Supabase is asleep.
+
+The homepage's three latest posts and the banner are the exception: they are
+read in the browser (`js/home-news.js`), straight from PostgREST, and stay
+hidden on any failure.
+
+### Markdown, safely
+
+Post bodies are a small Markdown subset rendered by `js/postmd.js`, one file
+used by both the editor's preview and the Worker, so the preview is the page.
+It escapes all HTML first, allows links only to `https:`, `http:`, `mailto:`
+or a site path, and images only from this project's `post-images` bucket.
+Raw HTML in a post is shown as text, never run.
+
+---
+
 ## Owner checklist
 
 Do these in order. Menu names are the Supabase dashboard's as of late 2025;
@@ -389,7 +473,17 @@ if one has moved, search the dashboard for the **setting** name in bold.
    with an authenticator app), with `is_admin()` also requiring the session's
    `aal` claim to be `aal2`.
 
-11. **Try it.** Sign in on your phone; type a wrong code; use **Resend code**;
+11. **Run `posts.sql`** (after `auth.sql`). SQL Editor → New query → paste
+   the whole file → Run. Then check, in the SQL Editor:
+   `select id, public, file_size_limit, allowed_mime_types from storage.buckets where id = 'post-images';`
+   should show one public bucket with 2097152, and
+   `select policyname, cmd from pg_policies where tablename in ('posts', 'objects') order by 1;`
+   should list the five `posts` policies and the four `post-images:` ones.
+   Until it has run, the homepage's news section stays hidden, `/news` says
+   "News couldn't load right now", and admin.html's Posts section says it
+   isn't set up.
+
+12. **Try it.** Sign in on your phone; type a wrong code; use **Resend code**;
     set a display name; sign out. Make a throwaway account with another address
     and delete it from the account sheet, then check Authentication → Users
     that it is gone. Check the email comes from `login@trailwatermaps.com`.
@@ -428,6 +522,13 @@ Found doing the checklist for real (2026-10-19):
   the platform no longer lets SQL-owned functions delete from `auth.users`.
   The fallback is an Edge Function that calls the Auth admin API with the
   service-role key, which stays on the server.
+- **Deleting an admin account that uploaded photos: not checked.** Some
+  Storage schema versions keep a foreign key from `storage.objects.owner` to
+  `auth.users`, which would make `delete_my_account()` fail for that
+  account. To see whether this project has one:
+  `select conname from pg_constraint where conrelid = 'storage.objects'::regclass and contype = 'f';`
+  If an owner key is listed, delete that account's uploads in Storage →
+  post-images before deleting the account.
 - **Old report statuses:** the status check was added `not valid`, so any old
   row with a status other than new / fixed / wontfix stays as it is (the admin
   counts list it separately). See the comment in `auth.sql` to tidy up and
