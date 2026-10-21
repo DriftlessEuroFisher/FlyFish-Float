@@ -1118,8 +1118,12 @@ function openLake(id){
   delete body.dataset.river;            // renderSheet's fold memory is per river; this is a lake
   const wx = {key:"lake:" + k.id, pt:wxLakePoint(k)};    // on a lake the wind is the forecast that matters
   const fish = speciesRowHTML("lake", k);
+  /* Private water (Lake Halice, an HOA lake) says so before anything else:
+     this is a map people use to decide where to go, and nothing on the sheet
+     may read as an invitation. The amber of the Iowa low-head-dam row. */
+  const priv = k.private ? `<div class="rc-dam">Private water — residents and guests only. No public access.</div>` : "";
   body.innerHTML =
-    (desigHTML(k.id) || fish ? `<div class="rulescard">${desigHTML(k.id)}${fish}</div>` : "") +
+    (priv || desigHTML(k.id) || fish ? `<div class="rulescard">${priv}${desigHTML(k.id)}${fish}</div>` : "") +
     `<p style="margin:12px 2px 2px;font-size:13.5px">${k.blurb}</p>` +
     `<div class="flowcard"><div class="gname">Still water — ${k.areaKm2} km²</div>` +
     `<div class="plain">No gauge and no flow number: a lake doesn't have one. What "in shape" means here is ice-off, water temperature and wind, not CFS — and on the big lakes the wind is the thing that decides the day.</div></div>` +
@@ -1128,7 +1132,8 @@ function openLake(id){
     `<div class="secthead">${pk.heading || "Park regulations"}</div><div class="fishnote">` +
       `<span class="badge" style="background:#4a6f8a">${pk.badge}</span> ` +
       `<span style="font-size:11.5px">${k.regs}</span>` +
-      `<div style="font-size:10.5px;color:var(--txt-dim);margin-top:8px">${pk.lakeNote || pk.note}</div>` +
+      // a lake the row's note doesn't describe (Lake Halice: no DNR fish list) carries its own
+      `<div style="font-size:10.5px;color:var(--txt-dim);margin-top:8px">${k.regsNote || pk.lakeNote || pk.note}</div>` +
     `</div>` +
     `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Lake outline: ${k.src==="osm" ? "OpenStreetMap" : k.src==="wgfd" ? "Wyoming Game &amp; Fish's lakes map (NHDPlus HR)" : k.src==="iadnr" ? "Iowa DNR Fishing Atlas lakes layer" : "USGS NHD waterbodies"}. Verify regulations with ${pk.regBody}.</p>` +
     `<div class="rp-wrap"><button type="button" class="rp-link" data-report="${fbEsc(k.id)}">Report an issue with this lake</button></div>`;

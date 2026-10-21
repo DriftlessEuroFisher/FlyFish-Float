@@ -28,7 +28,7 @@
    back, and a gap of more than two minutes between fixes starts a new
    segment. A gap is drawn as a gap, never as a line across the water. */
 
-const LAKETRIP_LAKES = ["bigcreeklake","saylorvillelake"];   // the pilot gate (owner's scope, 2026-10-16)
+const LAKETRIP_LAKES = ["bigcreeklake","saylorvillelake","lakehalice"];   // the pilot gate (owner's scope, 2026-10-16; Lake Halice 2026-10-21)
 const LT_CRAFT = {canoe:"Canoe", kayak:"Kayak", boat:"Boat", tube:"Float tube", shore:"Shore"};
 const LT_CRAFT_KEYS = Object.keys(LT_CRAFT);
 const LT_MAX_ACC   = 50;          // metres; a looser fix is dropped
@@ -215,11 +215,16 @@ function ltLaunchOptions(lake){
 }
 function ltRenderPlanner(){
   const k = ltPlanLake, craft = ltCraft();
+  /* A lake with no access pins (Lake Halice, private water) has only one
+     answer, so it is a line, not a dropdown of one; ltStart then finds no
+     #lp-ramp and the trip has no ramp, as "Where I am now" would give it. */
+  const pinned = RAMPS.some(p => p.lake === k.id && Array.isArray(p.pos));
   ltPlan.innerHTML = `
     <div class="fp-head"><div><h3>${fbEsc(k.name)}</h3>
       <div class="fp-meta">Record where you fish today</div></div>
       <button class="x" id="lp-x" type="button" aria-label="Close">✕</button></div>
-    <label class="fp-launch lp-launch">Launch <select id="lp-ramp">${ltLaunchOptions(k)}</select></label>
+    ${pinned ? `<label class="fp-launch lp-launch">Launch <select id="lp-ramp">${ltLaunchOptions(k)}</select></label>`
+             : `<div class="fp-launch lp-launch">Launch <span class="lp-here">Where I am now</span></div>`}
     <div class="fp-craft lp-craft" role="radiogroup" aria-label="Craft">${LT_CRAFT_KEYS.map(c =>
       `<button type="button" role="radio" aria-checked="${c===craft}" data-craft="${c}" class="${c===craft?"on":""}">${LT_CRAFT[c]}</button>`).join("")}</div>
     <ul class="lp-info">

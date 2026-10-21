@@ -41,7 +41,7 @@ season windows).
 | Idaho IDFG Seasons & Rules | 2025–2027, 2nd ed. (2026) | through 2027 | Dec 2027 (2028–30 rules) | 33 rivers, 1 lake | **hand-entered** + `lakes/` |
 | Wyoming WGFD Chapter 46 | effective Jan 1 2026 | until amended | each winter, check WGFD news | 41 rivers, 1 lake | `wy/` |
 | Iowa DNR Trout Stream Search | live web pages, dated per stream | n/a | any time | 72 trout streams | `iowa/dnr_trout.py` |
-| Iowa DNR fishing booklet | 2026 | 2026 | Nov 2026 | 2 lakes | `iowa/lakes/build.py` |
+| Iowa DNR fishing booklet | 2026 | 2026 | Nov 2026 | 3 lakes | `iowa/lakes/build.py` |
 | Wisconsin WDNR trout-regs layer | live layer, fetched 2026-10 | WI season | spring, before the May opener | 22 rivers | `wi/` |
 | Wisconsin WDNR (Door County) | layer, fetched 2026-09 | WI season | spring | 8 rivers | **hand-entered** |
 | Yellowstone NPS regulations | 2026 | 2026 season | Mar–May 2027 | 208 rivers, 9 lakes, closures | **hand-entered** |
@@ -232,7 +232,8 @@ Iowa water trails. The app shows those without a regulations block on purpose.
 - **File:** `iowa/lakes/cache/regs/ia_fishing_regs_2026.pdf` (24 pp, PDF created 2025-10-31).
 - **Scripts:** `iowa/lakes/build.py`. Every quoted fragment is asserted to appear on the
   page it cites, so a new booklet fails loudly rather than quietly.
-- **Feeds:** Big Creek Lake and Saylorville Lake `regs`, fences "iowa lakes" and "iowa
+- **Feeds:** Big Creek Lake, Saylorville Lake and Lake Halice `regs` (Lake Halice: the p. 6
+  "Fishing Private Waters" section and statewide rows only), fences "iowa lakes" and "iowa
   lake access".
 
 ## Agency web data (no edition)

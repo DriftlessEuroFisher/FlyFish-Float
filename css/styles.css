@@ -764,6 +764,10 @@ body.touring #icontip,body.zones-open #icontip{display:none}
 .rc-dam{margin-top:9px;font-size:12px;line-height:1.4;color:#92400e;background:#fef3c7;border:1px solid #fcd34d;border-radius:7px;padding:6px 9px}
 .rc-dam a{color:#7a3608}
 .rc-dam b{color:#7a3608}
+/* A lake's private-water row leads its card (a river's dam row is always last),
+   and its own box already separates it from the fish row below. */
+.rulescard > .rc-dam:first-child{margin-top:0}
+.rc-dam + .rc-fish{border-top:0;padding-top:0}
 
 /* The sheet's folds (Regulations, more gauges, the ungauged detail) share one
    summary row: thumb height, its own caret, teal like every other tap target. */
@@ -996,6 +1000,7 @@ details.morefold{margin:-4px 0 6px}
    fl-*); only what a lake adds is here. */
 .lp-launch select{flex:1;min-width:0;max-width:72%;min-height:44px;font:inherit;font-size:16px;padding:0 8px;
   border:1px solid var(--line);border-radius:9px;background:var(--paper-2);color:var(--txt)}
+.lp-here{font-weight:400;font-size:15px;color:var(--txt);min-height:44px;display:flex;align-items:center}   /* no pins: no dropdown */
 .lp-craft{grid-auto-flow:row;grid-template-columns:repeat(6,1fr);margin-bottom:8px}   /* five crafts: three over two */
 .lp-craft button{grid-column:span 2}
 .lp-craft button:nth-child(4){grid-column:2 / span 2}
