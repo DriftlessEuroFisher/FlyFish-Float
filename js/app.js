@@ -75,7 +75,7 @@ RIVERS.forEach(r => {
    dead zone. */
 const STATE_NAME = {ID:"Idaho", WY:"Wyoming", IA:"Iowa", MN:"Minnesota", WI:"Wisconsin", IL:"Illinois",
   CA:"California", OR:"Oregon", WA:"Washington", MT:"Montana", CO:"Colorado", UT:"Utah", AK:"Alaska",
-  MI:"Michigan", SD:"South Dakota", NM:"New Mexico", AZ:"Arizona", NV:"Nevada", PA:"Pennsylvania"};
+  MI:"Michigan", SD:"South Dakota", NM:"New Mexico", AZ:"Arizona", NV:"Nevada", PA:"Pennsylvania", NY:"New York"};
 
 const API_BASE = "https://api.waterdata.usgs.gov/ogcapi/v0/collections";
 const STAT_YEARS = 7;        // years of history for the median
@@ -986,6 +986,11 @@ const REGIONS = [
   ["── Pennsylvania ──", null],
   ["Pennsylvania", [41.00,-77.60,7]],
   ["Cumberland Valley (Letort / Yellow Breeches)", [40.15,-77.20,10]],
+  ["── New York ──", null],
+  ["New York", [42.90,-75.60,6]],
+  ["Catskills (Beaver Kill / Delaware)", [41.95,-74.80,9]],
+  ["Adirondacks (Ausable / Saranac)", [44.30,-73.90,8]],
+  ["Salmon River (Pulaski)", [43.55,-76.00,9]],
   ["── Michigan ──", null],
   ["Au Sable (Grayling / Mio)", [44.65,-84.40,9]],
   ["Manistee / Pere Marquette", [44.10,-85.80,8]],
@@ -1431,12 +1436,26 @@ const TROUT_CLASS = {
   pa_stocked: {color:"#a8552a", label:"Stocked trout water"},
   pa_wild:    {color:"#0e6f7d", label:"Wild trout (natural reproduction)"},
   pa_inland:  {color:"#6b7f8f", label:"Commonwealth inland water"},
+  /* New York's, from NYSDEC's Inland Trout Stream Fishing layer: each reach's
+     management category (MGMTCAT), as the Categorization of New York State
+     Trout Stream Reaches defines them. A management category, not a
+     regulation and not a biological class, so it shares no key with Iowa,
+     Wisconsin or Pennsylvania. Teal for the wild categories, rust for the
+     stocked ones; "Other" is the layer's own word for a reach in none of the
+     five. */
+  ny_wp:      {color:"#0e6f7d", label:"Wild-Premier — DEC's top wild-trout category"},
+  ny_wq:      {color:"#3d8f9b", label:"Wild-Quality — DEC wild-trout water"},
+  ny_se:      {color:"#8c4f2b", label:"Stocked-Extended — trout can last into summer"},
+  ny_st:      {color:"#a8552a", label:"Stocked — DEC stocked trout water"},
+  ny_ot:      {color:"#6d5a8e", label:"Other — not one of DEC's five categories"},
 };
 const TROUT_SOURCE = {
   iadnr:{agency:"Iowa DNR",      what:"trout-stream layer",          regs:"Iowa DNR trout regulations"},
   wdnr: {agency:"Wisconsin DNR", what:"classified trout water layer", regs:"Wisconsin DNR trout regulations"},
   pfbc: {agency:"Pennsylvania Fish &amp; Boat Commission", what:"section lines", regs:"Pennsylvania Fish &amp; Boat Commission regulations",
          url:"https://www.pa.gov/agencies/fishandboat"},
+  nydec:{agency:"NYSDEC", what:"Inland Trout Stream Fishing layer", regs:"NYSDEC freshwater fishing regulations",
+         url:"https://dec.ny.gov/things-to-do/freshwater-fishing/regulations"},
 };
 function riverColor(r){
   const c = r.troutClass && TROUT_CLASS[r.troutClass];
@@ -1928,6 +1947,27 @@ Object.assign(PARK_INFO, {
     footer:`🎣 <b>Pennsylvania</b>: a current fishing license is required of persons age 16 and over (Summary, p. 4), and <b>a current Pennsylvania trout permit is required to fish for trout</b> in Pennsylvania waters &mdash; that includes special-regulation water, Class A Wild Trout Waters and, February 16 through May 31, stocked trout waters (p. 5). Lake Erie and its listed tributaries need a Lake Erie permit as well.`,
     ungauged:"No live gauge on this water. Judge clarity and level on arrival."},
 });
+/* New York: NYSDEC's Inland Trout Stream Fishing reaches (geom "nydec"). The
+   sheet looks a row up by r.region, so the four New York regions each need
+   one, but only `sub` differs -- the rest is one shared body. No `zone`: the
+   state zone "ny" is counted by state, and a `zone` here would build a set of
+   rivers whose region matches none. Every
+   word below is from the 2026 New York State Freshwater Fishing Regulations
+   Guide, page given. The guide names no trout stamp, so none is claimed. The
+   statewide trout row (p. 4, footnote p. 5) excludes the Great Lakes
+   tributaries, which is why the Ontario streams' own entries matter more. */
+(function(){
+  const body = {heading:"Regulations", labelZoom:8, badge:"NYSDEC · 2026",
+    note:`From the <b>2026 New York State Freshwater Fishing Regulations Guide</b> (NYSDEC; in effect April 1, 2026): the stream's own Inland Trout Stream Special Regulations entries in DEC's words, with the guide's page cites, then DEC's management category and harvest or catch-and-release rule for each mapped reach.`,
+    licence:`<b>New York fishing licence</b> — “Everyone must have a valid fishing license in their possession while fishing or helping someone to fish” except persons under 16 and a few listed cases. (p. 89)`,
+    regBody:"NYSDEC",
+    footer:`🎣 <b>New York</b>, from the 2026 guide: a fishing licence is required of everyone 16 and over (p. 89), and “No license or stamp authorizes the holder to trespass upon private lands or waters” (p. 90). Statewide on Inland Trout Streams, April 1–Oct 15 the limit is 5 trout with only 2 longer than 12 inches, and Oct 16–Mar 31 is catch and release, artificial lures only (p. 4). Great Lakes and Finger Lakes tributaries below their first barrier are not Inland Trout Streams (p. 5), and special regulations for the water you are on come first.`,
+    ungauged:"No live gauge on this water. Judge clarity and level on arrival."};
+  const subs = {nycatskills:" · Catskills", nyadirondacks:" · Adirondacks", nyontario:" · Lake Ontario tributaries", nycentral:" · Central and Western"};
+  for(const k in subs) PARK_INFO[k] = Object.assign({sub:subs[k]}, body);
+  // reached only through REGS_SRC_ROW (parkRegsSrc "nydec"); no river carries region "newyork"
+  PARK_INFO.newyork = Object.assign({sub:""}, body);
+})();
 /* Michigan, South Dakota, New Mexico, Arizona and Nevada, plus the two of
    their parks with trout water. Each sheet quotes the state's own booklet. */
 Object.assign(PARK_INFO, {
@@ -2074,7 +2114,7 @@ Object.assign(PARK_INFO, {
    PARK_INFO[r.parkRegsSrc] lookup -- handing them Grand Teton's footer as well.
    Only the regulation fold's badge and note, the licence line and the
    ungauged copy look here. */
-const REGS_SRC_ROW = {yell:"yellowstone", grte:"grandteton", idfg:"tetonvalley", pfbc:"pennsylvania"};
+const REGS_SRC_ROW = {yell:"yellowstone", grte:"grandteton", idfg:"tetonvalley", pfbc:"pennsylvania", nydec:"newyork"};
 function regsSrcRow(r){ return PARK_INFO[REGS_SRC_ROW[r.parkRegsSrc]]; }
 /* Rivers that run through Grand Teton but carry no region of their own: the
    three Jackson Hole rivers, the park creeks WGFD's line carries on past the
@@ -2986,7 +3026,7 @@ let geomSweeps = 0;
 
    Two guards on what may be refined:
 
-   * `iadnr` / `iawt` / `widnr` / `midnr` / `wgfd` / `pfbc` rivers are never touched. Those lines are the state
+   * `iadnr` / `iawt` / `widnr` / `midnr` / `wgfd` / `pfbc` / `nydec` rivers are never touched. Those lines are the state
      fisheries agency's own drawing of the reach that is *designated trout
      water*, which is a different claim from "where the channel runs", and
      NHD would happily replace it with the whole creek or the wrong Bear
@@ -3071,12 +3111,13 @@ async function refineRiver(r){
      which starts and stops where the designation does, not where the river does.
      wgfd is Wyoming Game & Fish's own line for the water it rates, and a
      Grand Teton creek extended past the park on it must not be clipped back
-     to the park by a cached NHD refinement.
+     to the park by a cached NHD refinement. nydec is NYSDEC's own line for
+     each reach it manages as trout water, gaps and all.
      OSM rivers are refined from OSM itself, never from NHD -- mixing two
      sources along one channel fragments the line wherever they disagree by
      more than REFINE_BUFFER_KM. The baked OSM line is simplified (40 m, 80 m
      in Alaska); the refinement is the same ways at full resolution. */
-  if(r.geom === "iadnr" || r.geom === "iawt" || r.geom === "widnr" || r.geom === "midnr" || r.geom === "wgfd" || r.geom === "pfbc"){ layer.refined = true; return; }
+  if(r.geom === "iadnr" || r.geom === "iawt" || r.geom === "widnr" || r.geom === "midnr" || r.geom === "wgfd" || r.geom === "pfbc" || r.geom === "nydec"){ layer.refined = true; return; }
   layer.refining = true;
   const ck = "nhdfine:" + r.id;
   const cached = store.get(ck);
@@ -4856,7 +4897,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v30";
+const APP_VERSION = "flyroutes-v31";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){

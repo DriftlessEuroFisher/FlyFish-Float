@@ -34,6 +34,7 @@ season windows).
 | Utah DWR guidebook | 2026 | 2026 | Oct–Dec 2026 | 34 + 39 rivers, 2 lakes | `rockies/`, `west2/` (ut) |
 | Alaska ADF&G summaries (4 regions) | 2026 | until the 2027 summary is issued | Apr–May 2027 | 79 rivers + park rivers | `rockies/` |
 | Michigan DNR booklet | 2026 | Apr 1 2026 – Mar 31 2027 | Feb–Mar 2027 | 23 rivers | `east/` |
+| New York DEC Freshwater Fishing Regulations Guide + Trout Stream Reach Categorization (Rev 6, Mar 2026) + DEC `Inland_Trout_Stream_Fishing` layer | 2026 guide, effective Apr 1 2026 | Apr 1 2026 – Mar 31 2027 | Feb–Apr 2027 (categorization updates mid-Feb) | 47 rivers | `ny/` (`regs.py`, `apply.py`) |
 | South Dakota GFP handbook | 2026 | 2026 | Dec 2026 – Jan 2027 | 6 rivers | `rockies/regs/east_assemble.py` |
 | New Mexico DGF Rules & Info | 2026–27 | Apr 1 2026 – Mar 31 2027 | Mar 2027 | 11 rivers | `rockies/regs/east_assemble.py` |
 | Arizona AZGFD regulations | 2025 & 2026 (amended Jan 2026) | 2025–2026 | Dec 2026 – Jan 2027 | 7 + 2 Grand Canyon | `rockies/regs/east_assemble.py` |

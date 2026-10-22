@@ -68,4 +68,7 @@ const ACCESS_LAW = {
   PA: {head:"Pennsylvania's fishing summary publishes no stream-access rule. The Fish & Boat Commission says a listed water isn't guaranteed public, and to get permission before entering private land.",
        quote:"Many waters in Pennsylvania are privately owned, the listing or mapping of waters by the Pennsylvania Fish and Boat Commission does not guarantee public access. Respect the privacy and rights of landowners - always obtain permission before entering any privately owned land.",
        src:"Pennsylvania Fish & Boat Commission, Fishing FAQs", url:"https://www.pa.gov/agencies/fishandboat/faqs/fishing-faqs"},
+  NY: {head:"New York's fishing guide publishes no stream-access rule. A licence is not permission to cross private land, so get permission first.",
+       quote:"No license or stamp authorizes the holder to trespass upon private lands or waters, or interfere with property belonging to another person.",
+       src:"NYSDEC 2026 Freshwater Fishing Regulations Guide, p. 90", url:"https://dec.ny.gov/things-to-do/freshwater-fishing/regulations"},
 };
