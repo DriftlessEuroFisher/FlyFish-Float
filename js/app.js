@@ -75,7 +75,7 @@ RIVERS.forEach(r => {
    dead zone. */
 const STATE_NAME = {ID:"Idaho", WY:"Wyoming", IA:"Iowa", MN:"Minnesota", WI:"Wisconsin", IL:"Illinois",
   CA:"California", OR:"Oregon", WA:"Washington", MT:"Montana", CO:"Colorado", UT:"Utah", AK:"Alaska",
-  MI:"Michigan", SD:"South Dakota", NM:"New Mexico", AZ:"Arizona", NV:"Nevada"};
+  MI:"Michigan", SD:"South Dakota", NM:"New Mexico", AZ:"Arizona", NV:"Nevada", PA:"Pennsylvania"};
 
 const API_BASE = "https://api.waterdata.usgs.gov/ogcapi/v0/collections";
 const STAT_YEARS = 7;        // years of history for the median
@@ -983,6 +983,9 @@ const REGIONS = [
   ["Kuskokwim Bay (Kanektok / Goodnews)", [59.70,-161.10,8]],
   ["Kodiak (Karluk / Ayakulik)", [57.50,-153.70,8]],
   ["Southeast (Situk / Prince of Wales)", [57.00,-134.50,6]],
+  ["── Pennsylvania ──", null],
+  ["Pennsylvania", [41.00,-77.60,7]],
+  ["Cumberland Valley (Letort / Yellow Breeches)", [40.15,-77.20,10]],
   ["── Michigan ──", null],
   ["Au Sable (Grayling / Mio)", [44.65,-84.40,9]],
   ["Manistee / Pere Marquette", [44.10,-85.80,8]],
@@ -1418,10 +1421,22 @@ const TROUT_CLASS = {
   stocked:    {color:"#a8552a", label:"Catchable stocked"},
   wi1:        {color:"#0e6f7d", label:"Class I — wild, self-sustaining"},
   wi2:        {color:"#5a9ea8", label:"Class II — partial natural reproduction"},
+  /* Pennsylvania's four, from the Fish & Boat Commission's own section lines.
+     Like Wisconsin's, kept separate from Iowa's: these are the PFBC's
+     designations (what the Commission calls each section), and folding them
+     into Iowa's regulation classes would put an Iowa label on a PA stream.
+     Colours follow the family -- teal wild, rust stocked, purple special --
+     and "inland" is a blue-grey that matches no other class. */
+  pa_special: {color:"#7b2d8e", label:"Special regulation area"},
+  pa_stocked: {color:"#a8552a", label:"Stocked trout water"},
+  pa_wild:    {color:"#0e6f7d", label:"Wild trout (natural reproduction)"},
+  pa_inland:  {color:"#6b7f8f", label:"Commonwealth inland water"},
 };
 const TROUT_SOURCE = {
   iadnr:{agency:"Iowa DNR",      what:"trout-stream layer",          regs:"Iowa DNR trout regulations"},
   wdnr: {agency:"Wisconsin DNR", what:"classified trout water layer", regs:"Wisconsin DNR trout regulations"},
+  pfbc: {agency:"Pennsylvania Fish &amp; Boat Commission", what:"section lines", regs:"Pennsylvania Fish &amp; Boat Commission regulations",
+         url:"https://www.pa.gov/agencies/fishandboat"},
 };
 function riverColor(r){
   const c = r.troutClass && TROUT_CLASS[r.troutClass];
@@ -1901,6 +1916,18 @@ Object.assign(PARK_INFO, {
     footer:`🎣 <b>Iowa</b>, from the 2026 booklet: “Iowa residents and nonresidents 16 years and older must have a valid fishing license on their person while fishing, and have paid all applicable fees.” (p. 3) “When fishing by hook-and-line, you cannot use more than two lines or more than two hooks on each line when still fishing or trolling.” “You can use a third line if you have a valid third line fishing permit.” (p. 6) “You cannot possess live Gizzard Shad at any lake.” (p. 5)`},
 });
 
+/* Pennsylvania: the Fish & Boat Commission's own section lines (geom "pfbc").
+   No `zone` -- zones are states and PA has none yet, and a `zone` would make
+   refreshZoneCounts() build an empty set. Every licence word below is from
+   the 2026 Pennsylvania Fishing Summary, page given. */
+Object.assign(PARK_INFO, {
+  pennsylvania: {sub:"", heading:"Regulations", labelZoom:8, badge:"PFBC · 2026",
+    note:`From the <b>2026 Pennsylvania Fishing Summary</b> (Pennsylvania Fish &amp; Boat Commission): the water's own special-regulation entries in the Commission's words, with the booklet's page cites, then the statewide rule they fall back to.`,
+    licence:"<b>Pennsylvania fishing licence</b> (age 16 and over) <b>+ trout permit</b> to fish for trout",
+    regBody:"the Pennsylvania Fish &amp; Boat Commission",
+    footer:`🎣 <b>Pennsylvania</b>: a current fishing license is required of persons age 16 and over (Summary, p. 4), and <b>a current Pennsylvania trout permit is required to fish for trout</b> in Pennsylvania waters &mdash; that includes special-regulation water, Class A Wild Trout Waters and, February 16 through May 31, stocked trout waters (p. 5). Lake Erie and its listed tributaries need a Lake Erie permit as well.`,
+    ungauged:"No live gauge on this water. Judge clarity and level on arrival."},
+});
 /* Michigan, South Dakota, New Mexico, Arizona and Nevada, plus the two of
    their parks with trout water. Each sheet quotes the state's own booklet. */
 Object.assign(PARK_INFO, {
@@ -2047,7 +2074,7 @@ Object.assign(PARK_INFO, {
    PARK_INFO[r.parkRegsSrc] lookup -- handing them Grand Teton's footer as well.
    Only the regulation fold's badge and note, the licence line and the
    ungauged copy look here. */
-const REGS_SRC_ROW = {yell:"yellowstone", grte:"grandteton", idfg:"tetonvalley"};
+const REGS_SRC_ROW = {yell:"yellowstone", grte:"grandteton", idfg:"tetonvalley", pfbc:"pennsylvania"};
 function regsSrcRow(r){ return PARK_INFO[REGS_SRC_ROW[r.parkRegsSrc]]; }
 /* Rivers that run through Grand Teton but carry no region of their own: the
    three Jackson Hole rivers, the park creeks WGFD's line carries on past the
@@ -2959,7 +2986,7 @@ let geomSweeps = 0;
 
    Two guards on what may be refined:
 
-   * `iadnr` / `iawt` / `widnr` / `midnr` / `wgfd` rivers are never touched. Those lines are the state
+   * `iadnr` / `iawt` / `widnr` / `midnr` / `wgfd` / `pfbc` rivers are never touched. Those lines are the state
      fisheries agency's own drawing of the reach that is *designated trout
      water*, which is a different claim from "where the channel runs", and
      NHD would happily replace it with the whole creek or the wrong Bear
@@ -3049,7 +3076,7 @@ async function refineRiver(r){
      sources along one channel fragments the line wherever they disagree by
      more than REFINE_BUFFER_KM. The baked OSM line is simplified (40 m, 80 m
      in Alaska); the refinement is the same ways at full resolution. */
-  if(r.geom === "iadnr" || r.geom === "iawt" || r.geom === "widnr" || r.geom === "midnr" || r.geom === "wgfd"){ layer.refined = true; return; }
+  if(r.geom === "iadnr" || r.geom === "iawt" || r.geom === "widnr" || r.geom === "midnr" || r.geom === "wgfd" || r.geom === "pfbc"){ layer.refined = true; return; }
   layer.refining = true;
   const ck = "nhdfine:" + r.id;
   const cached = store.get(ck);
@@ -3438,7 +3465,7 @@ function rulesCardHTML(r){
   const tags = TAGS.filter(([re]) => re.test(re.source.startsWith("fly") ? noArt : txt)).map(t => t[1]);
   /* On an Iowa stream designated reach by reach, the special rules are the
      restrictive reach's, not the whole stream's -- so the chip says so. */
-  const part = r.reachClass && r.reachClass.includes("restrictive") && r.reachClass.some(c => c !== "restrictive");
+  const part = r.reachClass && ["restrictive","pa_special"].some(k => r.reachClass.includes(k) && r.reachClass.some(c => c !== k));
 
   return `<div class="rulescard">${desigHTML(r.id)}`+
     (head ? `<div class="rc-status"><span class="rc-dot" style="background:${dot}"></span>`+
@@ -3551,7 +3578,7 @@ function regsFoldHTML(r){
       `${TROUT_CLASS[cls].label}${mi != null ? " · " + mi.toFixed(1) + " mi" : ""}</span>`).join(" ");
     const page = r.dnrCode
       ? ` <a href="https://programs.iowadnr.gov/lakemanagement/FishIowa/TroutStreamDetails/${encodeURIComponent(r.dnrCode)}" target="_blank" rel="noopener">Iowa DNR stream page</a>`
-      : "";
+      : (src.url ? ` <a href="${src.url}" target="_blank" rel="noopener">${src.agency}</a>` : "");
     inner += `<div class="fishnote">`+
       (reaches.length > 1 ? `<div style="display:flex;flex-wrap:wrap;gap:6px">${badges}</div>` : badges)+
       (r.wildTrout ? `<div style="margin-top:6px;font-size:11.5px">Wild trout present: <b>${r.wildTrout}</b></div>` : "")+

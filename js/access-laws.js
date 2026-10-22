@@ -65,4 +65,7 @@ const ACCESS_LAW = {
        quote:null, src:"NDOW 2026 Fishing Guide (no access section)", url:"https://www.ndow.org/fish/"},
   IL: {head:"The Illinois DNR publishes no current stream-access rule. Treat streambeds through private land as private, and ask first.",
        quote:null, src:"Illinois DNR", url:"https://dnr.illinois.gov/fishing.html"},
+  PA: {head:"Pennsylvania's fishing summary publishes no stream-access rule. The Fish & Boat Commission says a listed water isn't guaranteed public, and to get permission before entering private land.",
+       quote:"Many waters in Pennsylvania are privately owned, the listing or mapping of waters by the Pennsylvania Fish and Boat Commission does not guarantee public access. Respect the privacy and rights of landowners - always obtain permission before entering any privately owned land.",
+       src:"Pennsylvania Fish & Boat Commission, Fishing FAQs", url:"https://www.pa.gov/agencies/fishandboat/faqs/fishing-faqs"},
 };
