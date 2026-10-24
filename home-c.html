@@ -45,8 +45,12 @@
   <p class="kicker">About</p>
   <p class="about-lead">Built by an angler, for the water you actually fish.</p>
   <h3 class="about-sub">The name</h3>
-  <h2>Trail<span>Water</span>. Yes, like <i>tailwater</i>.</h2>
-  <p>A tailwater is the stretch of river below a dam: cold, steady, and some of the best trout water there is. We liked the sound of it. But our water is the kind you walk to, down a two-track, along a bank, over a ridge. The trail is part of the trip, and the map shows you the way in.</p>
+  <h2 class="wordplay" id="wp" aria-label="Tailwater, with an r added, is TrailWater"><span aria-hidden="true">T<span class="ins">r<i class="caret"></i></span>ail<span class="cap"><b>W</b></span>ater</span></h2>
+  <p class="wp-cap">Add an <b>r</b>. Add a trail.</p>
+  <script>(function(){var e=document.getElementById("wp");if(!e)return;e.classList.add("armed");function go(){e.classList.add("in")}
+  if(!("IntersectionObserver" in window)||matchMedia("(prefers-reduced-motion:reduce)").matches){go();return}
+  new IntersectionObserver(function(o,ob){if(o[0].isIntersecting){setTimeout(go,500);ob.disconnect()}},{threshold:.7}).observe(e);})();</script>
+  <p>A tailwater is the stretch of river below a dam: cold, steady, and some of the best trout water there is. TrailWater is the other kind. It is the water you walk to, wade, drift and float, and play on. The trail is where we come in. We help you find your water, navigate to it, and get on it.</p>
 </div></section>
 <section class="c-cta"><div class="wrap"><h2>No account.<br>Just the water.</h2><a class="pill pill-ink" href="app">Open the map <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7"/></svg></a></div></section>
 </main>
