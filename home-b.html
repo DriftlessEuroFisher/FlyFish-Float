@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#f4eee4">
+<title>TrailWater — Read the river first</title>
+<meta name="description" content="Live river flows, the rules for each river, and public access, built for your phone.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/home-lab.css">
+<link rel="icon" type="image/svg+xml" href="icons/tile-black.svg">
+</head>
+<body>
+<header class="bar"><div class="wrap">
+  <a class="brand" href="home-b" aria-label="TrailWater home"><svg class="brandmark" viewBox="-4 -4 108 108" aria-hidden="true" focusable="false"><path d="M8 12H44M24 12V62M44 12L56 62L68 32L80 62L92 12M10 88Q20 80 30 88T50 88T70 88T90 88"/></svg><span>TrailWater</span></a>
+  <nav class="nav" aria-label="Site"><a href="news">News</a><a href="home-b#app">The app</a><a class="nav-map" href="app">Open the map</a></nav>
+</div></header>
+<main>
+<section class="b-mast"><div class="wrap">
+  <div class="dateline"><span id="today">TrailWater news</span><span>Flows &middot; rules &middot; access reports</span></div>
+  <h1>Read the river first.</h1>
+</div></section>
+<section><div class="wrap b-main">
+  <div class="b-lead" data-nw="lead"></div>
+  <aside class="b-rail"><h2>Latest</h2><ul class="nw-list" data-nw="list" data-count="4"></ul><p class="nw-sample" data-nw-sample hidden>Sample headlines for this mockup. Real posts from the admin page appear here once published.</p><p class="nw-all"><a href="news">All news &rarr;</a></p></aside>
+</div></section>
+<section class="b-app" id="app"><div class="wrap">
+  <div>
+    <p class="kicker">The app</p>
+    <h2 class="b-h2">Then check the water.</h2>
+    <p class="lede">1,400+ rivers across 18 states and 28 national parks, with live flows, the rules and access. No account needed.</p>
+    <a class="pill" href="app">Open the map <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7"/></svg></a>
+  </div>
+  <div class="b-shots">
+    <figure class="phone"><img src="img/flow.webp" width="390" height="844" alt="Live flow card"></figure>
+    <figure class="phone"><img src="img/rules.webp" width="390" height="844" loading="lazy" alt="Rules today card"></figure>
+    <figure class="phone"><img src="img/land.webp" width="390" height="844" loading="lazy" alt="Public land and access"></figure>
+    <figure class="phone"><img src="img/weather.webp" width="390" height="844" loading="lazy" alt="Wind and weather card"></figure>
+    <figure class="phone"><img src="img/fieldbook.webp" width="390" height="844" loading="lazy" alt="Field Book trip"></figure>
+  </div>
+</div></section>
+<section class="b-strip"><div class="wrap"><dl class="stats"><div><dt>1,400+</dt><dd>Rivers &amp; creeks</dd></div><div><dt>18</dt><dd>States</dd></div><div><dt>28</dt><dd>National parks</dd></div><div><dt>800+</dt><dd>Live gauges</dd></div></dl></div></section>
+<script>(function(){var e=document.getElementById("today");if(e)e.textContent=new Date().toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"});})();</script>
+</main>
+<footer class="foot"><div class="wrap">
+  <a class="brand" href="home-b"><svg class="brandmark" viewBox="-4 -4 108 108" aria-hidden="true" focusable="false"><path d="M8 12H44M24 12V62M44 12L56 62L68 32L80 62L92 12M10 88Q20 80 30 88T50 88T70 88T90 88"/></svg><span>TrailWater</span></a>
+  <p style="margin-top:14px">Live river flows, the rules for each river, and public access, built to be checked from your phone.</p>
+  <p>TrailWater is an independent project and is not affiliated with the agencies whose data it uses. Always check current regulations before you fish.</p>
+  <p><a href="app">Open the map</a> &middot; <a href="news">News</a></p>
+</div></footer>
+<nav class="vsw" aria-label="Homepage variants"><span>Mockup</span><a href="home-a">A</a><a href="home-b" aria-current="page">B</a><a href="home-c">C</a></nav>
+<script src="js/config.js" defer></script>
+<script src="js/home-lab-news.js" defer></script>
+</body>
+</html>

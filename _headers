@@ -14,6 +14,15 @@
 
 # The map is app.html. Cloudflare serves it at /app and redirects /app.html
 # there, like index.html at / (now the homepage).
+/home-a
+  Cache-Control: no-cache
+
+/home-b
+  Cache-Control: no-cache
+
+/home-c
+  Cache-Control: no-cache
+
 /app
   Cache-Control: no-cache
 

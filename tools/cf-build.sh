@@ -18,7 +18,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 rm -rf dist && mkdir dist
-cp -R index.html app.html admin.html manifest.json sw.js _headers css js icons img data dist/
+cp -R index.html home-a.html home-b.html home-c.html app.html admin.html manifest.json sw.js _headers css js icons img data dist/
 
 for f in dist/index.html dist/app.html dist/css/home.css dist/css/news.css dist/js/postmd.js dist/js/home-news.js dist/js/rivers-data.js; do
   if [ ! -f "$f" ]; then
