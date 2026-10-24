@@ -76,4 +76,7 @@ const ACCESS_LAW = {
        src:"2026 Freshwater Fishing & Boating in Virginia, Virginia DWR, p. 14", url:"https://dwr.virginia.gov/fishing/regulations/"},
   ME: {head:"Maine's 2026 fishing lawbook publishes no stream-access rule. Treat private land as private, and ask first.",
        quote:null, src:"2026 Maine Fishing Laws, Maine DIFW (no access section)", url:"https://www.maine.gov/IFW/docs/25-MDIFW-23-FISHING-LAWBOOK-2026.pdf"},
+  MO: {head:"Missouri\u2019s fishing summary has one statement on access, a box headed \u201cDon\u2019t Trespass!\u201d. It says nothing about navigable-stream beds, gravel bars or wading.",
+       quote:"Many rivers and streams flow through private land. Before entering, ask landowners for permission.",
+       src:"Missouri Department of Conservation, A Summary of Missouri Fishing Regulations 2026, p. 35", url:"https://mdc.mo.gov/sites/default/files/2026-02/Fishing%20Summ%202026_508.pdf"},
 };

@@ -75,7 +75,7 @@ RIVERS.forEach(r => {
    dead zone. */
 const STATE_NAME = {ID:"Idaho", WY:"Wyoming", IA:"Iowa", MN:"Minnesota", WI:"Wisconsin", IL:"Illinois",
   CA:"California", OR:"Oregon", WA:"Washington", MT:"Montana", CO:"Colorado", UT:"Utah", AK:"Alaska",
-  MI:"Michigan", SD:"South Dakota", NM:"New Mexico", AZ:"Arizona", NV:"Nevada", PA:"Pennsylvania", NY:"New York", VA:"Virginia", ME:"Maine"};
+  MI:"Michigan", SD:"South Dakota", NM:"New Mexico", AZ:"Arizona", NV:"Nevada", PA:"Pennsylvania", NY:"New York", VA:"Virginia", ME:"Maine", MO:"Missouri"};
 
 const API_BASE = "https://api.waterdata.usgs.gov/ogcapi/v0/collections";
 const STAT_YEARS = 7;        // years of history for the median
@@ -998,6 +998,10 @@ const REGIONS = [
   ["Maine", [45.30,-69.20,7]],
   ["The Forks (Kennebec / Dead / Moose)", [45.34,-69.95,9]],
   ["Rangeley (Rapid / Kennebago / Magalloway)", [44.95,-70.75,9]],
+  ["── Missouri ──", null],
+  ["Missouri", [37.60,-92.40,7]],
+  ["Current River trout water (Montauk / Akers)", [37.45,-91.60,10]],
+  ["Lake Taneycomo / Table Rock", [36.65,-93.20,10]],
   ["── Michigan ──", null],
   ["Au Sable (Grayling / Mio)", [44.65,-84.40,9]],
   ["Manistee / Pere Marquette", [44.10,-85.80,8]],
@@ -1079,7 +1083,11 @@ const lakeShapes = {};
 const LAKE_LABEL_ZOOM = 8;
 
 (typeof LAKES === "undefined" ? [] : LAKES).forEach(k => {
-  const poly = L.polygon(k.ring, {pane:"lakePane", color:"#0e5f72", weight:1.8,
+  /* A lake in genuine pieces (Taneycomo is three) carries the extra outlines
+     in `parts`, each a ring. Leaflet reads a list of ring-lists as a
+     multipolygon, so it is still one layer: one tap, one lake. */
+  const shape = k.parts && k.parts.length ? [[k.ring]].concat(k.parts.map(q => [q])) : k.ring;
+  const poly = L.polygon(shape, {pane:"lakePane", color:"#0e5f72", weight:1.8,
     fillColor:"#3aa7c2", fillOpacity:.34, className:"lake-shape"}).addTo(lakeLayer);
   onTap(poly, () => openLake(k.id));
   poly.bindTooltip(`<b>${k.name}</b>`, {direction:"top", className:"zone-tip"});
@@ -1143,7 +1151,7 @@ function openLake(id){
     `<div class="flowcard"><div class="gname">Still water — ${k.areaKm2} km²</div>` +
     `<div class="plain">No gauge and no flow number: a lake doesn't have one. What "in shape" means here is ice-off, water temperature and wind, not CFS — and on the big lakes the wind is the thing that decides the day.</div></div>` +
     wxCardHTML(wx) +
-    `<div class="secthead">Fishing notes</div><div class="fishnote">🎣 ${k.fish}</div>` +
+    (k.fish ? `<div class="secthead">Fishing notes</div><div class="fishnote">🎣 ${k.fish}</div>` : "") +
     `<div class="secthead">${pk.heading || "Park regulations"}</div><div class="fishnote">` +
       `<span class="badge" style="background:#4a6f8a">${pk.badge}</span> ` +
       `<span style="font-size:11.5px">${k.regs}</span>` +
@@ -1463,6 +1471,20 @@ const TROUT_CLASS = {
   va_special: {color:"#7b2d8e", label:"Special regulation trout water"},
   va_stocked: {color:"#a8552a", label:"Designated stocked trout water"},
   va_wild:    {color:"#0e6f7d", label:"Wild trout stream"},
+  /* Missouri's, from the Missouri Department of Conservation: the trout-area
+     types its 2026 Summary of Fishing Regulations defines (pp. 24-27). Their
+     own keys, because a Blue Ribbon area is MDC's term and means what the
+     booklet says it means. Colours stay in the family and add no meaning:
+     teal for the naturally reproducing Blue Ribbon water, rust for the
+     stocked White Ribbon water and Taneycomo, purple for the Red Ribbon
+     catch-and-release water, and the brown of New York's extended stocking
+     for the daily-stocked trout parks. (There is no key for the Smallmouth
+     Bass Special Management Areas: they are not trout water.) */
+  mo_park:      {color:"#8c4f2b", label:"Trout Park"},
+  mo_blue:      {color:"#0e6f7d", label:"Blue Ribbon Trout Area"},
+  mo_white:     {color:"#a8552a", label:"White Ribbon Trout Area"},
+  mo_red:       {color:"#7b2d8e", label:"Red Ribbon Trout Area"},
+  mo_taneycomo: {color:"#a8552a", label:"Lake Taneycomo"},
 };
 const TROUT_SOURCE = {
   iadnr:{agency:"Iowa DNR",      what:"trout-stream layer",          regs:"Iowa DNR trout regulations"},
@@ -1473,6 +1495,8 @@ const TROUT_SOURCE = {
          url:"https://dec.ny.gov/things-to-do/freshwater-fishing/regulations"},
   vdwr:{agency:"Virginia Department of Wildlife Resources (DWR)", what:"trout-water layers", regs:"Virginia DWR regulations",
          url:"https://dwr.virginia.gov/fishing/regulations/"},
+  mdc:{agency:"Missouri Department of Conservation (MDC)", what:"Fishing Atlas trout-stream layer", regs:"Missouri Summary of Fishing Regulations",
+         url:"https://mdc.mo.gov/sites/default/files/2026-02/Fishing%20Summ%202026_508.pdf"},
 };
 function riverColor(r){
   const c = r.troutClass && TROUT_CLASS[r.troutClass];
@@ -2014,6 +2038,23 @@ Object.assign(PARK_INFO, {
     footer:`🎣 <b>Maine</b>, from the 2026 booklet: “A valid Maine fishing license is required for anyone 16 years of age or older to fish in inland waters or transport fish taken from inland waters” (p. 51). Free Fishing Days are February 14–15 and May 30–31, 2026, when anyone may fish without a license and all other laws still apply (p. 2). The booklet names no stamp or extra permit for trout or salmon. Unless a river's own entry says otherwise, rivers are open April 1–August 15, then <b>artificial lures or flies only</b> August 16–September 30 with a bag of one landlocked salmon and one brook trout, and closed October 1–March 31 (inside front cover flap). Live fish as bait are prohibited in the North Zone and permitted in the South. <b>Sea-run Atlantic salmon</b> share some of these waters: “Sea-run salmon are listed as endangered by the U.S. Fish and Wildlife Service and therefore may not be fished or harvested,” and “Any sea-run Atlantic salmon incidentally caught must be released immediately, alive and uninjured” (p. A-1, the S-33 code).`,
     ungauged:"No live gauge on this water. Judge clarity and level on arrival."},
 });
+/* Missouri: the Missouri Department of Conservation's 2026 Summary of Missouri
+   Fishing Regulations (effective March 1, 2026), with MDC's own trout-area
+   lines (geom "mdc") and OSM channel for the float rivers; every Missouri
+   river and lake is region "missouri" (lakes name it in `park`). No `zone`:
+   there is none yet, and a `zone` would make refreshZoneCounts() build an
+   empty set. Every licence word is the booklet's, with its page. The
+   booklet's only statement on access is the "Don't Trespass!" box
+   (ACCESS_LAW.MO), and none is claimed beyond it. */
+Object.assign(PARK_INFO, {
+  missouri: {sub:"", heading:"Regulations", labelZoom:8, badge:"MDC · 2026",
+    note:`From the <b>2026 Summary of Missouri Fishing Regulations</b> (Missouri Department of Conservation): the water's own entries in the Department's words, with the booklet's page cites, then the statewide rule they fall back to. A water with no entry of its own says so and shows the statewide rule alone.`,
+    lakeNote:`From the <b>2026 Summary of Missouri Fishing Regulations</b> (Missouri Department of Conservation): the rules that name this lake, with the booklet's page cites, then the statewide rules the booklet gives for the fish it lists.`,
+    licence:"<b>Missouri fishing permit</b> (unless exempt) <b>+ trout permit</b> to possess trout outside the trout parks; <b>daily trout tag</b> in the trout parks",
+    regBody:"the Missouri Department of Conservation",
+    footer:`🎣 <b>Missouri</b>, from the 2026 booklet: “Anyone who fishes must have the appropriate lifetime, annual, or daily fishing permit or qualify for an exemption” (p. 4). “In addition to a fishing permit, you will need a trout permit to possess trout on all waters outside of the trout parks and a daily tag while fishing in the trout parks” (p. 24). A trout permit is required “for all winter fishing in trout parks and for all fishing year-round in Lake Taneycomo upstream from the U.S. Highway 65 bridge” (p. 6). The daily trout tag is $5 for anglers 16 and older and $3 for anglers 15 and younger (p. 24). Exempt from the fishing permit, but still needing a daily trout tag or trout permit where required: any Missouri resident 65 or older and anyone 15 or younger (p. 4).`,
+    ungauged:"No live gauge on this water. Judge clarity and level on arrival."},
+});
 /* Michigan, South Dakota, New Mexico, Arizona and Nevada, plus the two of
    their parks with trout water. Each sheet quotes the state's own booklet. */
 Object.assign(PARK_INFO, {
@@ -2160,7 +2201,7 @@ Object.assign(PARK_INFO, {
    PARK_INFO[r.parkRegsSrc] lookup -- handing them Grand Teton's footer as well.
    Only the regulation fold's badge and note, the licence line and the
    ungauged copy look here. */
-const REGS_SRC_ROW = {yell:"yellowstone", grte:"grandteton", idfg:"tetonvalley", pfbc:"pennsylvania", nydec:"newyork", vdwr:"virginia"};
+const REGS_SRC_ROW = {yell:"yellowstone", grte:"grandteton", idfg:"tetonvalley", pfbc:"pennsylvania", nydec:"newyork", vdwr:"virginia", mdc:"missouri"};
 function regsSrcRow(r){ return PARK_INFO[REGS_SRC_ROW[r.parkRegsSrc]]; }
 /* Rivers that run through Grand Teton but carry no region of their own: the
    three Jackson Hole rivers, the park creeks WGFD's line carries on past the
@@ -3072,7 +3113,7 @@ let geomSweeps = 0;
 
    Two guards on what may be refined:
 
-   * `iadnr` / `iawt` / `widnr` / `midnr` / `wgfd` / `pfbc` / `nydec` / `vdwr` rivers are never touched. Those lines are the state
+   * `iadnr` / `iawt` / `widnr` / `midnr` / `wgfd` / `pfbc` / `nydec` / `vdwr` / `mdc` rivers are never touched. Those lines are the state
      fisheries agency's own drawing of the reach that is *designated trout
      water*, which is a different claim from "where the channel runs", and
      NHD would happily replace it with the whole creek or the wrong Bear
@@ -3163,7 +3204,7 @@ async function refineRiver(r){
      sources along one channel fragments the line wherever they disagree by
      more than REFINE_BUFFER_KM. The baked OSM line is simplified (40 m, 80 m
      in Alaska); the refinement is the same ways at full resolution. */
-  if(r.geom === "iadnr" || r.geom === "iawt" || r.geom === "widnr" || r.geom === "midnr" || r.geom === "wgfd" || r.geom === "pfbc" || r.geom === "nydec" || r.geom === "vdwr"){ layer.refined = true; return; }
+  if(r.geom === "iadnr" || r.geom === "iawt" || r.geom === "widnr" || r.geom === "midnr" || r.geom === "wgfd" || r.geom === "pfbc" || r.geom === "nydec" || r.geom === "vdwr" || r.geom === "mdc"){ layer.refined = true; return; }
   layer.refining = true;
   const ck = "nhdfine:" + r.id;
   const cached = store.get(ck);
@@ -3336,7 +3377,7 @@ function tierChipHTML(r){
 function regBodyFor(r){
   return (PARK_INFO[r.region] && PARK_INFO[r.region].regBody)
     // no row, or a row that leaves it to the state (the Driftless, North Shore, Door County)
-    || {IA:"the Iowa DNR", MN:"the Minnesota DNR", WI:"the Wisconsin DNR", IL:"the Illinois DNR", ID:"Idaho Fish &amp; Game", WY:"Wyoming Game &amp; Fish"}[r.state]
+    || {IA:"the Iowa DNR", MN:"the Minnesota DNR", WI:"the Wisconsin DNR", IL:"the Illinois DNR", ID:"Idaho Fish &amp; Game", WY:"Wyoming Game &amp; Fish", MO:"the Missouri Department of Conservation"}[r.state]
     || "WY Game &amp; Fish / Idaho Fish &amp; Game";
 }
 
@@ -3476,6 +3517,7 @@ function stateLicence(r){
        : r.state==="IL" ? "<b>Illinois</b> fishing licence"
        : r.state==="ID" ? "<b>Idaho</b> fishing licence"
        : r.state==="WY" ? "<b>Wyoming</b> fishing licence"
+       : r.state==="MO" ? "<b>Missouri fishing permit</b> (unless exempt) <b>+ trout permit</b> to possess trout outside the trout parks; <b>daily trout tag</b> in the trout parks"
        : `Licence: see ${regBodyFor(r)}`;
 }
 
@@ -4102,10 +4144,14 @@ const TROUT_REST_F = 72;      // give them a rest
    so are the small-stream regions inside them; text alone missed the Snake
    (named only as "cutthroat") and the Henry's Fork (no species at all). The
    warmwater left over -- Iowa water trails, MN/WI big rivers -- gets the cue
-   only where its own text names trout reaches. */
+   only where its own text names trout reaches. Missouri is the same kind of
+   mixed state: its trout is the MDC trout-area water (a troutClass) and
+   Lake Taneycomo; the Ozark float rivers are smallmouth water unless their
+   own text names trout (the Current, Jacks Fork, Eleven Point, North Fork,
+   Niangua and Meramec mainstems carry trout reaches and say so). */
 const TROUT_REGIONS = new Set(["driftless","northshore","doorcounty","wisouthshore","wicentralsands"]);
 function isTroutWater(r){
-  return !!(r && (r.troutClass || TROUT_REGIONS.has(r.region) || !["IA","MN","WI","IL"].includes(r.state) ||
+  return !!(r && (r.troutClass || TROUT_REGIONS.has(r.region) || !["IA","MN","WI","IL","MO"].includes(r.state) ||
     /trout|steelhead|salmon|cutthroat|grayling/i.test((r.fish || "") + " " + (r.blurb || ""))));
 }
 /* The temperature line under the flow number. Same 24 h rule as discharge:
@@ -4943,7 +4989,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v32";
+const APP_VERSION = "flyroutes-v33";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){

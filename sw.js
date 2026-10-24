@@ -18,7 +18,7 @@
    the server by the Cloudflare Worker (worker/index.js) and are never
    handled here: not cached into the shell, and never answered with the
    cached map when offline. The browser fetches them itself. */
-const VERSION = "flyroutes-v32";
+const VERSION = "flyroutes-v33";
 const TILES_BROWSE = "tiles-browse", TILES_SAVED = "tiles-saved", DATA_TILES = "data-tiles";
 const TOPO = "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/";
 const LEAFLET = [
