@@ -71,4 +71,7 @@ const ACCESS_LAW = {
   NY: {head:"New York's fishing guide publishes no stream-access rule. A licence is not permission to cross private land, so get permission first.",
        quote:"No license or stamp authorizes the holder to trespass upon private lands or waters, or interfere with property belonging to another person.",
        src:"NYSDEC 2026 Freshwater Fishing Regulations Guide, p. 90", url:"https://dec.ny.gov/things-to-do/freshwater-fishing/regulations"},
+  VA: {head:"Virginia's booklet says you need the landowner's permission to fish on someone else's property, except on designated stocked trout waters posted as open to the public. It says nothing about wading or the streambed.",
+       quote:"Any person who fishes on another\u2019s property must have the landowner\u2019s permission to do so except on designated stocked trout waters along which signs have been placed indicating that the waters are open to public fishing.",
+       src:"2026 Freshwater Fishing & Boating in Virginia, Virginia DWR, p. 14", url:"https://dwr.virginia.gov/fishing/regulations/"},
 };

@@ -75,7 +75,7 @@ RIVERS.forEach(r => {
    dead zone. */
 const STATE_NAME = {ID:"Idaho", WY:"Wyoming", IA:"Iowa", MN:"Minnesota", WI:"Wisconsin", IL:"Illinois",
   CA:"California", OR:"Oregon", WA:"Washington", MT:"Montana", CO:"Colorado", UT:"Utah", AK:"Alaska",
-  MI:"Michigan", SD:"South Dakota", NM:"New Mexico", AZ:"Arizona", NV:"Nevada", PA:"Pennsylvania", NY:"New York"};
+  MI:"Michigan", SD:"South Dakota", NM:"New Mexico", AZ:"Arizona", NV:"Nevada", PA:"Pennsylvania", NY:"New York", VA:"Virginia"};
 
 const API_BASE = "https://api.waterdata.usgs.gov/ogcapi/v0/collections";
 const STAT_YEARS = 7;        // years of history for the median
@@ -991,6 +991,9 @@ const REGIONS = [
   ["Catskills (Beaver Kill / Delaware)", [41.95,-74.80,9]],
   ["Adirondacks (Ausable / Saranac)", [44.30,-73.90,8]],
   ["Salmon River (Pulaski)", [43.55,-76.00,9]],
+  ["── Virginia ──", null],
+  ["Virginia", [37.70,-79.40,7]],
+  ["Shenandoah National Park / Rapidan", [38.45,-78.35,9]],
   ["── Michigan ──", null],
   ["Au Sable (Grayling / Mio)", [44.65,-84.40,9]],
   ["Manistee / Pere Marquette", [44.10,-85.80,8]],
@@ -1448,6 +1451,14 @@ const TROUT_CLASS = {
   ny_se:      {color:"#8c4f2b", label:"Stocked-Extended — trout can last into summer"},
   ny_st:      {color:"#a8552a", label:"Stocked — DEC stocked trout water"},
   ny_ot:      {color:"#6d5a8e", label:"Other — not one of DEC's five categories"},
+  /* Virginia's three, from the DWR's own trout-water layers (stocked trout
+     waters and wild trout streams). Kept apart from Pennsylvania's even
+     though the family is the same -- purple special, rust stocked, teal wild --
+     because "special regulation" and "wild" mean what the Virginia booklet
+     says they mean (catch-and-release, 9-inch, 16-inch/2 fish and the like). */
+  va_special: {color:"#7b2d8e", label:"Special regulation trout water"},
+  va_stocked: {color:"#a8552a", label:"Designated stocked trout water"},
+  va_wild:    {color:"#0e6f7d", label:"Wild trout stream"},
 };
 const TROUT_SOURCE = {
   iadnr:{agency:"Iowa DNR",      what:"trout-stream layer",          regs:"Iowa DNR trout regulations"},
@@ -1456,6 +1467,8 @@ const TROUT_SOURCE = {
          url:"https://www.pa.gov/agencies/fishandboat"},
   nydec:{agency:"NYSDEC", what:"Inland Trout Stream Fishing layer", regs:"NYSDEC freshwater fishing regulations",
          url:"https://dec.ny.gov/things-to-do/freshwater-fishing/regulations"},
+  vdwr:{agency:"Virginia Department of Wildlife Resources (DWR)", what:"trout-water layers", regs:"Virginia DWR regulations",
+         url:"https://dwr.virginia.gov/fishing/regulations/"},
 };
 function riverColor(r){
   const c = r.troutClass && TROUT_CLASS[r.troutClass];
@@ -1968,6 +1981,21 @@ Object.assign(PARK_INFO, {
   // reached only through REGS_SRC_ROW (parkRegsSrc "nydec"); no river carries region "newyork"
   PARK_INFO.newyork = Object.assign({sub:""}, body);
 })();
+/* Virginia: the DWR's own stocked- and wild-trout layers (geom "vdwr") for the
+   trout streams, and OSM channel for the big float rivers; all of it region
+   "virginia", so every Virginia river reads this row. No `zone`: Virginia is
+   counted by state, and a `zone` would make refreshZoneCounts() build an empty
+   set. Every licence word is from the 2026 Freshwater Fishing & Boating in
+   Virginia booklet, printed page given. The booklet says nothing about wading
+   or the streambed, so none is claimed. */
+Object.assign(PARK_INFO, {
+  virginia: {sub:"", heading:"Regulations", labelZoom:8, badge:"Virginia DWR · 2026",
+    note:`From the <b>2026 Freshwater Fishing &amp; Boating in Virginia</b> booklet (Virginia Department of Wildlife Resources): the water's own entries in the Department's words, with the booklet's page cites, then the rules they fall back to.`,
+    licence:"<b>Virginia freshwater fishing licence</b> (age 16 and over); a <b>trout licence</b> as well in designated stocked trout waters, Oct 1–Jun 15",
+    regBody:"the Virginia Department of Wildlife Resources",
+    footer:`🎣 <b>Virginia</b>, from the 2026 booklet: a resident or nonresident freshwater fishing licence is required at age 16 and older (p. 10). “A valid trout license (annual or lifetime) is required in addition to other resident licenses only if you are fishing in designated stocked trout waters (October 1–June 15)” (p. 10), and “from June 16 through September 30 anglers can fish in stocked trout waters without a trout license” (p. 29). “Fishing in wild trout and most special regulation waters? Some require a signed landowner permit card” (p. 29). A National Forest Permit is also required on National Forest lands, with the exceptions listed (p. 12). “Any person who fishes on another’s property must have the landowner’s permission to do so except on designated stocked trout waters along which signs have been placed indicating that the waters are open to public fishing” (p. 14).`,
+    ungauged:"No live gauge on this water. Judge clarity and level on arrival."},
+});
 /* Michigan, South Dakota, New Mexico, Arizona and Nevada, plus the two of
    their parks with trout water. Each sheet quotes the state's own booklet. */
 Object.assign(PARK_INFO, {
@@ -2114,7 +2142,7 @@ Object.assign(PARK_INFO, {
    PARK_INFO[r.parkRegsSrc] lookup -- handing them Grand Teton's footer as well.
    Only the regulation fold's badge and note, the licence line and the
    ungauged copy look here. */
-const REGS_SRC_ROW = {yell:"yellowstone", grte:"grandteton", idfg:"tetonvalley", pfbc:"pennsylvania", nydec:"newyork"};
+const REGS_SRC_ROW = {yell:"yellowstone", grte:"grandteton", idfg:"tetonvalley", pfbc:"pennsylvania", nydec:"newyork", vdwr:"virginia"};
 function regsSrcRow(r){ return PARK_INFO[REGS_SRC_ROW[r.parkRegsSrc]]; }
 /* Rivers that run through Grand Teton but carry no region of their own: the
    three Jackson Hole rivers, the park creeks WGFD's line carries on past the
@@ -3026,7 +3054,7 @@ let geomSweeps = 0;
 
    Two guards on what may be refined:
 
-   * `iadnr` / `iawt` / `widnr` / `midnr` / `wgfd` / `pfbc` / `nydec` rivers are never touched. Those lines are the state
+   * `iadnr` / `iawt` / `widnr` / `midnr` / `wgfd` / `pfbc` / `nydec` / `vdwr` rivers are never touched. Those lines are the state
      fisheries agency's own drawing of the reach that is *designated trout
      water*, which is a different claim from "where the channel runs", and
      NHD would happily replace it with the whole creek or the wrong Bear
@@ -3117,7 +3145,7 @@ async function refineRiver(r){
      sources along one channel fragments the line wherever they disagree by
      more than REFINE_BUFFER_KM. The baked OSM line is simplified (40 m, 80 m
      in Alaska); the refinement is the same ways at full resolution. */
-  if(r.geom === "iadnr" || r.geom === "iawt" || r.geom === "widnr" || r.geom === "midnr" || r.geom === "wgfd" || r.geom === "pfbc" || r.geom === "nydec"){ layer.refined = true; return; }
+  if(r.geom === "iadnr" || r.geom === "iawt" || r.geom === "widnr" || r.geom === "midnr" || r.geom === "wgfd" || r.geom === "pfbc" || r.geom === "nydec" || r.geom === "vdwr"){ layer.refined = true; return; }
   layer.refining = true;
   const ck = "nhdfine:" + r.id;
   const cached = store.get(ck);
@@ -3506,7 +3534,7 @@ function rulesCardHTML(r){
   const tags = TAGS.filter(([re]) => re.test(re.source.startsWith("fly") ? noArt : txt)).map(t => t[1]);
   /* On an Iowa stream designated reach by reach, the special rules are the
      restrictive reach's, not the whole stream's -- so the chip says so. */
-  const part = r.reachClass && ["restrictive","pa_special"].some(k => r.reachClass.includes(k) && r.reachClass.some(c => c !== k));
+  const part = r.reachClass && ["restrictive","pa_special","va_special"].some(k => r.reachClass.includes(k) && r.reachClass.some(c => c !== k));
 
   return `<div class="rulescard">${desigHTML(r.id)}`+
     (head ? `<div class="rc-status"><span class="rc-dot" style="background:${dot}"></span>`+
@@ -4897,7 +4925,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v31";
+const APP_VERSION = "flyroutes-v32";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){
