@@ -1158,7 +1158,7 @@ function openLake(id){
       // a lake the row's note doesn't describe (Lake Halice: no DNR fish list) carries its own
       `<div style="font-size:10.5px;color:var(--txt-dim);margin-top:8px">${k.regsNote || pk.lakeNote || pk.note}</div>` +
     `</div>` +
-    `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Lake outline: ${k.src==="osm" ? "OpenStreetMap" : k.src==="wgfd" ? "Wyoming Game &amp; Fish's lakes map (NHDPlus HR)" : k.src==="iadnr" ? "Iowa DNR Fishing Atlas lakes layer" : "USGS NHD waterbodies"}. Verify regulations with ${pk.regBody}.</p>` +
+    `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Lake outline: ${k.src==="osm" ? "OpenStreetMap" : k.src==="wgfd" ? "Wyoming Game &amp; Fish's lakes map (NHDPlus HR)" : k.src==="iadnr" ? "Iowa DNR Fishing Atlas lakes layer" : k.src==="mndnr" ? "Minnesota DNR hydrography (public waters basins, and the DNR 24K lakes layer for the pits and the pond)" : "USGS NHD waterbodies"}. Verify regulations with ${pk.regBody}.</p>` +
     `<div class="rp-wrap"><button type="button" class="rp-link" data-report="${fbEsc(k.id)}">Report an issue with this lake</button></div>`;
   wxLoad(wx);
 }
@@ -2054,6 +2054,18 @@ Object.assign(PARK_INFO, {
     regBody:"the Missouri Department of Conservation",
     footer:`🎣 <b>Missouri</b>, from the 2026 booklet: “Anyone who fishes must have the appropriate lifetime, annual, or daily fishing permit or qualify for an exemption” (p. 4). “In addition to a fishing permit, you will need a trout permit to possess trout on all waters outside of the trout parks and a daily tag while fishing in the trout parks” (p. 24). A trout permit is required “for all winter fishing in trout parks and for all fishing year-round in Lake Taneycomo upstream from the U.S. Highway 65 bridge” (p. 6). The daily trout tag is $5 for anglers 16 and older and $3 for anglers 15 and younger (p. 24). Exempt from the fishing permit, but still needing a daily trout tag or trout permit where required: any Missouri resident 65 or older and anyone 15 or younger (p. 4).`,
     ungauged:"No live gauge on this water. Judge clarity and level on arrival."},
+});
+/* Minnesota's designated stream trout lakes (mnlakes/build.py). Only lakes name
+   this row: no Minnesota river has region "minnesota", so it never reaches a
+   river sheet, and it has no `zone` (it would build an empty set). Every word
+   of licence below is from the 2026 Minnesota Fishing Regulations, page given. */
+Object.assign(PARK_INFO, {
+  minnesota: {sub:"", heading:"Regulations", labelZoom:8, badge:"Minnesota DNR · 2026",
+    note:`From the Minnesota DNR's <b>2026 Minnesota Fishing Regulations</b>, word for word, with the booklet's page numbers. Read the current booklet before you fish.`,
+    lakeNote:`From the Minnesota DNR's <b>2026 Minnesota Fishing Regulations</b>: the booklet's rules for designated stream trout lakes, word for word. It names none of these lakes individually. Read the current booklet and the DNR's designation list before you fish.`,
+    licence:`<b>Minnesota fishing licence + trout/salmon stamp</b> — “anglers need a Minnesota trout/salmon stamp validation and a fishing or sports license when fishing in designated trout streams, designated trout lakes, Lake Superior, or when possessing trout on waters that are not designated trout water.” (p. 25)`,
+    regBody:"the Minnesota DNR",
+    footer:`🎣 <b>Minnesota</b>, from the 2026 booklet: “Except as noted, anglers need a Minnesota trout/salmon stamp validation and a fishing or sports license when fishing in designated trout streams, designated trout lakes, Lake Superior, or when possessing trout on waters that are not designated trout water.” “Trout/salmon stamps are not required for children younger than 18 years old, adults who are 65 and older, people fishing with a 24-hour or 72-hour license or people who are exempt from fishing license requirements or who receive a fishing license at no charge.” (p. 25)`},
 });
 /* Michigan, South Dakota, New Mexico, Arizona and Nevada, plus the two of
    their parks with trout water. Each sheet quotes the state's own booklet. */
