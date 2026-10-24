@@ -141,3 +141,15 @@ img{max-width:100%;height:auto}
 @media(min-width:1000px){.c-rail{justify-content:center}}
 .c-cta{padding:30px 0 60px;text-align:center}
 .c-cta h2{font-size:clamp(42px,9vw,76px);line-height:.92;margin-bottom:22px}
+
+/* "About the name" note (tailwater vs TrailWater) */
+.nameplate{padding:48px 0;border-block:1px solid var(--line);background:var(--bone-2)}
+.nameplate h2{font-size:clamp(34px,6.5vw,56px);line-height:.98;margin-bottom:16px;max-width:18ch}
+.nameplate h2 span{color:var(--river-deep)}
+.nameplate h2 i{font-style:normal;border-bottom:3px solid var(--river)}
+.nameplate p:last-child{font-size:19px;color:var(--dim);max-width:60ch;margin:0}
+.nameplate{scroll-margin-top:60px}
+.nameplate .about-lead{font:700 clamp(30px,5.5vw,46px)/1 "Barlow Condensed",sans-serif;text-transform:uppercase;color:var(--ink);margin:0 0 26px;max-width:22ch}
+.nameplate .about-sub{font:600 14px/1 "IBM Plex Mono",monospace;letter-spacing:.08em;color:var(--dim);margin:0 0 10px;padding-top:20px;border-top:1px solid var(--line)}
+.nameplate h2{font-size:clamp(28px,5vw,42px)}
+@media(max-width:700px){.nav a:not(.nav-map):not(:last-of-type){display:none}}
