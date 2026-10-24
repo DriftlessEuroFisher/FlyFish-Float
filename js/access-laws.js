@@ -10,7 +10,7 @@
    `head` is the one-line summary shown in the river panel. It is written
    to say no more than the quote under it. `quote` is verbatim. `src` names
    the document and `url` links to it. Where a state publishes no
-   stream-access rule (AZ, NV, IL), the entry says that plainly rather
+   stream-access rule (AZ, NV, IL, ME), the entry says that plainly rather
    than filling the gap with a guess. */
 const ACCESS_LAW = {
   MT: {head:"Wade and fish up to the ordinary high-water mark — but reach the river from public land, a public bridge or a county road.",
@@ -74,4 +74,6 @@ const ACCESS_LAW = {
   VA: {head:"Virginia's booklet says you need the landowner's permission to fish on someone else's property, except on designated stocked trout waters posted as open to the public. It says nothing about wading or the streambed.",
        quote:"Any person who fishes on another\u2019s property must have the landowner\u2019s permission to do so except on designated stocked trout waters along which signs have been placed indicating that the waters are open to public fishing.",
        src:"2026 Freshwater Fishing & Boating in Virginia, Virginia DWR, p. 14", url:"https://dwr.virginia.gov/fishing/regulations/"},
+  ME: {head:"Maine's 2026 fishing lawbook publishes no stream-access rule. Treat private land as private, and ask first.",
+       quote:null, src:"2026 Maine Fishing Laws, Maine DIFW (no access section)", url:"https://www.maine.gov/IFW/docs/25-MDIFW-23-FISHING-LAWBOOK-2026.pdf"},
 };

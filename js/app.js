@@ -75,7 +75,7 @@ RIVERS.forEach(r => {
    dead zone. */
 const STATE_NAME = {ID:"Idaho", WY:"Wyoming", IA:"Iowa", MN:"Minnesota", WI:"Wisconsin", IL:"Illinois",
   CA:"California", OR:"Oregon", WA:"Washington", MT:"Montana", CO:"Colorado", UT:"Utah", AK:"Alaska",
-  MI:"Michigan", SD:"South Dakota", NM:"New Mexico", AZ:"Arizona", NV:"Nevada", PA:"Pennsylvania", NY:"New York", VA:"Virginia"};
+  MI:"Michigan", SD:"South Dakota", NM:"New Mexico", AZ:"Arizona", NV:"Nevada", PA:"Pennsylvania", NY:"New York", VA:"Virginia", ME:"Maine"};
 
 const API_BASE = "https://api.waterdata.usgs.gov/ogcapi/v0/collections";
 const STAT_YEARS = 7;        // years of history for the median
@@ -994,6 +994,10 @@ const REGIONS = [
   ["── Virginia ──", null],
   ["Virginia", [37.70,-79.40,7]],
   ["Shenandoah National Park / Rapidan", [38.45,-78.35,9]],
+  ["── Maine ──", null],
+  ["Maine", [45.30,-69.20,7]],
+  ["The Forks (Kennebec / Dead / Moose)", [45.34,-69.95,9]],
+  ["Rangeley (Rapid / Kennebago / Magalloway)", [44.95,-70.75,9]],
   ["── Michigan ──", null],
   ["Au Sable (Grayling / Mio)", [44.65,-84.40,9]],
   ["Manistee / Pere Marquette", [44.10,-85.80,8]],
@@ -1994,6 +1998,20 @@ Object.assign(PARK_INFO, {
     licence:"<b>Virginia freshwater fishing licence</b> (age 16 and over); a <b>trout licence</b> as well in designated stocked trout waters, Oct 1–Jun 15",
     regBody:"the Virginia Department of Wildlife Resources",
     footer:`🎣 <b>Virginia</b>, from the 2026 booklet: a resident or nonresident freshwater fishing licence is required at age 16 and older (p. 10). “A valid trout license (annual or lifetime) is required in addition to other resident licenses only if you are fishing in designated stocked trout waters (October 1–June 15)” (p. 10), and “from June 16 through September 30 anglers can fish in stocked trout waters without a trout license” (p. 29). “Fishing in wild trout and most special regulation waters? Some require a signed landowner permit card” (p. 29). A National Forest Permit is also required on National Forest lands, with the exceptions listed (p. 12). “Any person who fishes on another’s property must have the landowner’s permission to do so except on designated stocked trout waters along which signs have been placed indicating that the waters are open to public fishing” (p. 14).`,
+    ungauged:"No live gauge on this water. Judge clarity and level on arrival."},
+});
+/* Maine: the 2026 Maine Fishing Laws booklet (MDIFW), whose own entries are
+   quoted on each river (OSM/NHD channel, region "maine"). No `zone`: Maine is
+   counted by state, and a `zone` would make refreshZoneCounts() build an empty
+   set. Every licence and season word is the booklet's, with its page; the
+   booklet says no stamp or extra trout permit, and names no stream-access
+   rule, so none is claimed. "Not valid after December 31, 2026". */
+Object.assign(PARK_INFO, {
+  maine: {sub:"", heading:"Regulations", labelZoom:8, badge:"Maine IFW · 2026",
+    note:`From the <b>2026 Maine Fishing Laws</b> booklet (Maine Department of Inland Fisheries and Wildlife; “not valid after December 31, 2026”): the river's own entries in the Department's words, with the booklet's page cites, then the North or South Zone rule they fall back to. The booklet sets the zones by county; where a river crosses the line, both rules are shown.`,
+    licence:"<b>Maine fishing licence</b> (age 16 and over); the booklet names no stamp or extra trout permit",
+    regBody:"the Maine Department of Inland Fisheries and Wildlife",
+    footer:`🎣 <b>Maine</b>, from the 2026 booklet: “A valid Maine fishing license is required for anyone 16 years of age or older to fish in inland waters or transport fish taken from inland waters” (p. 51). Free Fishing Days are February 14–15 and May 30–31, 2026, when anyone may fish without a license and all other laws still apply (p. 2). The booklet names no stamp or extra permit for trout or salmon. Unless a river's own entry says otherwise, rivers are open April 1–August 15, then <b>artificial lures or flies only</b> August 16–September 30 with a bag of one landlocked salmon and one brook trout, and closed October 1–March 31 (inside front cover flap). Live fish as bait are prohibited in the North Zone and permitted in the South. <b>Sea-run Atlantic salmon</b> share some of these waters: “Sea-run salmon are listed as endangered by the U.S. Fish and Wildlife Service and therefore may not be fished or harvested,” and “Any sea-run Atlantic salmon incidentally caught must be released immediately, alive and uninjured” (p. A-1, the S-33 code).`,
     ungauged:"No live gauge on this water. Judge clarity and level on arrival."},
 });
 /* Michigan, South Dakota, New Mexico, Arizona and Nevada, plus the two of

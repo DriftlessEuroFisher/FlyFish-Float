@@ -308,3 +308,11 @@ Iowa water trails. The app shows those without a regulations block on purpose.
 - **Season windows in `js/tiers.js`**: written by `states/seasons.py`, `west2/gen_ut.py`
   (`SEASON`, `PART`), `east/mi_apply.py` and the park apply scripts, plus hand rows.
   Each run regenerates the windows from that year's text.
+
+## Maine (2026-10-24)
+- **2026 Maine Fishing Laws** (`maine.gov/IFW/docs/25-MDIFW-23-FISHING-LAWBOOK-2026.pdf`,
+  not valid after 2026-12-31; release asset `me/lawbook2026.pdf`). Printed page = PDF
+  page - 5 for PDF pp. 7-61. Pipeline `~/.cache/flyfish-osm/me/`: `build.py` (NHD +
+  lake cut) -> `build_2b.py` (gauges, pins) -> `regs.py` -> `apply.py` -> `verify.py`.
+  Feeds 22 rivers (fence "maine rivers"), `PARK_INFO.maine`, `ACCESS_LAW.ME`.
+  The booklet's special laws are one alphabetical list by water, not by county.
