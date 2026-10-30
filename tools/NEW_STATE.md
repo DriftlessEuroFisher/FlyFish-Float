@@ -5,6 +5,15 @@ re-read tokens to write about 6,000**, because four commands printed 440–610 K
 each into one 200-turn agent's conversation. Every later turn re-read about
 400,000 tokens. The writing and the thinking were cheap; the repetition was not.
 
+## Run unattended (owner, 2026-10-28)
+**Once the owner asks for a state, run stages 1 to 6 back to back with no
+check-ins.** Don't ask "proceed to stage 2?"; the planning session launches each
+stage's agent as soon as the last one reports its files and summary. Stop only
+when a stage fails its own checks twice, or a decision is the owner's alone
+(out-of-state gauges, scope changes, anything marked "owner to review").
+Record those as open items in CLAUDE.md and carry on with what doesn't depend
+on them. The token-saving format below is unchanged.
+
 ## Rules
 1. **Raw output goes to files, and the screen gets a summary under 2 KB.** Fetched
    JSON, PDF text and built rivers stay on disk. Scripts print counts, skips and a

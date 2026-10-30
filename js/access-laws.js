@@ -10,7 +10,7 @@
    `head` is the one-line summary shown in the river panel. It is written
    to say no more than the quote under it. `quote` is verbatim. `src` names
    the document and `url` links to it. Where a state publishes no
-   stream-access rule (AZ, NV, IL, ME), the entry says that plainly rather
+   stream-access rule (AZ, NV, IL, ME, NH), the entry says that plainly rather
    than filling the gap with a guess. */
 const ACCESS_LAW = {
   MT: {head:"Wade and fish up to the ordinary high-water mark — but reach the river from public land, a public bridge or a county road.",
@@ -76,6 +76,10 @@ const ACCESS_LAW = {
        src:"2026 Freshwater Fishing & Boating in Virginia, Virginia DWR, p. 14", url:"https://dwr.virginia.gov/fishing/regulations/"},
   ME: {head:"Maine's 2026 fishing lawbook publishes no stream-access rule. Treat private land as private, and ask first.",
        quote:null, src:"2026 Maine Fishing Laws, Maine DIFW (no access section)", url:"https://www.maine.gov/IFW/docs/25-MDIFW-23-FISHING-LAWBOOK-2026.pdf"},
+  MA: {head:"No stream-access rule is on file for Massachusetts: the MassWildlife guide could not be loaded for this app. Treat private land as private, and ask first.",
+       quote:null, src:"MassWildlife Guide to Freshwater Fishing, Hunting and Trapping (not yet checked)", url:"https://www.mass.gov/doc/2026-guide-to-freshwater-fishing-hunting-and-trapping/download"},
+  NH: {head:"New Hampshire's 2026 fishing digest publishes no stream-access rule. Treat private land as private, and ask first.",
+       quote:null, src:"2026 NH Freshwater Fishing Digest, NH Fish and Game (no access section)", url:"https://www.eregulations.com/assets/docs/guides/26NHFW-LR3.pdf"},
   MO: {head:"Missouri\u2019s fishing summary has one statement on access, a box headed \u201cDon\u2019t Trespass!\u201d. It says nothing about navigable-stream beds, gravel bars or wading.",
        quote:"Many rivers and streams flow through private land. Before entering, ask landowners for permission.",
        src:"Missouri Department of Conservation, A Summary of Missouri Fishing Regulations 2026, p. 35", url:"https://mdc.mo.gov/sites/default/files/2026-02/Fishing%20Summ%202026_508.pdf"},

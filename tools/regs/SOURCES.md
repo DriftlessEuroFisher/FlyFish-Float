@@ -316,3 +316,10 @@ Iowa water trails. The app shows those without a regulations block on purpose.
   lake cut) -> `build_2b.py` (gauges, pins) -> `regs.py` -> `apply.py` -> `verify.py`.
   Feeds 22 rivers (fence "maine rivers"), `PARK_INFO.maine`, `ACCESS_LAW.ME`.
   The booklet's special laws are one alphabetical list by water, not by county.
+
+## New Hampshire (2026-10-30)
+- **2026 NH Freshwater Fishing Digest** (`eregulations.com/assets/docs/guides/26NHFW-LR3.pdf`, Jan 1-Dec 31 2026),
+  `nh/digest2026.pdf` in the pipeline. Printed page = PDF page - 2. Special-rules tables pp. 22-25.
+  Scripts: `~/.cache/flyfish-osm/nh/regs.py` (`spotcheck.py` confirms every quote). Feeds `parkRegs` on the 47 `nh_*` rivers.
+- Geometry: NHD by name (`nh/build.py`); stocked layer (F&G `FishStocking_view` layer 2) and access sites
+  (`nh_access_sites`) on services8.arcgis.com/hg1B9Egwk1I5p300. Fence "new hampshire fish and game rivers".

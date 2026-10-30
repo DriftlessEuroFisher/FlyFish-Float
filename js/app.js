@@ -75,7 +75,7 @@ RIVERS.forEach(r => {
    dead zone. */
 const STATE_NAME = {ID:"Idaho", WY:"Wyoming", IA:"Iowa", MN:"Minnesota", WI:"Wisconsin", IL:"Illinois",
   CA:"California", OR:"Oregon", WA:"Washington", MT:"Montana", CO:"Colorado", UT:"Utah", AK:"Alaska",
-  MI:"Michigan", SD:"South Dakota", NM:"New Mexico", AZ:"Arizona", NV:"Nevada", PA:"Pennsylvania", NY:"New York", VA:"Virginia", ME:"Maine", MO:"Missouri"};
+  MI:"Michigan", SD:"South Dakota", NM:"New Mexico", AZ:"Arizona", NV:"Nevada", PA:"Pennsylvania", NY:"New York", VA:"Virginia", ME:"Maine", MO:"Missouri", MA:"Massachusetts", NH:"New Hampshire"};
 
 const API_BASE = "https://api.waterdata.usgs.gov/ogcapi/v0/collections";
 const STAT_YEARS = 7;        // years of history for the median
@@ -1002,6 +1002,10 @@ const REGIONS = [
   ["Missouri", [37.60,-92.40,7]],
   ["Current River trout water (Montauk / Akers)", [37.45,-91.60,10]],
   ["Lake Taneycomo / Table Rock", [36.65,-93.20,10]],
+  ["── Massachusetts ──", null],
+  ["Massachusetts", [42.25,-71.80,7]],
+  ["── New Hampshire ──", null],
+  ["New Hampshire", [43.95,-71.50,7]],
   ["── Michigan ──", null],
   ["Au Sable (Grayling / Mio)", [44.65,-84.40,9]],
   ["Manistee / Pere Marquette", [44.10,-85.80,8]],
@@ -2054,6 +2058,36 @@ Object.assign(PARK_INFO, {
     regBody:"the Missouri Department of Conservation",
     footer:`🎣 <b>Missouri</b>, from the 2026 booklet: “Anyone who fishes must have the appropriate lifetime, annual, or daily fishing permit or qualify for an exemption” (p. 4). “In addition to a fishing permit, you will need a trout permit to possess trout on all waters outside of the trout parks and a daily tag while fishing in the trout parks” (p. 24). A trout permit is required “for all winter fishing in trout parks and for all fishing year-round in Lake Taneycomo upstream from the U.S. Highway 65 bridge” (p. 6). The daily trout tag is $5 for anglers 16 and older and $3 for anglers 15 and younger (p. 24). Exempt from the fishing permit, but still needing a daily trout tag or trout permit where required: any Missouri resident 65 or older and anyone 15 or younger (p. 4).`,
     ungauged:"No live gauge on this water. Judge clarity and level on arrival."},
+});
+/* Massachusetts: MassWildlife (Division of Fisheries and Wildlife) lines and
+   gauges, every river region "massachusetts" (geom "mdfw"/"nhd"). No `zone`:
+   a `zone` would make refreshZoneCounts() build an empty set. The 2026
+   MassWildlife guide could not be fetched (mass.gov refuses the download), so
+   no regulation text is on file and this row states no licence, fee, stamp,
+   season or limit; it only names the authority and sends the reader to the
+   guide. When the guide text is loaded, add the page-cited licence line here
+   and set parkRegsSrc:"massachusetts" on the rivers. */
+Object.assign(PARK_INFO, {
+  massachusetts: {sub:"", heading:"Regulations", labelZoom:8, badge:"MassWildlife",
+    note:`Massachusetts regulations are written by <b>MassWildlife</b> (the Division of Fisheries and Wildlife). No rule text is loaded for this water yet. Read the current <b>Guide to Freshwater Fishing, Hunting and Trapping</b> before you go.`,
+    licence:"<b>Massachusetts</b> fishing licence: see the MassWildlife guide for who needs one and for any trout rules",
+    regBody:"MassWildlife (the Massachusetts Division of Fisheries and Wildlife)",
+    footer:`🎣 <b>Massachusetts</b>: fishing rules are set by MassWildlife (the Division of Fisheries and Wildlife). This app does not yet carry its licence, season or limit text, so check the current MassWildlife guide to freshwater fishing before you fish. Lines on this map show where MassWildlife has found coldwater fish and where it stocks; they are not a statement of what is open or legal.`,
+    ungauged:"No live gauge on this water. Judge clarity and level on arrival."},
+});
+/* New Hampshire: the 2026 New Hampshire Freshwater Fishing Digest (NH Fish and
+   Game), whose own special-rules rows are quoted on each river (every river is
+   region "newhampshire", state "NH"). No `zone`: a `zone` would make
+   refreshZoneCounts() build an empty set. Every licence word is the digest's,
+   with its page. The digest names no trout or salmon stamp and no
+   stream-access rule (ACCESS_LAW.NH), so none is claimed. */
+Object.assign(PARK_INFO, {
+  newhampshire: {sub:"", heading:"Regulations", labelZoom:8, badge:"NH Fish & Game · 2026",
+    note:`From the <b>2026 New Hampshire Freshwater Fishing Digest</b> (New Hampshire Fish and Game Department; “Jan. 1–Dec. 31, 2026”): the water's own special-rules rows in the Department's words, with the digest's page cites, then the general rule they fall back to. Water on the Connecticut River or the Maine line is also under the digest's interstate rules.`,
+    licence:"<b>New Hampshire fishing licence</b> (age 16 and over; includes a $1 fisheries habitat fee); the digest names no stamp",
+    regBody:"the New Hampshire Fish and Game Department",
+    footer:`🎣 <b>New Hampshire</b>, from the 2026 digest: “Fishing licenses are required for people 16 years of age and older” (p. 6). “All freshwater anglers pay a $1 fisheries habitat fee, which is included in the license price” (p. 7). Licenses “may be purchased online via fishnh.com, from license agents, Fish and Game Department headquarters in Concord, Fish and Game Region 1, 2 and 4 offices, and some town or city clerks” (p. 6). “The license must be carried on your person when fishing or hunting” (p. 7). The digest names no trout or salmon stamp. On the Connecticut River, “all New Hampshire resident and Vermont resident fishing licenses are valid” and other nonresidents may fish only east of the Vermont low water mark (p. 39); “all New Hampshire and Maine fishing licenses are valid” on the New Hampshire–Maine interstate waters (p. 38).`,
+    ungauged:"No live gauge on this brook or river. Judge clarity and level on arrival."},
 });
 /* Minnesota's designated stream trout lakes (mnlakes/build.py). Only lakes name
    this row: no Minnesota river has region "minnesota", so it never reaches a
@@ -3125,11 +3159,14 @@ let geomSweeps = 0;
 
    Two guards on what may be refined:
 
-   * `iadnr` / `iawt` / `widnr` / `midnr` / `wgfd` / `pfbc` / `nydec` / `vdwr` / `mdc` rivers are never touched. Those lines are the state
+   * `iadnr` / `iawt` / `widnr` / `midnr` / `wgfd` / `pfbc` / `nydec` / `vdwr` / `mdc` / `mdfw` rivers are never touched. Those lines are the state
      fisheries agency's own drawing of the reach that is *designated trout
      water*, which is a different claim from "where the channel runs", and
      NHD would happily replace it with the whole creek or the wrong Bear
      Creek entirely. Agency geometry stays exactly as the agency drew it.
+     (`mdfw`, Massachusetts, is MassWildlife's coldwater-habitat line: a
+     habitat claim, not designated trout water, but its gaps are reaches the
+     agency doesn't map, so it is kept as drawn for the same reason.)
    * `nhd` rivers were clipped to a park or a state boundary when they were
      baked. A fresh fetch does not know about that clip, so the refined
      geometry is filtered to what lies within REFINE_BUFFER_KM of the line
@@ -3216,7 +3253,7 @@ async function refineRiver(r){
      sources along one channel fragments the line wherever they disagree by
      more than REFINE_BUFFER_KM. The baked OSM line is simplified (40 m, 80 m
      in Alaska); the refinement is the same ways at full resolution. */
-  if(r.geom === "iadnr" || r.geom === "iawt" || r.geom === "widnr" || r.geom === "midnr" || r.geom === "wgfd" || r.geom === "pfbc" || r.geom === "nydec" || r.geom === "vdwr" || r.geom === "mdc"){ layer.refined = true; return; }
+  if(r.geom === "iadnr" || r.geom === "iawt" || r.geom === "widnr" || r.geom === "midnr" || r.geom === "wgfd" || r.geom === "pfbc" || r.geom === "nydec" || r.geom === "vdwr" || r.geom === "mdc" || r.geom === "mdfw"){ layer.refined = true; return; }
   layer.refining = true;
   const ck = "nhdfine:" + r.id;
   const cached = store.get(ck);
@@ -5001,7 +5038,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v33";
+const APP_VERSION = "flyroutes-v35";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){
