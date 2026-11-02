@@ -75,7 +75,7 @@ RIVERS.forEach(r => {
    dead zone. */
 const STATE_NAME = {ID:"Idaho", WY:"Wyoming", IA:"Iowa", MN:"Minnesota", WI:"Wisconsin", IL:"Illinois",
   CA:"California", OR:"Oregon", WA:"Washington", MT:"Montana", CO:"Colorado", UT:"Utah", AK:"Alaska",
-  MI:"Michigan", SD:"South Dakota", NM:"New Mexico", AZ:"Arizona", NV:"Nevada", PA:"Pennsylvania", NY:"New York", VA:"Virginia", ME:"Maine", MO:"Missouri", MA:"Massachusetts", NH:"New Hampshire"};
+  MI:"Michigan", SD:"South Dakota", NM:"New Mexico", AZ:"Arizona", NV:"Nevada", PA:"Pennsylvania", NY:"New York", VA:"Virginia", ME:"Maine", MO:"Missouri", MA:"Massachusetts", NH:"New Hampshire", WV:"West Virginia"};
 
 const API_BASE = "https://api.waterdata.usgs.gov/ogcapi/v0/collections";
 const STAT_YEARS = 7;        // years of history for the median
@@ -994,6 +994,8 @@ const REGIONS = [
   ["── Virginia ──", null],
   ["Virginia", [37.70,-79.40,7]],
   ["Shenandoah National Park / Rapidan", [38.45,-78.35,9]],
+  ["── West Virginia ──", null],
+  ["West Virginia", [38.60,-80.60,7]],
   ["── Maine ──", null],
   ["Maine", [45.30,-69.20,7]],
   ["The Forks (Kennebec / Dead / Moose)", [45.34,-69.95,9]],
@@ -1489,6 +1491,19 @@ const TROUT_CLASS = {
   mo_white:     {color:"#a8552a", label:"White Ribbon Trout Area"},
   mo_red:       {color:"#7b2d8e", label:"Red Ribbon Trout Area"},
   mo_taneycomo: {color:"#a8552a", label:"Lake Taneycomo"},
+  /* West Virginia's four, from the WVDNR Stocked Trout Streams layer (its own
+     RegType) and, for the wild water, two outside lines. Kept apart from
+     Virginia's: "special" here is the booklet's catch-and-release, fly-fishing-
+     only, delayed-harvest and Children/Class Q areas. wv_wild is NOT a WVDNR
+     designation: the booklet carries no wild-trout list, so those lines come
+     from a stream-temperature and size model (a third-party layer built on
+     WVDNR's NHD trout distribution) or from a pipeline-survey layer's
+     "Reproducing" flag. wv_maryland is the North Branch of the Potomac, which
+     the layer marks "See Maryland Regulations". */
+  wv_special:  {color:"#7b2d8e", label:"Special regulation trout water"},
+  wv_stocked:  {color:"#a8552a", label:"Stocked trout water"},
+  wv_wild:     {color:"#0e6f7d", label:"Possible wild trout water (not a WVDNR designation)"},
+  wv_maryland: {color:"#6d5a8e", label:"See Maryland regulations"},
 };
 const TROUT_SOURCE = {
   iadnr:{agency:"Iowa DNR",      what:"trout-stream layer",          regs:"Iowa DNR trout regulations"},
@@ -1499,6 +1514,8 @@ const TROUT_SOURCE = {
          url:"https://dec.ny.gov/things-to-do/freshwater-fishing/regulations"},
   vdwr:{agency:"Virginia Department of Wildlife Resources (DWR)", what:"trout-water layers", regs:"Virginia DWR regulations",
          url:"https://dwr.virginia.gov/fishing/regulations/"},
+  wvdnr:{agency:"West Virginia Division of Natural Resources (WVDNR)", what:"Stocked Trout Streams layer", regs:"West Virginia fishing regulations",
+         url:"https://wvdnr.gov/fishing/"},
   mdc:{agency:"Missouri Department of Conservation (MDC)", what:"Fishing Atlas trout-stream layer", regs:"Missouri Summary of Fishing Regulations",
          url:"https://mdc.mo.gov/sites/default/files/2026-02/Fishing%20Summ%202026_508.pdf"},
 };
@@ -2028,6 +2045,21 @@ Object.assign(PARK_INFO, {
     footer:`🎣 <b>Virginia</b>, from the 2026 booklet: a resident or nonresident freshwater fishing licence is required at age 16 and older (p. 10). “A valid trout license (annual or lifetime) is required in addition to other resident licenses only if you are fishing in designated stocked trout waters (October 1–June 15)” (p. 10), and “from June 16 through September 30 anglers can fish in stocked trout waters without a trout license” (p. 29). “Fishing in wild trout and most special regulation waters? Some require a signed landowner permit card” (p. 29). A National Forest Permit is also required on National Forest lands, with the exceptions listed (p. 12). “Any person who fishes on another’s property must have the landowner’s permission to do so except on designated stocked trout waters along which signs have been placed indicating that the waters are open to public fishing” (p. 14).`,
     ungauged:"No live gauge on this water. Judge clarity and level on arrival."},
 });
+/* West Virginia: the WVDNR Stocked Trout Streams layer (geom "wvdnr") for the
+   trout streams, two outside wild-water layers (see TROUT_CLASS wv_wild), and
+   OSM/NHD channel for the smallmouth float rivers; all of it region
+   "westvirginia". No `zone`: West Virginia is counted by state, and a `zone`
+   would make refreshZoneCounts() build an empty set. Every licence word is the
+   2026 West Virginia Fishing Regulations Summary's, printed page given. The
+   booklet has no stream-access rule (ACCESS_LAW.WV), so none is claimed. */
+Object.assign(PARK_INFO, {
+  westvirginia: {sub:"", heading:"Regulations", labelZoom:8, badge:"WVDNR · 2026",
+    note:`From the <b>2026 West Virginia Fishing Regulations Summary</b> (West Virginia Division of Natural Resources): the water's own entries in the Division's words, with the booklet's page cites, then the statewide rules the booklet gives for the fish it lists.`,
+    licence:"<b>West Virginia fishing licence</b>; a <b>trout stamp</b> as well (Class O resident, Class OO nonresident) to fish for trout",
+    regBody:"the West Virginia Division of Natural Resources",
+    footer:`🎣 <b>West Virginia</b>, from the 2026 booklet: resident Fishing (Class B) is $19.00 and nonresident Fishing (Class F) is $37.00 (p. 28). The Conservation Stamp (Class CS) is “Required for anglers and hunters with Class B, L, A and AH licenses” (p. 28). The Trout Fishing Stamp (Class O, resident, $10.00) is “Required of licensed anglers fishing for trout, except holders of Class XS, XP and XP3 licenses”; the nonresident Class OO ($16.00) is “Required of licensed anglers fishing for trout” (p. 28). People who do not need a trout stamp include “resident and nonresident youth under 15 years of age” (p. 29). The National Forest stamp (Class I, nonresident) is “Required if fishing on National Forests in addition to Class F, LL and F-L” (p. 28). Free Fishing Days: “June 13-14, 2026 … No license required on these days” (p. 9). On the Potomac, “West Virginia residents who possess valid West Virginia fishing licenses may fish by angling in the waters of the Potomac River, including the North Branch and Jennings Randolph Lake … without obtaining a Maryland fishing license” (p. 31).`,
+    ungauged:"No live gauge on this water. Judge clarity and level on arrival."},
+});
 /* Maine: the 2026 Maine Fishing Laws booklet (MDIFW), whose own entries are
    quoted on each river (OSM/NHD channel, region "maine"). No `zone`: Maine is
    counted by state, and a `zone` would make refreshZoneCounts() build an empty
@@ -2247,7 +2279,7 @@ Object.assign(PARK_INFO, {
    PARK_INFO[r.parkRegsSrc] lookup -- handing them Grand Teton's footer as well.
    Only the regulation fold's badge and note, the licence line and the
    ungauged copy look here. */
-const REGS_SRC_ROW = {yell:"yellowstone", grte:"grandteton", idfg:"tetonvalley", pfbc:"pennsylvania", nydec:"newyork", vdwr:"virginia", mdc:"missouri"};
+const REGS_SRC_ROW = {yell:"yellowstone", grte:"grandteton", idfg:"tetonvalley", pfbc:"pennsylvania", nydec:"newyork", vdwr:"virginia", mdc:"missouri", wvdnr:"westvirginia"};
 function regsSrcRow(r){ return PARK_INFO[REGS_SRC_ROW[r.parkRegsSrc]]; }
 /* Rivers that run through Grand Teton but carry no region of their own: the
    three Jackson Hole rivers, the park creeks WGFD's line carries on past the
@@ -3159,7 +3191,7 @@ let geomSweeps = 0;
 
    Two guards on what may be refined:
 
-   * `iadnr` / `iawt` / `widnr` / `midnr` / `wgfd` / `pfbc` / `nydec` / `vdwr` / `mdc` / `mdfw` rivers are never touched. Those lines are the state
+   * `iadnr` / `iawt` / `widnr` / `midnr` / `wgfd` / `pfbc` / `nydec` / `vdwr` / `mdc` / `mdfw` / `wvdnr` rivers are never touched. Those lines are the state
      fisheries agency's own drawing of the reach that is *designated trout
      water*, which is a different claim from "where the channel runs", and
      NHD would happily replace it with the whole creek or the wrong Bear
@@ -3253,7 +3285,7 @@ async function refineRiver(r){
      sources along one channel fragments the line wherever they disagree by
      more than REFINE_BUFFER_KM. The baked OSM line is simplified (40 m, 80 m
      in Alaska); the refinement is the same ways at full resolution. */
-  if(r.geom === "iadnr" || r.geom === "iawt" || r.geom === "widnr" || r.geom === "midnr" || r.geom === "wgfd" || r.geom === "pfbc" || r.geom === "nydec" || r.geom === "vdwr" || r.geom === "mdc" || r.geom === "mdfw"){ layer.refined = true; return; }
+  if(r.geom === "iadnr" || r.geom === "iawt" || r.geom === "widnr" || r.geom === "midnr" || r.geom === "wgfd" || r.geom === "pfbc" || r.geom === "nydec" || r.geom === "vdwr" || r.geom === "mdc" || r.geom === "mdfw" || r.geom === "wvdnr" || r.geom === "trout_dist" || r.geom === "wvva"){ layer.refined = true; return; }
   layer.refining = true;
   const ck = "nhdfine:" + r.id;
   const cached = store.get(ck);
@@ -3566,6 +3598,7 @@ function stateLicence(r){
        : r.state==="IL" ? "<b>Illinois</b> fishing licence"
        : r.state==="ID" ? "<b>Idaho</b> fishing licence"
        : r.state==="WY" ? "<b>Wyoming</b> fishing licence"
+       : r.state==="WV" ? "<b>West Virginia fishing licence</b> + <b>trout stamp</b> (Class O resident, Class OO nonresident) to fish for trout"
        : r.state==="MO" ? "<b>Missouri fishing permit</b> (unless exempt) <b>+ trout permit</b> to possess trout outside the trout parks; <b>daily trout tag</b> in the trout parks"
        : `Licence: see ${regBodyFor(r)}`;
 }
@@ -3643,7 +3676,7 @@ function rulesCardHTML(r){
   const tags = TAGS.filter(([re]) => re.test(re.source.startsWith("fly") ? noArt : txt)).map(t => t[1]);
   /* On an Iowa stream designated reach by reach, the special rules are the
      restrictive reach's, not the whole stream's -- so the chip says so. */
-  const part = r.reachClass && ["restrictive","pa_special","va_special"].some(k => r.reachClass.includes(k) && r.reachClass.some(c => c !== k));
+  const part = r.reachClass && ["restrictive","pa_special","va_special","wv_special"].some(k => r.reachClass.includes(k) && r.reachClass.some(c => c !== k));
 
   return `<div class="rulescard">${desigHTML(r.id)}`+
     (head ? `<div class="rc-status"><span class="rc-dot" style="background:${dot}"></span>`+
@@ -4197,10 +4230,13 @@ const TROUT_REST_F = 72;      // give them a rest
    mixed state: its trout is the MDC trout-area water (a troutClass) and
    Lake Taneycomo; the Ozark float rivers are smallmouth water unless their
    own text names trout (the Current, Jacks Fork, Eleven Point, North Fork,
-   Niangua and Meramec mainstems carry trout reaches and say so). */
+   Niangua and Meramec mainstems carry trout reaches and say so). Virginia and
+   West Virginia are mixed the same way: their trout streams carry a
+   troutClass, and the smallmouth float rivers (9 and 12) don't, so they stay
+   warmwater unless their own text names trout. */
 const TROUT_REGIONS = new Set(["driftless","northshore","doorcounty","wisouthshore","wicentralsands"]);
 function isTroutWater(r){
-  return !!(r && (r.troutClass || TROUT_REGIONS.has(r.region) || !["IA","MN","WI","IL","MO"].includes(r.state) ||
+  return !!(r && (r.troutClass || TROUT_REGIONS.has(r.region) || !["IA","MN","WI","IL","MO","VA","WV"].includes(r.state) ||
     /trout|steelhead|salmon|cutthroat|grayling/i.test((r.fish || "") + " " + (r.blurb || ""))));
 }
 /* The temperature line under the flow number. Same 24 h rule as discharge:
