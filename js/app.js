@@ -75,7 +75,7 @@ RIVERS.forEach(r => {
    dead zone. */
 const STATE_NAME = {ID:"Idaho", WY:"Wyoming", IA:"Iowa", MN:"Minnesota", WI:"Wisconsin", IL:"Illinois",
   CA:"California", OR:"Oregon", WA:"Washington", MT:"Montana", CO:"Colorado", UT:"Utah", AK:"Alaska",
-  MI:"Michigan", SD:"South Dakota", NM:"New Mexico", AZ:"Arizona", NV:"Nevada", PA:"Pennsylvania", NY:"New York", VA:"Virginia", ME:"Maine", MO:"Missouri", MA:"Massachusetts", NH:"New Hampshire", WV:"West Virginia"};
+  MI:"Michigan", SD:"South Dakota", NM:"New Mexico", AZ:"Arizona", NV:"Nevada", PA:"Pennsylvania", NY:"New York", VA:"Virginia", ME:"Maine", MO:"Missouri", MA:"Massachusetts", NH:"New Hampshire", WV:"West Virginia", CT:"Connecticut"};
 
 const API_BASE = "https://api.waterdata.usgs.gov/ogcapi/v0/collections";
 const STAT_YEARS = 7;        // years of history for the median
@@ -991,6 +991,10 @@ const REGIONS = [
   ["Catskills (Beaver Kill / Delaware)", [41.95,-74.80,9]],
   ["Adirondacks (Ausable / Saranac)", [44.30,-73.90,8]],
   ["Salmon River (Pulaski)", [43.55,-76.00,9]],
+  ["── Connecticut ──", null],
+  ["Connecticut", [41.60,-72.75,8]],
+  ["Farmington River (Collinsville / Pleasant Valley)", [41.88,-72.96,10]],
+  ["Housatonic River (Falls Village / Cornwall)", [41.78,-73.43,10]],
   ["── Virginia ──", null],
   ["Virginia", [37.70,-79.40,7]],
   ["Shenandoah National Park / Rapidan", [38.45,-78.35,9]],
@@ -1504,6 +1508,22 @@ const TROUT_CLASS = {
   wv_stocked:  {color:"#a8552a", label:"Stocked trout water"},
   wv_wild:     {color:"#0e6f7d", label:"Possible wild trout water (not a WVDNR designation)"},
   wv_maryland: {color:"#6d5a8e", label:"See Maryland regulations"},
+  /* Connecticut's, from CT DEEP: the management-area types its 2026 Fishing
+     Guide defines (pp. 39-40) and its Fisheries Management Area lines draw.
+     Their own keys, because a Wild Trout Management Area Class 1 is DEEP's term
+     (single barbless hook, catch and release), not another state's "wild".
+     Same colour families as the other states, no extra meaning: purple for the
+     Trout Management Areas, teal for the wild-trout Classes (darkest = Class 1,
+     the strictest), rust for the Trout Parks, brown for the Trophy Trout Areas,
+     slate for the sea-run water. The guide's tidal-water and Atlantic Salmon
+     Management Area categories are not drawn as classes. */
+  ct_tma:    {color:"#7b2d8e", label:"Trout Management Area"},
+  ct_wild1:  {color:"#0e6f7d", label:"Wild Trout Management Area, Class 1"},
+  ct_wild2:  {color:"#3d8f9b", label:"Wild Trout Management Area, Class 2"},
+  ct_wild3:  {color:"#5a9ea8", label:"Wild Trout Management Area, Class 3"},
+  ct_park:   {color:"#a8552a", label:"Trout Park"},
+  ct_trophy: {color:"#8c4f2b", label:"Trophy Trout Area"},
+  ct_searun: {color:"#4f6d8f", label:"Sea-Run Trout Stream"},
 };
 const TROUT_SOURCE = {
   iadnr:{agency:"Iowa DNR",      what:"trout-stream layer",          regs:"Iowa DNR trout regulations"},
@@ -1518,6 +1538,8 @@ const TROUT_SOURCE = {
          url:"https://wvdnr.gov/fishing/"},
   mdc:{agency:"Missouri Department of Conservation (MDC)", what:"Fishing Atlas trout-stream layer", regs:"Missouri Summary of Fishing Regulations",
          url:"https://mdc.mo.gov/sites/default/files/2026-02/Fishing%20Summ%202026_508.pdf"},
+  ctdeep:{agency:"Connecticut Department of Energy and Environmental Protection (DEEP)", what:"Fisheries Management Area lines", regs:"Connecticut DEEP Fishing Guide",
+         url:"https://portal.ct.gov/-/media/deep/fishing/anglers_guide/2026-fishing-guide-october-2025-for-web.pdf"},
 };
 function riverColor(r){
   const c = r.troutClass && TROUT_CLASS[r.troutClass];
@@ -2121,6 +2143,21 @@ Object.assign(PARK_INFO, {
     footer:`🎣 <b>New Hampshire</b>, from the 2026 digest: “Fishing licenses are required for people 16 years of age and older” (p. 6). “All freshwater anglers pay a $1 fisheries habitat fee, which is included in the license price” (p. 7). Licenses “may be purchased online via fishnh.com, from license agents, Fish and Game Department headquarters in Concord, Fish and Game Region 1, 2 and 4 offices, and some town or city clerks” (p. 6). “The license must be carried on your person when fishing or hunting” (p. 7). The digest names no trout or salmon stamp. On the Connecticut River, “all New Hampshire resident and Vermont resident fishing licenses are valid” and other nonresidents may fish only east of the Vermont low water mark (p. 39); “all New Hampshire and Maine fishing licenses are valid” on the New Hampshire–Maine interstate waters (p. 38).`,
     ungauged:"No live gauge on this brook or river. Judge clarity and level on arrival."},
 });
+/* Connecticut: CT DEEP's Fisheries Management Area lines (geom "ctdeep") for the
+   designated trout streams, and the 2026 Connecticut Fishing Guide (April 2026,
+   v3) for the rules; every Connecticut river is region "connecticut", so each
+   reads this row. No `zone`: a `zone` here would make refreshZoneCounts() build
+   an empty set. Every licence word is the guide's, printed page given (printed
+   page = PDF page). The guide's only words on streambeds are on p. 41
+   (ACCESS_LAW.CT), and it states no public right to wade. */
+Object.assign(PARK_INFO, {
+  connecticut: {sub:"", heading:"Regulations", labelZoom:8, badge:"CT DEEP · 2026",
+    note:`From the <b>2026 Connecticut Fishing Guide</b> (CT DEEP; April 2026, v3): the water's own entries from the guide's rivers and streams with special fishing regulations (pp. 42–53) in DEEP's words, with page cites, then the statewide default regulations. A water with no entry of its own says so and shows the statewide rule alone.`,
+    licence:"<b>Connecticut fishing licence</b> (age 16 and over) + <b>Trout and Salmon Stamp</b> to keep trout or salmon and to fish a Trout Management Area, Trout Park or Wild Trout Management Area",
+    regBody:"CT DEEP",
+    footer:`🎣 <b>Connecticut</b>, from the 2026 guide: fishing licences are “Required for all persons age 16 and older,” “Issued on a calendar year basis and expire on December 31st,” and “Free for Connecticut residents age 65 or older” (p. 5). “The Trout and Salmon Stamp is required for all persons age 16 and older when: A. Taking (keeping any trout or salmon) B. Fishing in waters designated as a: -Trout Management Area (Rivers) -Trout Park -Wild Trout Management Area Class 1, 2, or 3 -Atlantic Salmon Management Area” (p. 5). The stamp is $3 for Connecticut anglers 16 and 17, $5 for Connecticut anglers 18 and over and $5 for nonresidents (p. 5). “An ‘All Waters’ or ‘Inland Waters Only’ fishing license is required upstream of the indicated landmarks while an ‘All Waters’ or ‘Marine Waters Only’ fishing license is required downstream” (p. 8). “Family Fishing Day: No fishing license is required on May 9, 2026” (p. 6). Licences and stamps: “available online anytime via https://portal.ct.gov/CTOutdoorLicenses or can be purchased at most bait and tackle shops, town clerk offices, or DEEP field offices” (p. 5).`,
+    ungauged:"No live gauge on this water. Judge clarity and level on arrival."},
+});
 /* Minnesota's designated stream trout lakes (mnlakes/build.py). Only lakes name
    this row: no Minnesota river has region "minnesota", so it never reaches a
    river sheet, and it has no `zone` (it would build an empty set). Every word
@@ -2279,7 +2316,7 @@ Object.assign(PARK_INFO, {
    PARK_INFO[r.parkRegsSrc] lookup -- handing them Grand Teton's footer as well.
    Only the regulation fold's badge and note, the licence line and the
    ungauged copy look here. */
-const REGS_SRC_ROW = {yell:"yellowstone", grte:"grandteton", idfg:"tetonvalley", pfbc:"pennsylvania", nydec:"newyork", vdwr:"virginia", mdc:"missouri", wvdnr:"westvirginia"};
+const REGS_SRC_ROW = {yell:"yellowstone", grte:"grandteton", idfg:"tetonvalley", pfbc:"pennsylvania", nydec:"newyork", vdwr:"virginia", mdc:"missouri", wvdnr:"westvirginia", ctdeep:"connecticut"};
 function regsSrcRow(r){ return PARK_INFO[REGS_SRC_ROW[r.parkRegsSrc]]; }
 /* Rivers that run through Grand Teton but carry no region of their own: the
    three Jackson Hole rivers, the park creeks WGFD's line carries on past the
@@ -3191,7 +3228,7 @@ let geomSweeps = 0;
 
    Two guards on what may be refined:
 
-   * `iadnr` / `iawt` / `widnr` / `midnr` / `wgfd` / `pfbc` / `nydec` / `vdwr` / `mdc` / `mdfw` / `wvdnr` rivers are never touched. Those lines are the state
+   * `iadnr` / `iawt` / `widnr` / `midnr` / `wgfd` / `pfbc` / `nydec` / `vdwr` / `mdc` / `mdfw` / `wvdnr` / `ctdeep` rivers are never touched. Those lines are the state
      fisheries agency's own drawing of the reach that is *designated trout
      water*, which is a different claim from "where the channel runs", and
      NHD would happily replace it with the whole creek or the wrong Bear
@@ -3285,7 +3322,7 @@ async function refineRiver(r){
      sources along one channel fragments the line wherever they disagree by
      more than REFINE_BUFFER_KM. The baked OSM line is simplified (40 m, 80 m
      in Alaska); the refinement is the same ways at full resolution. */
-  if(r.geom === "iadnr" || r.geom === "iawt" || r.geom === "widnr" || r.geom === "midnr" || r.geom === "wgfd" || r.geom === "pfbc" || r.geom === "nydec" || r.geom === "vdwr" || r.geom === "mdc" || r.geom === "mdfw" || r.geom === "wvdnr" || r.geom === "trout_dist" || r.geom === "wvva"){ layer.refined = true; return; }
+  if(r.geom === "iadnr" || r.geom === "iawt" || r.geom === "widnr" || r.geom === "midnr" || r.geom === "wgfd" || r.geom === "pfbc" || r.geom === "nydec" || r.geom === "vdwr" || r.geom === "mdc" || r.geom === "mdfw" || r.geom === "wvdnr" || r.geom === "ctdeep" || r.geom === "trout_dist" || r.geom === "wvva"){ layer.refined = true; return; }
   layer.refining = true;
   const ck = "nhdfine:" + r.id;
   const cached = store.get(ck);
@@ -3458,7 +3495,7 @@ function tierChipHTML(r){
 function regBodyFor(r){
   return (PARK_INFO[r.region] && PARK_INFO[r.region].regBody)
     // no row, or a row that leaves it to the state (the Driftless, North Shore, Door County)
-    || {IA:"the Iowa DNR", MN:"the Minnesota DNR", WI:"the Wisconsin DNR", IL:"the Illinois DNR", ID:"Idaho Fish &amp; Game", WY:"Wyoming Game &amp; Fish", MO:"the Missouri Department of Conservation"}[r.state]
+    || {IA:"the Iowa DNR", MN:"the Minnesota DNR", WI:"the Wisconsin DNR", IL:"the Illinois DNR", ID:"Idaho Fish &amp; Game", WY:"Wyoming Game &amp; Fish", MO:"the Missouri Department of Conservation", CT:"CT DEEP"}[r.state]
     || "WY Game &amp; Fish / Idaho Fish &amp; Game";
 }
 
@@ -3599,6 +3636,7 @@ function stateLicence(r){
        : r.state==="ID" ? "<b>Idaho</b> fishing licence"
        : r.state==="WY" ? "<b>Wyoming</b> fishing licence"
        : r.state==="WV" ? "<b>West Virginia fishing licence</b> + <b>trout stamp</b> (Class O resident, Class OO nonresident) to fish for trout"
+       : r.state==="CT" ? "<b>Connecticut fishing licence</b> (age 16 and over) + <b>Trout and Salmon Stamp</b> to keep trout or salmon and to fish a Trout Management Area, Trout Park or Wild Trout Management Area"
        : r.state==="MO" ? "<b>Missouri fishing permit</b> (unless exempt) <b>+ trout permit</b> to possess trout outside the trout parks; <b>daily trout tag</b> in the trout parks"
        : `Licence: see ${regBodyFor(r)}`;
 }
@@ -3676,7 +3714,7 @@ function rulesCardHTML(r){
   const tags = TAGS.filter(([re]) => re.test(re.source.startsWith("fly") ? noArt : txt)).map(t => t[1]);
   /* On an Iowa stream designated reach by reach, the special rules are the
      restrictive reach's, not the whole stream's -- so the chip says so. */
-  const part = r.reachClass && ["restrictive","pa_special","va_special","wv_special"].some(k => r.reachClass.includes(k) && r.reachClass.some(c => c !== k));
+  const part = r.reachClass && ["restrictive","pa_special","va_special","wv_special","ct_tma"].some(k => r.reachClass.includes(k) && r.reachClass.some(c => c !== k));
 
   return `<div class="rulescard">${desigHTML(r.id)}`+
     (head ? `<div class="rc-status"><span class="rc-dot" style="background:${dot}"></span>`+
@@ -5074,7 +5112,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v36";
+const APP_VERSION = "flyroutes-v37";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){

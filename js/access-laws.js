@@ -87,4 +87,7 @@ const ACCESS_LAW = {
   MO: {head:"Missouri\u2019s fishing summary has one statement on access, a box headed \u201cDon\u2019t Trespass!\u201d. It says nothing about navigable-stream beds, gravel bars or wading.",
        quote:"Many rivers and streams flow through private land. Before entering, ask landowners for permission.",
        src:"Missouri Department of Conservation, A Summary of Missouri Fishing Regulations 2026, p. 35", url:"https://mdc.mo.gov/sites/default/files/2026-02/Fishing%20Summ%202026_508.pdf"},
+  CT: {head:"Connecticut\u2019s fishing guide says the stream bottom can be privately owned and wading may be trespassing. It states no public right to wade or walk a streambed.",
+       quote:"The stream bottom can be privately owned. Wading in a stream or river may be considered trespassing. When in doubt ask permission from the landowner and always respect landowner\u2019s right to post their property.",
+       src:"2026 Connecticut Fishing Guide, CT DEEP, p. 41", url:"https://portal.ct.gov/-/media/deep/fishing/anglers_guide/2026-fishing-guide-october-2025-for-web.pdf"},
 };
