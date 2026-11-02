@@ -2093,18 +2093,18 @@ Object.assign(PARK_INFO, {
 });
 /* Massachusetts: MassWildlife (Division of Fisheries and Wildlife) lines and
    gauges, every river region "massachusetts" (geom "mdfw"/"nhd"). No `zone`:
-   a `zone` would make refreshZoneCounts() build an empty set. The 2026
-   MassWildlife guide could not be fetched (mass.gov refuses the download), so
-   no regulation text is on file and this row states no licence, fee, stamp,
-   season or limit; it only names the authority and sends the reader to the
-   guide. When the guide text is loaded, add the page-cited licence line here
-   and set parkRegsSrc:"massachusetts" on the rivers. */
+   a `zone` would make refreshZoneCounts() build an empty set. Every licence
+   word is the 2026 Massachusetts Official Freshwater Fishing, Hunting, and
+   Trapping Laws booklet's, with its printed page (ma/regs.json). The booklet
+   names no trout stamp (its one stamp is the Wildlands Conservation Stamp
+   added to the licence) and no streambed or wading rule (ACCESS_LAW.MA), so
+   none is claimed. */
 Object.assign(PARK_INFO, {
-  massachusetts: {sub:"", heading:"Regulations", labelZoom:8, badge:"MassWildlife",
-    note:`Massachusetts regulations are written by <b>MassWildlife</b> (the Division of Fisheries and Wildlife). No rule text is loaded for this water yet. Read the current <b>Guide to Freshwater Fishing, Hunting and Trapping</b> before you go.`,
-    licence:"<b>Massachusetts</b> fishing licence: see the MassWildlife guide for who needs one and for any trout rules",
+  massachusetts: {sub:"", heading:"Regulations", labelZoom:8, badge:"MassWildlife · 2026",
+    note:`From the <b>2026 Massachusetts Official Freshwater Fishing, Hunting, and Trapping Laws</b> (MassWildlife, the Division of Fisheries and Wildlife): the water's own entries in MassWildlife's words, with the booklet's page cites, then the standard trout rule they fall back to. A water with no entry of its own says so and shows the standard rule alone.`,
+    licence:"<b>Massachusetts fishing licence</b> (age 15 and over, inland waters); the booklet names no trout stamp",
     regBody:"MassWildlife (the Massachusetts Division of Fisheries and Wildlife)",
-    footer:`🎣 <b>Massachusetts</b>: fishing rules are set by MassWildlife (the Division of Fisheries and Wildlife). This app does not yet carry its licence, season or limit text, so check the current MassWildlife guide to freshwater fishing before you fish. Lines on this map show where MassWildlife has found coldwater fish and where it stocks; they are not a statement of what is open or legal.`,
+    footer:`🎣 <b>Massachusetts</b>, from the 2026 booklet: “Licenses are required for anyone 15 years of age and over for fishing the inland (fresh) waters of Massachusetts. Anglers under 15 may fish, but do not need a license” (p. 8). “A valid Massachusetts non-resident license is required for all non-resident anglers and hunters ages 15 and older” (p. 8). “Licenses are valid from January 1 through December 31 (except for limited term licenses)” (p. 8). Resident Fishing is $40.00 and Non-resident Fishing $50.00; the price “does not include the $5.00 Wildlands Conservation Stamp that is added to the first resident license and all non-resident licenses purchased” (p. 12). The booklet names no trout stamp. Free Fishing Weekend is June 6–7, 2026: “No freshwater license needed!” (p. 15). Lines on this map show where MassWildlife has found coldwater fish and where it stocks; they are not a statement of what is open or legal.`,
     ungauged:"No live gauge on this water. Judge clarity and level on arrival."},
 });
 /* New Hampshire: the 2026 New Hampshire Freshwater Fishing Digest (NH Fish and
@@ -5074,7 +5074,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v35";
+const APP_VERSION = "flyroutes-v36";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){
