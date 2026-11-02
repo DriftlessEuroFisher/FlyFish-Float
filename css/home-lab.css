@@ -178,3 +178,6 @@ img{max-width:100%;height:auto}
 .nameplate h2.wordplay .ins{color:var(--river)}
 .nameplate h2.wordplay .cap{color:transparent}
 .nameplate h2.wordplay .cap b{color:var(--ink)}
+.name-band{padding:32px 0;border-top:0}
+.name-band .wp-cap{margin:0}
+.name-band h2.wordplay{margin-bottom:10px}
