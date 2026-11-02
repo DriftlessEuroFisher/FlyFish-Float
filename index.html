@@ -10,318 +10,83 @@ if(/[?&]tour=/.test(q)||(sa&&!/[?&]home(?:[=&]|$)/.test(q)))location.replace("ap
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#1f1915">
+<meta name="theme-color" content="#f4eee4">
 <meta name="color-scheme" content="light">
-<title>TrailWaterMaps — live river flows, fishing rules and access</title>
-<meta name="description" content="Live USGS river flows read against normal, each river's own fishing rules, public land and access, and the forecast at the water. Trout streams, float rivers and lakes across 18 states and 28 national parks.">
+<title>TrailWater — Check the water. Then go.</title>
+<meta name="description" content="Live river flows, the rules for each river, and public access, built for your phone.">
 <link rel="canonical" href="https://trailwatermaps.com/">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="TrailWaterMaps">
+<meta property="og:site_name" content="TrailWater">
 <meta property="og:url" content="https://trailwatermaps.com/">
-<meta property="og:title" content="TrailWaterMaps — live river flows, fishing rules and access">
+<meta property="og:title" content="TrailWater — live river flows, fishing rules and access">
 <meta property="og:description" content="Live river flows read against normal, the rules for each river, and where you can get on the water. Built for your phone.">
 <meta property="og:image" content="https://trailwatermaps.com/img/og.jpg">
 <meta property="og:image:width" content="780">
 <meta property="og:image:height" content="1688">
-<meta property="og:image:alt" content="The Snake River in Jackson Hole open in TrailWaterMaps, with its Rules today card">
+<meta property="og:image:alt" content="The Snake River in Jackson Hole open in TrailWater, with its Rules today card">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/home-lab.css">
 <link rel="manifest" href="manifest.json">
-<link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
+<link rel="icon" type="image/svg+xml" href="icons/tile-black.svg">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="alternate" type="application/rss+xml" title="TrailWaterMaps news" href="news/feed.xml">
+<link rel="alternate" type="application/rss+xml" title="TrailWater news" href="news/feed.xml">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="TrailWater">
-<script>document.documentElement.classList.add("js");</script>
 </head>
 <body>
-
-<header class="bar">
-  <a class="brand" href="./" aria-label="TrailWaterMaps home">
-    <!-- The 1b "Rocking TW" mark (icons/mark.svg), inline so it takes Bone. -->
-    <svg class="brandmark" viewBox="-4 -4 108 108" aria-hidden="true" focusable="false"><path d="M8 12H44M24 12V62M44 12L56 62L68 32L80 62L92 12M10 88Q20 80 30 88T50 88T70 88T90 88"/></svg>
-    <span>TrailWaterMaps</span>
-  </a>
-  <button class="navbtn" id="navbtn" type="button" aria-expanded="false" aria-controls="nav" aria-label="Menu">
-    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="b1" d="M4 7h16"/><path class="b2" d="M4 12h16"/><path class="b3" d="M4 17h16"/></svg>
-  </button>
-  <nav class="nav" id="nav" aria-label="Site">
-    <a href="#features">Features</a>
-    <a href="#how">How it works</a>
-    <a href="news">News</a>
-    <a class="nav-map" href="app">Open the map</a>
-  </nav>
-</header>
-
-<!-- The pinned announcement, filled by js/home-news.js. Hidden until there
-     is one, so with no script (or no signal) it simply isn't there. -->
-<aside class="hn-banner" id="hn-banner" aria-label="Announcement" hidden></aside>
-
+<header class="bar"><div class="wrap">
+  <a class="brand" href="./" aria-label="TrailWater home"><svg class="brandmark" viewBox="-4 -4 108 108" aria-hidden="true" focusable="false"><path d="M8 12H44M24 12V62M44 12L56 62L68 32L80 62L92 12M10 88Q20 80 30 88T50 88T70 88T90 88"/></svg><span>TrailWater</span></a>
+  <nav class="nav" aria-label="Site"><a href="news">News</a><a href="./#app">The app</a><a href="./#about">About</a><a class="nav-map" href="app">Open the map</a></nav>
+</div></header>
 <main>
-
-<!-- The hero picture is a screenshot of the map itself. To use a photo later,
-     swap the two files in img/ (or the two srcs here); nothing else changes.
-     --hero-pos in home.css sets which part of the picture stays in view. -->
-<section class="hero">
-  <picture>
-    <source media="(min-width:700px)" srcset="img/hero-wide.webp" width="1600" height="1000">
-    <img class="hero-bg" src="img/hero-tall.webp" width="780" height="1400" fetchpriority="high" alt="">
-  </picture>
-  <div class="wrap hero-in">
-    <span class="apptile" aria-hidden="true">
-      <svg viewBox="-4 -4 108 108" focusable="false"><path d="M8 12H44M24 12V62M44 12L56 62L68 32L80 62L92 12M10 88Q20 80 30 88T50 88T70 88T90 88"/></svg>
-    </span>
-    <h1>The map for trout and float water</h1>
-    <p class="sub">1,400+ rivers and creeks across 18&nbsp;states and 28&nbsp;national parks.</p>
-    <p class="sub">Live flows, the rules, and where to get on the water.</p>
-    <a class="pill" href="app">Open the map
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7"/></svg>
-    </a>
-  </div>
-</section>
-
-<section class="tagline">
+<section class="c-hero">
+  <picture><source media="(min-width:700px)" srcset="img/hero-wide.webp"><img class="bg" src="img/hero-tall.webp" width="780" height="1400" alt="" fetchpriority="high"></picture>
   <div class="wrap">
-    <p class="big">Built by an angler, for the water you actually fish.</p>
-    <p class="works">Works on iPhone &middot; Android &middot; Desktop &mdash; in your browser</p>
+    <h1>Check the water. Then go.</h1>
+    <p class="lede">Live flows, the rules, and where to get on, for 1,400+ trout and float rivers.</p>
+    <a class="pill" href="app">Open the map <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7"/></svg></a>
   </div>
 </section>
-
-<section class="stats" aria-label="TrailWaterMaps at a glance">
-  <dl class="wrap">
-    <div><dt>1,400+</dt><dd>Rivers &amp; creeks</dd></div>
-    <div><dt>18</dt><dd>States</dd></div>
-    <div><dt>28</dt><dd>National parks</dd></div>
-    <div><dt>800+</dt><dd>Live gauges</dd></div>
-  </dl>
-</section>
-
-<section class="features" id="features">
-  <div class="wrap">
-    <header class="head">
-      <h2>Features</h2>
-      <p>What you get when you tap a river.</p>
-    </header>
-
-    <article class="feature" id="flow">
-      <figure class="phone">
-        <img src="img/flow.webp" width="390" height="844" loading="lazy" decoding="async"
-             alt="The live flow card for the Firehole River: the latest discharge in cfs, its status against the median for the week, and the water temperature.">
-      </figure>
-      <div class="copy">
-        <p class="kicker">Live flow</p>
-        <h3>Read the flow against normal</h3>
-        <p>Every gauged river shows the latest USGS discharge next to the seven-year median for this week of the year, so the number means something on a spring creek or the Snake. Where the gauge reports water temperature you get that too.</p>
-        <p>A creek with no gauge says so instead of borrowing another stream&rsquo;s number.</p>
-      </div>
-    </article>
-
-    <article class="feature" id="rules">
-      <figure class="phone">
-        <img src="img/rules.webp" width="390" height="844" loading="lazy" decoding="async"
-             alt="The Rules today card for Waterloo Creek in the Iowa Driftless: open all year, licence and trout fee, the public angling easement rule, and the Iowa DNR's regulation wording below.">
-      </figure>
-      <div class="copy">
-        <p class="kicker">Rules today</p>
-        <h3>The rules for that river, in the agency&rsquo;s own words</h3>
-        <p>Most rivers carry their own entry from the state&rsquo;s 2026 fishing regulations, or the national park&rsquo;s own rules, reproduced word for word. A card at the top pulls out what decides the day: whether the season is open, the licence you need, and the state&rsquo;s law on wading a private streambed.</p>
-        <p class="note">Regulations change, and the app can lag behind them. Check the official booklet or the park&rsquo;s current rules before you fish.</p>
-      </div>
-    </article>
-
-    <article class="feature" id="access">
-      <figure class="phone">
-        <img src="img/land.webp" width="390" height="844" loading="lazy" decoding="async"
-             alt="Northeast Iowa trout streams at close zoom with public land switched on: state land shaded green and federal land blue, with parking and wade-access points along the creeks.">
-      </figure>
-      <div class="copy">
-        <p class="kicker">Public land &amp; access</p>
-        <h3>See where you can get on the water</h3>
-        <p>Public land from the USGS Protected Areas Database is shaded by who manages it, because the manager sets the rules. Switch on boat ramps, wade access and parking, bridge crossings, campsites, trailheads, and falls, rapids and dams.</p>
-        <p>A bridge shows that state&rsquo;s access rule, because a bridge isn&rsquo;t legal access everywhere.</p>
-      </div>
-    </article>
-
-    <article class="feature" id="weather">
-      <figure class="phone">
-        <img src="img/weather.webp" width="390" height="844" loading="lazy" decoding="async"
-             alt="The Wind and weather card for Big Creek Lake in Iowa: temperature and wind now, then every two hours through the morning, from the National Weather Service hourly forecast.">
-      </figure>
-      <div class="copy">
-        <p class="kicker">Wind &amp; weather</p>
-        <h3>The forecast at the water, not in town</h3>
-        <p>The National Weather Service hourly forecast, taken at the river&rsquo;s gauge, the middle of the river, or the lake. The next hours of temperature and wind sit in a row, with a one-line read on the wind. It&rsquo;s a forecast, and the card says so.</p>
-      </div>
-    </article>
-
-    <article class="feature" id="fieldbook">
-      <figure class="phone">
-        <img src="img/fieldbook.webp" width="390" height="844" loading="lazy" decoding="async"
-             alt="The Firehole River after one tap on Fished: the trip is listed with the forecast and the gauge reading recorded at that moment, with buttons to edit or delete it.">
-      </figure>
-      <div class="copy">
-        <p class="kicker">Field Book</p>
-        <h3>A Field Book that remembers the day</h3>
-        <p>Mark the water you keep coming back to as a favorite. Tap Fished and the trip is logged with the forecast and the gauge reading from that moment, so next season you can see what the river was doing the day it fished well.</p>
-        <p>Your Field Book is saved on your phone. You don&rsquo;t need an account to use it.</p>
-      </div>
-    </article>
-
-    <article class="feature" id="float">
-      <figure class="phone">
-        <img src="img/float.webp" width="390" height="844" loading="lazy" decoding="async"
-             alt="The float planner on a Snake River section: the route drawn on the map, a choice of craft, the launch time and the estimated time off the water.">
-      </figure>
-      <div class="copy">
-        <p class="kicker">In pilot</p>
-        <h3>Float Mode and lake trips</h3>
-        <p>Pick a float section, a craft and a launch time and the planner estimates when you&rsquo;ll be off the water, then a live panel shows miles done and left, your ETA and pace. Float Mode is being tried on the Snake, the Teton, the South Fork and the Green, and on beginner and intermediate sections of Iowa&rsquo;s water trails with no low-head dam.</p>
-        <p>On Big Creek and Saylorville lakes in central Iowa, a lake trip records your track and saves it with the trip in your Field Book.</p>
-      </div>
-    </article>
-
-    <article class="feature" id="offline">
-      <figure class="phone">
-        <img src="img/offline.webp" width="390" height="844" loading="lazy" decoding="async"
-             alt="The map with no connection: the header reads flows cached, and a banner says it is showing the last saved readings.">
-      </figure>
-      <div class="copy">
-        <p class="kicker">Weak signal</p>
-        <h3>Built for one bar of signal</h3>
-        <p>Once it&rsquo;s been opened, the app starts without a connection and shows the last readings it saved, marked as old. Before you head up a canyon, save the area you&rsquo;re fishing from the Field Book&rsquo;s Offline tab and the USGS Topo map comes with you.</p>
-      </div>
-    </article>
-
-    <article class="feature" id="coverage">
-      <figure class="phone">
-        <img src="img/coverage.webp" width="390" height="844" loading="lazy" decoding="async"
-             alt="The opening map: the states TrailWaterMaps covers outlined, with national parks marked inside them.">
-      </figure>
-      <div class="copy">
-        <p class="kicker">Coverage</p>
-        <h3>From the Driftless to Denali</h3>
-        <p>Blue-ribbon western rivers, the Driftless spring creeks, the North Shore of Lake Superior, Michigan&rsquo;s trout streams, Iowa&rsquo;s water trails, and the fishing water of national parks from Yellowstone and Glacier to Yosemite and Katmai.</p>
-        <p class="states">Alaska &middot; Arizona &middot; California &middot; Colorado &middot; Idaho &middot; Illinois &middot; Iowa &middot; Michigan &middot; Minnesota &middot; Montana &middot; Nevada &middot; New Mexico &middot; Oregon &middot; South Dakota &middot; Utah &middot; Washington &middot; Wisconsin &middot; Wyoming</p>
-      </div>
-    </article>
+<!-- Filled by js/home-news.js. Hidden until there is a published post, so
+     with no script, no signal or no posts it simply isn't there. -->
+<section class="c-news" hidden><div class="wrap">
+  <div class="head"><h2>Latest from TrailWater</h2><a href="news">All news &rarr;</a></div>
+  <ul class="nw-list cols3" data-nw="list" data-count="3"></ul>
+</div></section>
+<section class="c-shots" id="app"><div class="wrap"><p class="kicker">In the app</p><h2 class="c-h2">Everything on one thumb-sized screen</h2></div>
+  <div class="c-rail">
+    <figure><div class="phone"><img src="img/flow.webp" width="390" height="844" loading="lazy" alt="Live flow card"></div><figcaption>Live flow<small>Against the seven-year median.</small></figcaption></figure>
+    <figure><div class="phone"><img src="img/rules.webp" width="390" height="844" loading="lazy" alt="Rules today card"></div><figcaption>Rules today<small>Season, licence, streambed law.</small></figcaption></figure>
+    <figure><div class="phone"><img src="img/land.webp" width="390" height="844" loading="lazy" alt="Public land and access"></div><figcaption>Access<small>Public land, ramps, parking.</small></figcaption></figure>
+    <figure><div class="phone"><img src="img/weather.webp" width="390" height="844" loading="lazy" alt="Wind and weather"></div><figcaption>Weather<small>The forecast at the water.</small></figcaption></figure>
+    <figure><div class="phone"><img src="img/offline.webp" width="390" height="844" loading="lazy" alt="Offline"></div><figcaption>Weak signal<small>Last readings, saved topo.</small></figcaption></figure>
   </div>
 </section>
-
-<section class="how" id="how">
-  <div class="wrap">
-    <header class="head">
-      <p class="kicker">How it works</p>
-      <h2>Three easy steps</h2>
-    </header>
-    <ol class="steps">
-      <li>
-        <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M9 4 3 6.5v13L9 17l6 3 6-2.5v-13L15 7 9 4z"/><path d="M9 4v13M15 7v13"/></svg></span>
-        <div>
-          <h3><a href="app">Open the map</a></h3>
-          <p>It runs in your browser. Nothing to download and no account needed.</p>
-        </div>
-      </li>
-      <li>
-        <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4 3l7 17 2.5-7L21 10.5 4 3z"/></svg></span>
-        <div>
-          <h3>Pick a region and tap a river</h3>
-          <p>Choose a state or national park, then tap a river to see its flow, its rules and where to get on the water.</p>
-        </div>
-      </li>
-      <li id="install">
-        <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><rect x="7" y="2.5" width="10" height="19" rx="2.2"/><path d="M12 8v6M9.5 11.5 12 14l2.5-2.5M11 18.5h2"/></svg></span>
-        <div>
-          <h3>Add it to your home screen</h3>
-          <p>On iPhone, open the map in Safari, tap Share, then <b>Add to Home Screen</b>. On Android, open it in Chrome, tap the &#8942; menu, then <b>Install app</b>. It then opens full screen and starts without signal.</p>
-        </div>
-      </li>
-    </ol>
-  </div>
-</section>
-
-<!-- The latest three posts, filled by js/home-news.js. Hidden until they
-     arrive; the full list is the server-rendered /news page. -->
-<section class="hnews" id="hn" aria-labelledby="hn-h" hidden>
-  <div class="wrap">
-    <header class="head">
-      <p class="kicker">Latest</p>
-      <h2 id="hn-h">News &amp; updates</h2>
-    </header>
-    <ul class="hn-list" id="hn-list"></ul>
-    <p class="hn-all"><a href="news">All news <span aria-hidden="true">&rarr;</span></a></p>
-  </div>
-</section>
-
-<section class="cta">
-  <div class="wrap">
-    <p class="giant">No account.<br>Just the map.</p>
-    <a class="pill pill-bone" href="app">Open the map
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7"/></svg>
-    </a>
-  </div>
-</section>
-
+<section class="b-strip"><div class="wrap"><dl class="stats"><div><dt>1,400+</dt><dd>Rivers &amp; creeks</dd></div><div><dt>18</dt><dd>States</dd></div><div><dt>28</dt><dd>National parks</dd></div><div><dt>800+</dt><dd>Live gauges</dd></div></dl></div></section>
+<section class="nameplate" id="about"><div class="wrap">
+  <p class="kicker">About</p>
+  <p class="about-lead">Built by an angler, for the water you actually fish.</p>
+  <h3 class="about-sub">The name</h3>
+  <h2 class="wordplay" id="wp" aria-label="Tailwater, with an r added, is TrailWater"><span aria-hidden="true">T<span class="ins">r<i class="caret"></i></span>ail<span class="cap"><b>W</b></span>ater</span></h2>
+  <p class="wp-cap">Add an <b>r</b>. Add a trail.</p>
+  <script>(function(){var e=document.getElementById("wp");if(!e)return;e.classList.add("armed");function go(){e.classList.add("in")}
+  if(!("IntersectionObserver" in window)||matchMedia("(prefers-reduced-motion:reduce)").matches){go();return}
+  new IntersectionObserver(function(o,ob){if(o[0].isIntersecting){setTimeout(go,500);ob.disconnect()}},{threshold:.7}).observe(e);})();</script>
+  <p>A tailwater is the stretch of river below a dam: cold, steady, and some of the best trout water there is. TrailWater is the other kind. It is the water you walk to, wade, drift and float, and play on. The trail is where we come in. We help you find your water, navigate to it, and get on it.</p>
+</div></section>
+<section class="c-cta"><div class="wrap"><h2>No account.<br>Just the water.</h2><a class="pill pill-ink" href="app">Open the map <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7"/></svg></a></div></section>
 </main>
-
-<footer class="foot">
-  <div class="wrap">
-    <div class="cols">
-      <div class="about">
-        <a class="brand" href="./" aria-label="TrailWaterMaps home">
-          <svg class="brandmark" viewBox="-4 -4 108 108" aria-hidden="true" focusable="false"><path d="M8 12H44M24 12V62M44 12L56 62L68 32L80 62L92 12M10 88Q20 80 30 88T50 88T70 88T90 88"/></svg>
-          <span>TrailWaterMaps</span>
-        </a>
-        <p>Live river flows, the rules for each river, and public access, on a map built to be checked from your phone.</p>
-      </div>
-      <nav aria-label="App">
-        <h4>App</h4>
-        <ul>
-          <li><a href="app">Open the map</a></li>
-          <li><a href="app">Report an issue</a></li>
-          <li><a href="#how">How it works</a></li>
-          <li><a href="news">News</a></li>
-        </ul>
-      </nav>
-      <div>
-        <h4>Data</h4>
-        <ul>
-          <li>U.S. Geological Survey (flows, water temperature, topo basemap, PAD-US public land)</li>
-          <li>National Weather Service</li>
-          <li>National Park Service</li>
-          <li>State fish and wildlife agencies</li>
-          <li>Colorado Division of Water Resources</li>
-          <li>FHWA National Bridge Inventory</li>
-          <li>&copy; OpenStreetMap contributors</li>
-        </ul>
-      </div>
-    </div>
-    <p class="legal">TrailWaterMaps is an independent project and is not affiliated with any of these agencies. Always check current regulations with the agency before you fish.</p>
-  </div>
-</footer>
-
-<script>
-// Header menu on a phone: a button that opens a panel. Closes on a link tap,
-// on Escape (focus goes back to the button) and when the page widens.
-(function(){
-  var b=document.getElementById("navbtn"),n=document.getElementById("nav"),w=matchMedia("(min-width:900px)");
-  function set(o){b.setAttribute("aria-expanded",o?"true":"false");n.classList.toggle("open",o);}
-  b.addEventListener("click",function(){set(b.getAttribute("aria-expanded")!=="true");});
-  n.addEventListener("click",function(e){if(e.target.closest("a"))set(false);});
-  document.addEventListener("keydown",function(e){
-    if(e.key==="Escape"&&b.getAttribute("aria-expanded")==="true"){set(false);b.focus();}
-  });
-  document.addEventListener("click",function(e){
-    if(!e.target.closest(".bar"))set(false);
-  });
-  (w.addEventListener?w.addEventListener.bind(w,"change"):w.addListener.bind(w))(function(){set(false);});
-})();
-</script>
+<footer class="foot"><div class="wrap">
+  <a class="brand" href="./"><svg class="brandmark" viewBox="-4 -4 108 108" aria-hidden="true" focusable="false"><path d="M8 12H44M24 12V62M44 12L56 62L68 32L80 62L92 12M10 88Q20 80 30 88T50 88T70 88T90 88"/></svg><span>TrailWater</span></a>
+  <p style="margin-top:14px">Live river flows, the rules for each river, and public access, built to be checked from your phone.</p>
+  <p>TrailWater is an independent project and is not affiliated with the agencies whose data it uses. Always check current regulations before you fish.</p>
+  <p><a href="app">Open the map</a> &middot; <a href="news">News</a></p>
+</div></footer>
 <script src="js/config.js" defer></script>
 <script src="js/home-news.js" defer></script>
-
 </body>
 </html>

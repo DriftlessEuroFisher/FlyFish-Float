@@ -57,7 +57,7 @@ export function postHref(p){
   return out ? {href:out, outside:true} : null;
 }
 function description(p){
-  return p.summary || (p.body ? PM().excerpt(p.body, 160) : "") || "News from TrailWaterMaps.";
+  return p.summary || (p.body ? PM().excerpt(p.body, 160) : "") || "News from TrailWater.";
 }
 // For a <script type="application/ld+json">: "<" can't appear, so neither can "</script>".
 const ldJSON = o => JSON.stringify(o).replace(/</g, "\\u003c").replace(/>/g, "\\u003e").replace(/&/g, "\\u0026")
@@ -74,11 +74,11 @@ function headHTML(o){
 <meta name="theme-color" content="#1f1915">
 <meta name="color-scheme" content="light">
 <title>${esc(o.title)}</title>
-<meta name="description" content="${esc(o.description)}">${o.noindex ? `\n<meta name="robots" content="noindex">` : ""}${o.canonical ? `\n<link rel="canonical" href="${esc(o.canonical)}">` : ""}${o.og ? m("og:type", o.og.type) + m("og:site_name", "TrailWaterMaps") + m("og:url", o.canonical) + m("og:title", o.og.title)
+<meta name="description" content="${esc(o.description)}">${o.noindex ? `\n<meta name="robots" content="noindex">` : ""}${o.canonical ? `\n<link rel="canonical" href="${esc(o.canonical)}">` : ""}${o.og ? m("og:type", o.og.type) + m("og:site_name", "TrailWater") + m("og:url", o.canonical) + m("og:title", o.og.title)
     + m("og:description", o.description) + m("og:image", o.og.image) + m("og:image:alt", o.og.imageAlt)
     + m("article:published_time", o.og.published) + m("article:modified_time", o.og.modified)
     + `\n<meta name="twitter:card" content="${o.og.large ? "summary_large_image" : "summary"}">` : ""}
-<link rel="alternate" type="application/rss+xml" title="TrailWaterMaps news" href="/news/feed.xml">
+<link rel="alternate" type="application/rss+xml" title="TrailWater news" href="/news/feed.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="${FONTS}" rel="stylesheet">
@@ -90,21 +90,21 @@ function headHTML(o){
 }
 function barHTML(){
   return `<header class="bar bar-news">
-  <a class="brand" href="/" aria-label="TrailWaterMaps home">${MARK}<span>TrailWaterMaps</span></a>
+  <a class="brand" href="/" aria-label="TrailWater home">${MARK}<span>TrailWater</span></a>
   <nav class="nav" aria-label="Site"><a class="nav-map" href="/app">Open the map</a></nav>
 </header>`;
 }
 function footHTML(){
   return `<footer class="foot foot-news">
   <div class="wrap">
-    <a class="brand" href="/" aria-label="TrailWaterMaps home">${MARK}<span>TrailWaterMaps</span></a>
+    <a class="brand" href="/" aria-label="TrailWater home">${MARK}<span>TrailWater</span></a>
     <ul class="foot-links">
       <li><a href="/">Home</a></li>
       <li><a href="/app">Open the map</a></li>
       <li><a href="/news">News</a></li>
       <li><a href="/news/feed.xml">RSS feed</a></li>
     </ul>
-    <p class="legal">TrailWaterMaps is an independent project and is not affiliated with any agency. Always check current regulations with the agency before you fish.</p>
+    <p class="legal">TrailWater is an independent project and is not affiliated with any agency. Always check current regulations with the agency before you fish.</p>
   </div>
 </footer>`;
 }
@@ -151,12 +151,12 @@ export function postPage(p, opts){
     datePublished: published || undefined,
     dateModified: modified || undefined,
     image: cover ? [cover] : undefined,
-    author: {"@type":"Organization", name:"TrailWaterMaps", url:`${site}/`},
-    publisher: {"@type":"Organization", name:"TrailWaterMaps", logo:{"@type":"ImageObject", url:`${site}/icons/icon-512.png`}},
+    author: {"@type":"Organization", name:"TrailWater", url:`${site}/`},
+    publisher: {"@type":"Organization", name:"TrailWater", logo:{"@type":"ImageObject", url:`${site}/icons/icon-512.png`}},
     isBasedOn: okHttps(p.link_url) || undefined,
   };
   const head = headHTML({
-    title: `${p.title} — TrailWaterMaps`, description: desc, canonical, ld,
+    title: `${p.title} — TrailWater`, description: desc, canonical, ld,
     og: {type:"article", title:p.title, image: cover || `${site}/icons/icon-512.png`, imageAlt: cover ? (p.cover_alt || "") : "",
          large: !!cover, published, modified},
   });
@@ -190,11 +190,11 @@ export function listPage(o){
   const site = o.site || SITE, kind = KINDS[o.kind] ? o.kind : "", page = Math.max(1, o.page | 0 || 1);
   const posts = o.posts || [];
   const label = kind ? FILTERS.find(f => f[0] === kind)[1] : "";
-  const title = `${label ? label + " — " : ""}News & updates${page > 1 ? ` (page ${page})` : ""} — TrailWaterMaps`;
+  const title = `${label ? label + " — " : ""}News & updates${page > 1 ? ` (page ${page})` : ""} — TrailWater`;
   const head = headHTML({
     title, canonical: `${site}/news${listQS(kind, page)}`,
-    description: "Announcements, blog posts and news about rivers, fishing rules and access, from TrailWaterMaps.",
-    og: {type:"website", title:"TrailWaterMaps news & updates", image:`${site}/icons/icon-512.png`, large:false},
+    description: "Announcements, blog posts and news about rivers, fishing rules and access, from TrailWater.",
+    og: {type:"website", title:"TrailWater news & updates", image:`${site}/icons/icon-512.png`, large:false},
   });
   const filters = FILTERS.map(([k, name]) =>
     `<a href="/news${listQS(k, 1)}"${k === kind ? ` aria-current="page"` : ""}>${esc(name)}</a>`).join("");
@@ -218,7 +218,7 @@ ${pager}
 /* ---------- errors ---------- */
 export function notFoundPage(o){
   o = o || {};
-  const head = headHTML({title:"Not found — TrailWaterMaps", description:"That page isn't here.", noindex:true});
+  const head = headHTML({title:"Not found — TrailWater", description:"That page isn't here.", noindex:true});
   return pageHTML(head, `<main class="news-main news-msg">
 <h1>That post isn't here</h1>
 <p>It may have been taken down, or the address has a typo.</p>
@@ -226,7 +226,7 @@ export function notFoundPage(o){
 </main>`);
 }
 export function unavailablePage(){
-  const head = headHTML({title:"News couldn't load — TrailWaterMaps", description:"News couldn't load right now.", noindex:true});
+  const head = headHTML({title:"News couldn't load — TrailWater", description:"News couldn't load right now.", noindex:true});
   return pageHTML(head, `<main class="news-main news-msg">
 <h1>News couldn't load right now</h1>
 <p>Try again in a minute. The map doesn't depend on this page and still works.</p>
@@ -256,9 +256,9 @@ export function feedXML(o){
   return `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
-<title>TrailWaterMaps news</title>
+<title>TrailWater news</title>
 <link>${xml(site)}/news</link>
-<description>Announcements, blog posts and news from TrailWaterMaps.</description>
+<description>Announcements, blog posts and news from TrailWater.</description>
 <language>en-us</language>
 <atom:link href="${xml(site)}/news/feed.xml" rel="self" type="application/rss+xml"/>${newest ? `
 <lastBuildDate>${xml(new Date(newest).toUTCString())}</lastBuildDate>` : ""}

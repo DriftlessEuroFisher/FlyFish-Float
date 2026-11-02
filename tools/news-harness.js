@@ -124,7 +124,7 @@ async function run(){
   check("render", "JSON-LD parses and keeps the title intact", ld && ld.headline === HOSTILE_TITLE.slice(0, 110), ld && ld.headline);
   const onAttrs = [...doc.querySelectorAll("*")].flatMap(el => [...el.attributes].filter(a => /^on/i.test(a.name)).map(a => el.tagName + "@" + a.name));
   check("render", "no on* attributes anywhere", !onAttrs.length, onAttrs.join());
-  check("render", "title text is literal", doc.title === HOSTILE_TITLE + " — TrailWaterMaps", doc.title);
+  check("render", "title text is literal", doc.title === HOSTILE_TITLE + " — TrailWater", doc.title);
   check("render", "h1 is literal", doc.querySelector("h1").textContent === HOSTILE_TITLE, doc.querySelector("h1").textContent);
   check("render", "javascript: link_url dropped", !doc.querySelector(".post-orig") && !/javascript:/i.test([...doc.querySelectorAll("a")].map(a => a.href).join()), "");
   check("render", "../ cover path dropped", !doc.querySelector(".post-cover") && !doc.querySelector('meta[property="og:image:alt"]'), "");

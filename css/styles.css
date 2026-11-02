@@ -1,5 +1,5 @@
 /* ============================================================
-   DESIGN TOKENS — TrailWaterMaps brand: "Iron / Bone"
+   DESIGN TOKENS — TrailWater brand: "Iron / Bone"
    Iron chrome (#1f1915, the parent icon's ground), warm Bone paper
    panels, Saddle leather for links and secondary accents, River blue
    for water. Survey-flagging orange stays reserved for the live data
@@ -70,11 +70,9 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 }
 #appbar .spacer{flex:1}
 /* On a phone the tagline took a second and third line — about a fifth of
-   an iPhone screen. Title only. At 375 px the mark and the buttons leave
-   too little for "TRAILWATERMAPS" on one line, so the name may break once,
-   after "TRAILWATER" (the <wbr> in app.html; it is one word, so without
-   it the line would clip): two tight lines fit inside the 38 px buttons,
-   so the bar is no taller than one line would make it. */
+   an iPhone screen. Title only. "TRAILWATER" fits on one line beside the
+   mark and the buttons at 375 px; the tight line-height keeps the bar no
+   taller than the 38 px buttons. */
 @media (max-width:767px){
   #appbar{gap:8px}
   #appbar h1{min-width:0;flex:0 1 auto;gap:7px;font-size:16px;line-height:1;letter-spacing:.02em}

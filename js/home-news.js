@@ -1,14 +1,15 @@
-/* The homepage's news: the pinned announcement banner under the header and
-   the latest three posts as cards ("News & updates"). Read straight from
-   Supabase (supabase/posts.sql) with the publishable key, so it works on the
-   local dev server too; the /news pages themselves are built on the server
-   by the Worker (worker/index.js).
+/* The homepage's news: the latest posts as cards in the "Latest from
+   TrailWater" strip ([data-nw="list"], how many in its data-count). Read
+   straight from Supabase (supabase/posts.sql) with the publishable key, so it
+   works on the local dev server too; the /news pages themselves are built on
+   the server by the Worker (worker/index.js).
 
-   Both slots start hidden in index.html and stay hidden until there is
+   The strip starts hidden in index.html and stays hidden until there is
    something to show: no script, no signal, a paused project, posts.sql not
-   run yet, or no posts all leave the homepage exactly as it was. Nothing is
-   logged or retried; this page has no metrics and no service worker of its
-   own.
+   run yet, or no posts all leave the homepage exactly as it was. There are
+   no sample headlines: a placeholder story on the live homepage would read as
+   news. Nothing is logged or retried; this page has no metrics and no service
+   worker of its own.
 
    The publishable key goes in `apikey` only. It is not a JWT, so it never
    goes in Authorization; with no Authorization the request is `anon`, and
@@ -19,9 +20,10 @@
 (function(){
   "use strict";
   if(typeof SUPABASE === "undefined" || !SUPABASE.url || !SUPABASE.anonKey) return;
-  const banner = document.getElementById("hn-banner");
-  const section = document.getElementById("hn"), list = document.getElementById("hn-list");
-  if(!banner && !(section && list)) return;
+  const list = document.querySelector('[data-nw="list"]');
+  const section = list && list.closest("section");
+  if(!list || !section) return;
+  const want = Math.min(Math.max(parseInt(list.dataset.count, 10) || 3, 1), 12);
 
   const BASE = String(SUPABASE.url).replace(/\/+$/, "");
   const PHOTOS = BASE + "/storage/v1/object/public/post-images/";
@@ -58,6 +60,7 @@
     return isNaN(d) ? "" : d.toLocaleDateString("en-US", {month:"short", day:"numeric", year:"numeric"});
   }
   const kind = k => KINDS[k] ? k : "news";
+  const PLACEHOLDER = `<div class="nw-ph" aria-hidden="true"></div>`;
 
   function cards(rows){
     const html = rows.map(p => {
@@ -67,41 +70,23 @@
       const iso = new Date(p.published_at);
       // The title is the link; CSS stretches it over the card. The photo is
       // decoration beside it (alt=""), or a screen reader hears it twice.
-      return `<li class="hn-card${img ? "" : " hn-noimg"}">${img ? `<img class="hn-img" src="${esc(img)}" alt="" loading="lazy" decoding="async">` : ""}
-        <div class="hn-txt">
-          <p class="hn-meta"><span class="hn-kind hn-kind-${kind(p.kind)}">${esc(KINDS[kind(p.kind)])}</span>${isNaN(iso) ? "" : `<time datetime="${esc(iso.toISOString())}">${esc(dateText(p.published_at))}</time>`}</p>
+      return `<li class="nw-card">${img ? `<img class="nw-img" src="${esc(img)}" alt="" loading="lazy" decoding="async">` : PLACEHOLDER}
+        <div class="nw-txt">
+          <p class="nw-meta"><span class="nw-kind">${esc(KINDS[kind(p.kind)])}</span>${isNaN(iso) ? "" : `<time datetime="${esc(iso.toISOString())}">${esc(dateText(p.published_at))}</time>`}</p>
           <h3><a href="${esc(to.href)}"${to.outside ? ` rel="noopener noreferrer"` : ""}>${esc(p.title)}</a></h3>
-          ${p.summary ? `<p class="hn-sum">${esc(p.summary)}</p>` : ""}
-          ${to.outside ? `<p class="hn-out">${p.link_source ? `At ${esc(p.link_source)}` : "Outside article"} <span aria-hidden="true">↗</span></p>` : ""}
+          ${p.summary ? `<p class="nw-sum">${esc(p.summary)}</p>` : ""}
+          ${to.outside ? `<p class="nw-out">${p.link_source ? `At ${esc(p.link_source)}` : "Outside article"} <span aria-hidden="true">↗</span></p>` : ""}
         </div></li>`;
     }).join("");
     if(!html) return;
     list.innerHTML = html;
-    // A photo that won't load (deleted from storage) goes, rather than
-    // leaving a broken-image box on the homepage.
-    list.querySelectorAll(".hn-img").forEach(img => img.addEventListener("error", () => {
-      const card = img.closest(".hn-card"); img.remove(); if(card) card.classList.add("hn-noimg");
+    // A photo that won't load (deleted from storage) becomes the plain
+    // placeholder, rather than leaving a broken-image box on the homepage.
+    list.querySelectorAll(".nw-img").forEach(img => img.addEventListener("error", () => {
+      img.insertAdjacentHTML("afterend", PLACEHOLDER); img.remove();
     }));
     section.hidden = false;
   }
 
-  function showBanner(rows){
-    const p = rows[0], to = p && target(p);
-    if(!to) return;
-    banner.innerHTML = `<div class="wrap"><span class="hn-tag">${esc(KINDS[kind(p.kind)])}</span><a href="${esc(to.href)}"${to.outside ? ` rel="noopener noreferrer"` : ""}>${esc(p.title)}</a>${
-      p.summary ? `<span class="hn-bsum">${esc(p.summary)}</span>` : ""}</div>`;
-    banner.hidden = false;
-  }
-
-  // Seconds, no fraction: the value sits inside PostgREST's or=(…) syntax,
-  // quoted because it holds colons.
-  const now = new Date().toISOString().replace(/\.\d+Z$/, "Z");
-  if(section && list){
-    get(`posts?select=${COLS}&status=eq.published&order=published_at.desc,id.desc&limit=3`).then(cards).catch(() => {});
-  }
-  if(banner){
-    get(`posts?select=${COLS}&status=eq.published&kind=eq.announcement&pinned=is.true` +
-        `&or=${encodeURIComponent(`(show_until.is.null,show_until.gt."${now}")`)}&order=published_at.desc,id.desc&limit=1`)
-      .then(showBanner).catch(() => {});
-  }
+  get(`posts?select=${COLS}&status=eq.published&order=published_at.desc,id.desc&limit=${want}`).then(cards).catch(() => {});
 })();

@@ -1,6 +1,8 @@
-/* Homepage variants (home-a / home-b / home-c). Mockups: shared by all three,
-   not linked from the live site. Brand tokens match css/home.css; the header
-   is Bone with the black TW mark instead of Iron with the bone one. */
+/* The homepage (index.html, served at /). It began as mockup C of three;
+   the A and B rules below are left over from that comparison and unused,
+   except .b-strip (the stats row).
+   Brand tokens match css/home.css, which the /news pages still load; the
+   header here is Bone with the black TW mark instead of Iron with the bone one. */
 :root{
   --ink:#14100d; --iron:#1f1915; --bone:#f4eee4; --bone-2:#fffcf6; --line:#d6ccc0;
   --txt:#2a211b; --dim:#5e534a; --river:#236b8f; --river-deep:#1d5a79; --link:#985535;
@@ -45,7 +47,7 @@ img{max-width:100%;height:auto}
 .stats dd{margin:4px 0 0;color:var(--dim);font-size:15px}
 @media(min-width:700px){.stats{grid-template-columns:repeat(4,1fr)}}
 
-/* news (js/home-lab-news.js) */
+/* news (js/home-news.js) */
 .nw-list{list-style:none;margin:0;padding:0;display:grid;gap:16px}
 .nw-card{position:relative;background:var(--bone-2);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
 .nw-img{width:100%;aspect-ratio:16/9;object-fit:cover;background:var(--line)}
@@ -58,7 +60,6 @@ img{max-width:100%;height:auto}
 .nw-card h3 a::after{content:"";position:absolute;inset:0}
 .nw-sum{color:var(--dim);font-size:16px;margin:0}
 .nw-out{font:500 13px/1 "IBM Plex Mono",monospace;color:var(--dim);margin:10px 0 0}
-.nw-sample{font:500 13px/1.4 "IBM Plex Mono",monospace;color:var(--dim);margin:12px 0 0}
 .nw-all{font:700 18px/1 "Barlow Condensed",sans-serif;letter-spacing:.06em;text-transform:uppercase;margin:18px 0 0}
 @media(min-width:760px){.nw-list.cols3{grid-template-columns:repeat(3,1fr)}}
 
@@ -66,12 +67,6 @@ img{max-width:100%;height:auto}
 .foot a{color:#f4eee4}
 .foot .brand{color:var(--bone)} .foot .brandmark{stroke:var(--bone)}
 .foot p{max-width:62ch;color:#b3a596}
-
-/* variant switcher (mockup review only) */
-.vsw{position:fixed;z-index:50;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:2px;padding:4px;background:var(--ink);border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.35)}
-.vsw a{color:#d9cfc1;text-decoration:none;font:600 15px/1 "IBM Plex Mono",monospace;padding:10px 16px;border-radius:999px}
-.vsw a[aria-current]{background:var(--bone);color:var(--ink)}
-.vsw span{align-self:center;color:#b3a596;font:500 12px/1 "IBM Plex Mono",monospace;padding:0 8px 0 12px}
 
 /* ===== A: app-led ===== */
 .a-hero{padding:36px 0 20px}
