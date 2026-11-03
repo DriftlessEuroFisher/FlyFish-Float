@@ -16,8 +16,63 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="TrailWater">
+<!-- The boot screen's styles are inline so it paints before styles.css and
+     the 7 MB of deferred scripts below it have arrived. -->
+<style>
+#boot{position:fixed;inset:0;z-index:5000;background:#1f1915;color:#f4eee4;display:flex;
+  flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:16px;
+  font-family:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;transition:opacity .35s ease}
+#boot.ready{opacity:0;pointer-events:none}
+#boot .bt-brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:30px;
+  letter-spacing:.04em;text-transform:uppercase}
+#boot svg{width:44px;height:44px;fill:none;stroke:#f4eee4;stroke-width:11;stroke-linecap:round;stroke-linejoin:round}
+#boot .bt-bar{position:relative;width:180px;max-width:60vw;height:3px;border-radius:2px;
+  background:rgba(244,238,228,.18);overflow:hidden}
+#boot .bt-bar i{position:absolute;top:0;bottom:0;width:40%;border-radius:2px;background:#f4eee4;
+  animation:bt-slide 1.3s ease-in-out infinite}
+@keyframes bt-slide{from{left:-40%}to{left:100%}}
+@media (prefers-reduced-motion:reduce){#boot .bt-bar i{animation:none;left:30%}}
+#boot .bt-msg{font-family:"Barlow",system-ui,sans-serif;font-size:13px;letter-spacing:.08em;
+  text-transform:uppercase;color:#b3a596;text-align:center}
+#boot .bt-msg a{color:#f4eee4}
+</style>
 </head>
 <body>
+
+<div id="boot" role="status" aria-live="polite">
+  <div class="bt-brand"><svg viewBox="-4 -4 108 108" aria-hidden="true" focusable="false"><path d="M8 12H44M24 12V62M44 12L56 62L68 32L80 62L92 12M10 88Q20 80 30 88T50 88T70 88T90 88"/></svg>TrailWater</div>
+  <div class="bt-bar"><i></i></div>
+  <div class="bt-msg">Loading rivers…</div>
+</div>
+<script>
+/* The scripts are deferred, so this runs first. app.js calls bootHide() once
+   the map is drawn. If a script fails to load, or startup never gets there,
+   the screen must not sit on "Loading" for ever: a failed script, or the
+   page still without Leaflet or RIVERS after 15 s, says so with a Reload
+   link; anything else after 15 s just lifts the screen. */
+(function(){
+  var boot = document.getElementById("boot"), failed = false;
+  window.bootHide = function(){
+    if(!boot || failed) return;
+    var b = boot; boot = null;
+    b.classList.add("ready");
+    setTimeout(function(){ if(b.parentNode) b.parentNode.removeChild(b); }, 400);
+  };
+  function fail(){
+    if(!boot || failed) return;
+    failed = true;
+    boot.querySelector(".bt-bar").style.display = "none";
+    boot.querySelector(".bt-msg").innerHTML = 'Couldn’t load the map — <a href="" onclick="location.reload();return false">Reload</a>';
+  }
+  // a script that 404s or drops fires "error" on its own element, which only a capturing listener sees
+  window.addEventListener("error", function(e){
+    if(e.target && e.target.tagName === "SCRIPT") fail();
+  }, true);
+  setTimeout(function(){
+    if(!window.L || typeof RIVERS === "undefined") fail(); else window.bootHide();
+  }, 15000);
+})();
+</script>
 
 <header id="appbar">
   <!-- The 1b "Rocking TW" mark: T and W share one top bar over a line of
@@ -275,21 +330,21 @@
   </details>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script src="js/rivers-data.js"></script>
-<script src="js/tiers.js"></script>
-<script src="js/zones.js"></script>
-<script src="js/access-laws.js"></script>
-<script src="js/designations.js"></script>
-<script src="js/species.js"></script>
-<script src="js/config.js"></script>
-<script src="js/app.js"></script>
-<script src="js/float.js"></script>
-<script src="js/laketrip.js"></script>
-<script src="js/tour.js"></script>
-<script src="js/auth.js"></script>
-<script src="js/signin.js"></script>
-<script src="js/account.js"></script>
-<script src="js/metrics.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" defer></script>
+<script src="js/rivers-data.js" defer></script>
+<script src="js/tiers.js" defer></script>
+<script src="js/zones.js" defer></script>
+<script src="js/access-laws.js" defer></script>
+<script src="js/designations.js" defer></script>
+<script src="js/species.js" defer></script>
+<script src="js/config.js" defer></script>
+<script src="js/app.js" defer></script>
+<script src="js/float.js" defer></script>
+<script src="js/laketrip.js" defer></script>
+<script src="js/tour.js" defer></script>
+<script src="js/auth.js" defer></script>
+<script src="js/signin.js" defer></script>
+<script src="js/account.js" defer></script>
+<script src="js/metrics.js" defer></script>
 </body>
 </html>

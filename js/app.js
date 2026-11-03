@@ -2354,7 +2354,7 @@ function reachOverlays(r, line){
     const cls = r.reachClass[i], tc = TROUT_CLASS[cls];
     if(!tc || cls === r.troutClass || run.length < 2) return;
     const o = L.polyline(run, {color:tc.color, weight:tierWeight(r), opacity:.92,
-      lineCap:"round", lineJoin:"round", smoothFactor:1.2, pane:"riversPane"}).addTo(map);
+      lineCap:"round", lineJoin:"round", smoothFactor:1.2, pane:"riversPane"});   // applyRiver() adds it with its line
     o.reachColor = tc.color;
     onTap(o, e=>openRiver(r.id, null, {at:e.latlng}));
     out.push(o);
@@ -2381,9 +2381,14 @@ function reachMiles(r){
   return Object.entries(mi).sort((a, b) => b[1] - a[1]);
 }
 
+/* The layers are built here but not put on the map: applyFilters() at the end
+   of startup adds the ones the class filter shows (applyRiver). Adding all
+   ~2,000 and then taking the hidden Class 3 ones off again moments later
+   cost a launch on a phone for nothing. Everything below that reads a line
+   (bounds, getLatLngs, setLatLngs) works on a layer that isn't on the map. */
 RIVERS.forEach(r=>{
   const line = L.polyline(r.coords,{color:riverColor(r), weight:tierWeight(r), opacity:.92,
-    lineCap:"round", lineJoin:"round", smoothFactor:1.2, pane:"riversPane"}).addTo(map);
+    lineCap:"round", lineJoin:"round", smoothFactor:1.2, pane:"riversPane"});
   // An NHD snap or a zoom refinement redraws the line in place; the gold
   // focus outline has to follow it rather than keep tracing the old one.
   const setLL = line.setLatLngs;
@@ -2394,7 +2399,7 @@ RIVERS.forEach(r=>{
   };
   onTap(line, e=>openRiver(r.id, null, {at:e.latlng}));   // where it was tapped: see fitFocus
   const mid = midCoord(r.coords);
-  const lbl = L.marker(mid,{interactive:false,icon:L.divIcon({className:"riv-label",html:r.name.split("—")[0].split("(")[0].trim(),iconSize:null})}).addTo(map);
+  const lbl = L.marker(mid,{interactive:false,icon:L.divIcon({className:"riv-label",html:r.name.split("—")[0].split("(")[0].trim(),iconSize:null})});
   riverLayers[r.id]={line,lbl,river:r,reaches:reachOverlays(r, line)};
 });
 syncLabels();
@@ -5112,7 +5117,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v38";
+const APP_VERSION = "flyroutes-v39";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){
@@ -6681,6 +6686,9 @@ applyFilters();
 syncMarkers();          // seed marker groups for the starting zoom
 loadPublicLand();
 setTimeout(trickleGeometry, 600);
+// the map is drawn: lift the boot screen (defined inline in app.html, which
+// also lifts it after 15 s if startup never gets here)
+if(typeof bootHide === "function") bootHide();
 
 
 /* The app bar floats over the map and its height isn't fixed: the title
