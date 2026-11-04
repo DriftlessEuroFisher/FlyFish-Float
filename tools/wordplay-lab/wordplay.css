@@ -1,0 +1,241 @@
+/* Wordplay lab: six ways to animate Tailwater -> TrailWater, each inside a
+   mock page. Page chrome and tokens are copied from css/home-lab.css so the
+   variants are judged against the real look. Never published (tools/ is not
+   in cf-build.sh's list).
+
+   How an animation is wired (see wordplay.js): the element with class "wp"
+   shows its FINAL state by default, so no script, no IntersectionObserver
+   or reduced motion all land on "TrailWater". The driver adds "armed", which
+   switches the keyframes on but paused at 0% (the "Tailwater" pre-state),
+   then "go" to run them. "rs" briefly kills every animation so a replay
+   restarts from the pre-state. */
+:root{
+  --ink:#14100d; --iron:#1f1915; --bone:#f4eee4; --bone-2:#fffcf6; --line:#d6ccc0;
+  --txt:#2a211b; --dim:#5e534a; --river:#236b8f; --river-deep:#1d5a79; --link:#985535;
+  --tile:#2b221c; --gutter:16px; --max:1120px;
+  /* glyph widths, measured by wordplay.js once the fonts are in */
+  --rw:.31em; --w1:.55em; --w2:.8em;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bone);color:var(--txt);font:17px/1.55 "Barlow",system-ui,sans-serif;overflow-x:hidden}
+h1,h2,h3,h4{font-family:"Barlow Condensed",sans-serif;font-weight:700;text-transform:uppercase;margin:0;color:var(--ink)}
+p{margin:0 0 14px} a{color:var(--link);text-underline-offset:2px}
+:focus-visible{outline:3px solid var(--river);outline-offset:3px;border-radius:4px}
+img{max-width:100%;height:auto}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--gutter)}
+.kicker{font:600 14px/1 "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--river-deep);margin:0 0 12px}
+
+/* ---- header / footer / buttons / phone (from home-lab.css) ---- */
+.bar{position:sticky;top:0;z-index:20;background:var(--bone);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:58px}
+.brand{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;font:700 24px/1 "Barlow Condensed",sans-serif;letter-spacing:.05em;text-transform:uppercase}
+.brandmark{width:30px;height:30px;fill:none;stroke:var(--ink);stroke-width:11;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.nav{display:flex;align-items:center;gap:6px 22px}
+.nav a{color:var(--ink);text-decoration:none;font:600 17px/1 "Barlow Condensed",sans-serif;letter-spacing:.06em;text-transform:uppercase;padding:10px 0}
+.nav .nav-map{padding:0 16px;min-height:38px;display:inline-flex;align-items:center;border-radius:999px;background:var(--ink);color:var(--bone)}
+@media(max-width:560px){.nav a:not(.nav-map){display:none}}
+.pill{display:inline-flex;align-items:center;gap:8px;min-height:54px;padding:0 20px 0 28px;border-radius:999px;background:var(--river);color:#fff;text-decoration:none;font:700 21px/1.1 "Barlow Condensed",sans-serif;letter-spacing:.05em;text-transform:uppercase}
+.pill:hover{background:var(--river-deep)}
+.pill svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.pill-ink{background:var(--ink)} .pill-ink:hover{background:#000}
+.pill-ghost{background:none;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)} .pill-ghost:hover{background:var(--ink);color:var(--bone)}
+.phone{margin:0;border-radius:30px;border:7px solid var(--ink);background:var(--ink);overflow:hidden;box-shadow:0 24px 40px -18px rgba(20,16,13,.55)}
+.phone img{display:block;width:100%}
+.foot{background:var(--ink);color:#d9cfc1;padding:36px 0 90px;font-size:15px}
+.foot a{color:#f4eee4}
+.foot .brand{color:var(--bone)} .foot .brandmark{stroke:var(--bone)}
+.foot p{max-width:62ch;color:#b3a596}
+
+/* ---- hero, screenshot rail, closing band (from home-lab.css) ---- */
+.c-hero{position:relative;color:var(--bone);background:var(--ink);isolation:isolate;overflow:hidden}
+.c-hero .wrap{display:grid;gap:36px;align-items:center;padding-top:clamp(40px,10vw,90px);padding-bottom:0}
+.c-hero .hero-phone{width:min(68vw,300px);margin:0 auto;border-bottom:0;border-radius:36px 36px 0 0;box-shadow:none;outline:1px solid #3a322b}
+@media(min-width:860px){.c-hero .wrap{grid-template-columns:1.1fr .9fr;gap:56px;padding-top:72px}.c-hero .hero-phone{width:min(100%,340px)}}
+.c-hero h1{color:var(--bone);font-size:clamp(48px,12vw,104px);line-height:.9;max-width:12ch}
+.c-hero .lede{font-size:20px;max-width:36ch;margin:20px 0 26px;color:#e5dccd}
+.c-hero .pill{background:var(--bone);color:var(--ink)} .c-hero .pill:hover{background:#fff}
+/* light hero, for the variants whose animation lives in it */
+.hero-light{background:var(--bone);color:var(--txt);border-bottom:1px solid var(--line)}
+.hero-light h1{color:var(--ink)}
+.hero-light .lede{color:var(--dim)}
+.hero-light .pill{background:var(--river);color:#fff} .hero-light .pill:hover{background:var(--river-deep)}
+.hero-light .hero-phone{outline:0}
+.hero-light .tagline{font:700 clamp(26px,5vw,40px)/1 "Barlow Condensed",sans-serif;text-transform:uppercase;color:var(--ink);margin:18px 0 0}
+.c-shots{padding:50px 0 20px}
+.c-h2{font-size:clamp(38px,7vw,60px);line-height:.95;margin-bottom:22px}
+.c-rail{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px var(--gutter) 24px;-webkit-overflow-scrolling:touch}
+.c-rail figure{flex:0 0 min(62vw,240px);scroll-snap-align:center;margin:0}
+.c-rail figcaption{margin-top:12px;font:700 22px/1 "Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:.04em;color:var(--ink)}
+.c-rail figcaption small{display:block;font:400 15px/1.35 "Barlow",sans-serif;text-transform:none;letter-spacing:0;color:var(--dim);margin-top:4px}
+@media(min-width:1000px){.c-rail{justify-content:center}}
+.c-cta{padding:30px 0 60px;text-align:center}
+.c-cta h2{font-size:clamp(42px,9vw,76px);line-height:.92;margin-bottom:22px}
+
+/* ---- lab chrome: variant strip, replay button, chooser ---- */
+.lab{background:#e9dfd0;border-bottom:1px solid var(--line);font:500 13px/1.4 "IBM Plex Mono",monospace;color:var(--dim)}
+.lab .wrap{display:flex;flex-wrap:wrap;gap:4px 18px;align-items:baseline;padding-block:10px}
+.lab a{color:var(--ink);font-weight:600}
+.lab b{color:var(--ink)}
+.wp-replay{position:fixed;right:14px;bottom:14px;z-index:40;min-height:44px;padding:0 18px;border:0;border-radius:999px;background:var(--ink);color:var(--bone);font:700 17px/1 "Barlow Condensed",sans-serif;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;box-shadow:0 8px 20px -8px rgba(20,16,13,.6)}
+.wp-replay:hover{background:#000}
+.lab-intro{padding:34px 0 8px}
+.lab-intro h1{font-size:clamp(40px,8vw,68px);line-height:.95;margin-bottom:14px}
+.lab-intro p{max-width:62ch;color:var(--dim)}
+.rm-note{background:var(--bone-2);border:1px solid var(--line);border-left:4px solid var(--river);padding:10px 14px;border-radius:6px;font-size:15px;max-width:62ch}
+.lab-bar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:18px 0 6px}
+.lab-bar .wp-replay{position:relative;z-index:1;right:auto;bottom:auto;box-shadow:none}
+.cards{display:grid;gap:18px;padding:16px 0 90px;grid-template-columns:1fr}
+@media(min-width:760px){.cards{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1100px){.cards{grid-template-columns:repeat(3,1fr)}}
+.card{background:var(--bone-2);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.card iframe{display:block;width:100%;height:236px;border:0;background:var(--bone);border-bottom:1px solid var(--line)}
+.card .ct{padding:14px 16px 18px;display:flex;flex-direction:column;gap:6px;flex:1}
+.card h2{font-size:28px;line-height:1}
+.card .n{font:600 13px/1 "IBM Plex Mono",monospace;color:var(--river-deep);letter-spacing:.06em;text-transform:uppercase}
+.card p{margin:0;color:var(--dim);font-size:15.5px;line-height:1.45}
+.card .where{font:500 12.5px/1.4 "IBM Plex Mono",monospace;color:var(--dim)}
+.card .pill{align-self:flex-start;margin-top:auto;min-height:44px;font-size:18px;padding:0 18px 0 22px}
+
+/* embed mode (?embed): wordplay.js moves the [data-stage] node to the top of
+   body and everything else is hidden, so a chooser card shows just the
+   animation, live. */
+body.embed{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bone);overflow:hidden}
+body.embed>*:not([data-stage]){display:none!important}
+body.embed [data-stage]{max-width:100%}
+body.embed .band,body.embed .cta6{width:100%;min-height:100vh;display:grid;place-content:center;text-align:center;border:0;padding-block:0}
+body.embed .cta6 h2,body.embed .cta6 .pill,body.embed .band .cap-line{display:none}
+
+/* ---- the word ---- */
+.wd{display:inline-block;font:500 var(--fs,64px)/1.05 "Barlow Condensed",sans-serif;letter-spacing:-.005em;color:var(--ink);white-space:nowrap;text-transform:none}
+.wp{position:relative}
+.wp-h{margin:0;font-size:inherit;text-transform:none;line-height:1}
+.wd .ins{display:inline-block;position:relative;color:var(--river);text-align:left}
+.wd .g{display:inline-block}
+.wd .cap{display:inline-block;position:relative;text-align:left;color:inherit}
+.wd .cap b{font-weight:700;position:relative;display:inline-block}
+.wd .cap i{font-style:normal;position:absolute;left:0;top:0;opacity:0}
+.wd .u{display:inline}
+
+/* shared pieces, timed per variant with --open-at/--cap-at... */
+@keyframes wp-open{from{width:0}to{width:var(--rw)}}
+@keyframes wp-drop{from{opacity:0;transform:translateY(-.5em) scale(.7) rotate(-8deg)}60%{opacity:1;transform:translateY(.04em) scale(1.08)}to{opacity:1;transform:none}}
+@keyframes wp-capw{from{width:var(--w1)}to{width:var(--w2)}}
+@keyframes wp-wout{from{opacity:1}to{opacity:0}}
+@keyframes wp-wpop{from{opacity:0;transform:translateY(.1em) scale(.92)}55%{opacity:1;transform:scale(1.06)}to{opacity:1;transform:none}}
+@keyframes wp-type{from{opacity:0}to{opacity:1}}
+.wp.armed .ins{animation:wp-open var(--open-d,.5s) cubic-bezier(.2,.8,.2,1) var(--open-at,0s) both}
+.wp.armed .ins .g{animation:wp-drop var(--drop-d,.55s) cubic-bezier(.2,.9,.3,1.25) var(--drop-at,0s) both}
+.wp.armed .cap{animation:wp-capw .3s ease var(--cap-at,0s) both}
+.wp.armed .cap i{animation:wp-wout .2s linear var(--cap-at,0s) both}
+.wp.armed .cap b{animation:wp-wpop .4s cubic-bezier(.2,.9,.3,1.3) var(--cap-at,0s) both}
+.wp.armed:not(.go),.wp.armed:not(.go) *,.wp.armed:not(.go) *::before,.wp.armed:not(.go) *::after{animation-play-state:paused!important}
+.wp.rs,.wp.rs *,.wp.rs *::before,.wp.rs *::after{animation:none!important}
+@media(prefers-reduced-motion:reduce){.wp,.wp *,.wp *::before,.wp *::after{animation:none!important}}
+
+/* ===== V1: caret insert, refined (band under the hero) ===== */
+.band{padding:36px 0 34px;background:var(--bone-2);border-block:1px solid var(--line);text-align:left}
+.v1{--fs:clamp(54px,14vw,128px);--open-at:1.45s;--open-d:.6s;--drop-at:1.6s;--drop-d:.7s;--cap-at:2.55s}
+.band .cap-line{font:600 15px/1 "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin:6px 0 0}
+.cap-line b{color:var(--river-deep)}
+.v1 .caret{position:absolute;left:0;bottom:-.06em;width:.2em;height:.2em;margin-left:-.1em;border-left:3px solid var(--river);border-top:3px solid var(--river);transform:rotate(45deg);opacity:0;pointer-events:none}
+@keyframes v1-caret{
+  0%{opacity:0;transform:translateY(.18em) rotate(45deg) scale(.4)}
+  10%{opacity:1;transform:rotate(45deg) scale(1)}
+  22%{opacity:.2} 34%{opacity:1} 46%{opacity:.2} 58%{opacity:1}
+  70%{opacity:1;transform:rotate(45deg) scale(1)}
+  100%{opacity:0;transform:translateY(.1em) rotate(45deg) scale(.6)}}
+.v1.armed .caret{animation:v1-caret 2.5s ease .1s both}
+
+/* ===== V2: typewriter (the hero H1) ===== */
+.v2{--fs:clamp(64px,17vw,150px);--open-at:2350ms;--open-d:.15s;--cap-at:2900ms}
+.v2 .l{position:relative}
+.v2 .l::after{content:"";position:absolute;right:-.045em;top:.1em;width:.05em;height:.8em;background:var(--river);opacity:0}
+@keyframes wp-pass{0%,99.9%{opacity:1}100%{opacity:0}}
+@keyframes wp-settle{from{color:var(--river)}to{color:var(--ink)}}
+.v2.armed .l::after{animation:var(--k,none)}
+.v2.armed .l:not(.ins){animation:wp-type 1ms steps(1,end) var(--ty,0s) both,wp-settle .7s ease 3000ms forwards}
+.v2.armed .l.cap{animation:wp-type 1ms steps(1,end) var(--ty,0s) both,wp-capw .2s ease 2900ms both,wp-settle .7s ease 3000ms forwards}
+.v2.armed .ins .g{animation:wp-type 1ms steps(1,end) 2350ms both}
+.v2.armed .cap i{animation:wp-wout .1s linear 2900ms both}
+.v2.armed .cap b{animation:wp-wpop .3s cubic-bezier(.2,.9,.3,1.3) 2900ms both}
+.hero-type{margin:0}
+
+/* ===== V3: trail draw (divider between hero and screenshots) ===== */
+.band3{overflow:hidden;padding:58px 0 66px;background:var(--bone-2);border-block:1px solid var(--line);text-align:center}
+.v3{--fs:clamp(44px,12.5vw,120px);--open-at:2.75s;--open-d:.5s;--drop-at:2.9s;--cap-at:3.4s}
+.v3 .trail{position:absolute;left:-1.2em;top:-.52em;width:6.4em;height:2.7em;overflow:visible;pointer-events:none}
+.v3 .tdots{fill:none;stroke:var(--river);stroke-width:6.5;stroke-linecap:round;stroke-dasharray:.1 13.5}
+.v3 .tmask{fill:none;stroke:#fff;stroke-width:22;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:0}
+.v3 .pin{fill:var(--river);transform-box:fill-box;transform-origin:50% 100%}
+.v3 .pin circle{fill:var(--bone-2)}
+@keyframes v3-draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes v3-pin{0%{opacity:0;transform:translateY(-.4em) scale(.2)}45%{opacity:1;transform:scale(1.15)}70%{opacity:1;transform:scale(.95)}85%{opacity:1;transform:none}100%{opacity:0;transform:translateY(.12em) scale(.2)}}
+.v3.armed .tmask{animation:v3-draw 2.4s cubic-bezier(.55,0,.3,1) .25s both}
+.v3.armed .pin{animation:v3-pin .95s ease 2.55s both}
+.v3 .pin{opacity:0}
+.v3.armed .pin{opacity:1}
+
+/* ===== V4: fish rise (the nav brand lockup) ===== */
+.brand.v4w{font-size:28px;text-transform:none;letter-spacing:0}
+.brand .v4{--fs:28px;--open-at:.62s;--open-d:.5s;--drop-at:.7s;--drop-d:.55s;--cap-at:1.4s;line-height:1}
+.v4 .ins::before,.v4 .ins::after{content:"";position:absolute;left:50%;bottom:.08em;width:1.5em;height:.46em;margin-left:-.75em;border:1.5px solid var(--river);border-radius:50%;opacity:0;pointer-events:none}
+@keyframes v4-ring{0%{opacity:.9;transform:scale(.12)}70%{opacity:.35}100%{opacity:0;transform:scale(1)}}
+.v4.armed .ins::before{animation:v4-ring 1.5s ease-out .1s both}
+.v4.armed .ins::after{animation:v4-ring 1.5s ease-out .5s both}
+@keyframes v4-rise{from{opacity:0;transform:translateY(.38em) scale(.7)}60%{opacity:1;transform:translateY(-.04em) scale(1.06)}to{opacity:1;transform:none}}
+.v4.armed .ins .g{animation:v4-rise .6s cubic-bezier(.2,.8,.3,1) .7s both}
+body.embed .brand.v4w{font-size:64px}
+body.embed .brand .v4{--fs:64px}
+body.embed .brand .brandmark{width:60px;height:60px}
+.brand-note{font:500 13px/1.3 "IBM Plex Mono",monospace;color:var(--dim);margin:0}
+
+/* ===== V5: split-flap sign (app launch splash) ===== */
+.splash{position:relative;width:min(100%,290px);margin:0 auto;aspect-ratio:9/17;background:var(--iron);border:7px solid #0e0b09;border-radius:34px;outline:1px solid #3a322b;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;color:var(--bone);box-shadow:0 24px 40px -18px rgba(20,16,13,.55)}
+.sp-mark{width:56px;height:56px;fill:none;stroke:var(--bone);stroke-width:11;stroke-linecap:round;stroke-linejoin:round}
+.sp-cap{font:500 12px/1 "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:#b3a596;margin:0}
+.sp-bar{width:60%;height:3px;border-radius:2px;background:#3a322b;overflow:hidden}
+.sp-bar i{display:block;height:100%;background:var(--river);transform-origin:0 50%}
+.board{--fs:34px;--th:1.18em;display:flex;align-items:center;justify-content:center;color:var(--bone);font-weight:600;line-height:1}
+.tile{display:block;position:relative;overflow:hidden;width:.64em;height:var(--th);margin:0 .04em;border-radius:.1em;background:var(--tile);color:var(--bone);text-align:center;box-shadow:0 2px 0 rgba(0,0,0,.35)}
+.tile::before{content:"";position:absolute;left:0;right:0;top:50%;height:2px;margin-top:-1px;background:rgba(0,0,0,.6);z-index:2}
+.tile::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(rgba(255,255,255,.08),rgba(255,255,255,0) 50%,rgba(0,0,0,.2) 50%,rgba(0,0,0,0))}
+.reel{display:block;transform:translateY(calc(var(--th) * (1 - var(--n,1))))}
+.reel b{display:block;height:var(--th);line-height:var(--th);font-weight:inherit}
+.tile.tr{background:var(--river)}
+.tile.tw{width:.8em}
+.tile.tw .reel b:last-child{font-weight:700}
+@keyframes wp-reel{from{transform:translateY(0)}}
+@keyframes v5-bg{from{background:var(--tile)}}
+@keyframes v5-new{from{width:0;margin-inline:0}}
+@keyframes v5-tw{from{width:.64em}}
+@keyframes v5-bar{from{transform:scaleX(0)}}
+.v5.armed .reel{animation:wp-reel var(--rd,.08s) steps(var(--rs,1),end) var(--rat,0s) both}
+.v5.armed .tile.tr{animation:v5-bg .3s ease 1.45s both}
+.v5.armed .tile.tn{animation:v5-new .3s cubic-bezier(.2,.8,.2,1) 1.6s both}
+.v5.armed .tile.tw{animation:v5-tw .25s ease 2.5s both}
+.v5.armed .sp-bar i{animation:v5-bar 3.1s linear .3s both}
+body.embed .splash{width:250px;aspect-ratio:auto;padding:22px 0;gap:18px}
+body.embed .sp-mark,body.embed .sp-cap{display:none}
+.hero-light .splash{outline:0}
+
+/* ===== V6: wave fill (closing CTA band) ===== */
+.cta6{padding:54px 0 62px;background:var(--bone-2);border-block:1px solid var(--line);text-align:center}
+.cta6 h2{font-size:clamp(42px,9vw,76px);line-height:.92;margin:18px 0 22px}
+.v6{--fs:clamp(54px,14vw,128px);--open-at:1.3s;--open-d:.5s;--drop-at:1.45s;--drop-d:.6s;--cap-at:1.95s;padding:.14em 0 .04em}
+.v6 .clip{position:absolute;inset:0;overflow:hidden;pointer-events:none;opacity:0}
+.v6 .surf,.v6 .rise{position:absolute;inset:0}
+.v6 .rise{overflow:hidden}
+.v6 .surf{background:rgba(35,107,143,.12)}
+.v6 .wave{position:absolute;left:0;bottom:100%;width:100%;height:.16em;overflow:hidden}
+.v6 .wave svg{display:block;position:absolute;left:0;top:0;width:200%;height:100%;fill:rgba(35,107,143,.12)}
+.v6 .rtxt{position:absolute;inset:0;padding:.14em 0 .04em;white-space:nowrap;text-align:left;color:var(--river)}
+.v6 .rtxt .ins,.v6 .rtxt .cap{color:var(--river)}
+@keyframes v6-rise{from{transform:translateY(122%)}to{transform:translateY(-18%)}}
+@keyframes v6-sink{from{transform:translateY(-122%)}to{transform:translateY(18%)}}
+@keyframes v6-slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes v6-fade{from{opacity:1}to{opacity:0}}
+.v6.armed .clip{animation:v6-fade .7s ease 2.9s both}
+.v6.armed .surf,.v6.armed .rise{animation:v6-rise 2.5s cubic-bezier(.45,.05,.35,1) .2s both}
+.v6.armed .rtxt{animation:v6-sink 2.5s cubic-bezier(.45,.05,.35,1) .2s both}
+.v6.armed .wave svg{animation:v6-slide 1s linear 0s 4 both}
