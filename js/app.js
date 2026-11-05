@@ -75,7 +75,7 @@ RIVERS.forEach(r => {
    dead zone. */
 const STATE_NAME = {ID:"Idaho", WY:"Wyoming", IA:"Iowa", MN:"Minnesota", WI:"Wisconsin", IL:"Illinois",
   CA:"California", OR:"Oregon", WA:"Washington", MT:"Montana", CO:"Colorado", UT:"Utah", AK:"Alaska",
-  MI:"Michigan", SD:"South Dakota", NM:"New Mexico", AZ:"Arizona", NV:"Nevada", PA:"Pennsylvania", NY:"New York", VA:"Virginia", ME:"Maine", MO:"Missouri", MA:"Massachusetts", NH:"New Hampshire", WV:"West Virginia", CT:"Connecticut"};
+  MI:"Michigan", SD:"South Dakota", NM:"New Mexico", AZ:"Arizona", NV:"Nevada", PA:"Pennsylvania", NY:"New York", VA:"Virginia", ME:"Maine", MO:"Missouri", MA:"Massachusetts", NH:"New Hampshire", WV:"West Virginia", CT:"Connecticut", VT:"Vermont"};
 
 const API_BASE = "https://api.waterdata.usgs.gov/ogcapi/v0/collections";
 const STAT_YEARS = 7;        // years of history for the median
@@ -1012,6 +1012,8 @@ const REGIONS = [
   ["Massachusetts", [42.25,-71.80,7]],
   ["── New Hampshire ──", null],
   ["New Hampshire", [43.95,-71.50,7]],
+  ["── Vermont ──", null],
+  ["Vermont", [44.00,-72.70,7]],
   ["── Michigan ──", null],
   ["Au Sable (Grayling / Mio)", [44.65,-84.40,9]],
   ["Manistee / Pere Marquette", [44.10,-85.80,8]],
@@ -2158,6 +2160,23 @@ Object.assign(PARK_INFO, {
     footer:`🎣 <b>Connecticut</b>, from the 2026 guide: fishing licences are “Required for all persons age 16 and older,” “Issued on a calendar year basis and expire on December 31st,” and “Free for Connecticut residents age 65 or older” (p. 5). “The Trout and Salmon Stamp is required for all persons age 16 and older when: A. Taking (keeping any trout or salmon) B. Fishing in waters designated as a: -Trout Management Area (Rivers) -Trout Park -Wild Trout Management Area Class 1, 2, or 3 -Atlantic Salmon Management Area” (p. 5). The stamp is $3 for Connecticut anglers 16 and 17, $5 for Connecticut anglers 18 and over and $5 for nonresidents (p. 5). “An ‘All Waters’ or ‘Inland Waters Only’ fishing license is required upstream of the indicated landmarks while an ‘All Waters’ or ‘Marine Waters Only’ fishing license is required downstream” (p. 8). “Family Fishing Day: No fishing license is required on May 9, 2026” (p. 6). Licences and stamps: “available online anytime via https://portal.ct.gov/CTOutdoorLicenses or can be purchased at most bait and tackle shops, town clerk offices, or DEEP field offices” (p. 5).`,
     ungauged:"No live gauge on this water. Judge clarity and level on arrival."},
 });
+/* Vermont: Vermont Fish & Wildlife Department's special-regulation lines (geom
+   "vtfw", and NHD for the rest) and the 2026 Vermont Fishing Guide &
+   Regulations for the rules; every Vermont river is region "vermont", so each
+   reads this row. No `zone`: a `zone` here would make refreshZoneCounts() build
+   an empty set. Every licence word is the guide's, printed page given (printed
+   page = PDF page - 2). The guide names no trout or salmon stamp (its only
+   stamps are duck stamps, p. 16) and states no stream-access rule
+   (ACCESS_LAW.VT). It draws no trout classes, so Vermont has no TROUT_CLASS
+   keys and rivers keep their own colour. */
+Object.assign(PARK_INFO, {
+  vermont: {sub:"", heading:"Regulations", labelZoom:8, badge:"Vermont F&amp;W · 2026",
+    note:`From the <b>2026 Vermont Fishing Guide &amp; Regulations</b> (Vermont Fish &amp; Wildlife Department): the water's own entries from the guide's Index of Rivers and Streams (pp. 40–53) in the Department's words, with page cites, then the general regulations (Table 1, p. 54) that apply to any water not listed. Water in the Lake Champlain basin also falls under the guide's Lake Champlain table (Table 2, p. 58), and the Connecticut River under its own (Table 3, p. 60).`,
+    licence:"<b>Vermont fishing licence</b> (children under 15 never need one); the guide names no trout stamp",
+    regBody:"Vermont Fish &amp; Wildlife",
+    footer:`🎣 <b>Vermont</b>, from the 2026 guide: “Anyone fishing, in possession of, or transporting fish taken in Vermont waters or the Vermont/New Hampshire waters of the Connecticut River must be properly licensed and must carry the license on his/her person” (p. 22). “The license must be shown on demand of a state game warden or other enforcement officer, or at the request of the owner of the land on which he/she is fishing” (p. 22). “Children under 15 never need a license to fish” (p. 15). “Fishing licenses cover fishing throughout the year” (p. 15). The guide names no trout or salmon stamp: its only stamps are the state and federal duck stamps (p. 16). On the Connecticut River, “a person with a resident Vermont fishing license may take fish anywhere in the Connecticut River, subject to the regulations of Vermont and New Hampshire” (p. 17).`,
+    ungauged:"No live gauge on this water. Judge clarity and level on arrival."},
+});
 /* Minnesota's designated stream trout lakes (mnlakes/build.py). Only lakes name
    this row: no Minnesota river has region "minnesota", so it never reaches a
    river sheet, and it has no `zone` (it would build an empty set). Every word
@@ -3233,7 +3252,7 @@ let geomSweeps = 0;
 
    Two guards on what may be refined:
 
-   * `iadnr` / `iawt` / `widnr` / `midnr` / `wgfd` / `pfbc` / `nydec` / `vdwr` / `mdc` / `mdfw` / `wvdnr` / `ctdeep` rivers are never touched. Those lines are the state
+   * `iadnr` / `iawt` / `widnr` / `midnr` / `wgfd` / `pfbc` / `nydec` / `vdwr` / `mdc` / `mdfw` / `wvdnr` / `ctdeep` / `vtfw` rivers are never touched. Those lines are the state
      fisheries agency's own drawing of the reach that is *designated trout
      water*, which is a different claim from "where the channel runs", and
      NHD would happily replace it with the whole creek or the wrong Bear
@@ -3327,7 +3346,7 @@ async function refineRiver(r){
      sources along one channel fragments the line wherever they disagree by
      more than REFINE_BUFFER_KM. The baked OSM line is simplified (40 m, 80 m
      in Alaska); the refinement is the same ways at full resolution. */
-  if(r.geom === "iadnr" || r.geom === "iawt" || r.geom === "widnr" || r.geom === "midnr" || r.geom === "wgfd" || r.geom === "pfbc" || r.geom === "nydec" || r.geom === "vdwr" || r.geom === "mdc" || r.geom === "mdfw" || r.geom === "wvdnr" || r.geom === "ctdeep" || r.geom === "trout_dist" || r.geom === "wvva"){ layer.refined = true; return; }
+  if(r.geom === "iadnr" || r.geom === "iawt" || r.geom === "widnr" || r.geom === "midnr" || r.geom === "wgfd" || r.geom === "pfbc" || r.geom === "nydec" || r.geom === "vdwr" || r.geom === "mdc" || r.geom === "mdfw" || r.geom === "wvdnr" || r.geom === "ctdeep" || r.geom === "vtfw" || r.geom === "trout_dist" || r.geom === "wvva"){ layer.refined = true; return; }
   layer.refining = true;
   const ck = "nhdfine:" + r.id;
   const cached = store.get(ck);
@@ -5117,7 +5136,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v39";
+const APP_VERSION = "flyroutes-v40";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){
