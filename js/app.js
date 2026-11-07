@@ -2268,7 +2268,10 @@ Object.assign(PARK_INFO, {
    region picks a PARK_INFO row and the behaviour that comes with it), so this
    row is found through `parkRegsSrc:"wgfd"` instead -- and it has no `zone`,
    because refreshZoneCounts() would otherwise count it as Wyoming's set. Soda
-   Lake reads it through its `park` field like the other state lakes. */
+   Lake reads it through its `park` field like the other state lakes, and so
+   do the lakes from lakes/wyoming/build.py. Most of those are outside Area 1,
+   so each carries a `regsNote` naming its own Area, which openLake() prefers
+   to this row's Area 1 note. */
 Object.assign(PARK_INFO, {
   wgfd: {sub:"", heading:"Regulations", labelZoom:8, badge:"WGFD · Chapter 46 · 2026",
     note:`From the Wyoming Game and Fish Commission's <b>Chapter 46, Fishing Regulations</b>, effective January 1, 2026 — Area 1, the Snake River drainage: this water's own entry where it has one, then the rules for every stream and water in Area 1, word for word. Wyoming re-issues Chapter 46; check the current regulations at wgfd.wyo.gov before you fish.`,
@@ -5136,7 +5139,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v41";
+const APP_VERSION = "flyroutes-v43";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){
