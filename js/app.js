@@ -3448,10 +3448,13 @@ function riverPlace(r){
 function riverStateName(r){ return riverPlace(r).split(" · ")[0]; }
 /* "Wyoming · Yellowstone · lake" — the lake sheet's subtitle, shared with the
    Field Book rows the same way. A lake that names no PARK_INFO row reads as
-   Yellowstone's, the first lakes the sheet was written for. */
+   Yellowstone's, the first lakes the sheet was written for. A lake's own
+   `sub` wins over its row's: South Dakota's row says " · Black Hills", which
+   is where all its rivers are, and Lake Oahe is not. Its lakes carry the
+   handbook's fisheries area instead (" · Missouri River", " · East River"). */
 function lakePlace(k){
   const pk = PARK_INFO[k.park] || PARK_INFO.yellowstone;
-  return (STATE_NAME[k.state] || k.state) + pk.sub + " · lake";
+  return (STATE_NAME[k.state] || k.state) + (k.sub !== undefined ? k.sub : pk.sub) + " · lake";
 }
 /* A lake opened from the Field Book is framed the way a river is: in the part
    of the map the sheet and the controls leave clear (focusFrame). */
@@ -5139,7 +5142,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v43";
+const APP_VERSION = "flyroutes-v45";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){
