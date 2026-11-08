@@ -46,7 +46,16 @@ if(/[?&]tour=/.test(q)||(sa&&!/[?&]home(?:[=&]|$)/.test(q)))location.replace("ap
 <section class="c-hero">
   <div class="wrap">
     <div class="txt">
-      <h1>Find the water worth the drive.</h1>
+      <h1 id="tw-slogan" aria-live="polite">Find the water worth the drive.</h1>
+      <div class="tw-picker" hidden>
+        <div class="tw-ctl" role="group" aria-label="Headline options">
+          <button type="button" class="tw-prev" aria-label="Previous headline"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7"/></svg></button>
+          <span class="tw-count" aria-live="off">1 / 17</span>
+          <button type="button" class="tw-next" aria-label="Next headline"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7"/></svg></button>
+          <button type="button" class="tw-fav" aria-pressed="false" aria-label="Favorite this headline">&#9733;</button>
+        </div>
+        <p class="tw-favs" hidden></p>
+      </div>
       <p class="lede">Live flows, the rules, weather and where to get on, for 1,400+ trout and float rivers. All on your phone.</p>
       <a class="pill" href="app">Open the map <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7"/></svg></a>
     </div>
@@ -83,6 +92,67 @@ if(/[?&]tour=/.test(q)||(sa&&!/[?&]home(?:[=&]|$)/.test(q)))location.replace("ap
   <p>A tailwater is the stretch of river below a dam: cold, steady, and some of the best trout water there is. TrailWater is the other kind. It is the water you walk to, wade, drift and float, and play on. The trail is where we come in. We help you find your water, navigate to it, and get on it.</p>
 </div></section>
 <section class="c-cta"><div class="wrap"><h2>No account.<br>Just the water.</h2><a class="pill pill-ink" href="app">Open the map <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7"/></svg></a></div></section>
+<script>
+// Temporary headline picker for testers. Set SHOW_PICKER to false to hide the
+// controls and leave the first headline, which is also what the HTML says.
+const SHOW_PICKER = true;
+(function(){
+if(!SHOW_PICKER)return;
+var SLOGANS=["Find the water worth the drive.","Walk it. Wade it. Float it.","Less driving. More casting.","Less driving. More fishing.","Less driving. More drifting.","Less windshield. More water.","Fewer wasted drives.","Bank, boot or boat.","However you get on the water.","Works where the signal doesn't.","Check the flow. Then go.","Read the river before you leave the house.","Skip the blown-out river.","Not the tailwater. The trail to it.","From the trailhead to the riffle.","Every water worth the walk.","Free map. Live flows. No sign-up."];
+var N=SLOGANS.length,KEY="tw-slogan-favs";
+var h1=document.getElementById("tw-slogan"),box=document.querySelector(".tw-picker");
+if(!h1||!box)return;
+var cnt=box.querySelector(".tw-count"),fav=box.querySelector(".tw-fav"),favs=box.querySelector(".tw-favs");
+var memFavs=[],cur=1,timer=0;
+function loadFavs(){try{var a=JSON.parse(localStorage.getItem(KEY)||"[]");if(Array.isArray(a))return a.filter(function(n){return n>=1&&n<=N});}catch(e){}return memFavs.slice();}
+function saveFavs(a){memFavs=a.slice();try{localStorage.setItem(KEY,JSON.stringify(a));}catch(e){}}
+function paintFavs(){
+  var a=loadFavs().sort(function(x,y){return x-y});
+  fav.setAttribute("aria-pressed",a.indexOf(cur)>=0?"true":"false");
+  fav.setAttribute("aria-label",a.indexOf(cur)>=0?"Remove this headline from favorites":"Favorite this headline");
+  favs.hidden=!a.length;
+  favs.textContent=a.length?"Your favorites: "+a.map(function(n){return "#"+n}).join(", "):"";
+}
+function show(n,fade){
+  cur=((n-1+N)%N)+1;
+  function apply(){
+    h1.textContent=SLOGANS[cur-1];
+    cnt.textContent=cur+" / "+N;
+    paintFavs();
+    try{history.replaceState(null,"","#slogan="+cur);}catch(e){}
+  }
+  clearTimeout(timer);
+  if(!fade||matchMedia("(prefers-reduced-motion:reduce)").matches){h1.classList.remove("tw-fade");apply();return;}
+  h1.classList.add("tw-fade");
+  timer=setTimeout(function(){apply();h1.classList.remove("tw-fade");},180);
+}
+box.querySelector(".tw-prev").addEventListener("click",function(){show(cur-1,true)});
+box.querySelector(".tw-next").addEventListener("click",function(){show(cur+1,true)});
+fav.addEventListener("click",function(){
+  var a=loadFavs(),i=a.indexOf(cur);
+  if(i>=0)a.splice(i,1);else a.push(cur);
+  saveFavs(a);paintFavs();
+});
+document.addEventListener("keydown",function(e){
+  if(e.key!=="ArrowLeft"&&e.key!=="ArrowRight")return;
+  if(e.altKey||e.ctrlKey||e.metaKey||e.shiftKey)return;
+  var t=e.target,tag=t&&t.tagName;
+  if(tag==="INPUT"||tag==="TEXTAREA"||tag==="SELECT"||(t&&t.isContentEditable))return;
+  show(cur+(e.key==="ArrowRight"?1:-1),true);
+});
+var sx=0,sy=0;
+h1.addEventListener("touchstart",function(e){var t=e.changedTouches[0];sx=t.clientX;sy=t.clientY;},{passive:true});
+h1.addEventListener("touchend",function(e){
+  var t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;
+  if(Math.abs(dx)>=40&&Math.abs(dx)>Math.abs(dy))show(cur+(dx<0?1:-1),true);
+},{passive:true});
+var m=/[#&]slogan=(\d+)/.exec(location.hash),start=m?parseInt(m[1],10):1;
+if(!(start>=1))start=1;
+if(start>N)start=N;
+box.hidden=false;
+show(start,false);
+})();
+</script>
 </main>
 <footer class="foot"><div class="wrap">
   <a class="brand" href="./"><svg class="brandmark" viewBox="-4 -4 108 108" aria-hidden="true" focusable="false"><path d="M8 12H44M24 12V62M44 12L56 62L68 32L80 62L92 12M10 88Q20 80 30 88T50 88T70 88T90 88"/></svg><span>TrailWater</span></a>
