@@ -1170,7 +1170,7 @@ function openLake(id){
       // a lake the row's note doesn't describe (Lake Halice: no DNR fish list) carries its own
       `<div style="font-size:10.5px;color:var(--txt-dim);margin-top:8px">${k.regsNote || pk.lakeNote || pk.note}</div>` +
     `</div>` +
-    `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Lake outline: ${k.src==="osm" ? "OpenStreetMap" : k.src==="wgfd" ? "Wyoming Game &amp; Fish's lakes map (NHDPlus HR)" : k.src==="iadnr" ? "Iowa DNR Fishing Atlas lakes layer" : k.src==="mndnr" ? "Minnesota DNR hydrography (public waters basins, and the DNR 24K lakes layer for the pits and the pond)" : "USGS NHD waterbodies"}. Verify regulations with ${pk.regBody}.</p>` +
+    `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Lake outline: ${k.src==="osm" ? "OpenStreetMap" : k.src==="wgfd" ? "Wyoming Game &amp; Fish's lakes map (NHDPlus HR)" : k.src==="iadnr" ? "Iowa DNR Fishing Atlas lakes layer" : k.src==="mndnr" ? "Minnesota DNR hydrography (public waters basins, and the DNR 24K lakes layer for the pits and the pond)" : k.src==="idfg" ? "Idaho Fish and Game's lakes and reservoirs layer" : "USGS NHD waterbodies"}. Verify regulations with ${pk.regBody}.</p>` +
     `<div class="rp-wrap"><button type="button" class="rp-link" data-report="${fbEsc(k.id)}">Report an issue with this lake</button></div>`;
   wxLoad(wx);
 }
@@ -5142,7 +5142,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v47";
+const APP_VERSION = "flyroutes-v49";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){
