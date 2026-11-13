@@ -4064,9 +4064,16 @@ function wxLoad(target){
    or lake's id, so if the sheet has moved on there is nothing to fill. */
 function wxFill(target){
   const el = body.querySelector(`[data-wx="${target.key}"]`);
-  if(!el) return;
-  const html = wxCardHTML(target);
-  if(html) el.outerHTML = html; else el.remove();
+  if(el){
+    const html = wxCardHTML(target);
+    if(html) el.outerHTML = html; else el.remove();
+  }
+  // the Today strip's weather line, keyed the same way and only for rivers
+  const s = body.querySelector(`[data-wxs="${target.key}"]`);
+  if(s){
+    const html = todayWxHTML(target);
+    if(html) s.outerHTML = html; else s.remove();
+  }
 }
 
 /* ---------- Field Book: conditions at the tap ----------
@@ -4157,11 +4164,15 @@ function wxHour(p){
   const h = +String(p.s).slice(11, 13);
   return isFinite(h) ? `${h % 12 || 12}${h < 12 ? "a" : "p"}` : "";
 }
-function wxCardHTML(target){
+const wxWind = (p, full) => wxTop(p.ws) === 0 ? "calm"
+  : full ? `${p.wd} ${p.ws}`.trim() : `${p.wd} ${wxTop(p.ws)}`.trim();
+/* The forecast as it stands for one point: "none" outside NWS coverage,
+   "loading", "failed", or "ok" with the hours still ahead and the current
+   hour's headline. The weather card and the Today strip both read this, so
+   the strip's line is always the card's first line. */
+function wxNowState(target){
   const url = wxURLKnown(target.pt);
-  if(url === null) return "";
-  const head = `<div class="gname">Wind &amp; weather</div>`;
-  const shell = inner => `<div class="wxcard" data-wx="${target.key}">${head}${inner}</div>`;
+  if(url === null) return {state:"none"};
   const fc = wxCached(url);
   const now = Date.now();
   const periods = fc ? fc.periods.filter(p => new Date(p.e).getTime() > now) : [];
@@ -4169,18 +4180,25 @@ function wxCardHTML(target){
   // an older copy stands in while its refresh is on the way, but not once
   // that refresh has failed: then it is no longer the current forecast
   const failed = wxFailedAt[target.pt.id] && !wxBusy[target.pt.id];
-  if(!periods.length || (!fresh && failed)){
-    return failed
+  if(!periods.length || (!fresh && failed)) return {state: failed ? "failed" : "loading"};
+  const unit = u => u === "F" || !u ? "°F" : "°" + u;
+  const p0 = periods[0], top0 = wxTop(p0.ws);
+  const nowBits = [`<b>${p0.t}${unit(p0.u)}</b>`, `Wind <span class="wx-wtxt${wxEmph(top0)}">${wxWind(p0, true)}</span>`];
+  if(p0.pop != null && p0.pop >= WX_RAIN_MIN) nowBits.push(`${p0.pop}% rain`);
+  if(p0.sf) nowBits.push(fbEsc(p0.sf));
+  return {state:"ok", fc, periods, now:nowBits.join(" · ")};
+}
+function wxCardHTML(target){
+  const ws = wxNowState(target);
+  if(ws.state === "none") return "";
+  const head = `<div class="gname">Wind &amp; weather</div>`;
+  const shell = inner => `<div class="wxcard" data-wx="${target.key}">${head}${inner}</div>`;
+  if(ws.state !== "ok"){
+    return ws.state === "failed"
       ? shell(`<div class="wx-off">Forecast unavailable — no connection to the National Weather Service.</div>`)
       : shell(`<div class="wx-now wx-dim">Loading forecast…</div>`);
   }
-  const unit = u => u === "F" || !u ? "°F" : "°" + u;
-  const p0 = periods[0], top0 = wxTop(p0.ws);
-  const wind = (p, full) => wxTop(p.ws) === 0 ? "calm"
-    : full ? `${p.wd} ${p.ws}`.trim() : `${p.wd} ${wxTop(p.ws)}`.trim();
-  const nowBits = [`<b>${p0.t}${unit(p0.u)}</b>`, `Wind <span class="wx-wtxt${wxEmph(top0)}">${wind(p0, true)}</span>`];
-  if(p0.pop != null && p0.pop >= WX_RAIN_MIN) nowBits.push(`${p0.pop}% rain`);
-  if(p0.sf) nowBits.push(fbEsc(p0.sf));
+  const {fc, periods} = ws, p0 = periods[0], wind = wxWind;
 
   const cells = [];
   for(let n = 1; n <= WX_CELLS; n++){ const p = periods[n * WX_STEP]; if(p) cells.push(p); }
@@ -4202,7 +4220,7 @@ function wxCardHTML(target){
 
   const issued = fc.updated ? readingWhen(fc.updated) : "";
   return shell(
-    `<div class="wx-now">${nowBits.join(" · ")}</div>` +
+    `<div class="wx-now">${ws.now}</div>` +
     (strip ? `<div class="wx-strip">${strip}</div>` : "") +
     `<div class="wx-sum">${sum}</div>` +
     `<div class="wx-src">National Weather Service hourly forecast · ${fbEsc(target.pt.label)}${issued ? ` · issued ${issued}` : ""}</div>`);
@@ -4267,11 +4285,19 @@ function renderSheet(r){
     h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">${piFoot.footer}</p>`;
   }
   // The Iowa low-head-dam warning is in the rules card (damWarnHTML), not down here.
-  body.innerHTML = rulesCardHTML(r) + regsFoldHTML(r) + h +
+  body.innerHTML = todayStripHTML(r, wx) + rulesCardHTML(r) + regsFoldHTML(r) + h +
     `<div class="rp-wrap"><button type="button" class="rp-link" data-report="${fbEsc(r.id)}">Report an issue with this river</button></div>`;
   body.dataset.river = r.id;
   wxLoad(wx);
   keepOpen.forEach(k => { const d = body.querySelector(`details[data-fold="${k}"]`); if(d) d.open = true; });
+  todayStripFit();
+  // the strip taps through to the primary gauge's card (or the ungauged one)
+  body.querySelector(".todaystrip").addEventListener("click", () => {
+    const card = body.querySelector(".flowcard");
+    if(!card) return;
+    const top = body.scrollTop + card.getBoundingClientRect().top - body.getBoundingClientRect().top - 8;
+    body.scrollTo({top, behavior: reducedMotion ? "auto" : "smooth"});
+  });
 
   body.querySelectorAll("[data-zoom]").forEach(el=>el.addEventListener("click",()=>{
     const s = SECTIONS.find(x=>x.id===el.dataset.zoom);
@@ -4309,16 +4335,86 @@ function isTroutWater(r){
 }
 /* The temperature line under the flow number. Same 24 h rule as discharge:
    an old temperature is not today's, so it isn't shown at all. */
-function waterTempHTML(key, riverObj){
+/* Today's water temperature in °F, or null: the one test the flow card and
+   the Today strip share, so the two can never show different readings. */
+function waterTempF(key){
   const t = temps[key];
-  if(!t || t.c == null || readingIsOld(t)) return "";
-  const f = Math.round(t.c * 9/5 + 32);
-  const cue = !isTroutWater(riverObj) ? ""
-    : f >= TROUT_REST_F ? "Too warm for trout — give them a rest today."
-    : f >= TROUT_WARM_F ? "Warm for trout — fish early, land and release fish fast." : "";
-  return `<div class="wtemp">Water <b>${f}°F</b> (${t.c.toFixed(1)}°C)</div>` +
+  return !t || t.c == null || readingIsOld(t) ? null : Math.round(t.c * 9/5 + 32);
+}
+const troutTempCue = (f, riverObj) => f == null || !isTroutWater(riverObj) ? ""
+  : f >= TROUT_REST_F ? "rest" : f >= TROUT_WARM_F ? "warm" : "";
+function waterTempHTML(key, riverObj){
+  const f = waterTempF(key);
+  if(f == null) return "";
+  const c = troutTempCue(f, riverObj);
+  const cue = c === "rest" ? "Too warm for trout — give them a rest today."
+    : c === "warm" ? "Warm for trout — fish early, land and release fish fast." : "";
+  return `<div class="wtemp">Water <b>${f}°F</b> (${temps[key].c.toFixed(1)}°C)</div>` +
     (cue ? `<div class="tempwarn">🌡 ${cue}</div>` : "");
 }
+
+/* The Today strip: the first thing in a river's sheet, so "is it worth the
+   drive" is answered before the rules. It is a summary of the primary
+   gauge's card and the weather card's first line, built from the same
+   readings under the same rules (statusOf, the 24 h test, waterTempF,
+   wxNowState), and taps through to the card. Never a borrowed number: an
+   ungauged river says so and nothing else. No good-flow verdict here. */
+function todayWxHTML(target){
+  const ws = wxNowState(target);
+  if(ws.state === "ok") return `<span class="ts-wx" data-wxs="${target.key}">${ws.now}</span>`;
+  // a slot held while the forecast loads, so its arrival doesn't shove the sheet down
+  if(ws.state === "loading") return `<span class="ts-wx" data-wxs="${target.key}"><span class="skel">00°F · Wind NNE 0 mph</span></span>`;
+  // failed: an empty (hidden) slot, so a retry that succeeds can still fill it
+  return ws.state === "failed" ? `<span class="ts-wx" data-wxs="${target.key}"></span>` : "";
+}
+function todayStripHTML(r, wx){
+  let l1, wt = "", say;
+  if(!r.gauges.length){
+    l1 = `<span class="ts-msg">No gauge on this water</span>`;
+    say = "no gauge on this water";
+  } else {
+    const key = primaryGaugeOf(r), f = flows[key], st = statusOf(key);
+    if(!f){
+      l1 = `<span class="ts-cfs"><span class="skel">0000</span><small> CFS</small></span><span class="badge ts-badge skel">Loading</span>`;
+      say = "flow loading";
+    } else if(st.cls === "old"){
+      // the card's badge wording: a gauge gone quiet, or this phone's saved copy
+      l1 = `<span class="ts-msg">${f.stale ? "Saved reading out of date" : "Gauge not reporting"}</span>`;
+      say = f.stale ? "saved reading out of date" : "gauge not reporting";
+    } else if(f.cfs == null){
+      l1 = `<span class="ts-msg">No reading from the gauge</span>`;
+      say = "no reading from the gauge";
+    } else {
+      const cfs = Math.round(f.cfs).toLocaleString();
+      l1 = `<span class="ts-cfs${f.stale ? " ts-saved" : ""}">${cfs}<small> CFS</small></span>` +
+        (f.stale ? `<span class="ts-tag">saved</span>` : "") +
+        `<span class="badge ts-badge" style="background:${st.color}">${st.label}</span>`;
+      say = `${cfs} CFS${f.stale ? " (saved reading)" : ""}, ${st.label.replace(/\s*⚠/, "").toLowerCase()}`;
+      const tf = waterTempF(key);
+      if(tf != null){
+        const warm = troutTempCue(tf, r) ? " ts-warm" : "";
+        wt = `<span class="ts-wt${warm}">Water ${tf}°F</span>`;
+        say += `, water ${tf}°F`;
+      }
+    }
+  }
+  /* The temperature appears twice: on line 1, and at the head of line 2 for
+     when line 1 has no room for it (todayStripFit decides, never both). */
+  return `<button type="button" class="todaystrip" aria-label="Today: ${say}. Jump to flow details">` +
+    `<span class="ts-l1">${l1}${wt ? `<span class="ts-sep">·</span>${wt}` : ""}</span>` +
+    `<span class="ts-l2">${wt.replace('class="ts-wt', 'class="ts-wt ts-wt2')}${todayWxHTML(wx)}</span></button>`;
+}
+/* Line 1 keeps the water temperature only when it fits beside the number
+   and badge; otherwise it leads line 2, so the strip stays two lines and the
+   CFS and badge are never cut. Measured, because it depends on the number. */
+function todayStripFit(){
+  const s = body.querySelector(".todaystrip");
+  if(!s || !s.offsetParent) return;
+  s.classList.remove("ts-wrap");
+  const wt = s.querySelector(".ts-l1 .ts-wt"), first = s.querySelector(".ts-l1 > :first-child");
+  if(wt && first && wt.getBoundingClientRect().top > first.getBoundingClientRect().bottom - 4) s.classList.add("ts-wrap");
+}
+window.addEventListener("resize", () => { if(body.dataset.river) todayStripFit(); });
 
 function flowCardHTML(key, riverId){
   const f=flows[key], s=stats[key], st=statusOf(key), m=meta[key];
@@ -5142,7 +5238,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v49";
+const APP_VERSION = "flyroutes-v50";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){
