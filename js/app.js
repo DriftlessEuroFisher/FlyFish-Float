@@ -75,7 +75,7 @@ RIVERS.forEach(r => {
    dead zone. */
 const STATE_NAME = {ID:"Idaho", WY:"Wyoming", IA:"Iowa", MN:"Minnesota", WI:"Wisconsin", IL:"Illinois",
   CA:"California", OR:"Oregon", WA:"Washington", MT:"Montana", CO:"Colorado", UT:"Utah", AK:"Alaska",
-  MI:"Michigan", SD:"South Dakota", NM:"New Mexico", AZ:"Arizona", NV:"Nevada", PA:"Pennsylvania", NY:"New York", VA:"Virginia", ME:"Maine", MO:"Missouri", MA:"Massachusetts", NH:"New Hampshire", WV:"West Virginia", CT:"Connecticut", VT:"Vermont"};
+  MI:"Michigan", SD:"South Dakota", NM:"New Mexico", AZ:"Arizona", NV:"Nevada", PA:"Pennsylvania", NY:"New York", VA:"Virginia", ME:"Maine", MO:"Missouri", MA:"Massachusetts", NH:"New Hampshire", WV:"West Virginia", CT:"Connecticut", VT:"Vermont", NE:"Nebraska"};
 
 const API_BASE = "https://api.waterdata.usgs.gov/ogcapi/v0/collections";
 const STAT_YEARS = 7;        // years of history for the median
@@ -2188,6 +2188,20 @@ Object.assign(PARK_INFO, {
     licence:`<b>Minnesota fishing licence + trout/salmon stamp</b> — “anglers need a Minnesota trout/salmon stamp validation and a fishing or sports license when fishing in designated trout streams, designated trout lakes, Lake Superior, or when possessing trout on waters that are not designated trout water.” (p. 25)`,
     regBody:"the Minnesota DNR",
     footer:`🎣 <b>Minnesota</b>, from the 2026 booklet: “Except as noted, anglers need a Minnesota trout/salmon stamp validation and a fishing or sports license when fishing in designated trout streams, designated trout lakes, Lake Superior, or when possessing trout on waters that are not designated trout water.” “Trout/salmon stamps are not required for children younger than 18 years old, adults who are 65 and older, people fishing with a 24-hour or 72-hour license or people who are exempt from fishing license requirements or who receive a fishing license at no charge.” (p. 25)`},
+});
+/* Nebraska's public fishing lakes (lakes/nebraska/build.py). Nebraska has no
+   rivers on this map, so only lakes name this row and it has no `zone` (it
+   would build an empty set; the state zone's count is rivers, 0). The two
+   quoted sentences are the 2026 Fishing Guide's, p. 5; the stamp line is
+   p. 22's rule in short. Each lake's own regsNote says what its regs hold. */
+Object.assign(PARK_INFO, {
+  nebraska: {sub:"", heading:"Regulations", labelZoom:9, badge:"NGPC · 2026",
+    note:`From the Nebraska Game and Parks Commission's <b>2026 Fishing Guide</b> — the water's row in the public fishing areas table, then the bag, possession and length limits for the fish it lists, word for word with pages.`,
+    lakeNote:`From the Nebraska Game and Parks Commission's <b>2026 Fishing Guide</b>, word for word with pages.`,
+    licence:"<b>Nebraska fishing permit</b>, residents and nonresidents age 16 and over",
+    regBody:"the Nebraska Game and Parks Commission",
+    footer:`🎣 <b>Nebraska</b>: “A Nebraska permit is required of residents and nonresidents age 16 and over. Nonresidents under age 16 need not have a fishing permit if they are accompanied by someone who has a Nebraska fishing permit.” Motorboats registered outside Nebraska need the annual Aquatic Invasive Species Stamp before launching from any Nebraska boat ramp (2026 Fishing Guide, pp. 5, 22).`,
+    ungauged:"No live gauge on this water."},
 });
 /* Michigan, South Dakota, New Mexico, Arizona and Nevada, plus the two of
    their parks with trout water. Each sheet quotes the state's own booklet. */
@@ -5238,7 +5252,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v51";
+const APP_VERSION = "flyroutes-v52";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){
