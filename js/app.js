@@ -5252,7 +5252,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v52";
+const APP_VERSION = "flyroutes-v53";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){
@@ -5304,6 +5304,126 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && reportEl.classL
 document.addEventListener("click", e => {
   const b = e.target.closest("[data-report]"); if(b) openReport(b.dataset.report || null);
 });
+/* ============================================================
+   Water search: the header magnifier. A name typed in, a river or lake
+   opened and framed. 2,000+ rivers and 500+ lakes are otherwise reachable
+   only by panning or the Jump list.
+   The index is built on first open. Every token of the query must start a
+   word of the name or of the place ("bear creek montana"), and at least one
+   must hit the name, so a state name alone finds nothing. The query text is
+   never sent anywhere.
+   ============================================================ */
+const searchEl = $("#search"), qIn = $("#q"), qList = $("#q-results"), qStatus = $("#q-status");
+let searchIdx = null;
+const SEARCH_MAX = 40;
+// lowercase, accents off, apostrophes gone ("Henry's" = "henrys"), other punctuation a space
+const searchNorm = t => String(t||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"")
+  .replace(/['’ʼ`]/g,"").replace(/[^a-z0-9]+/g," ").trim();
+function searchBuild(){
+  searchIdx = [];
+  RIVERS.forEach(r => {
+    const place = riverPlace(r), n = searchNorm(r.name), pn = searchNorm(place);
+    const t = tierNow.get(r.id);
+    searchIdx.push({kind:"river", id:r.id, name:r.name, place, n, pn, nw:n.split(" "), pw:pn.split(" "),
+      rank:{gold:0,"1":1,"2":2,"3":3}[t ? t.tier : "3"], src:r, ll:null});
+  });
+  (typeof LAKES==="undefined" ? [] : LAKES).forEach(k => {
+    const place = lakePlace(k).replace(/ · lake$/, ""), n = searchNorm(k.name), pn = searchNorm(place);
+    searchIdx.push({kind:"lake", id:k.id, name:k.name, place, n, pn, nw:n.split(" "), pw:pn.split(" "),
+      rank:2, src:k, ll:k.at});
+  });
+}
+// the water's own point, worked out only for waters that matched (midCoord walks the whole line)
+function searchLL(e){ return e.ll || (e.ll = midCoord(e.src.coords)); }
+function searchMatch(toks, qn){
+  const out = [];
+  for(const e of searchIdx){
+    let hitName = false, ok = true;
+    for(const t of toks){
+      if(e.nw.some(w => w.startsWith(t))){ hitName = true; }
+      else if(!e.pw.some(w => w.startsWith(t))){ ok = false; break; }
+    }
+    if(!ok || !hitName) continue;
+    // 0 whole name, 1 name starts with the query, 2 every token starts a word of the name, 3 the rest
+    e.sc = e.n === qn ? 0 : e.n.startsWith(qn) ? 1 : toks.every(t => e.nw.some(w => w.startsWith(t))) ? 2 : 3;
+    out.push(e);
+  }
+  const c = map.getCenter();
+  const d2 = e => { const p = searchLL(e), dy = p[0]-c.lat, dx = (p[1]-c.lng)*Math.cos(c.lat*Math.PI/180); return dy*dy+dx*dx; };
+  out.forEach(e => e.d = d2(e));
+  out.sort((a,b) => a.sc-b.sc || a.rank-b.rank || a.d-b.d || a.name.localeCompare(b.name));
+  return out;
+}
+function searchRowHTML(e){
+  return `<li role="option"><button type="button" class="q-row" data-qkind="${e.kind}" data-qid="${fbEsc(e.id)}">`+
+    `<span class="q-main"><span class="q-name">${fbEsc(e.name)}</span><span class="q-place">${fbEsc(e.place)}</span></span>`+
+    `<span class="q-kind ${e.kind}">${e.kind==="lake" ? "Lake" : "River"}</span></button></li>`;
+}
+function searchRender(){
+  const raw = qIn.value, qn = searchNorm(raw), toks = qn ? qn.split(" ") : [];
+  if(!qn){
+    // nothing typed: this phone's favorites, if any, else the hint
+    const favs = fbByName(fbWatersWhere(e => e.fav));
+    qStatus.textContent = "Type at least 2 letters.";
+    qList.innerHTML = favs.length ? `<li class="q-head" role="presentation">Favorites</li>` + favs.map(x => searchRowHTML({
+      kind:x.kind, id:x.id, name:x.w.name, place:(x.kind==="lake" ? lakePlace(x.w).replace(/ · lake$/, "") : riverPlace(x.w))})).join("") : "";
+    return;
+  }
+  if(qn.length < 2){ qStatus.textContent = "Type at least 2 letters."; qList.innerHTML = ""; return; }
+  if(!searchIdx) searchBuild();
+  const hits = searchMatch(toks, qn);
+  qList.innerHTML = hits.slice(0, SEARCH_MAX).map(searchRowHTML).join("");
+  qList.scrollTop = 0;
+  qStatus.textContent = !hits.length ? "No river or lake by that name on this map."
+    : hits.length > SEARCH_MAX ? `${SEARCH_MAX} of ${hits.length} — keep typing`
+    : `${hits.length} match${hits.length===1 ? "" : "es"}`;
+}
+function openSearch(){
+  // the welcome card and the tour own the screen; nothing else may open over them
+  if(typeof welcomePending === "function" && welcomePending()) return;
+  if(document.body.classList.contains("touring")) return;
+  if(typeof Metrics !== "undefined") Metrics.track("search_open");
+  closeIconMenus(); zoneCollapseJump(); closeLegend();
+  searchEl.classList.add("show");
+  searchRender();
+  // focus inside the click itself: iOS raises the keyboard only from a user gesture
+  qIn.focus(); qIn.select();
+}
+function closeSearch(){
+  if(!searchEl.classList.contains("show")) return;
+  searchEl.classList.remove("show");
+  qIn.blur();
+  $("#btn-search").focus({preventScroll:true});
+}
+function searchPick(kind, id){
+  closeSearch();
+  hideZones();                               // no-op unless the region chooser is up
+  if(kind==="lake"){
+    const k = typeof LAKES==="undefined" ? null : LAKES.find(x => x.id===id); if(!k) return;
+    openLake(k.id);
+    if(lakeShapes[k.id]) frameLake(k);       // after the sheet opens, so the frame clears it
+    else goTo(k.at, 12);
+  } else openRiver(id);                      // frames the river clear of the sheet, and un-hides a filtered one
+}
+$("#btn-search").addEventListener("click", openSearch);
+$("#search-x").addEventListener("click", closeSearch);
+qIn.addEventListener("input", searchRender);
+qList.addEventListener("click", e => {
+  const b = e.target.closest("button[data-qid]"); if(b) searchPick(b.dataset.qkind, b.dataset.qid);
+});
+searchEl.addEventListener("keydown", e => {
+  if(e.key==="Escape"){ e.preventDefault(); closeSearch(); return; }
+  const rows = [...qList.querySelectorAll("button[data-qid]")];
+  if(e.key==="Enter" && e.target===qIn){
+    e.preventDefault(); if(rows[0]) rows[0].click(); return;
+  }
+  if(e.key!=="ArrowDown" && e.key!=="ArrowUp") return;
+  e.preventDefault();
+  const i = rows.indexOf(document.activeElement);
+  if(e.key==="ArrowDown") (rows[i+1] || rows[i<0 ? 0 : i] || qIn).focus();
+  else if(i<=0) qIn.focus(); else rows[i-1].focus();
+});
+
 /* Header flag: always reachable. Prefills the river whose sheet is open, if any. */
 $("#btn-report").addEventListener("click", () => openReport(sheet.classList.contains("open") ? curRiver : null));
 $("#rp-river").addEventListener("input", () => {
@@ -5436,7 +5556,7 @@ function paintStatus(){
   if(curRiver) renderSheet(RIVERS.find(r=>r.id===curRiver));
 }
 async function refreshAll(manual){
-  const btn=$("#btn-refresh"); btn.classList.add("spin");
+  const btn=$("#updated"); btn.classList.add("spin");   // the time is the refresh button: it dims while flows load
   const keys = gaugesNearestFirst(Object.keys(GAUGES));
   // Colorado DWR's gauges answer from another host with its own budget: one request, alongside
   const dwr = keys.filter(isDWR);
@@ -5535,7 +5655,7 @@ async function loadViewStats(){
 function statsSoon(){ clearTimeout(statsTimer); statsTimer = setTimeout(loadViewStats, 800); }
 map.on("moveend", statsSoon);
 
-$("#btn-refresh").addEventListener("click",()=>refreshAll(true));
+$("#updated").addEventListener("click",()=>refreshAll(true));
 window.addEventListener("online",()=>refreshAll());
 setInterval(refreshAll, REFRESH_MS);
 refreshAll();
