@@ -1132,6 +1132,7 @@ function syncLakeFilter(){
     });
   });
   syncLakes();                          // a label put back takes its zoom rule again
+  syncDepthLater();                     // and its depth curves follow the lake
 }
 
 /* ---------- Stocking fold (lakes) ----------
@@ -1177,6 +1178,175 @@ function stockLoad(id){
     .then(d => stockFill(id, d), () => stockFill(id, null));
 }
 
+/* ---------- Depth contours (lakes) ----------
+   The depth curves an agency printed for a lake, one file per lake under
+   data/depth/ and a list of the lakes that have one (index.json). Jackson
+   Lake's are traced from the 1968 USGS 1:24,000 sheets. Each line is
+   [depth, encoded polyline]; nothing here knows which lake it is drawing.
+
+   Lines only, never fills: a closed curve can be a hump as easily as a
+   hole, and a filled band would say which. No animation either -- still
+   water. They sit in their own pane just over the lake's fill and under the
+   rivers, and that pane never takes a tap (see the CSS): a tap on the lake
+   between two curves still opens the lake, and one on an inlet still opens
+   the river. One path per depth, built once per lake and kept, so a pan
+   adds or removes a layer group and nothing is decoded twice. */
+const depthPane = map.createPane("depthPane");
+depthPane.style.zIndex = 406;                // over the lake's fill (405), under the rivers (410)
+const DEPTH_MIN_ZOOM = 11;                   // a 25 ft curve is noise at regional zoom
+const DEPTH_LABEL_ZOOM = 13;
+const DEPTH_LABEL_PX = 110;                  // a line shorter than this on screen carries no number
+const DEPTH_LABEL_GAP = 46;                  // no two numbers closer than this
+const DEPTH_LABEL_MAX = 70;
+const DEPTH_SHALLOW = [58, 128, 186], DEPTH_DEEP = [10, 34, 78];   // mid blue -> dark navy
+const depthBuilt = {};                       // lake id -> {group, lines}, kept once built
+const depthLoading = new Set(), depthBad = new Set();
+const depthLabelLayer = L.layerGroup().addTo(map);
+let depthIndexP = null;
+function depthIndex(){
+  if(!depthIndexP) depthIndexP = tileJSON("data/depth/index.json")
+    .then(a => Array.isArray(a) ? a : [], () => { depthIndexP = null; return null; });   // retried on the next look
+  return depthIndexP;
+}
+function depthOK(d){
+  return !!d && Array.isArray(d.lines) && d.lines.length > 0 && typeof d.units === "string" &&
+    [d.min, d.max, d.interval].every(v => Number.isFinite(v)) && d.interval > 0;
+}
+function depthColor(dep, min, max){
+  const t = max > min ? Math.min(1, Math.max(0, (dep - min) / (max - min))) : 0;
+  return "rgb(" + DEPTH_SHALLOW.map((a, i) => Math.round(a + (DEPTH_DEEP[i] - a) * t)).join(",") + ")";
+}
+// every fifth curve is the heavier one, as on the printed sheets
+const depthMajor = (dep, iv) => dep % (iv * 5) === 0;
+function depthBuild(d){
+  const byDepth = new Map(), lines = [];
+  d.lines.forEach(l => {
+    if(!Array.isArray(l) || !Number.isFinite(l[0]) || typeof l[1] !== "string") return;
+    const pts = decodePolyline(l[1]); if(pts.length < 2) return;
+    const dep = l[0], major = depthMajor(dep, d.interval), color = depthColor(dep, d.min, d.max);
+    if(!byDepth.has(dep)) byDepth.set(dep, []);
+    byDepth.get(dep).push(pts);
+    lines.push({dep, major, color, pts, b:L.latLngBounds(pts)});
+  });
+  if(!lines.length) return null;
+  const group = L.layerGroup();
+  // the heavy curves last, so they stay unbroken where two run close
+  [...byDepth.keys()].sort((a, b) => depthMajor(a, d.interval) - depthMajor(b, d.interval) || a - b)
+    .forEach(dep => L.polyline(byDepth.get(dep), {pane:"depthPane", interactive:false,
+      color:depthColor(dep, d.min, d.max), weight:depthMajor(dep, d.interval) ? 1.9 : 1,
+      opacity:.9, lineJoin:"round", lineCap:"round"}).addTo(group));
+  return {group, lines};
+}
+function depthHideAll(){
+  depthLabelLayer.clearLayers();
+  Object.values(depthBuilt).forEach(b => { if(map.hasLayer(b.group)) map.removeLayer(b.group); });
+}
+function syncDepth(){
+  if(zonesShown || map.getZoom() < DEPTH_MIN_ZOOM){ depthHideAll(); return; }
+  depthIndex().then(ix => { if(ix) depthApply(ix); });
+}
+function depthApply(ix){
+  if(zonesShown || map.getZoom() < DEPTH_MIN_ZOOM){ depthHideAll(); return; }   // changed while the index loaded
+  const view = map.getBounds().pad(0.25), shown = [];
+  ix.forEach(id => {
+    const ls = lakeShapes[id], b = depthBuilt[id];
+    const want = !!ls && lakeSpeciesShown(id) && (curLake === id || view.intersects(ls.poly.getBounds()));
+    if(!want){ if(b && map.hasLayer(b.group)) map.removeLayer(b.group); return; }
+    if(b){ if(!map.hasLayer(b.group)) b.group.addTo(map); shown.push(b); return; }
+    if(depthLoading.has(id) || depthBad.has(id)) return;
+    depthLoading.add(id);
+    tileJSON("data/depth/" + encodeURIComponent(id) + ".json").then(d => {
+      depthLoading.delete(id);
+      const built = depthOK(d) ? depthBuild(d) : null;
+      if(built){ depthBuilt[id] = built; syncDepth(); } else depthBad.add(id);
+    }, () => depthLoading.delete(id));                        // tileJSON forgets a failure; the next move retries
+  });
+  depthPlaceLabels(shown);
+}
+/* Numbers from zoom 13, upright, on the line. Only lines long enough on
+   screen to carry one, index curves first, then the longest; a number that
+   would land within DEPTH_LABEL_GAP of one already placed tries a quarter of
+   the way along each side before giving up. Recomputed when the view settles. */
+function depthPlaceLabels(shown){
+  depthLabelLayer.clearLayers();
+  if(map.getZoom() < DEPTH_LABEL_ZOOM || !shown.length) return;
+  const size = map.getSize(), vb = map.getBounds(), M = 14;   // keep numbers off the screen edge
+  const inside = q => q.x >= M && q.y >= M && q.x <= size.x - M && q.y <= size.y - M;
+  const cands = [];
+  shown.forEach(b => b.lines.forEach(l => {
+    if(!vb.intersects(l.b)) return;
+    // the longest unbroken run of this line on screen
+    let best = null, run = [], len = 0;
+    const flush = () => { if(run.length > 1 && (!best || len > best.len)) best = {run, len}; run = []; len = 0; };
+    l.pts.forEach(p => {
+      const q = map.latLngToContainerPoint(p);
+      if(!inside(q)){ flush(); return; }
+      if(run.length) len += q.distanceTo(run[run.length - 1]);
+      run.push(q);
+    });
+    flush();
+    if(best && best.len >= DEPTH_LABEL_PX) cands.push({l, run:best.run, len:best.len});
+  }));
+  cands.sort((a, b) => (b.l.major - a.l.major) || (b.len - a.len));
+  const at = (run, s) => {                     // the point s pixels along a run
+    for(let i = 1; i < run.length; i++){
+      const seg = run[i].distanceTo(run[i - 1]);
+      if(s <= seg) return run[i - 1].add(run[i].subtract(run[i - 1]).multiplyBy(seg ? s / seg : 0));
+      s -= seg;
+    }
+    return run[run.length - 1];
+  };
+  const placed = [];
+  for(const c of cands){
+    if(placed.length >= DEPTH_LABEL_MAX) break;
+    const q = [.5, .25, .75].map(f => at(c.run, c.len * f))
+      .find(p => placed.every(o => o.distanceTo(p) >= DEPTH_LABEL_GAP));
+    if(!q) continue;
+    placed.push(q);
+    L.marker(map.containerPointToLatLng(q), {pane:"depthPane", interactive:false, keyboard:false,
+      icon:L.divIcon({className:"depth-lbl-wrap", iconSize:null,
+        html:`<span class="depth-lbl" style="color:${c.l.color}">${c.l.dep}</span>`})}).addTo(depthLabelLayer);
+  }
+}
+let depthT = null;
+function syncDepthLater(){
+  clearTimeout(depthT);
+  depthT = setTimeout(() => {
+    if(map._animatingZoom){ syncDepthLater(); return; }      // not mid-animation
+    syncDepth();
+  }, 150);
+}
+map.on("zoomend moveend", syncDepthLater);
+map.on("zoomstart", () => clearTimeout(depthT));
+
+/* The sheet's Depth block: the same placeholder-then-fill as the Stocking
+   fold. The file's own wording (datum, survey, credit, note, coverage) is
+   shown verbatim -- the reference level is what every depth is measured from. */
+function depthBlockHTML(d){
+  if(!depthOK(d)) return "";
+  const u = fbEsc(d.units), iv = fbEsc(d.interval);
+  const about = [["Reference level", d.datum], ["Survey", d.survey], ["Source", d.credit], ["Coverage", d.coverage]]
+    .filter(r => r[1]).map(r => `<div><b>${r[0]}</b>${fbEsc(r[1])}</div>`).join("");
+  return `<div class="depthblk">` +
+    `<div class="dp-head">Depth contours · every ${iv} ${u}, ${fbEsc(d.min)}–${fbEsc(d.max)} ${u}</div>` +
+    `<div class="dp-sub">Drawn on the map when you zoom in on the lake. Heavier line every ${fbEsc(d.interval * 5)} ${u}.</div>` +
+    (d.note ? `<div class="rc-dam">${fbEsc(d.note)}</div>` : "") +
+    `<div class="dp-sub">Depths are measured from the lake level stated below. Water levels change, so real depths can be less.</div>` +
+    (about ? `<details class="fold depthfold" data-fold="depth"><summary><span>About these contours</span></summary><div class="dp-about">${about}</div></details>` : "") +
+    `</div>`;
+}
+function depthFill(id, d){
+  const el = [...body.querySelectorAll("[data-depth]")].find(e => e.dataset.depth === id);
+  if(!el) return;
+  const html = curLake === id ? depthBlockHTML(d) : "";
+  if(html) el.outerHTML = html; else el.remove();
+}
+function depthLoad(id){
+  depthIndex()
+    .then(ix => ix && ix.includes(id) ? tileJSON("data/depth/" + encodeURIComponent(id) + ".json") : null)
+    .then(d => depthFill(id, d), () => depthFill(id, null));
+}
+
 function openLake(id){
   const k = LAKES.find(x => x.id === id); if(!k) return;
   unfocusRiver();                       // the sheet stays open, but it is no longer a river's
@@ -1203,6 +1373,7 @@ function openLake(id){
   body.innerHTML =
     (priv || desigHTML(k.id) || fish ? `<div class="rulescard">${priv}${desigHTML(k.id)}${fish}</div>` : "") +
     `<div data-stock="${fbEsc(k.id)}"></div>` +
+    `<div data-depth="${fbEsc(k.id)}"></div>` +
     `<p style="margin:12px 2px 2px;font-size:13.5px">${k.blurb}</p>` +
     `<div class="flowcard"><div class="gname">Still water — ${k.areaKm2} km²</div>` +
     `<div class="plain">No gauge and no flow number: a lake doesn't have one. What "in shape" means here is ice-off, water temperature and wind, not CFS — and on the big lakes the wind is the thing that decides the day.</div></div>` +
@@ -1218,6 +1389,8 @@ function openLake(id){
     `<div class="rp-wrap"><button type="button" class="rp-link" data-report="${fbEsc(k.id)}">Report an issue with this lake</button></div>`;
   wxLoad(wx);
   stockLoad(k.id);
+  depthLoad(k.id);
+  syncDepthLater();                     // an open lake keeps its contours wherever the map is
 }
 
 /* ============================================================
@@ -5297,7 +5470,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v54";
+const APP_VERSION = "flyroutes-v55";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){
@@ -6106,6 +6279,7 @@ function showZones(){
   syncRegionLabels();
   if(typeof syncFlow === "function") syncFlow();
   if(typeof syncLakes === "function") syncLakes();
+  if(typeof syncDepth === "function") syncDepth();
   if(typeof syncClosures === "function") syncClosures();
   // Fit the covered area rather than a fixed zoom: z4 fills a laptop but
   // shows a fraction of the country on a phone, which is the screen this
@@ -6128,6 +6302,7 @@ function hideZones(){
   syncRegionLabels();
   if(typeof syncFlow === "function") syncFlow();
   if(typeof syncLakes === "function") syncLakes();
+  if(typeof syncDepth === "function") syncDepth();
   if(typeof syncClosures === "function") syncClosures();
   statsSoon();                        // Change Region can close the chooser without moving the map
 }
@@ -6665,7 +6840,7 @@ function unfocusRiver(){
 new MutationObserver(() => {
   if(!sheet.classList.contains("open")){
     unfocusRiver();
-    if(curLake){ curLake = null; if(speciesPick){ syncLakeFilter(); syncMarkers(); } }   // likewise the open lake
+    if(curLake){ curLake = null; if(speciesPick){ syncLakeFilter(); syncMarkers(); } syncDepthLater(); }   // likewise the open lake
   }
   iconNudge();
 }).observe(sheet, {attributes:true, attributeFilter:["class"]});
