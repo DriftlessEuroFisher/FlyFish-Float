@@ -1070,7 +1070,7 @@ const speciesHas = (key, sp) => { const s = SP_SETS.get(key); return !!(s && s.h
 function speciesInScope(kind, w){
   const s = SP_ON && typeof SPECIES_SCOPE !== "undefined" ? SPECIES_SCOPE : null;
   if(!s || !w) return false;
-  return kind === "lake" ? (s.lakePark || []).includes(w.park)
+  return kind === "lake" ? (s.lakePark || []).includes(w.park) || (s.lakeIds || []).includes(w.id)
                          : (s.state || []).includes(w.state) || (s.region || []).includes(w.region);
 }
 function lakeSpeciesShown(id){
@@ -1134,6 +1134,49 @@ function syncLakeFilter(){
   syncLakes();                          // a label put back takes its zoom rule again
 }
 
+/* ---------- Stocking fold (lakes) ----------
+   IDFG's stocking records for a few Idaho lakes, one file per lake under
+   data/stocking/ and a sorted list of the lakes that have one (index.json,
+   built by ~/.cache/flyfish-osm/stocking/). The sheet opens at once with an
+   empty placeholder carrying the lake's id; the files are fetched through
+   tileJSON (one fetch per URL, the service worker keeps them), and an answer
+   fills the placeholder only if that lake's sheet is still the one open, the
+   way the weather card does. A lake not in the index, a failed fetch or a
+   file that doesn't read right shows nothing. */
+let stockIndexP = null;
+function stockIndex(){
+  if(!stockIndexP) stockIndexP = tileJSON("data/stocking/index.json")
+    .then(a => Array.isArray(a) ? a : [], () => { stockIndexP = null; return null; });   // a failure is retried on the next lake
+  return stockIndexP;
+}
+function stockFoldHTML(d){
+  if(!d || !Array.isArray(d.rows) || !d.rows.length) return "";
+  const rows = d.rows.filter(r => Array.isArray(r) && r.length === 4);
+  if(!rows.length) return "";
+  const n = rows.length;
+  const url = /^https:\/\//.test(d.url || "") ? d.url : "";
+  const yr = String(d.first || "").slice(0, 4);
+  const more = Number.isFinite(d.total) && yr
+    ? `${d.total} records back to ${fbEsc(yr)} on the agency's page` : "the agency's page";
+  return `<details class="fold stockfold" data-fold="stocking"><summary><span>Stocking · ${n} record${n > 1 ? "s" : ""} since ${fbEsc(d.from)}</span></summary>`+
+    `<div class="stk">`+
+    rows.map(r => `<div class="stk-row"><span class="stk-d">${fbEsc(r[0])}</span><span class="stk-s">${fbEsc(r[1])}</span>`+
+      `<span class="stk-q">${fbEsc(r[2])}</span><span class="stk-z">${fbEsc(r[3])}</span></div>`).join("")+
+    `</div><div class="rg-src">Idaho Fish and Game stocking records, read ${fbEsc(d.read)}. `+
+    (url ? `<a href="${fbEsc(url)}" target="_blank" rel="noopener">${more} ↗</a>` : more) + `</div></details>`;
+}
+function stockFill(id, d){
+  const el = [...body.querySelectorAll("[data-stock]")].find(e => e.dataset.stock === id);
+  if(!el) return;
+  const html = curLake === id ? stockFoldHTML(d) : "";
+  if(html) el.outerHTML = html; else el.remove();
+}
+function stockLoad(id){
+  stockIndex()
+    .then(ix => ix && ix.includes(id) ? tileJSON("data/stocking/" + encodeURIComponent(id) + ".json") : null)
+    .then(d => stockFill(id, d), () => stockFill(id, null));
+}
+
 function openLake(id){
   const k = LAKES.find(x => x.id === id); if(!k) return;
   unfocusRiver();                       // the sheet stays open, but it is no longer a river's
@@ -1159,6 +1202,7 @@ function openLake(id){
   const priv = k.private ? `<div class="rc-dam">Private water — residents and guests only. No public access.</div>` : "";
   body.innerHTML =
     (priv || desigHTML(k.id) || fish ? `<div class="rulescard">${priv}${desigHTML(k.id)}${fish}</div>` : "") +
+    `<div data-stock="${fbEsc(k.id)}"></div>` +
     `<p style="margin:12px 2px 2px;font-size:13.5px">${k.blurb}</p>` +
     `<div class="flowcard"><div class="gname">Still water — ${k.areaKm2} km²</div>` +
     `<div class="plain">No gauge and no flow number: a lake doesn't have one. What "in shape" means here is ice-off, water temperature and wind, not CFS — and on the big lakes the wind is the thing that decides the day.</div></div>` +
@@ -1173,6 +1217,7 @@ function openLake(id){
     `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Lake outline: ${k.src==="osm" ? "OpenStreetMap" : k.src==="wgfd" ? "Wyoming Game &amp; Fish's lakes map (NHDPlus HR)" : k.src==="iadnr" ? "Iowa DNR Fishing Atlas lakes layer" : k.src==="mndnr" ? "Minnesota DNR hydrography (public waters basins, and the DNR 24K lakes layer for the pits and the pond)" : k.src==="idfg" ? "Idaho Fish and Game's lakes and reservoirs layer" : "USGS NHD waterbodies"}. Verify regulations with ${pk.regBody}.</p>` +
     `<div class="rp-wrap"><button type="button" class="rp-link" data-report="${fbEsc(k.id)}">Report an issue with this lake</button></div>`;
   wxLoad(wx);
+  stockLoad(k.id);
 }
 
 /* ============================================================
@@ -5252,7 +5297,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v53";
+const APP_VERSION = "flyroutes-v54";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){

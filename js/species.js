@@ -238,10 +238,12 @@ const SPECIES_SRC = {
   "idfg:1112967437724":{"checked":true,"date":"2026-10-19","name":"Idaho Fish & Game — Fishing Planner","page":"South Fork Packsaddle Creek","url":"https://idfg.idaho.gov/ifwis/fishingplanner/water/1112967437724"},
   "idfg:1113752434418":{"checked":true,"date":"2026-10-19","name":"Idaho Fish & Game — Fishing Planner","page":"Fall Creek","url":"https://idfg.idaho.gov/ifwis/fishingplanner/water/1113752434418"},
   "idfg:1113785434480":{"checked":true,"date":"2026-10-19","name":"Idaho Fish & Game — Fishing Planner","page":"Rainey Creek","url":"https://idfg.idaho.gov/ifwis/fishingplanner/water/1113785434480"},
+  "idfg:1114065446388":{"checked":true,"date":"2026-11-15","name":"Idaho Fish & Game — Fishing Planner","page":"Henrys Lake","url":"https://idfg.idaho.gov/ifwis/fishingplanner/water/1114065446388"},
   "idfg:1114179434913":{"checked":true,"date":"2026-10-19","name":"Idaho Fish & Game — Fishing Planner","page":"Pine Creek","url":"https://idfg.idaho.gov/ifwis/fishingplanner/water/1114179434913"},
   "idfg:1114261434617":{"checked":true,"date":"2026-10-19","name":"Idaho Fish & Game — Fishing Planner","page":"Pritchard Creek","url":"https://idfg.idaho.gov/ifwis/fishingplanner/water/1114261434617"},
   "idfg:1114342434854":{"checked":true,"date":"2026-10-19","name":"Idaho Fish & Game — Fishing Planner","page":"Garden Creek","url":"https://idfg.idaho.gov/ifwis/fishingplanner/water/1114342434854"},
   "idfg:1114619439171":{"checked":true,"date":"2026-10-19","name":"Idaho Fish & Game — Fishing Planner","page":"Canyon Creek","url":"https://idfg.idaho.gov/ifwis/fishingplanner/water/1114619439171"},
+  "idfg:1115398443973":{"checked":true,"date":"2026-11-15","name":"Idaho Fish & Game — Fishing Planner","page":"Island Park Reservoir","url":"https://idfg.idaho.gov/ifwis/fishingplanner/water/1115398443973"},
   "idfg:1118383438988":{"checked":true,"date":"2026-10-19","name":"Idaho Fish & Game — Fishing Planner","page":"Teton River","url":"https://idfg.idaho.gov/ifwis/fishingplanner/water/1118383438988"},
   "idfg:1119497437575":{"checked":true,"date":"2026-10-19","name":"Idaho Fish & Game — Fishing Planner","page":"South Fork Snake River (Snake River)","url":"https://idfg.idaho.gov/ifwis/fishingplanner/water/1119497437575"},
   "ngpc_fishmap":{"checked":true,"date":"2026-11-09","name":"Nebraska Game and Parks Commission — public fishing areas map layer (JoinedData_Lakes, Species)","url":"https://services5.arcgis.com/IOshH1zLrIieqrNk/arcgis/rest/services/JoinedData_Lakes/FeatureServer/0"},
@@ -252,7 +254,7 @@ const SPECIES_SRC = {
   "wgfd":{"date":"2026-10-19","name":"Wyoming Game & Fish — Wyoming Fishing Guide","url":"https://experience.arcgis.com/experience/313c464a64284328aec793be217dfc9c"},
   "wgfd_lakes":{"date":"2026-10-19","name":"Wyoming Game & Fish — Wyoming Fishing Guide (lakes)","url":"https://experience.arcgis.com/experience/313c464a64284328aec793be217dfc9c"},
 };
-const SPECIES_SCOPE = {"lakePark":["grandteton","iowa","nebraska","wgfd","yellowstone"],"region":["grandteton","swanvalley","tetonvalley","yellowstone"],"state":["IA","WY"]};
+const SPECIES_SCOPE = {"lakeIds":["henryslake","islandparkres"],"lakePark":["grandteton","iowa","nebraska","wgfd","yellowstone"],"region":["grandteton","swanvalley","tetonvalley","yellowstone"],"state":["IA","WY"]};
 const SPECIES = {
   "arizonacreek":[["brown","wgfd"],["cutthroat","wgfd",null,"Snake River Cutthroat"],["brook","wgfd"]],
   "bear":[["brown","wgfd"],["cutthroat","wgfd",null,"Bear River Cutthroat"],["whitefish","wgfd"],["yellowperch","wgfd"]],
@@ -383,8 +385,10 @@ const SPECIES = {
   "lake:halfmoonlakewy":[["brown","wgfd_lakes"],["rainbow","wgfd_lakes"],["cutthroat","wgfd_lakes"],["brook","wgfd_lakes"],["laketrout","wgfd_lakes"],["whitefish","wgfd_lakes"]],
   "lake:hawthornlake":[["largemouth","iala:HAW62"],["musky","iala:HAW62","stocked","stocked 2025"],["channelcat","iala:HAW62","stocked","stocked 2023"],["crappie","iala:HAW62",null,"Black Crappie"],["sunfish","iala:HAW62",null,"Bluegill"]],
   "lake:heartlake":[["cutthroat","nps_yell"],["laketrout","nps_yell"],["whitefish","nps_yell"]],
+  "lake:henryslake":[["cutthroat","idfg:1114065446388","stocked","survey 2022 · stocked 2026"],["brook","idfg:1114065446388","stocked","survey 2022 · stocked 2026"],["kokanee","idfg:1114065446388",null,"survey 2019"]],
   "lake:iaspiritlake":[["smallmouth","iala:SPL30"],["largemouth","iala:SPL30"],["walleye","iala:SPL30","stocked","stocked 2025"],["pike","iala:SPL30"],["musky","iala:SPL30","stocked","stocked 2025"],["whitebass","iala:SPL30"],["channelcat","iala:SPL30"],["crappie","iala:SPL30",null,"Black Crappie"],["sunfish","iala:SPL30",null,"Bluegill, Green Sunfish, Orangespotted sunfish, Pumpkinseed"],["yellowperch","iala:SPL30"],["carp","iala:SPL30"]],
   "lake:inghamlake":[["largemouth","iala:ING32"],["walleye","iala:ING32","stocked","stocked 2025"],["pike","iala:ING32"],["channelcat","iala:ING32"],["crappie","iala:ING32",null,"Black Crappie, White Crappie"],["sunfish","iala:ING32",null,"Bluegill"],["yellowperch","iala:ING32"]],
+  "lake:islandparkres":[["rainbow","idfg:1115398443973","stocked","survey 2009 · stocked 2026"],["cutthroat","idfg:1115398443973",null,"survey 2009"],["brook","idfg:1115398443973",null,"survey 2009"],["kokanee","idfg:1115398443973",null,"survey 2009"],["whitefish","idfg:1115398443973",null,"survey 2008"]],
   "lake:jacksonlake":[["brown","wgfd_lakes"],["cutthroat","wgfd_lakes",null,"Snake River Cutthroat"],["laketrout","wgfd_lakes"],["whitefish","wgfd_lakes"]],
   "lake:jennylake":[["cutthroat","wgfd_lakes",null,"Snake River Cutthroat"],["brook","wgfd_lakes"],["laketrout","wgfd_lakes"],["whitefish","wgfd_lakes"]],
   "lake:keyholeres":[["smallmouth","wgfd_lakes"],["walleye","wgfd_lakes"],["pike","wgfd_lakes"],["channelcat","wgfd_lakes"],["crappie","wgfd_lakes",null,"Black Crappie, White Crappie"],["sunfish","wgfd_lakes",null,"Bluegill, Green Sunfish"],["yellowperch","wgfd_lakes"]],

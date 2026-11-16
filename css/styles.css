@@ -830,6 +830,15 @@ details.rulesfull{margin-bottom:9px}
 .rg-law{font-size:12px;line-height:1.4}
 .rg-law blockquote{margin:6px 0 2px;padding-left:9px;border-left:2px solid var(--line);font-size:11.5px;line-height:1.4;color:var(--txt-dim)}
 details.morefold{margin:-4px 0 6px}
+/* The lake sheet's Stocking fold: one record per row, date | species | quantity, and the
+   size on a second line, because the full species name ("Cutbow - Cutthroat x Rainbow
+   Trout - Triploid") is what wraps at 375 px. */
+details.stockfold{margin:6px 0 2px}
+.stk{font-size:12px;line-height:1.35}
+.stk-row{display:grid;grid-template-columns:auto 1fr auto;column-gap:10px;padding:5px 0;border-top:1px solid var(--line)}
+.stk-d{font-variant-numeric:tabular-nums;color:var(--txt-dim);white-space:nowrap}
+.stk-q{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.stk-z{grid-column:2 / 4;font-size:11px;color:var(--txt-dim)}
 /* Ungauged small-stream water: one line, the detail folded under it. */
 .flowcard.ungauged{padding:10px 12px}
 .ung-line{font-size:14px;font-weight:600;color:var(--txt);line-height:1.3}
