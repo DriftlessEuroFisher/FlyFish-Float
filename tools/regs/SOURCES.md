@@ -323,3 +323,19 @@ Iowa water trails. The app shows those without a regulations block on purpose.
   Scripts: `~/.cache/flyfish-osm/nh/regs.py` (`spotcheck.py` confirms every quote). Feeds `parkRegs` on the 47 `nh_*` rivers.
 - Geometry: NHD by name (`nh/build.py`); stocked layer (F&G `FishStocking_view` layer 2) and access sites
   (`nh_access_sites`) on services8.arcgis.com/hg1B9Egwk1I5p300. Fence "new hampshire fish and game rivers".
+
+## Minnesota big lakes (2026-11-17)
+- **2026 Minnesota Fishing Regulations** (`files.dnr.state.mn.us/rlp/regulations/fishing/fishing_regs.pdf`,
+  "Updated 6.4.26", March 2026 to Feb 28, 2027; on disk as `mnlakes/cache/regs/mn_fishing_regs.pdf`).
+  Printed page = PDF page. Start checking for the 2027 edition in February 2027.
+  Pipeline `~/.cache/flyfish-osm/mnlakes/big/`: `regs/parse.py` (booklet → `special.json`, `border.json`,
+  `statewide.json`; `regs/check.py`) → `compose.py` (per-lake text; `regs_check.py`) → `apply.py`.
+  Feeds `regs`, `regsNote` and `warn` on the 42 `park:"mnlakes"` lakes (fence "mn big lakes") and the
+  licence quote in `PARK_INFO.mnlakes` (p. 26, typed into app.js).
+- **Mille Lacs and Upper Red:** the booklet prints no limits (p. 45, posted during the season). Nothing is
+  taken from mndnr.gov/millelacslake.
+- Agency web data, no edition: DNR Hydrography and public waters basins (outlines), LakeFinder
+  (`maps.dnr.state.mn.us/cgi-bin/lakefinder/detail.cgi?type=lake_survey&id=<number>`: acres, depths,
+  surveys, species), Public Water Access Sites (`gis.dnr.state.mn.us/.../loc_water_access_sites`, 165 pins,
+  fence "mn big lake access"). Re-run `fetch.py --refetch` then `outlines.py` to refresh.
+- The older "mn trout lakes" fence (17 lakes, `mnlakes/build.py`) reads the same booklet.

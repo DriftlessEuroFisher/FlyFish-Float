@@ -1368,10 +1368,12 @@ function openLake(id){
   const fish = speciesRowHTML("lake", k);
   /* Private water (Lake Halice, an HOA lake) says so before anything else:
      this is a map people use to decide where to go, and nothing on the sheet
-     may read as an invitation. The amber of the Iowa low-head-dam row. */
+     may read as an invitation. The amber of the Iowa low-head-dam row.
+     `warn` (plain text from the regulations, Minnesota big lakes) sits next to it. */
   const priv = k.private ? `<div class="rc-dam">Private water — residents and guests only. No public access.</div>` : "";
+  const warn = k.warn ? `<div class="rc-dam">${fbEsc(k.warn)}</div>` : "";
   body.innerHTML =
-    (priv || desigHTML(k.id) || fish ? `<div class="rulescard">${priv}${desigHTML(k.id)}${fish}</div>` : "") +
+    (priv || warn || desigHTML(k.id) || fish ? `<div class="rulescard">${priv}${warn}${desigHTML(k.id)}${fish}</div>` : "") +
     `<div data-stock="${fbEsc(k.id)}"></div>` +
     `<div data-depth="${fbEsc(k.id)}"></div>` +
     `<p style="margin:12px 2px 2px;font-size:13.5px">${k.blurb}</p>` +
@@ -1385,7 +1387,7 @@ function openLake(id){
       // a lake the row's note doesn't describe (Lake Halice: no DNR fish list) carries its own
       `<div style="font-size:10.5px;color:var(--txt-dim);margin-top:8px">${k.regsNote || pk.lakeNote || pk.note}</div>` +
     `</div>` +
-    `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Lake outline: ${k.src==="osm" ? "OpenStreetMap" : k.src==="wgfd" ? "Wyoming Game &amp; Fish's lakes map (NHDPlus HR)" : k.src==="iadnr" ? "Iowa DNR Fishing Atlas lakes layer" : k.src==="mndnr" ? "Minnesota DNR hydrography (public waters basins, and the DNR 24K lakes layer for the pits and the pond)" : k.src==="idfg" ? "Idaho Fish and Game's lakes and reservoirs layer" : "USGS NHD waterbodies"}. Verify regulations with ${pk.regBody}.</p>` +
+    `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:14px">Lake outline: ${k.src==="osm" ? "OpenStreetMap" : k.src==="wgfd" ? "Wyoming Game &amp; Fish's lakes map (NHDPlus HR)" : k.src==="iadnr" ? "Iowa DNR Fishing Atlas lakes layer" : k.src==="mndnr" ? "Minnesota DNR hydrography (its lakes layer, or its public waters basins)" : k.src==="idfg" ? "Idaho Fish and Game's lakes and reservoirs layer" : "USGS NHD waterbodies"}. Verify regulations with ${pk.regBody}.</p>` +
     `<div class="rp-wrap"><button type="button" class="rp-link" data-report="${fbEsc(k.id)}">Report an issue with this lake</button></div>`;
   wxLoad(wx);
   stockLoad(k.id);
@@ -2406,6 +2408,15 @@ Object.assign(PARK_INFO, {
     licence:`<b>Minnesota fishing licence + trout/salmon stamp</b> — “anglers need a Minnesota trout/salmon stamp validation and a fishing or sports license when fishing in designated trout streams, designated trout lakes, Lake Superior, or when possessing trout on waters that are not designated trout water.” (p. 25)`,
     regBody:"the Minnesota DNR",
     footer:`🎣 <b>Minnesota</b>, from the 2026 booklet: “Except as noted, anglers need a Minnesota trout/salmon stamp validation and a fishing or sports license when fishing in designated trout streams, designated trout lakes, Lake Superior, or when possessing trout on waters that are not designated trout water.” “Trout/salmon stamps are not required for children younger than 18 years old, adults who are 65 and older, people fishing with a 24-hour or 72-hour license or people who are exempt from fishing license requirements or who receive a fishing license at no charge.” (p. 25)`},
+  /* Minnesota's big lakes, 5,000 acres or more (mnlakes/big/apply.py). Lakes
+     only, and no `zone` on purpose, like the row above. These are not trout
+     water, so the row says nothing about a trout stamp. */
+  mnlakes: {sub:"", heading:"Regulations", labelZoom:8, badge:"Minnesota DNR · 2026",
+    note:`From the Minnesota DNR's <b>2026 Minnesota Fishing Regulations</b>: this lake's own entry where the booklet has one, the border-water rules where it names the lake, then the statewide limits, word for word with page numbers. Read the current booklet before you fish.`,
+    lakeNote:`From the Minnesota DNR's <b>2026 Minnesota Fishing Regulations</b>: this lake's own entry where the booklet has one, the border-water rules where it names the lake, then the statewide limits, word for word with page numbers. Read the current booklet before you fish.`,
+    licence:`<b>Minnesota fishing licence</b> — “To legally fish in Minnesota, all residents of Minnesota, age 16 through 89, must have a current Minnesota fishing license unless an exemption applies …” “All nonresidents need a license except those younger than 16 do not need a license if a parent or guardian is licensed.” (p. 26)`,
+    regBody:"the Minnesota DNR",
+    footer:`🎣 <b>Minnesota</b>, from the 2026 booklet: “To legally fish in Minnesota, all residents of Minnesota, age 16 through 89, must have a current Minnesota fishing license unless an exemption applies …” “All nonresidents need a license except those younger than 16 do not need a license if a parent or guardian is licensed.” (p. 26)`},
 });
 /* Nebraska's public fishing lakes (lakes/nebraska/build.py). Nebraska has no
    rivers on this map, so only lakes name this row and it has no `zone` (it
@@ -5470,7 +5481,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v55";
+const APP_VERSION = "flyroutes-v56";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){
