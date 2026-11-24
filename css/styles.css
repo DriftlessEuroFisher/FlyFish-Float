@@ -907,7 +907,7 @@ details.depthfold{margin:2px 0 0}
 .fbt-cond{font-size:12px;color:var(--txt-dim);line-height:1.35;overflow-wrap:anywhere}
 .fbt-acts{display:flex;align-items:center;gap:6px;flex:0 0 auto;margin-left:auto}
 .fbt-ask{font-size:12.5px;font-weight:600;color:var(--txt)}
-.fbt-btn{min-height:36px;padding:0 12px;border-radius:var(--radius);border:1px solid var(--line);background:var(--paper);
+.fbt-btn{min-height:36px;padding:5px 12px;border-radius:var(--radius);border:1px solid var(--line);background:var(--paper);
   color:var(--txt);font-size:13px;font-weight:600;white-space:nowrap}
 .fbt-btn:active{transform:scale(.97)}
 .fbt-primary{background:var(--river);border-color:var(--river);color:#fff}
@@ -1221,3 +1221,19 @@ details.depthfold{margin:2px 0 0}
 #tour-tip .tt-nav .tt-next{background:var(--river);color:#fff}
 #tour-tip .tt-nav button:disabled{opacity:.4}
 #tour-tip .tt-primary{background:var(--river) !important;color:#fff !important}
+
+/* ============================================================
+   Driving directions (Google Maps). A River-filled pill, thumb-sized in
+   the sheet and a little smaller in a map popup. The dot marks a tapped
+   spot on the river: Iron with a white ring (no orange, red or gold).
+   ============================================================ */
+.dir-link{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;min-height:44px;padding:6px 16px;text-align:center;line-height:1.15;
+  background:var(--river);color:#fff;border-radius:var(--radius);text-decoration:none;
+  font-family:"Barlow Condensed",sans-serif;font-size:16px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.leaflet-popup-content .dir-link{min-height:36px;padding:5px 12px;margin-top:8px;font-size:14px;color:#fff}
+.ag-pop a.dir-link{font-size:14px;display:inline-flex}
+.dest-row{margin:0 0 10px}
+.dest-row .dir-link{display:flex;width:100%}
+.dest-note{margin-top:6px;font-size:11.5px;line-height:1.35;color:var(--txt-dim)}
+.dest-dot{width:16px;height:16px;box-sizing:border-box;border-radius:50%;background:#1f1915;border:3px solid #fff;
+  box-shadow:0 0 0 1px rgba(31,25,21,.45),0 1px 3px rgba(31,25,21,.4)}

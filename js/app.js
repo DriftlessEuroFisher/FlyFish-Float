@@ -1347,9 +1347,10 @@ function depthLoad(id){
     .then(d => depthFill(id, d), () => depthFill(id, null));
 }
 
-function openLake(id){
+function openLake(id, opts){
   const k = LAKES.find(x => x.id === id); if(!k) return;
-  unfocusRiver();                       // the sheet stays open, but it is no longer a river's
+  unfocusRiver();                       // the sheet stays open, but it is no longer a river's (this also clears any directions spot)
+  setRiverDest(opts && opts.dest ? {lake:id, pos:opts.dest.pos, name:opts.dest.name || null} : null);   // only a pin tap passes one; after unfocusRiver, which would wipe it
   curRiver = null;
   curLake = k.id;
   if(speciesPick){ syncLakeFilter(); syncMarkers(); }   // opened from the Field Book while the filter hides it: show it, pins too
@@ -1372,7 +1373,7 @@ function openLake(id){
      `warn` (plain text from the regulations, Minnesota big lakes) sits next to it. */
   const priv = k.private ? `<div class="rc-dam">Private water — residents and guests only. No public access.</div>` : "";
   const warn = k.warn ? `<div class="rc-dam">${fbEsc(k.warn)}</div>` : "";
-  body.innerHTML =
+  body.innerHTML = destRowHTML(k, true) +
     (priv || warn || desigHTML(k.id) || fish ? `<div class="rulescard">${priv}${warn}${desigHTML(k.id)}${fish}</div>` : "") +
     `<div data-stock="${fbEsc(k.id)}"></div>` +
     `<div data-depth="${fbEsc(k.id)}"></div>` +
@@ -2610,6 +2611,11 @@ let highlight = null;
    FOCUS" further down), or null. Declared up here because syncLabels() and
    syncMarkers() read it on their first calls at startup. */
 let focusId = null;
+/* The spot the open sheet offers driving directions to: a river's {id, pos, name|null}
+   (openRiver, from a pin or a tap on the line) or a lake's {lake, pos, name} (openLake,
+   from a lake access pin). Cleared by unfocusRiver. Declared up here because
+   unfocusRiver() can run at startup. */
+let riverDest = null, destDot = null;   // destDot: the tapped spot's marker (setRiverDest)
 
 /* Per-reach colours. The Iowa DNR designates a stream reach by reach -- a
    catch-and-release stretch inside catchable water -- and `reachClass` gives
@@ -2630,7 +2636,7 @@ function reachOverlays(r, line){
     const o = L.polyline(run, {color:tc.color, weight:tierWeight(r), opacity:.92,
       lineCap:"round", lineJoin:"round", smoothFactor:1.2, pane:"riversPane"});   // applyRiver() adds it with its line
     o.reachColor = tc.color;
-    onTap(o, e=>openRiver(r.id, null, {at:e.latlng}));
+    onTap(o, e=>openRiver(r.id, null, {at:e.latlng, dest:{pos:snapToLine(r, e.latlng)}}));
     out.push(o);
   });
   if(out.length){
@@ -2671,7 +2677,7 @@ RIVERS.forEach(r=>{
     if(focusId === r.id) drawFocus();
     return out;
   };
-  onTap(line, e=>openRiver(r.id, null, {at:e.latlng}));   // where it was tapped: see fitFocus
+  onTap(line, e=>openRiver(r.id, null, {at:e.latlng, dest:{pos:snapToLine(r, e.latlng)}}));   // `at`: where it was tapped, see fitFocus; `dest`: the same spot put on the line
   const mid = midCoord(r.coords);
   const lbl = L.marker(mid,{interactive:false,icon:L.divIcon({className:"riv-label",html:r.name.split("—")[0].split("(")[0].trim(),iconSize:null})});
   riverLayers[r.id]={line,lbl,river:r,reaches:reachOverlays(r, line)};
@@ -2724,10 +2730,9 @@ const RAMP_MIN_ZOOM = 8, WADE_MIN_ZOOM = 9;
 
 RAMPS.forEach(p=>{
   const m = L.marker(p.pos,{icon:apIcon(p,"")});
-  m.bindPopup(`<b>${p.name}</b><br><span style="font-size:11px">${p.kind==="parking" ? "Parking" : roleWord(p.role)} · ${p.note}</span>`+
-    (p.src ? `<br><span style="font-size:10.5px;color:var(--txt-dim)">Source: ${p.src}</span>` : ""));
+  m.bindPopup(() => rampPopupHTML(p));            // built on first open: thousands of pins
   // A lake's access (Big Creek, Saylorville) carries `lake` and no `river`: its pin opens the lake's sheet.
-  m.on("click",()=>{ if(p.lake) openLake(p.lake); else openRiver(p.river, null, {at:p.pos}); });
+  m.on("click",()=>{ if(p.lake) openLake(p.lake, {dest:{pos:p.pos, name:p.name}}); else openRiver(p.river, null, {at:p.pos, dest:{pos:p.pos, name:p.name}}); });
   rampMarkers[p.id]=m;
 });
 function groupFor(p){ return p.role==="wade" ? wadeLayer : rampLayer; }
@@ -2762,6 +2767,62 @@ function syncMarkers(){
 map.on("zoomend", syncMarkers);
 function apIcon(p, sel){ return L.divIcon({className:"", html:`<div class="ap ${p.role} ${sel}">${apGlyph(p)}</div>`, iconSize:[28,28], iconAnchor:[14,14]}); }
 function roleWord(r){ return {launch:"Put-in (boat launch)", takeout:"Take-out (boat ramp)", both:"Put-in & take-out ramp", wade:"Wade-fishing access"}[r]; }
+
+/* Google Maps driving directions. With no origin Google starts from the phone's own
+   location (on iPhone the Google Maps app opens when it is installed). Only the
+   destination's coordinates go in the URL. Takes [lat,lng] or an L.LatLng. */
+function gmapsDirURL(dest, origin){
+  const c = x => { const a = Array.isArray(x) ? x : [x.lat, x.lng]; return Number(a[0]).toFixed(6)+","+Number(a[1]).toFixed(6); };
+  return "https://www.google.com/maps/dir/?api=1" + (origin ? "&origin="+c(origin) : "") + "&destination="+c(dest) + "&travelmode=driving";
+}
+function dirLinkHTML(dest, label){
+  return `<a class="dir-link" target="_blank" rel="noopener" href="${gmapsDirURL(dest)}">${label}&nbsp;↗</a>`;
+}
+function rampPopupHTML(p){
+  return `<b>${p.name}</b><br><span style="font-size:11px">${p.kind==="parking" ? "Parking" : roleWord(p.role)} · ${p.note}</span>`+
+    (p.src ? `<br><span style="font-size:10.5px;color:var(--txt-dim)">Source: ${p.src}</span>` : "") +
+    `<br>${dirLinkHTML(p.pos, "Driving directions")}`;
+}
+
+/* A tap on a river lands wherever the finger did, usually a few metres off the line.
+   Directions go to the point of the line nearest it, so the dot and the link agree.
+   Falls back to the tap itself when the line isn't drawn (not on the map, no parts yet). */
+function snapToLine(r, ll){
+  ll = L.latLng(ll);
+  try{
+    const rl = riverLayers[r.id], line = rl && rl.line;
+    if(line && line._map && line._parts && line._parts.length){
+      const q = line.closestLayerPoint(map.latLngToLayerPoint(ll));
+      if(q) return map.layerPointToLatLng(q);
+    }
+  }catch(e){}
+  return ll;
+}
+/* riverDest (declared by focusId) is {id, pos, name|null}. A tapped spot (no name) gets a
+   small dot, because the map re-frames after the tap and you couldn't tell which spot the
+   link goes to; a pin is already on the map. Iron with a white ring: not orange (live
+   data), red (closures) or gold (focus). */
+function setRiverDest(d){
+  riverDest = d;
+  if(destDot){ map.removeLayer(destDot); destDot = null; }
+  if(d && !d.name){
+    if(!map.getPane("destPane")){
+      const pn = map.createPane("destPane");
+      pn.style.zIndex = 413; pn.style.pointerEvents = "none";   // over the focus copy (412)
+    }
+    const ll = Array.isArray(d.pos) ? d.pos : [d.pos.lat, d.pos.lng];
+    destDot = L.marker(ll, {pane:"destPane", interactive:false, keyboard:false,
+      icon:L.divIcon({className:"dest-dot", iconSize:[16,16], iconAnchor:[8,8]})}).addTo(map);
+  }
+}
+/* The sheet row that goes with riverDest (a river's `id` or a lake's `lake`): only when this water's sheet was opened from the
+   pin or the spot, never a made-up destination. */
+function destRowHTML(r, isLake){
+  if(!riverDest || (isLake ? riverDest.lake !== r.id : riverDest.id !== r.id)) return "";
+  if(riverDest.name) return `<div class="dest-row">${dirLinkHTML(riverDest.pos, "Driving directions to "+fbEsc(riverDest.name))}</div>`;
+  return `<div class="dest-row">${dirLinkHTML(riverDest.pos, "Driving directions to the spot you tapped")}
+    <div class="dest-note">Google Maps drives to the nearest road, which may be private. Park only at public access.</div></div>`;
+}
 
 Object.keys(GAUGE_POS).forEach(key=>{
   const m = L.marker(GAUGE_POS[key],{icon:gIcon(key), zIndexOffset:300}).addTo(gaugeLayer);
@@ -3737,6 +3798,7 @@ async function openRiver(id, focusGauge, opts){
   loadRealRiver(r);                    // snap this river to exact USGS linework
   const floating = typeof floatActiveNow === "function" && floatActiveNow();
   focusRiver(r, !focusGauge && !(opts && opts.fit === false) && !floating, opts && opts.at);
+  setRiverDest(opts && opts.dest ? {id:r.id, pos:opts.dest.pos, name:opts.dest.name || null} : null);   // only a pin or a tapped spot offers directions
   renderSheet(r);                      // instant paint with whatever we have
   // a gauge tapped on the map may be one of the folded ones: show it (the fold then stays open on repaint)
   if(focusGauge && focusGauge !== primaryGaugeOf(r)){
@@ -4541,7 +4603,7 @@ function renderSheet(r){
     h += `<p style="font-size:10.5px;color:var(--txt-dim);margin-top:4px">${piFoot.footer}</p>`;
   }
   // The Iowa low-head-dam warning is in the rules card (damWarnHTML), not down here.
-  body.innerHTML = todayStripHTML(r, wx) + rulesCardHTML(r) + regsFoldHTML(r) + h +
+  body.innerHTML = todayStripHTML(r, wx) + destRowHTML(r) + rulesCardHTML(r) + regsFoldHTML(r) + h +
     `<div class="rp-wrap"><button type="button" class="rp-link" data-report="${fbEsc(r.id)}">Report an issue with this river</button></div>`;
   body.dataset.river = r.id;
   wxLoad(wx);
@@ -4841,7 +4903,7 @@ function sectionHTML(s){
     <button class="zoom" data-zoom="${s.id}">Show on map →</button>
     ${canFloat ? `<div class="floatbtns">
       <button class="zoom floatgo" data-float="${s.id}">${typeof lakeTripBusy === "function" && lakeTripBusy() ? "🛶 Lake trip running" : "🛶 Start float"}</button>
-      <a class="zoom shuttle-link" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=${put.pos[0]},${put.pos[1]}&destination=${take.pos[0]},${take.pos[1]}">Shuttle directions →</a>
+      <a class="zoom shuttle-link" target="_blank" rel="noopener" href="${gmapsDirURL(take.pos, put.pos)}">Shuttle directions →</a>
     </div>` : typeof s.level === "string" && typeof floatEligible === "function"
       ? `<div class="nofloat">Start float is offered on DNR Beginner and Intermediate sections without a dam.</div>` : ""}
   </div>`;
@@ -5494,7 +5556,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v57";
+const APP_VERSION = "flyroutes-v58";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){
@@ -6846,6 +6908,7 @@ function focusRiver(r, fit, at){
   syncFlow();                                   // this river first in the animation budget
 }
 function unfocusRiver(){
+  setRiverDest(null);                          // always: the spot belongs to the sheet that is closing
   if(!focusId) return;                         // also what makes this safe to call at startup
   const was = riverLayers[focusId] && riverLayers[focusId].river;
   focusId = null;
