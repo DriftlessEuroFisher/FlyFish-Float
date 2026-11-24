@@ -2417,6 +2417,15 @@ Object.assign(PARK_INFO, {
     licence:`<b>Minnesota fishing licence</b> — “To legally fish in Minnesota, all residents of Minnesota, age 16 through 89, must have a current Minnesota fishing license unless an exemption applies …” “All nonresidents need a license except those younger than 16 do not need a license if a parent or guardian is licensed.” (p. 26)`,
     regBody:"the Minnesota DNR",
     footer:`🎣 <b>Minnesota</b>, from the 2026 booklet: “To legally fish in Minnesota, all residents of Minnesota, age 16 through 89, must have a current Minnesota fishing license unless an exemption applies …” “All nonresidents need a license except those younger than 16 do not need a license if a parent or guardian is licensed.” (p. 26)`},
+  /* Minnesota's 59 rivers (mnrivers/apply.py). Reached only through
+     REGS_SRC_ROW (parkRegsSrc "mndnr"): no river has region "mnrivers", so the
+     Driftless and North Shore rows keep their own sub, label zoom, footer and
+     ungauged copy. Only the regulation fold's badge and note read it. No
+     `zone`, and no licence, footer or ungauged text: the licence line comes
+     from stateLicence(), which reads each river's mnTrout for the stamp. */
+  mnrivers: {sub:"", heading:"Regulations", badge:"Minnesota DNR · 2026",
+    note:`From the Minnesota DNR's <b>2026 Minnesota Fishing Regulations</b>: this river's own entries where the booklet has them, the border-water rules where it names the river, then the statewide rules that apply to it, word for word with page numbers. Read the current booklet before you fish.`,
+    regBody:"the Minnesota DNR"},
 });
 /* Nebraska's public fishing lakes (lakes/nebraska/build.py). Nebraska has no
    rivers on this map, so only lakes name this row and it has no `zone` (it
@@ -2568,7 +2577,7 @@ Object.assign(PARK_INFO, {
     footer:UPPER_SNAKE_FOOTER + " Palisades Reservoir and its tributaries sit at the top of the valley; Big Elk Creek's drainage reaches into Wyoming."},
   driftless: {sub:" · Driftless Area", labelZoom:10},
   northshore: {sub:" · North Shore", labelZoom:10,
-    footer:`🌊 North Shore streams drop fast and cold straight off the ridge — spring steelhead runs are driven by snowmelt timing more than the calendar, so check current run reports before making the drive. Most access is <b>state park or DNR wayside</b> parking (many require a vehicle permit); a Minnesota <b>trout stamp</b> is required in addition to a fishing license. The Pigeon River and Grand Portage River cross into tribal or international jurisdiction — check current Grand Portage Band and Ontario licensing before fishing those reaches.`,
+    footer:`🌊 North Shore streams drop fast and cold straight off the ridge — spring steelhead runs are driven by snowmelt timing more than the calendar, so check current run reports before making the drive. Most access is <b>state park or DNR wayside</b> parking (many require a vehicle permit); a Minnesota <b>trout stamp</b> is required in addition to a fishing license on designated trout streams and Lake Superior (booklet p. 25). The Pigeon River and Grand Portage River cross into tribal or international jurisdiction — check current Grand Portage Band and Ontario licensing before fishing those reaches.`,
     ungauged:"Most North Shore streams are too small to gauge — there's no live number for this one, and the app doesn't invent one. Judge it on arrival: <b>clarity</b> is the thing that matters most. These are rain- and snowmelt-driven freestone streams, not spring creeks — they blow out fast after a heavy rain or a warm melt day and can take several days to clear and drop back into shape, longer than a Driftless spring creek would."},
   doorcounty: {sub:" · Door Peninsula", labelZoom:10,
     footer:`🌊 Door County has <b>no USGS gauge anywhere in the county</b> — every stream here is ungauged on purpose, and the nearest gauged water is a long way off. These creeks are small and rain-driven: judge them on the water. Almost all of them are <b>Great Lakes tributary</b> water, which carries its own season, a 10" minimum, a hook-gap limit and a <b>night-fishing closure</b> from September 15 — read the current Wisconsin regs before you go.`,
@@ -2581,7 +2590,7 @@ Object.assign(PARK_INFO, {
    PARK_INFO[r.parkRegsSrc] lookup -- handing them Grand Teton's footer as well.
    Only the regulation fold's badge and note, the licence line and the
    ungauged copy look here. */
-const REGS_SRC_ROW = {yell:"yellowstone", grte:"grandteton", idfg:"tetonvalley", pfbc:"pennsylvania", nydec:"newyork", vdwr:"virginia", mdc:"missouri", wvdnr:"westvirginia", ctdeep:"connecticut"};
+const REGS_SRC_ROW = {yell:"yellowstone", grte:"grandteton", idfg:"tetonvalley", pfbc:"pennsylvania", nydec:"newyork", vdwr:"virginia", mdc:"missouri", wvdnr:"westvirginia", ctdeep:"connecticut", mndnr:"mnrivers"};
 function regsSrcRow(r){ return PARK_INFO[REGS_SRC_ROW[r.parkRegsSrc]]; }
 /* Rivers that run through Grand Teton but carry no region of their own: the
    three Jackson Hole rivers, the park creeks WGFD's line carries on past the
@@ -3898,12 +3907,16 @@ function speciesRowHTML(kind, w){
 /* The licence line where no row states one: the Upper Midwest and the
    original Idaho and Wyoming rivers. It goes by state, and then by whether the
    water takes the state's trout fee or stamp -- which differs inside one
-   region (a Minnesota North Shore stream needs the stamp; a Wisconsin one only
-   if it is classified trout water), so it can't be one string per row. */
+   region (a Wisconsin stream needs the stamp only if it is classified trout
+   water), so it can't be one string per row. Minnesota goes by each river's
+   `mnTrout` (mnrivers/compose.py), not by region: 1 where the DNR designates
+   the river as trout water, "part" where it designates only some reaches, and
+   absent on undesignated water such as the Root River mainstem. */
 function stateLicence(r){
-  const dn = r.region==="driftless" || r.region==="northshore";
+  const mnStamp = r.mnTrout === 1 ? " + trout stamp"
+                : r.mnTrout === "part" ? " + trout stamp on the designated trout reaches" : "";
   return r.state==="IA" ? (r.region==="driftless" ? "<b>Iowa</b> fishing licence + trout fee for trout water" : "<b>Iowa</b> fishing licence")
-       : r.state==="MN" ? "<b>Minnesota</b> fishing licence" + (dn ? " + trout stamp" : "")
+       : r.state==="MN" ? "<b>Minnesota</b> fishing licence" + mnStamp
        : r.state==="WI" ? "<b>Wisconsin</b> fishing licence" + (r.troutClass || r.region==="driftless" || r.region==="doorcounty" ? " + trout stamp" : "")
        : r.state==="IL" ? "<b>Illinois</b> fishing licence"
        : r.state==="ID" ? "<b>Idaho</b> fishing licence"
@@ -5481,7 +5494,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v56";
+const APP_VERSION = "flyroutes-v57";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){

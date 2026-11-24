@@ -58,9 +58,9 @@ still be checked with the change report's `diff` mode, but the text itself has
 to be edited by hand. See [UPDATING.md](UPDATING.md#hand-entered-sources).
 
 Not covered by any regulation text: Idaho's 27 original rivers, Wyoming's 15
-original rivers outside the WGFD fence, Minnesota (Driftless, North Shore and
-the big rivers), Wisconsin's Driftless and Northwoods rivers, Illinois, and the
-Iowa water trails. The app shows those without a regulations block on purpose.
+original rivers outside the WGFD fence, Wisconsin's Driftless and Northwoods
+rivers, Illinois, and the Iowa water trails. (Minnesota's 59 rivers have it
+since 2026-11-17; see *Minnesota rivers* below.) The app shows those without a regulations block on purpose.
 
 ---
 
@@ -339,3 +339,17 @@ Iowa water trails. The app shows those without a regulations block on purpose.
   surveys, species), Public Water Access Sites (`gis.dnr.state.mn.us/.../loc_water_access_sites`, 165 pins,
   fence "mn big lake access"). Re-run `fetch.py --refetch` then `outlines.py` to refresh.
 - The older "mn trout lakes" fence (17 lakes, `mnlakes/build.py`) reads the same booklet.
+
+## Minnesota rivers (2026-11-17)
+- **Same 2026 booklet** as the big lakes (above). Pipeline `~/.cache/flyfish-osm/mnrivers/`
+  (`BRIEF.md`, `RESUME.md`): `fetch.py` → `geo.py` (`geo.json`) → `parse_booklet.py`
+  (pp. 32–36 → `booklet_trout.json`, `booklet_superior.json`), `mentions.py` → `compose.py`
+  (`regs.json`, `review.txt`, `mentions.txt`; reuses `mnlakes/big/regs/*.json` and
+  `mnlakes/big/compose.py`'s helpers) → `regs_check.py` (6,399 fragments) → `apply.py`.
+  Feeds `parkRegs`, `parkRegsSrc:"mndnr"` and `mnTrout` on the 59 hand-entered `state:"MN"`
+  rivers (written in place, no fence) and `PARK_INFO.mnrivers` (typed into app.js).
+- Agency web data, no edition (decides which rules apply, never their wording): DNR
+  "State Designated Trout Streams" and "Trout Stream Special Regulations" layers
+  (`enterprise.gisdata.mn.gov/aghost/rest/services/us_mn_state_dnr/env_trout_stream_designations`,
+  `…/env_trout_stream_special_regs`), `maps.dnr.state.mn.us/faw/trout/streams.json`,
+  Census county polygons. Re-run `fetch.py` then `geo.py` to refresh.
