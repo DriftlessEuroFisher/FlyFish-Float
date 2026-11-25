@@ -5556,7 +5556,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v58";
+const APP_VERSION = "flyroutes-v59";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){
@@ -5975,6 +5975,11 @@ const zonePane = map.createPane("zonePane");
 zonePane.style.zIndex = 450;
 const zoneLayer = L.layerGroup();
 let zonesShown = false;
+/* When a launch with location on started the watch (see the location block
+   further down). Declared here, not there, because the chooser's own handlers
+   below clear it, and a `let` read before its line is a ReferenceError that
+   would stop the rest of app.js. 0 = no pending arrival. */
+let locArriveAt = 0;
 
 const ZONE_STYLE = {
   state: {color:"#12566b", fillColor:"#2f8fa8", fillOpacity:.22, weight:2.2},
@@ -6031,6 +6036,7 @@ const zoneCards = [];   // {zone, marker, poly}
 
 function enterZone(z){
   if(typeof Metrics !== "undefined") Metrics.track("zone_pick", z.id, z.label);
+  locArriveAt = 0;                    // the user chose: a late location fix mustn't override it
   hideZones();
   goTo(L.latLngBounds(z.bounds).pad(0.08));
 }
@@ -6440,6 +6446,7 @@ zoneCtl.onAdd = function(){
     const b = e.target.closest("[data-jump]"); if(!b) return;
     const r = REGIONS[+b.dataset.jump][1];
     if(typeof Metrics !== "undefined") Metrics.track("zone_pick", REGIONS[+b.dataset.jump][0]);
+    locArriveAt = 0;                          // a pick beats a late location fix, as in enterZone
     hideZones();
     goTo(L.latLng(r[0], r[1]), r[2]);         // never map.setView: see goTo()
   });
@@ -6462,6 +6469,7 @@ farCtl.onAdd = function(){
   const inAlaska = () => map.getCenter().lng < -129 && map.getCenter().lat > 51;
   const label = () => { btn.textContent = inAlaska() ? "Lower 48 ▼" : "Alaska ▲"; };
   btn.addEventListener("click", ()=>{
+    locArriveAt = 0;                  // browsing the chooser on purpose: don't pull it away
     const far = ZONES.filter(z=>z.far), near = ZONES.filter(z=>!z.far);
     const set = inAlaska() ? near : far;
     goTo(L.latLngBounds([].concat(...set.map(z=>z.bounds))).pad(0.04));
@@ -7028,9 +7036,13 @@ new MutationObserver(iconNudge).observe(document.body, {attributes:true, attribu
    block. So one friendly card (#locask) asks once, before the system prompt,
    and the answer is remembered in localStorage.locPref ("on"/"off" — a
    preference, never a position). Later launches with "on" start the watch
-   by themselves in `located`, not `following`: the dot appears but the map
-   stays where it is, so we don't yank it away from the zone chooser or the
-   river you opened; the button is already lit and one tap recentres.
+   by themselves in `located`, not `following`: the button is already lit
+   and one tap recentres. The zone chooser still draws first, as the
+   fallback for a slow or missing fix. If the first fix lands within
+   LOC_ARRIVE_MS of the launch, while the chooser is still up and nothing
+   has been opened or picked, it closes the chooser and frames the nearest
+   water shown (locArrive) — "where am I fishing?" answered by the phone.
+   Any pick, drag or open before then wins, and the map isn't moved later.
    "Not now" is permanent on purpose — nagging every launch is how an app
    gets deleted; the button still works any time.
 
@@ -7115,12 +7127,75 @@ function locInMiddleThird(ll){
   const s = map.getSize(), p = map.latLngToContainerPoint(ll);
   return p.x > s.x/3 && p.x < s.x*2/3 && p.y > s.y/3 && p.y < s.y*2/3;
 }
+/* Arriving from the chooser on a location fix. Zoom 11 around the dot is
+   often an empty square of topo (the nearest river shown can be 30 km off),
+   so the frame takes in the nearest LOC_NEAR_COUNT waters that are actually
+   drawn: rivers past the class and species filters (riverVisible), lakes
+   past the species filter. Distance is to the nearest vertex, flat-earth,
+   which is plenty at 80 km. The frame is centred on the dot, each water's
+   point mirrored through it: while following, a dot outside the middle third
+   is recentred on the very next fix, and an off-centre frame would be thrown
+   away a second after it was drawn. */
+const LOC_NEAR_KM = 80, LOC_NEAR_COUNT = 3, LOC_ARRIVE_MS = 15000;
+const LOC_ARRIVE_MIN_ZOOM = 8, LOC_ARRIVE_MAX_ZOOM = 12;
+function locNearestWaters(ll){
+  const kx = 111.32 * Math.cos(ll.lat * Math.PI / 180), ky = 110.57;   // km per degree here
+  const dLat = LOC_NEAR_KM / ky, dLng = LOC_NEAR_KM / Math.max(kx, 1);
+  // Leaflet caches each shape's bounds: a cheap cut before any vertex is walked
+  const near = b => b && b.isValid() && ll.lat >= b.getSouth() - dLat && ll.lat <= b.getNorth() + dLat
+                 && ll.lng >= b.getWest() - dLng && ll.lng <= b.getEast() + dLng;
+  const nearest = pts => {
+    let best = Infinity, at = null;
+    for(const p of pts){
+      const dx = (p[1] - ll.lng) * kx, dy = (p[0] - ll.lat) * ky, d = dx*dx + dy*dy;
+      if(d < best){ best = d; at = p; }
+    }
+    best = Math.sqrt(best);
+    return at && best <= LOC_NEAR_KM ? {km:best, at:L.latLng(at[0], at[1])} : null;
+  };
+  const hits = [];
+  RIVERS.forEach(r => {
+    const lay = riverLayers[r.id];
+    if(!lay || !near(lay.line.getBounds()) || !riverVisible(r)) return;
+    const h = nearest(flatCoords(r.coords)); if(h) hits.push(h);
+  });
+  Object.values(lakeShapes).forEach(({lake, poly}) => {
+    if(!near(poly.getBounds()) || !lakeSpeciesShown(lake.id)) return;
+    const h = nearest([lake.ring].concat(lake.parts || []).flat()); if(h) hits.push(h);
+  });
+  return hits.sort((a, b) => a.km - b.km).slice(0, LOC_NEAR_COUNT);
+}
+function locArrive(ll){
+  if(zonesShown) hideZones();
+  const hits = locNearestWaters(ll);
+  if(!hits.length){
+    goTo(ll, FOCUS_MIN_ZOOM);
+    locSay("No mapped water near you yet — Change Region to browse.");
+    return;
+  }
+  const b = L.latLngBounds([ll]);
+  hits.forEach(h => { b.extend(h.at); b.extend(L.latLng(2*ll.lat - h.at.lat, 2*ll.lng - h.at.lng)); });
+  const fb = b.pad(0.15);
+  // clear of the app bar; nothing else is open, since arriving needs the chooser up
+  const tl = L.point(16, ($("#appbar") ? $("#appbar").offsetHeight : 0) + 12), br = L.point(16, 16);
+  // Water a long way off would frame a region, not "where I am": hold the zoom at 8.
+  if(map.getSize().x && map.getBoundsZoom(fb, false, tl.add(br)) < LOC_ARRIVE_MIN_ZOOM) goTo(ll, LOC_ARRIVE_MIN_ZOOM);
+  else goTo(fb, null, {paddingTopLeft:tl, paddingBottomRight:br, maxZoom:LOC_ARRIVE_MAX_ZOOM});
+}
 function locFix(pos){
   const ll = locDraw(pos.coords);
+  const arrive = locArriveAt; locArriveAt = 0;   // a launch arrival is the first fix's to take, or nobody's
   if(locFirst){
     locFirst = false;
-    if(zonesShown) hideZones();
-    goTo(ll, Math.max(map.getZoom(), 11));
+    if(zonesShown) locArrive(ll);                 // a tap from the chooser: land on nearby water
+    else goTo(ll, Math.max(map.getZoom(), 11));
+  } else if(arrive){
+    // The launch auto-start (boot below): closes the chooser only if the fix is
+    // prompt and the user hasn't already picked, opened or started anything.
+    // The open sheet is checked as well as focusId: a river opened over the
+    // chooser has a sheet but no focus (focusRiver waits for the chooser to go).
+    if(Date.now() - arrive < LOC_ARRIVE_MS && zonesShown && !focusId && !curLake && !sheet.classList.contains("open")
+       && !(window.floatActiveNow && floatActiveNow()) && !(window.lakeTripActiveNow && lakeTripActiveNow())) locArrive(ll);
   } else if(locState === "following" && !locInMiddleThird(ll)){
     goTo(ll, map.getZoom());
   }
@@ -7136,7 +7211,7 @@ function locWatchStart(){
   locWatch = navigator.geolocation.watchPosition(locFix, locError,
     {enableHighAccuracy:true, maximumAge:10000, timeout:20000});
 }
-function locStart(mode){            // mode: "following" (tap) | "located" (auto-start, map stays put)
+function locStart(mode){            // mode: "following" (tap) | "located" (auto-start: moves only via locArriveAt)
   if(!navigator.geolocation || !window.isSecureContext){ locSay("Location isn't available here."); return; }
   locFirst = mode !== "located";    // the first fix only flies the map when the user asked for it
   locSetState(mode);
@@ -7155,7 +7230,10 @@ function locToggle(){
     locSetState("located");
   } else { locPrefSet("off"); locStop(); }
 }
-map.on("dragstart", () => { if(locState === "following") locSetState("located"); });
+map.on("dragstart", () => {
+  if(zonesShown) locArriveAt = 0;     // panning the chooser is browsing it: a late fix mustn't take over
+  if(locState === "following") locSetState("located");
+});
 document.addEventListener("visibilitychange", () => {
   if(locState === "off") return;
   if(document.visibilityState === "hidden"){
@@ -7202,7 +7280,7 @@ document.getElementById("la-no").addEventListener("click", () => { locAsk.classL
   const boot = () => setTimeout(() => {
     if(locPerm === "denied" || locState !== "off") return;
     const pref = locPrefGet();
-    if(pref === "on") locStart("located");
+    if(pref === "on"){ locArriveAt = Date.now(); locStart("located"); }   // first fix may close the chooser (locFix)
     else if(pref === null && !(typeof welcomePending === "function" && welcomePending())) locAsk.classList.add("show");
   }, 1200);
   if(q && q.then) q.then(st => {
