@@ -4985,11 +4985,11 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"sv_indiancreek", name:"Indian Creek", color:"#9f7f4f",
   state:"ID", region:"swanvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"<i>This line follows two creeks named Indian Creek: one runs into the South Fork below Palisades Dam, the other into Palisades Reservoir near the Wyoming line.</i><br><br><i>Into the South Fork:</i><br><b>South Fork Snake River tributaries (includes Burns, Palisades, Pine, and Rainey creeks and tributaries)</b> (p. 44)<br>• June 1 through June 30 – closed to fishing<br>• No harvest of Cutthroat Trout<br>• No limit on Rainbow Trout or trout hybrids<br><br><i>Into Palisades Reservoir:</i><br><b>Palisades Reservoir tributaries</b> (p. 44)<br>• Trout limit is 6, no harvest of Cutthroat Trout<br>• No harvest of kokanee", parkRegsSrc:"idfg",
+  parkRegs:"<b>South Fork Snake River tributaries (includes Burns, Palisades, Pine, and Rainey creeks and tributaries)</b> (p. 44)<br>• June 1 through June 30 – closed to fishing<br>• No harvest of Cutthroat Trout<br>• No limit on Rainbow Trout or trout hybrids", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"In to the South Fork between the dam and Swan Valley, off the Caribou Range front.",
   fish:"Small cutthroat water with a short walk in.",
-  cz:["gx_gGnj}dTcEkKl@yEeEaOv@kOcCqOpy@~~DeCeGv@cEiE_AP{HmK{SyBi[kGuUyFuEIeI","knrgG`jrfTrHcMlR{Nqx@vw@sIbBkiCygB|MtInDxJfJfI`Nd]dHjHbObJr@vDhc@|NxCpF","i`ygGneofT@xHvCzB}P{VuWcFa[|Ak]uKjNnG","knyfGbideT}MgX{j@za@wm@vJai@koAnHbHzQna@","e{}gGpcmfTpDcAja@lS}JoI","}j~fGhfaeTPfQjG`H?nK","gzogGnxofTiQdQwJxR_XpL","gs|gGzumfTtEjK~JdGmDgB","{_xgGb_pfToMiMcLjA"]
+  cz:["knrgG`jrfTrHcMlR{Nqx@vw@sIbBkiCygB|MtInDxJfJfI`Nd]dHjHbObJr@vDhc@|NxCpF","i`ygGneofT@xHvCzB}P{VuWcFa[|Ak]uKjNnG","e{}gGpcmfTpDcAja@lS}JoI","gzogGnxofTiQdQwJxR_XpL","gs|gGzumfTtEjK~JdGmDgB","{_xgGb_pfToMiMcLjA"]
 },
 {
   id:"sv_pritchardcreek", name:"Pritchard Creek", color:"#8f6f6f",
@@ -36993,7 +36993,7 @@ const FLOW_REV = {
   sv_bigelkcreek:"01",
   sv_fallcreek:"1010101110100?0",
   sv_gardencreek:"000000",
-  sv_indiancreek:"000110010",
+  sv_indiancreek:"001010",
   sv_mccoycreek:"1001100",
   sv_northforkpinecreek:"000000?",
   sv_palisadescreek:"0000000?0010",

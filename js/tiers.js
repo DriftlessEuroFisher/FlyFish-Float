@@ -154,7 +154,7 @@ const TIERS = {
   sv_northforkpinecreek: {t:"2", season:{closed:[[6,6]]}},
   sv_pritchardcreek:     {t:"2", season:{closed:[[6,6]]}},
   sv_bearcreek:          {t:"2"},
-  sv_indiancreek:        {t:"2"},
+  sv_indiancreek:        {t:"2", season:{closed:[[6,6]]}},
   sv_mccoycreek:         {t:"2"},
   sv_bigelkcreek:        {t:"2", season:{best:[[7,10]], poor:[[4,5]]}},
 
