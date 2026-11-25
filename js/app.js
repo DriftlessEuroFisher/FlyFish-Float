@@ -5132,6 +5132,25 @@ function fbCondHTML(t){
   if(t.wtUser!=null) lines.push(line(`Water ${t.wtUser}°F (your reading)`));
   return lines.join("");
 }
+/* One tap-logged trip: the ✓ Fished button and the walking card's "Start
+   fishing" both come here, so the two can never log differently. Returns the
+   trip, or null when it couldn't be saved. The open row is repainted only if
+   it is this water's (it may have been rebuilt since, by an import). */
+function fbLogTapTrip(kind, water){
+  const rowKey = kind + "|" + water.id;
+  const repaint = () => { if(fbRowFor === rowKey && fbRowPaint) fbRowPaint(); };
+  const t = fbAddTrip(kind, water.id, fbToday(), fbNowHM(), "tap", Date.now());
+  // never "Trip logged" for a trip a reload would lose; always said, whatever the rate limit
+  if(!t){ repaint(); fbWarnAt = Date.now(); fbToast(FB_FULL_MSG); return null; }
+  if(typeof Metrics !== "undefined") Metrics.track("trip_logged", kind);
+  const condOk = fbSnapTrip(t, kind, water);
+  repaint();
+  fbToast(`Trip logged · ${fbDateText(t.day)}, ${fbTimeText(t.time)}` + (condOk ? "" : " · conditions not saved, storage full"), () => {
+    fbDelTrip(t.id);
+    repaint();
+  });
+  return t;
+}
 function fbShowRow(water, force, kind){
   kind = kind || "river";
   const row = $("#fbrow"), rowKey = kind + "|" + water.id;
@@ -5206,18 +5225,7 @@ function fbShowRow(water, force, kind){
     if(kind==="river") applyFilters();     // a favourite river stays on the map whatever the class filter says
   });
   // Not a toggle: every tap is another trip, and the toast's Undo is the way back.
-  fishB.addEventListener("click", () => {
-    const t = fbAddTrip(kind, water.id, fbToday(), fbNowHM(), "tap", Date.now());
-    // never "Trip logged" for a trip a reload would lose; always said, whatever the rate limit
-    if(!t){ paint(); fbWarnAt = Date.now(); fbToast(FB_FULL_MSG); return; }
-    if(typeof Metrics !== "undefined") Metrics.track("trip_logged", kind);
-    const condOk = fbSnapTrip(t, kind, water);
-    paint();
-    fbToast(`Trip logged · ${fbDateText(t.day)}, ${fbTimeText(t.time)}` + (condOk ? "" : " · conditions not saved, storage full"), () => {
-      fbDelTrip(t.id);
-      if(fbRowFor === rowKey) fbRowPaint();     // the row may have been rebuilt since (an import)
-    });
-  });
+  fishB.addEventListener("click", () => fbLogTapTrip(kind, water));
   notesB.addEventListener("click", () => {
     const on = !box.classList.contains("show");
     openNotes(on); if(on) ta.focus();
@@ -5556,7 +5564,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v60";
+const APP_VERSION = "flyroutes-v61";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){
@@ -7051,7 +7059,12 @@ new MutationObserver(iconNudge).observe(document.body, {attributes:true, attribu
    anything the analytics script can see. The one exception is a lake trip
    the user starts on purpose (laketrip.js): its track is saved on this
    phone, in the Field Book. Don't promise "never sent" anywhere — trips are
-   planned to sync to the owner's database once accounts exist. */
+   planned to sync to the owner's database once accounts exist.
+
+   The same fixes feed the walking detector (walkOnFix, below locFix): walk
+   a river for a couple of minutes and a card offers "Start fishing". It
+   keeps recent fixes in memory only; all it saves is which rivers it
+   offered today (localStorage.walkPrompt), never a position. */
 const locatePane = map.createPane("locatePane");
 locatePane.style.zIndex = 650;      // above the markers: it must never hide under a gauge
 locatePane.style.pointerEvents = "none";
@@ -7098,6 +7111,7 @@ function locStop(){
   locWatch = null;
   locClear();
   locSetState("off");
+  walkReset();                      // location off: no run, no card (see the walking block below)
 }
 function locDraw(c){
   const ll = L.latLng(c.latitude, c.longitude);
@@ -7201,6 +7215,195 @@ function locFix(pos){
   }
   if(window.floatOnFix) floatOnFix(pos);   // float.js: tracks progress down the river
   if(window.lakeOnFix) lakeOnFix(pos);     // laketrip.js: records a lake trip's track
+  walkOnFix(pos);                          // below: "Let's start fishing" when walking a river
+}
+
+/* ---------- Walking a river: "Let's start fishing" ----------
+   Someone walking along a river with the app open is probably about to fish
+   it, so a card offers to log the trip (the same tap trip as ✓ Fished). It
+   rides the location watch that is already running for the blue dot: no new
+   permission, no new watch, nothing when location is off or the page is
+   hidden. Fixes are kept in memory only, never stored; the one thing saved
+   is which rivers were offered today (localStorage.walkPrompt).
+
+   Standing in a parking lot deciding where to go is the app's main use, and
+   driving a riverside road is the obvious false alarm, so a "run" needs time
+   *and* distance on one river at walking pace: two minutes and 50 m of path,
+   every accepted fix within 60 m of the line and under 3 m/s. GPS jitter
+   around a phone held still is the trap: path counts only steps of
+   WALK_STEP_M or more, and the run must also get WALK_SPAN_M from where it
+   began (±15 m of jitter fed at 1 Hz still added up to 50 m of "path";
+   it never gets 40 m away). All timing uses pos.timestamp, so a test can
+   feed synthetic fixes. */
+const WALK_ACC_M = 30;              // a fix less accurate than this is ignored (not a reset)
+const WALK_NEAR_M = 60;             // "on the river": this close to the drawn line
+const WALK_LEAVE_M = 150;           // the card goes once you're this far from its river
+const WALK_MAX_MPS = 3;             // ~6.7 mph: anything faster is driving, and resets the run
+const WALK_RUN_MS = 2 * 60000;      // a run must last this long…
+const WALK_RUN_M = 50;              // …and cover this much path
+const WALK_GAP_MS = 2 * 60000;      // a longer gap between accepted fixes starts over
+const WALK_STEP_M = 10;             // path is counted in steps at least this long (jitter guard)
+const WALK_SPAN_M = 40;             // …and the run must reach this far from its first fix (jitter guard)
+const WALK_COOLDOWN_MS = 30 * 60000;   // after any card, no other river for this long (neighbouring creeks)
+const WALK_BOX_PAD_M = 100;         // bbox prefilter padding
+let walkPrev = null;                // last accepted fix {lat, lng, t}
+let walkRun = null;                 // {id, start, last, from, anchor, len, span}
+let walkShownId = null;             // river the card is offering, while it shows
+let walkMem = null;                 // {day, ids, last}: today's offers, mirrored to localStorage
+const walkBoxes = new Map();        // river id → {c: the coords it was built from, box}
+
+// Metres between two points, flat-earth: fine at the tens-of-metres this works in.
+function walkDist(aLat, aLng, bLat, bLng){
+  const k = Math.cos((aLat + bLat) * Math.PI / 360);
+  const dx = (bLng - aLng) * 111320 * k, dy = (bLat - aLat) * 110540;
+  return Math.sqrt(dx*dx + dy*dy);
+}
+// The river's padded bbox, rebuilt only if its line was replaced (snap/refine).
+function walkBox(r){
+  const e = walkBoxes.get(r.id);
+  if(e && e.c === r.coords) return e.box;
+  let s = 90, w = 180, n = -90, ea = -180;
+  const pts = r.coords && r.coords.length ? flatCoords(r.coords) : [];
+  pts.forEach(p => { if(p[0] < s) s = p[0]; if(p[0] > n) n = p[0]; if(p[1] < w) w = p[1]; if(p[1] > ea) ea = p[1]; });
+  let box = null;
+  if(pts.length){
+    const pl = WALK_BOX_PAD_M / 110540, pg = WALK_BOX_PAD_M / (111320 * Math.cos((s + n) * Math.PI / 360));
+    box = [s - pl, w - pg, n + pl, ea + pg];
+  }
+  walkBoxes.set(r.id, {c:r.coords, box});
+  return box;
+}
+// Metres from a point to the river's line, point-to-segment within each piece
+// (pieces are never joined: a gap between them is not water). Infinity if no line.
+function walkLineDist(r, lat, lng){
+  if(!r.coords || !r.coords.length) return Infinity;
+  const pieces = isMulti(r.coords) ? r.coords : [r.coords];
+  const k = Math.cos(lat * Math.PI / 180), mx = 111320 * k, my = 110540;
+  let best = Infinity;
+  pieces.forEach(pc => {
+    for(let i = 0; i < pc.length; i++){
+      // local metres with the fix at the origin
+      const bx = (pc[i][1] - lng) * mx, by = (pc[i][0] - lat) * my;
+      if(i === 0){ best = Math.min(best, Math.hypot(bx, by)); continue; }
+      const ax = (pc[i-1][1] - lng) * mx, ay = (pc[i-1][0] - lat) * my;
+      const dx = bx - ax, dy = by - ay, L2 = dx*dx + dy*dy;
+      const u = L2 ? Math.max(0, Math.min(1, -(ax*dx + ay*dy) / L2)) : 0;
+      best = Math.min(best, Math.hypot(ax + u*dx, ay + u*dy));
+    }
+  });
+  return best;
+}
+// The nearest river within WALK_NEAR_M that isn't in a closed season this month
+// (the whole-river `closed` window, the same test the rules card makes). Every
+// river counts, hidden Class 3 included: you can be standing on one.
+function walkNearest(lat, lng){
+  let best = null, bestD = WALK_NEAR_M;
+  for(const r of RIVERS){
+    const b = walkBox(r);
+    if(!b || lat < b[0] || lat > b[2] || lng < b[1] || lng > b[3]) continue;
+    const d = walkLineDist(r, lat, lng);
+    if(d > bestD) continue;
+    if(typeof tierOf === "function" && tierOf(r).state === "closed") continue;
+    best = r; bestD = d;
+  }
+  return best;
+}
+function walkMemo(){
+  const day = fbToday();
+  if(!walkMem){
+    try{ walkMem = JSON.parse(localStorage.getItem("walkPrompt") || "null"); }catch(e){ walkMem = null; }
+  }
+  if(!walkMem || walkMem.day !== day || !Array.isArray(walkMem.ids)) walkMem = {day, ids:[], last:0};
+  return walkMem;
+}
+function walkRemember(id, t){
+  const m = walkMemo();
+  if(!m.ids.includes(id)) m.ids.push(id);
+  m.last = t;
+  // tiny, and a failed write only means it might ask again after a reload
+  try{ lsSetSafe("walkPrompt", JSON.stringify(m)); }catch(e){}
+}
+const walkFishedToday = id => fbTrips("river", id).some(t => t.day === fbToday());
+const walkShowing = id => !!document.querySelector(id + ".show");
+// A trip already recording, or something the card would land on top of.
+function walkBusy(){
+  return (typeof floatBusy === "function" && floatBusy())
+      || (typeof lakeTripBusy === "function" && lakeTripBusy());
+}
+function walkBlocked(){
+  return walkBusy()
+      || (typeof welcomePending === "function" && welcomePending())
+      || walkShowing("#tour-block") || walkShowing("#locask") || walkShowing("#search")
+      || walkShowing("#report") || walkShowing("#account") || walkShowing("#book");
+}
+function walkReset(){ walkRun = null; walkPrev = null; walkHide(); }
+function walkOnFix(pos){
+  const c = pos && pos.coords; if(!c) return;
+  if(!(typeof c.accuracy === "number" && c.accuracy <= WALK_ACC_M)) return;
+  const lat = c.latitude, lng = c.longitude, t = pos.timestamp;
+  if(typeof t !== "number" || !isFinite(t)) return;
+  // speed: the phone's own when it gives one (iOS sends -1 for "don't know"), else from the last fix
+  let sp = null;
+  if(typeof c.speed === "number" && isFinite(c.speed) && c.speed >= 0) sp = c.speed;
+  else if(walkPrev && t > walkPrev.t) sp = walkDist(walkPrev.lat, walkPrev.lng, lat, lng) / ((t - walkPrev.t) / 1000);
+  walkPrev = {lat, lng, t};
+  const driving = sp !== null && sp > WALK_MAX_MPS;
+  if(walkShownId){
+    // the card is up: it goes if a trip starts, you drive off, or you leave its river
+    const r = RIVERS.find(x => x.id === walkShownId);
+    if(walkBusy() || driving || !r || walkLineDist(r, lat, lng) > WALK_LEAVE_M) walkHide();
+    return;
+  }
+  if(driving || walkBlocked()){ walkRun = null; return; }
+  const m = walkMemo();
+  if(m.last && t - m.last < WALK_COOLDOWN_MS){ walkRun = null; return; }
+  const r = walkNearest(lat, lng);
+  // the nearest river decides the run, even one already offered or fished today:
+  // walking the creek you've just fished shouldn't offer the tributary 50 m away
+  if(!r || m.ids.includes(r.id) || walkFishedToday(r.id)){ walkRun = null; return; }
+  const run = walkRun;
+  if(run && run.id === r.id && t >= run.last && t - run.last <= WALK_GAP_MS){
+    run.last = t;
+    const step = walkDist(run.anchor[0], run.anchor[1], lat, lng);
+    if(step >= WALK_STEP_M){ run.len += step; run.anchor = [lat, lng]; }
+    run.span = Math.max(run.span, walkDist(run.from[0], run.from[1], lat, lng));
+  } else walkRun = {id:r.id, start:t, last:t, from:[lat, lng], anchor:[lat, lng], len:0, span:0};
+  if(walkRun.last - walkRun.start >= WALK_RUN_MS && walkRun.len >= WALK_RUN_M && walkRun.span >= WALK_SPAN_M){
+    walkRun = null;
+    walkRemember(r.id, t);          // shown counts as asked, whatever the answer
+    walkShow(r);
+  }
+}
+const walkAsk = document.body.appendChild(document.createElement("div"));
+walkAsk.id = "walkask"; walkAsk.setAttribute("role", "dialog"); walkAsk.setAttribute("aria-label", "Start fishing");
+function walkShow(r){
+  walkShownId = r.id;
+  walkAsk.innerHTML = `<div class="la-ic">${LOC_ICON}</div><div class="la-body"><h3>Let’s start fishing</h3>
+    <p>Looks like you’re walking along ${fbEsc(r.name)}.</p>
+    <div class="la-btns"><button type="button" id="wa-yes">Start fishing</button><button type="button" id="wa-no">Not now</button></div></div>`;
+  walkAsk.querySelector("#wa-yes").addEventListener("click", () => walkStart(r.id));
+  walkAsk.querySelector("#wa-no").addEventListener("click", walkHide);
+  walkAsk.classList.add("show");
+}
+function walkHide(){ walkShownId = null; walkAsk.classList.remove("show"); }
+// Open the river framed on where you stand, then log the trip exactly as ✓ Fished does.
+function walkStart(id){
+  walkHide();
+  const r = RIVERS.find(x => x.id === id); if(!r) return;
+  if(typeof closeSearch === "function" && walkShowing("#search")) closeSearch();
+  hideZones();                               // no-op unless the region chooser is up
+  openRiver(id, null, {fit:false});          // its Field Book row is built before openRiver's first await
+  if(locLast){
+    // The dot goes in the middle of the area the sheet leaves clear, as fitFocus
+    // does with its anchor: centred on the map it would sit under the sheet.
+    const tz = Math.max(map.getZoom(), 13), {size, tl, br} = focusFrame();
+    if(!size.x || !size.y) goTo(locLast, tz);
+    else {
+      const mid = L.point((tl.x + size.x - br.x) / 2, (tl.y + size.y - br.y) / 2);
+      goTo(map.unproject(map.project(locLast, tz).add(size.divideBy(2).subtract(mid)), tz), tz);
+    }
+  }
+  fbLogTapTrip("river", r);
 }
 function locError(e){
   if(e.code === 1){ locStop(); locPerm = "denied"; locBlockedSay(); }
@@ -7336,7 +7539,8 @@ function syncBottomControls(){
   let coverTop = Infinity;
   if(sheetOpen && !docked) coverTop = mapR.bottom - sheetEl.offsetHeight;
   // Float and lake-trip cards (planner, live card, collapsed pill) don't slide.
-  document.querySelectorAll(".floatcard.show").forEach(el => {
+  // The walking card ("Let's start fishing") sits in the same place, above the sheet.
+  document.querySelectorAll(".floatcard.show, #walkask.show").forEach(el => {
     const r = el.getBoundingClientRect();
     if(r.height && r.left < colRight && r.right > colLeft) coverTop = Math.min(coverTop, r.top);
   });
@@ -7366,6 +7570,7 @@ function syncBottomControls(){
     if(window.ResizeObserver) new ResizeObserver(syncBottomControls).observe(el);
   };
   watch(document.getElementById("sheet"));
+  watch(document.getElementById("walkask"));
   // float.js and laketrip.js build their cards after this file runs (all deferred, in order).
   const watchCards = () => { document.querySelectorAll(".floatcard").forEach(watch); syncBottomControls(); };
   if(document.readyState === "complete") watchCards();

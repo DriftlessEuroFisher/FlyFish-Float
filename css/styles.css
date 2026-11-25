@@ -776,21 +776,24 @@ body.touring #icontip,body.zones-open #icontip{display:none}
 }
 #locpill.show{display:block}
 /* One-time "show where you are?" ask. Over the map and chooser, under the
-   sheet and the Field Book; the wrapper ignores taps so only the card takes them. */
-#locask{
+   sheet and the Field Book; the wrapper ignores taps so only the card takes them.
+   The walking card ("Let's start fishing", #walkask) wears the same look but
+   sits above the sheet and the float cards, under the toast it leads to. */
+#locask,#walkask{
   position:fixed;z-index:1270;left:12px;right:12px;margin:0 auto;max-width:420px;
   bottom:calc(12px + env(safe-area-inset-bottom));display:none;gap:12px;align-items:flex-start;
   background:var(--paper);color:var(--txt);border:1px solid var(--line);border-radius:14px;
   padding:14px;box-shadow:var(--shadow);
 }
-#locask.show{display:flex}
-#locask .la-ic{flex:none;width:38px;height:38px;border-radius:50%;background:var(--river);color:#fff;display:flex;align-items:center;justify-content:center}
-#locask .la-ic svg{width:22px;height:22px}
-#locask h3{font-family:"Barlow Condensed",sans-serif;font-size:20px;text-transform:uppercase;letter-spacing:.04em;line-height:1.1;margin-bottom:4px}
-#locask p{font-size:13px;line-height:1.4;color:var(--txt-dim)}
-#locask .la-btns{display:flex;gap:8px;margin-top:11px}
-#locask .la-btns button{min-height:42px;padding:0 14px;border-radius:9px;font-size:14px;font-weight:600;background:#e8dfd2;color:var(--txt)}
-#locask .la-btns #la-yes{flex:1;background:var(--river);color:#fff}
+#walkask{z-index:1330}
+#locask.show,#walkask.show{display:flex}
+#locask .la-ic,#walkask .la-ic{flex:none;width:38px;height:38px;border-radius:50%;background:var(--river);color:#fff;display:flex;align-items:center;justify-content:center}
+#locask .la-ic svg,#walkask .la-ic svg{width:22px;height:22px}
+#locask h3,#walkask h3{font-family:"Barlow Condensed",sans-serif;font-size:20px;text-transform:uppercase;letter-spacing:.04em;line-height:1.1;margin-bottom:4px}
+#locask p,#walkask p{font-size:13px;line-height:1.4;color:var(--txt-dim)}
+#locask .la-btns,#walkask .la-btns{display:flex;gap:8px;margin-top:11px}
+#locask .la-btns button,#walkask .la-btns button{min-height:42px;padding:0 14px;border-radius:9px;font-size:14px;font-weight:600;background:#e8dfd2;color:var(--txt)}
+#locask .la-btns #la-yes,#walkask .la-btns #wa-yes{flex:1;background:var(--river);color:#fff}
 
 /* "Rules today" card — first thing in the sheet. Status dots are muted brick /
    amber / green / grey; the closure-tape red stays reserved for the map. */
