@@ -5556,7 +5556,7 @@ window.addEventListener("keydown", e => { if(e.key==="Escape" && bookEl.classLis
 /* ---------- Report an issue ----------
    Sends river, issue text, optional email and the app version to Supabase
    (js/config.js). Nothing else — no location. Draft survives a dropped signal. */
-const APP_VERSION = "flyroutes-v59";
+const APP_VERSION = "flyroutes-v60";
 const reportEl = $("#report"), rpForm = $("#report-form");
 let rpRiverId = null;
 function rpNames(){
@@ -7293,18 +7293,86 @@ document.getElementById("la-no").addEventListener("click", () => { locAsk.classL
   }, boot);
   else boot();
 })();
-// The sheet slides up over the bottom of the map and would cover the buttons;
-// watching its class is simpler than hooking every place it opens or closes.
-(function(){
+/* Zoom and locate sit bottom-right, exactly where the sheet (62vh, 88vh tall)
+   and the float / lake-trip card slide over the map. Hiding them whenever the
+   sheet was open left a phone with ~300 px of map and no way to find yourself,
+   so they ride up above whatever covers the bottom, on the sheet's own easing.
+   They go only when the lifted stack would run into the app bar: zoom first,
+   then locate. From 900 px the sheet docks on the right, so they step left of
+   it instead. Measured from each cover's final place, never mid-slide. */
+const BR_GAP = 10;        // px kept between the buttons and what covers the map
+const BR_TOP_ROOM = 8;    // px kept below the app bar
+let brZoomH = 102;        // zoom stack + its bottom margin; re-measured while it shows
+let brLocH = 44;
+let brBase = null;        // map bottom to locate's bottom at rest: margin, safe area, attribution
+function syncBottomControls(){
+  const locEl = locCtl.getContainer(), zoomEl = zoomCtl.getContainer();
+  const box = locEl && locEl.parentNode;
+  if(!box || !zoomEl) return;
+  const W = window.innerWidth;
+  const mapR = map.getContainer().getBoundingClientRect();   // #map is fixed, inset 0: the same box the sheet and cards sit in
+  const ls = getComputedStyle(locEl);
+  const mRight = parseFloat(ls.marginRight) || 10;
+  // offsetTop ignores the transform, so this is the resting place even mid-slide;
+  // the attribution under locate can wrap, so it is re-measured whenever locate shows.
+  if(!locEl.classList.contains("loc-hide") && locEl.offsetHeight){
+    brLocH = locEl.offsetHeight;
+    brBase = box.offsetHeight - locEl.offsetTop - brLocH;
+  }
+  const restBottom = mapR.bottom - (brBase !== null ? brBase : (parseFloat(ls.marginBottom) || 14));
+  if(!zoomEl.classList.contains("loc-hide") && zoomEl.offsetHeight)
+    brZoomH = zoomEl.offsetHeight + (parseFloat(getComputedStyle(zoomEl).marginBottom) || 10);
   const sheetEl = document.getElementById("sheet");
-  if(!sheetEl || !window.MutationObserver) return;
-  const sync = () => {
-    const open = sheetEl.classList.contains("open");
-    locCtl.getContainer().classList.toggle("loc-hide", open);
-    zoomCtl.getContainer().classList.toggle("loc-hide", open);   // zoom stays on the chooser, locate doesn't
+  const sheetOpen = !!sheetEl && sheetEl.classList.contains("open");
+  const docked = W >= 900;
+  // Docked sheet: step left of where it ends up (right + width), not where the slide is.
+  let shift = 0;
+  if(sheetOpen && docked){
+    const sheetLeft = mapR.right - (parseFloat(getComputedStyle(sheetEl).right) || 0) - sheetEl.offsetWidth;
+    shift = Math.max(0, (mapR.right - mRight) - (sheetLeft - BR_GAP));
+  }
+  const colRight = mapR.right - mRight - shift, colLeft = colRight - 48;
+  // Phone sheet: its top once open is the map's bottom less its height.
+  let coverTop = Infinity;
+  if(sheetOpen && !docked) coverTop = mapR.bottom - sheetEl.offsetHeight;
+  // Float and lake-trip cards (planner, live card, collapsed pill) don't slide.
+  document.querySelectorAll(".floatcard.show").forEach(el => {
+    const r = el.getBoundingClientRect();
+    if(r.height && r.left < colRight && r.right > colLeft) coverTop = Math.min(coverTop, r.top);
+  });
+  const lift = coverTop === Infinity ? 0 : Math.max(0, restBottom - (coverTop - BR_GAP));
+  // Room: the app bar, and anything in the top-right corner above this column.
+  const bar = document.getElementById("appbar");
+  let topLimit = bar ? bar.getBoundingClientRect().bottom : 0;
+  const tr = map.getContainer().querySelector(".leaflet-top.leaflet-right");
+  if(tr) Array.from(tr.children).forEach(c => {
+    const r = c.getBoundingClientRect();
+    if(r.height && r.left < colRight && r.right > colLeft) topLimit = Math.max(topLimit, r.bottom);
+  });
+  topLimit += BR_TOP_ROOM;
+  const locTop = restBottom - lift - brLocH;
+  const showLoc = locTop >= topLimit;
+  locEl.classList.toggle("loc-hide", !showLoc);
+  zoomEl.classList.toggle("loc-hide", !(showLoc && locTop - brZoomH >= topLimit));
+  box.style.setProperty("--br-lift", lift + "px");
+  box.style.setProperty("--br-shift", shift + "px");
+}
+(function(){
+  const seen = window.WeakSet ? new WeakSet() : null;
+  const watch = el => {
+    if(!el || !seen || seen.has(el)) return;
+    seen.add(el);
+    if(window.MutationObserver) new MutationObserver(syncBottomControls).observe(el, {attributes:true, attributeFilter:["class"]});
+    if(window.ResizeObserver) new ResizeObserver(syncBottomControls).observe(el);
   };
-  new MutationObserver(sync).observe(sheetEl, {attributes:true, attributeFilter:["class"]});
-  sync();
+  watch(document.getElementById("sheet"));
+  // float.js and laketrip.js build their cards after this file runs (all deferred, in order).
+  const watchCards = () => { document.querySelectorAll(".floatcard").forEach(watch); syncBottomControls(); };
+  if(document.readyState === "complete") watchCards();
+  else document.addEventListener("DOMContentLoaded", watchCards);
+  window.addEventListener("resize", syncBottomControls);
+  window.addEventListener("orientationchange", syncBottomControls);
+  syncBottomControls();
 })();
 
 /* A park's card counts what the map is actually showing, not everything

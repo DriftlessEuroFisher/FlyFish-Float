@@ -728,7 +728,19 @@ body.touring #icontip,body.zones-open #icontip{display:none}
    (a slow pulse nothing else on the map does) is what tells them apart.
    Teal for the button states — orange is live flow and red is closures. */
 .loc-ctl{ margin:0 10px calc(14px + env(safe-area-inset-bottom)) 0; }
-.loc-ctl.loc-hide, body.zones-open .loc-ctl{ display:none; }
+.loc-ctl.loc-hide{ display:none; }
+/* syncBottomControls() lifts zoom + locate above the sheet or a float card on a
+   phone, and steps them left of the docked sheet from 900 px: the sheet's easing,
+   so they move with it. The attribution in the same corner stays put. */
+.leaflet-bottom.leaflet-right .loc-ctl,
+.leaflet-bottom.leaflet-right .leaflet-control-zoom{
+  transform:translate(calc(-1 * var(--br-shift, 0px)), calc(-1 * var(--br-lift, 0px)));
+  transition:transform .28s cubic-bezier(.3,.9,.3,1);
+}
+@media (prefers-reduced-motion:reduce){
+  .leaflet-bottom.leaflet-right .loc-ctl,
+  .leaflet-bottom.leaflet-right .leaflet-control-zoom{ transition:none; }
+}
 #btn-locate{
   width:44px; height:44px; border-radius:50%; padding:0; cursor:pointer;
   display:flex; align-items:center; justify-content:center;
