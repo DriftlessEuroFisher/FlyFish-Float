@@ -22,7 +22,7 @@ const GAUGES = {
   townSnake:    { site:"USGS-13018750", label:"Snake River below Flat Creek, nr Jackson" },
   alpineSnake:  { site:"USGS-13022500", label:"Snake River above reservoir, nr Alpine" },
   grosVentre:   { site:"USGS-13014500", label:"Gros Ventre River at Kelly, WY" },
-  hoback:       { site:"USGS-13019300", label:"Hoback River above Cliff Creek, nr Bondurant" },
+  hobackJackson:{ site:"USGS-13019500", label:"Hoback River nr Jackson, WY" },   // 13019300 (above Cliff Creek) never measured discharge; key is new so phones holding a null for the old one still fetch this site
   flatCreek:    { site:"USGS-13018350", label:"Flat Creek below Cache Creek, nr Jackson" },
   buffaloFork:  { site:"USGS-13011900", label:"Buffalo Fork above Lava Creek, nr Moran" },
   salt:         { site:"USGS-13027500", label:"Salt River above reservoir, nr Etna" },
@@ -1328,7 +1328,7 @@ const GAUGES = {
    Refresh them from NWIS, never by eye. */
 const GAUGE_POS = {
   mooseSnake:[43.65406,-110.71547], damSnake:[43.85852,-110.58662], townSnake:[43.37222,-110.73861],
-  alpineSnake:[43.19611,-110.88944], grosVentre:[43.62089,-110.62306], hoback:[43.24382,-110.47935],
+  alpineSnake:[43.19611,-110.88944], grosVentre:[43.62089,-110.62306], hobackJackson:[43.30528,-110.68019],
   flatCreek:[43.45836,-110.79703], buffaloFork:[43.83806,-110.44083], salt:[43.07972,-111.03722],
   greys:[43.14306,-110.97694], southFork:[43.35083,-111.21889], heise:[43.61250,-111.66000],
   teton:[43.78194,-111.20917], tetonStA:[43.92722,-111.61389], hfIslandPark:[44.41667,-111.39472],
@@ -4705,7 +4705,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"tv_tetoncreek", name:"Teton Creek", color:"#2f7f8f",
   state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>. This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
+  parkRegs:"<b>Teton River tributaries (includes Bitch, Badger, Canyon, Fox, Trail, Teton, and S Leigh creeks and tributaries)</b> (p. 44)<br>• June 1 through June 30 – closed to fishing<br>• No harvest of Cutthroat Trout<br>• No limit on Rainbow Trout or hybrids<br><br>This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"The big one off the Teton Range's west slope, down Teton Canyon past the Driggs bench to the Teton River. The canyon road and trailhead are over the line in Wyoming; the fishing water below is Idaho's.",
   fish:"Yellowstone cutthroat, with rainbows and hybrids the state wants removed. It carries snowmelt colour late and fishes best from midsummer once the valley irrigation season settles the flow.",
@@ -4715,7 +4715,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"tv_darbycreek", name:"Darby Creek", color:"#3f8f7f",
   state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>. This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
+  parkRegs:"<b>Teton River tributaries (includes Bitch, Badger, Canyon, Fox, Trail, Teton, and S Leigh creeks and tributaries)</b> (p. 44)<br>• June 1 through June 30 – closed to fishing<br>• No harvest of Cutthroat Trout<br>• No limit on Rainbow Trout or hybrids<br><br>This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"Out of Darby Canyon south of Driggs — the creek below the wind caves, running across the bench to the Teton River.",
   fish:"Small-stream cutthroat fishing in a canyon mouth that most people drive to for the hike rather than the water.",
@@ -4725,7 +4725,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"tv_foxcreek", name:"Fox Creek", color:"#4f8f6f",
   state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>. This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
+  parkRegs:"<b>Teton River tributaries (includes Bitch, Badger, Canyon, Fox, Trail, Teton, and S Leigh creeks and tributaries)</b> (p. 44)<br>• June 1 through June 30 – closed to fishing<br>• No harvest of Cutthroat Trout<br>• No limit on Rainbow Trout or hybrids<br><br>This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"Between Victor and Driggs, out of Fox Creek Canyon and across the valley floor to the Teton — a classic Teton Valley spring-and-snowmelt creek.",
   fish:"Cutthroat in small, brushy water. Named in the state's special-rule list, which is the tell that it matters to the cutthroat programme.",
@@ -4735,7 +4735,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"tv_trailcreek", name:"Trail Creek", color:"#5f8f5f",
   state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>. This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
+  parkRegs:"<b>Teton River tributaries (includes Bitch, Badger, Canyon, Fox, Trail, Teton, and S Leigh creeks and tributaries)</b> (p. 44)<br>• June 1 through June 30 – closed to fishing<br>• No harvest of Cutthroat Trout<br>• No limit on Rainbow Trout or hybrids<br><br>This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"In from Pine Creek Pass and the Wyoming line above Victor, joining the Teton at the south end of the valley — the creek the highway follows over the pass.",
   fish:"Cutthroat, and one of the more accessible of the valley's small streams.",
@@ -4745,7 +4745,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"tv_gamecreek", name:"Game Creek", color:"#6f8f4f",
   state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>. This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
+  parkRegs:"<b>Teton River tributaries (includes Bitch, Badger, Canyon, Fox, Trail, Teton, and S Leigh creeks and tributaries)</b> (p. 44)<br>• June 1 through June 30 – closed to fishing<br>• No harvest of Cutthroat Trout<br>• No limit on Rainbow Trout or hybrids<br><br>This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"A short creek at the very south end of the valley above Victor, in to Trail Creek.",
   fish:"Small cutthroat water — a stop rather than a day.",
@@ -4755,7 +4755,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"tv_moosecreek", name:"Moose Creek", color:"#7f8f3f",
   state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>. This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
+  parkRegs:"<b>Teton River tributaries (includes Bitch, Badger, Canyon, Fox, Trail, Teton, and S Leigh creeks and tributaries)</b> (p. 44)<br>• June 1 through June 30 – closed to fishing<br>• No harvest of Cutthroat Trout<br>• No limit on Rainbow Trout or hybrids<br><br>This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"A short Idaho reach at the head of the valley near Victor before the drainage crosses into Wyoming. Not the Moose Creek of Grand Teton or of Idaho's Selway.",
   fish:"Small cutthroat water, and most of the creek is over the line.",
@@ -4765,7 +4765,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"tv_southleighcreek", name:"South Leigh Creek", color:"#2f8f5f",
   state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>. This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
+  parkRegs:"<b>Teton River tributaries (includes Bitch, Badger, Canyon, Fox, Trail, Teton, and S Leigh creeks and tributaries)</b> (p. 44)<br>• June 1 through June 30 – closed to fishing<br>• No harvest of Cutthroat Trout<br>• No limit on Rainbow Trout or hybrids<br><br>This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"North of Driggs, out of South Leigh Canyon and across the bench to the Teton — the larger of the two Leigh creeks on the Idaho side.",
   fish:"Cutthroat in a freestone creek that drops fast out of the canyon and then meanders. Named in the state's special-rule list.",
@@ -4775,7 +4775,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"tv_northleighcreek", name:"North Leigh Creek", color:"#3f9f5f",
   state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>. This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
+  parkRegs:"<b>Teton River tributaries (includes Bitch, Badger, Canyon, Fox, Trail, Teton, and S Leigh creeks and tributaries)</b> (p. 44)<br>• June 1 through June 30 – closed to fishing<br>• No harvest of Cutthroat Trout<br>• No limit on Rainbow Trout or hybrids<br><br>This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"South Leigh's neighbour a few miles north, same canyon-to-bench shape.",
   fish:"Small cutthroat water, quieter than its bigger twin.",
@@ -4785,7 +4785,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"tv_badgercreek", name:"Badger Creek", color:"#8f7f3f",
   state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>. This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
+  parkRegs:"<b>Teton River tributaries (includes Bitch, Badger, Canyon, Fox, Trail, Teton, and S Leigh creeks and tributaries)</b> (p. 44)<br>• June 1 through June 30 – closed to fishing<br>• No harvest of Cutthroat Trout<br>• No limit on Rainbow Trout or hybrids<br><br>This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"Off the Tetons north of Tetonia, joining the Teton River where the valley starts to narrow toward the canyon. Its North and South forks are mapped separately.",
   fish:"Cutthroat, and one of the creeks the state names by name in the tributary rule.",
@@ -4795,7 +4795,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"tv_northbadgercreek", name:"North Badger Creek", color:"#9f8f4f",
   state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>. This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
+  parkRegs:"<b>Teton River tributaries (includes Bitch, Badger, Canyon, Fox, Trail, Teton, and S Leigh creeks and tributaries)</b> (p. 44)<br>• June 1 through June 30 – closed to fishing<br>• No harvest of Cutthroat Trout<br>• No limit on Rainbow Trout or hybrids<br><br>This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"The north fork of Badger Creek, dropping off the range front above Tetonia.",
   fish:"Small cutthroat water in a tight canyon.",
@@ -4805,7 +4805,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"tv_southbadgercreek", name:"South Badger Creek", color:"#8f6f3f",
   state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>. This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
+  parkRegs:"<b>Teton River tributaries (includes Bitch, Badger, Canyon, Fox, Trail, Teton, and S Leigh creeks and tributaries)</b> (p. 44)<br>• June 1 through June 30 – closed to fishing<br>• No harvest of Cutthroat Trout<br>• No limit on Rainbow Trout or hybrids<br><br>This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"The south fork of Badger Creek, the two joining on the bench below.",
   fish:"Small cutthroat water.",
@@ -4815,7 +4815,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"tv_bitchcreek", name:"Bitch Creek", color:"#7f5f2f",
   state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>. This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
+  parkRegs:"<b>Teton River tributaries (includes Bitch, Badger, Canyon, Fox, Trail, Teton, and S Leigh creeks and tributaries)</b> (p. 44)<br>• June 1 through June 30 – closed to fishing<br>• No harvest of Cutthroat Trout<br>• No limit on Rainbow Trout or hybrids<br><br>This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"The Teton's biggest tributary, in from the north through a deep basalt canyon to meet the river below Felt. The name is a worn-down version of the French <i>biche</i> — the canyon is the real character of it.",
   fish:"Cutthroat in a rugged, committing canyon that is a scramble to get into and out of. Named in the state's tributary rule, and the one Teton Valley tributary that fishes like a small river rather than a creek.",
@@ -4825,7 +4825,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"tv_milkcreek", name:"Milk Creek", color:"#6f7f4f",
   state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  parkRegs:"<b>Teton River tributaries (includes Bitch, Badger, Canyon, Fox, Trail, Teton, and S Leigh creeks and tributaries)</b> (p. 44)<br>• June 1 through June 30 – closed to fishing<br>• No harvest of Cutthroat Trout<br>• No limit on Rainbow Trout or hybrids", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"The long west-side creek draining the Big Hole Mountains into the Teton River north of Tetonia — the opposite side of the valley from the Teton Range creeks.",
   fish:"Cutthroat in lower-gradient water than the range-front creeks, and a different feel: sage and aspen rather than granite.",
@@ -4835,7 +4835,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"tv_springcreek", name:"Spring Creek", color:"#2f9f8f",
   state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  parkRegs:"<b>Teton River tributaries (includes Bitch, Badger, Canyon, Fox, Trail, Teton, and S Leigh creeks and tributaries)</b> (p. 44)<br>• June 1 through June 30 – closed to fishing<br>• No harvest of Cutthroat Trout<br>• No limit on Rainbow Trout or hybrids", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"Spring water on the valley floor between Driggs and Tetonia, feeding the Teton River — flat, cold and clear, and fed by the aquifer rather than by snowmelt.",
   fish:"The valley's technical water: slow, weedy, and fishable when the freestone creeks are blown out. Cutthroat and rainbows.",
@@ -4845,7 +4845,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"tv_warmcreek", name:"Warm Creek", color:"#3f9f9f",
   state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  parkRegs:"<b>Teton River tributaries (includes Bitch, Badger, Canyon, Fox, Trail, Teton, and S Leigh creeks and tributaries)</b> (p. 44)<br>• June 1 through June 30 – closed to fishing<br>• No harvest of Cutthroat Trout<br>• No limit on Rainbow Trout or hybrids", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"A short spring-fed creek at the south end of the valley near Victor, into the Teton River. Not the Warm Creek of the lower canyon, which is a different stream with the same name.",
   fish:"Spring-fed and cold through summer, which matters in a valley where the freestone creeks warm up.",
@@ -4855,7 +4855,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"tv_canyoncreek", name:"Canyon Creek", color:"#4f7f9f",
   state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  parkRegs:"<b>Teton River tributaries (includes Bitch, Badger, Canyon, Fox, Trail, Teton, and S Leigh creeks and tributaries)</b> (p. 44)<br>• June 1 through June 30 – closed to fishing<br>• No harvest of Cutthroat Trout<br>• No limit on Rainbow Trout or hybrids", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"In from the Big Hole Mountains to the Teton River down in the canyon below Felt — the long west-side drainage the state names in its tributary rule.",
   fish:"Cutthroat in canyon water a long way from a road. The Teton's canyon reach here is the wild part of the valley.",
@@ -4865,7 +4865,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"tv_bullelkcreek", name:"Bull Elk Creek", color:"#5f7f3f",
   state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>. This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
+  parkRegs:"<b>Teton River tributaries (includes Bitch, Badger, Canyon, Fox, Trail, Teton, and S Leigh creeks and tributaries)</b> (p. 44)<br>• June 1 through June 30 – closed to fishing<br>• No harvest of Cutthroat Trout<br>• No limit on Rainbow Trout or hybrids<br><br>This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"A north-side creek joining the Teton near Badger Creek above the canyon.",
   fish:"Small cutthroat water off the range front.",
@@ -4875,7 +4875,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"tv_packsaddlecreek", name:"Packsaddle Creek", color:"#7f6f5f",
   state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  parkRegs:"<b>Teton River tributaries (includes Bitch, Badger, Canyon, Fox, Trail, Teton, and S Leigh creeks and tributaries)</b> (p. 44)<br>• June 1 through June 30 – closed to fishing<br>• No harvest of Cutthroat Trout<br>• No limit on Rainbow Trout or hybrids", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"Out of the Big Holes on the valley's west side, down past Packsaddle Lake to the Teton River near Tetonia.",
   fish:"Cutthroat in small west-side water — shaded, cold, and largely ignored.",
@@ -4885,7 +4885,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"tv_horseshoecreek", name:"Horseshoe Creek", color:"#6f6f7f",
   state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  parkRegs:"<b>Teton River tributaries (includes Bitch, Badger, Canyon, Fox, Trail, Teton, and S Leigh creeks and tributaries)</b> (p. 44)<br>• June 1 through June 30 – closed to fishing<br>• No harvest of Cutthroat Trout<br>• No limit on Rainbow Trout or hybrids", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"Another Big Hole Mountains creek, into the Teton between Driggs and Tetonia.",
   fish:"Small cutthroat water on the quiet side of the valley.",
@@ -4895,7 +4895,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"tv_mahoganycreek", name:"Mahogany Creek", color:"#8f5f5f",
   state:"ID", region:"tetonvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the Teton River tributaries as a group — the book names Bitch, Badger, Canyon, Fox, Trail, Teton and S Leigh creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  parkRegs:"<b>Teton River tributaries (includes Bitch, Badger, Canyon, Fox, Trail, Teton, and S Leigh creeks and tributaries)</b> (p. 44)<br>• June 1 through June 30 – closed to fishing<br>• No harvest of Cutthroat Trout<br>• No limit on Rainbow Trout or hybrids", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"A short west-side creek into the Teton River near Driggs.",
   fish:"Small cutthroat water. A half-hour creek.",
@@ -4905,7 +4905,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"sv_palisadescreek", name:"Palisades Creek", color:"#2f6f9f",
   state:"ID", region:"swanvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the South Fork tributaries as a group — the book names Burns, Palisades, Pine and Rainey creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  parkRegs:"<b>South Fork Snake River tributaries (includes Burns, Palisades, Pine, and Rainey creeks and tributaries)</b> (p. 44)<br>• June 1 through June 30 – closed to fishing<br>• No harvest of Cutthroat Trout<br>• No limit on Rainbow Trout or trout hybrids", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"In from the Palisades lakes to the South Fork just below the dam — the trail up to Lower and Upper Palisades Lakes is one of the best-known walks in the valley.",
   fish:"Yellowstone cutthroat, with the state asking anglers to keep every rainbow. The creek fishes best once the June closure lifts and the snowmelt drops out.",
@@ -4915,7 +4915,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"sv_raineycreek", name:"Rainey Creek", color:"#3f7f9f",
   state:"ID", region:"swanvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the South Fork tributaries as a group — the book names Burns, Palisades, Pine and Rainey creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  parkRegs:"<b>South Fork Snake River tributaries (includes Burns, Palisades, Pine, and Rainey creeks and tributaries)</b> (p. 44)<br>• June 1 through June 30 – closed to fishing<br>• No harvest of Cutthroat Trout<br>• No limit on Rainbow Trout or trout hybrids", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"Into the South Fork at Irwin, with a road up the main fork — one of the two tributaries most Swan Valley anglers actually fish.",
   fish:"Cutthroat, and a genuine spawning tributary for South Fork fish, which is why the June closure is on it.",
@@ -4925,7 +4925,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"sv_pinecreek", name:"Pine Creek", color:"#4f8f9f",
   state:"ID", region:"swanvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the South Fork tributaries as a group — the book names Burns, Palisades, Pine and Rainey creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  parkRegs:"<b>South Fork Snake River tributaries (includes Burns, Palisades, Pine, and Rainey creeks and tributaries)</b> (p. 44)<br>• June 1 through June 30 – closed to fishing<br>• No harvest of Cutthroat Trout<br>• No limit on Rainbow Trout or trout hybrids", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"Down from Pine Creek Pass to the South Fork at Swan Valley — the creek the highway between Swan Valley and Victor follows, with its North Fork joining above.",
   fish:"Cutthroat in a creek that connects the two valleys: over the pass is Teton Valley and a different river entirely.",
@@ -4935,7 +4935,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"sv_northforkpinecreek", name:"North Fork Pine Creek", color:"#5f9f9f",
   state:"ID", region:"swanvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the South Fork tributaries as a group — the book names Burns, Palisades, Pine and Rainey creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  parkRegs:"<b>South Fork Snake River tributaries (includes Burns, Palisades, Pine, and Rainey creeks and tributaries)</b> (p. 44)<br>• June 1 through June 30 – closed to fishing<br>• No harvest of Cutthroat Trout<br>• No limit on Rainbow Trout or trout hybrids", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"The north fork above the Pine Creek road, dropping out of the Big Hole Mountains.",
   fish:"Small cutthroat water in tight canyon country.",
@@ -4945,7 +4945,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"sv_fallcreek", name:"Fall Creek", color:"#2f8f6f",
   state:"ID", region:"swanvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the South Fork tributaries as a group — the book names Burns, Palisades, Pine and Rainey creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  parkRegs:"<b>South Fork Snake River tributaries (includes Burns, Palisades, Pine, and Rainey creeks and tributaries)</b> (p. 44)<br>• June 1 through June 30 – closed to fishing<br>• No harvest of Cutthroat Trout<br>• No limit on Rainbow Trout or trout hybrids", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"In to the South Fork from the south through the Caribou Range, with Fall Creek Falls dropping straight into the river near the mouth — the waterfall is the thing most people come for.",
   fish:"Cutthroat above the falls country, in a long drainage that sees far less traffic than the river it joins.",
@@ -4955,7 +4955,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"sv_bigelkcreek", name:"Big Elk Creek", color:"#6f9f4f",
   state:"ID", region:"swanvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the South Fork tributaries as a group — the book names Burns, Palisades, Pine and Rainey creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>. This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
+  parkRegs:"<b>Palisades Reservoir tributaries</b> (p. 44)<br>• Trout limit is 6, no harvest of Cutthroat Trout<br>• No harvest of kokanee<br><br>This canyon crosses into <b>Wyoming</b> part-way up — the line drawn here stops at the state line, because the rules do too. A Wyoming licence covers the water above it.", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"In to the east arm of Palisades Reservoir near the Wyoming line, with a popular trail up the canyon. The gap at the bottom of the line is the reservoir arm.",
   fish:"Cutthroat, and a spawning run out of the reservoir. The drainage heads into Wyoming at the top.",
@@ -4965,7 +4965,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"sv_mccoycreek", name:"McCoy Creek", color:"#7f9f3f",
   state:"ID", region:"swanvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the South Fork tributaries as a group — the book names Burns, Palisades, Pine and Rainey creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  parkRegs:"<b>McCoy Creek and tributaries</b> (p. 44)<br>• Trout limit is 6, no harvest of Cutthroat Trout<br><br><b>Palisades Reservoir tributaries</b> (p. 44)<br>• Trout limit is 6, no harvest of Cutthroat Trout<br>• No harvest of kokanee", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"In to the south end of Palisades Reservoir out of the Caribou Range, with the McCoy Creek road following it.",
   fish:"Cutthroat, with reservoir fish running up in spring. Long, quiet, and a fair drive from anywhere.",
@@ -4975,7 +4975,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"sv_bearcreek", name:"Bear Creek", color:"#8f8f3f",
   state:"ID", region:"swanvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the South Fork tributaries as a group — the book names Burns, Palisades, Pine and Rainey creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  parkRegs:"<b>Palisades Reservoir tributaries</b> (p. 44)<br>• Trout limit is 6, no harvest of Cutthroat Trout<br>• No harvest of kokanee", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"The long Caribou Range drainage into the west side of Palisades Reservoir. One of several Bear Creeks in eastern Idaho — this is the Palisades one.",
   fish:"Cutthroat in backcountry water. Bears, as advertised.",
@@ -4985,7 +4985,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"sv_indiancreek", name:"Indian Creek", color:"#9f7f4f",
   state:"ID", region:"swanvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the South Fork tributaries as a group — the book names Burns, Palisades, Pine and Rainey creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  parkRegs:"<i>This line follows two creeks named Indian Creek: one runs into the South Fork below Palisades Dam, the other into Palisades Reservoir near the Wyoming line.</i><br><br><i>Into the South Fork:</i><br><b>South Fork Snake River tributaries (includes Burns, Palisades, Pine, and Rainey creeks and tributaries)</b> (p. 44)<br>• June 1 through June 30 – closed to fishing<br>• No harvest of Cutthroat Trout<br>• No limit on Rainbow Trout or trout hybrids<br><br><i>Into Palisades Reservoir:</i><br><b>Palisades Reservoir tributaries</b> (p. 44)<br>• Trout limit is 6, no harvest of Cutthroat Trout<br>• No harvest of kokanee", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"In to the South Fork between the dam and Swan Valley, off the Caribou Range front.",
   fish:"Small cutthroat water with a short walk in.",
@@ -4995,7 +4995,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"sv_pritchardcreek", name:"Pritchard Creek", color:"#8f6f6f",
   state:"ID", region:"swanvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the South Fork tributaries as a group — the book names Burns, Palisades, Pine and Rainey creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  parkRegs:"<b>South Fork Snake River tributaries (includes Burns, Palisades, Pine, and Rainey creeks and tributaries)</b> (p. 44)<br>• June 1 through June 30 – closed to fishing<br>• No harvest of Cutthroat Trout<br>• No limit on Rainbow Trout or trout hybrids", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"A north-side creek into the South Fork down in the canyon below Swan Valley.",
   fish:"Small cutthroat water in the canyon — access is the limiting factor, as it is for most of this reach.",
@@ -5005,7 +5005,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
   id:"sv_gardencreek", name:"Garden Creek", color:"#7f7f5f",
   state:"ID", region:"swanvalley", gauges:[], primaryGauge:null,
   geom:"nhd",   // NHD clipped to Idaho at the state line — don't re-snap
-  parkRegs:"Idaho Fish &amp; Game rules the South Fork tributaries as a group — the book names Burns, Palisades, Pine and Rainey creeks: <b>closed June 1–30</b>, <b>no harvest of cutthroat trout</b>, and <b>no limit on rainbow trout or hybrids</b>.", parkRegsSrc:"idfg",
+  parkRegs:"<b>South Fork Snake River tributaries (includes Burns, Palisades, Pine, and Rainey creeks and tributaries)</b> (p. 44)<br>• June 1 through June 30 – closed to fishing<br>• No harvest of Cutthroat Trout<br>• No limit on Rainbow Trout or trout hybrids", parkRegsSrc:"idfg",
   goodFlow:null, // TODO: set {min:___,max:___} (CFS) for YOUR good-flow range on this river
   blurb:"Into the South Fork canyon between Swan Valley and Heise, off the north rim.",
   fish:"Small canyon-bottom cutthroat water, most easily reached from a boat on the river.",
@@ -18010,7 +18010,7 @@ cz:["grymGfuz{OrSfOSbGsI~HnA~CrIRvB~C?~CsDzERfE~CRj\\kMR~C_IrSf@~CvGnFwG~C_D~WsD
 },
 {
   id:"hoback", name:"Hoback River", color:"#7d4a8c",
-  state:"WY", gauges:["hoback"], primaryGauge:"hoback",
+  state:"WY", gauges:["hobackJackson"], primaryGauge:"hobackJackson",
   geom:"wgfd",   // Wyoming Game & Fish's own line for the whole river in Wyoming (was OSM, and stopped short) — never re-snapped or refined
   parkRegsSrc:"wgfd",
   parkRegs:"<i>No entry of its own in Chapter 46 — the Area 1 rules below apply.</i><br><br><b>Area 1 standard rules — Chapter 46, Section 17</b><br><b>(a) All streams within Area 1, unless indicated otherwise, in Fremont, Lincoln, Sublette, and Teton counties.</b><br>(i) The creel limit on trout shall be three (3) per day or in possession.<br>(A) No more than one (1) trout shall exceed sixteen (16) inches; and,<br>(B) No more than one (1) cutthroat trout shall exceed twelve (12) inches.<br><b>(b) All waters within Area 1 in Fremont, Lincoln, Sublette and Teton counties.</b><br>(i) The creel limit on mountain whitefish shall be twenty-five (25) per day or in possession.<br>(ii) Burbot (ling) and northern pike are designated as nongame fish.<br>(iii) All burbot and northern pike caught shall be killed immediately.",
@@ -28541,36 +28541,9 @@ const SECTIONS = [
      measured along the mapped channel between the agency-sourced ramp positions
      (WGFD / IDFG / USFS / BLM, 2026-10-06). The earlier figures were tied to
      ramp pins that sat 1.5–8 km off the river. f4 (to Twin Bridges) keeps its
-     old figure: Twin Bridges is off the drawn South Fork, so it can't be measured. */
-  // --- added with expanded Jackson/Victor/Swan access set ---
-  {id:"s8", river:"snake", name:"Pritchard → West Table", put:"pritch", take:"wtab",
-   miles:8.0, klass:"II", beginner:false, typSpeed:4.3,
-   notes:"The braided canyon-approach run below Astoria — fast, wood-strewn channels that re-converge. Take out at West Table unless you're committed to the Class III below.",
-   shuttle:"BTNF permit required May 1–Nov 1; US-89 turnouts, Jackson/Alpine outfitters shuttle."},
-  {id:"f5", river:"southfork", name:"Canyon (upper): Conant → Cottonwood", put:"conan", take:"cott",
-   miles:14.2, klass:"II", beginner:false, typSpeed:4.2,
-   notes:"First half of the roadless canyon — cliffs, side streams, and the 16 designated camps begin here. A common overnight put-in.",
-   shuttle:"Interagency fee site; long shuttle via Swan Valley Hwy — book through a fly shop."},
-  {id:"f6", river:"southfork", name:"Canyon (lower): Cottonwood → Byington", put:"cott", take:"bying",
-   miles:11.0, klass:"II", beginner:false, typSpeed:4.2,
-   notes:"Second half out of the canyon. Watch the 'Devils Kitchen' S-bend and an irrigation channel/boulders just above Byington.",
-   shuttle:"~45 min via Ririe; Swan Valley shops run it."},
-  {id:"f7", river:"southfork", name:"Lower river: Byington → Heise", put:"bying", take:"heise",
-   miles:3.0, klass:"I", beginner:true, typSpeed:4.0,
-   notes:"Mellow water below the canyon past the hot springs — cottonwood islands and easy banks, far fewer boats than the canyon.",
-   shuttle:"Short shuttle on the Heise/Ririe roads."},
-  {id:"t3", river:"teton", name:"Fox Creek → Bates Bridge", put:"foxc", take:"bates",
-   miles:6.6, klass:"I", beginner:true, typSpeed:2.2,
-   notes:"The quiet upper valley — placid, shallow, SUP-friendly water. Fox Creek is a short carry to the river.",
-   shuttle:"Driggs/Victor rental shops shuttle the valley accesses."},
-  {id:"t4", river:"teton", name:"Rainey (Big Eddy) → Cache Bridge", put:"rain", take:"tcache",
-   miles:3.3, klass:"I", beginner:true, typSpeed:2.4,
-   notes:"Glassy meadow bends with the Tetons on full display; moose are common. Slow current — budget more time than the miles imply.",
-   shuttle:"Easy valley shuttle; Cache is the busiest access on weekends."},
-  {id:"t5", river:"teton", name:"Cache Bridge → Harrops Bridge", put:"tcache", take:"harr",
-   miles:5.6, klass:"I", beginner:true, typSpeed:2.5,
-   notes:"The last mellow stretch. TAKE OUT AT HARROPS — below it the river drops into a Class IV–V canyon for experts only.",
-   shuttle:"Hwy 33 two-car shuttle."},
+     old figure: Twin Bridges is off the drawn South Fork, so it can't be measured.
+     Each river's sections run upstream to downstream (by put-in, the shorter first where two
+     share one), because the sheet lists them in this order. */
   // Snake (Jackson)
   {id:"s1", river:"snake", name:"Jackson Lake Dam → Pacific Creek", put:"jld", take:"pac",
    miles:4.4, klass:"I", beginner:true, typSpeed:3.2,
@@ -28596,6 +28569,10 @@ const SECTIONS = [
    miles:8.2, klass:"I-II", beginner:true, typSpeed:4.0,
    notes:"Riffle-pool water past Hoback Junction. Take out at Astoria unless you mean to run the canyon.",
    shuttle:"US-26/89 follows the river; quick shuttle."},
+  {id:"s8", river:"snake", name:"Pritchard → West Table", put:"pritch", take:"wtab",
+   miles:8.0, klass:"II", beginner:false, typSpeed:4.3,
+   notes:"The braided canyon-approach run below Astoria — fast, wood-strewn channels that re-converge. Take out at West Table unless you're committed to the Class III below.",
+   shuttle:"BTNF permit required May 1–Nov 1; US-89 turnouts, Jackson/Alpine outfitters shuttle."},
   {id:"s7", river:"snake", name:"Snake River Canyon: West Table → Sheep Gulch", put:"wtab", take:"sheep",
    miles:8.1, klass:"III", beginner:false, typSpeed:5.0,
    notes:"Big Kahuna, Lunch Counter, Ropes — real whitewater, huge at high flows. Go commercial or go with someone who knows it.",
@@ -28609,23 +28586,47 @@ const SECTIONS = [
    miles:2.1, klass:"I-II", beginner:true, typSpeed:4.0,
    notes:"More side channels and gravel bars. At high releases the water gets pushy — check CFS before committing.",
    shuttle:"Short hop on US-26."},
+  {id:"f5", river:"southfork", name:"Canyon (upper): Conant → Cottonwood", put:"conan", take:"cott",
+   miles:14.2, klass:"II", beginner:false, typSpeed:4.2,
+   notes:"First half of the roadless canyon — cliffs, side streams, and the 16 designated camps begin here. A common overnight put-in.",
+   shuttle:"Interagency fee site; long shuttle via Swan Valley Hwy — book through a fly shop."},
   {id:"f3", river:"southfork", name:"Canyon: Conant → Byington", put:"conan", take:"bying",
    miles:25.2, klass:"II", beginner:false, typSpeed:4.2,
    notes:"The famous roadless canyon — about 25 miles, with Cottonwood (Fullmer) the one access part-way. A long day; most split it or camp.",
    shuttle:"Long shuttle (~45 min) via Ririe; book it through a Swan Valley shop."},
+  {id:"f6", river:"southfork", name:"Canyon (lower): Cottonwood → Byington", put:"cott", take:"bying",
+   miles:11.0, klass:"II", beginner:false, typSpeed:4.2,
+   notes:"Second half out of the canyon. Watch the 'Devils Kitchen' S-bend and an irrigation channel/boulders just above Byington.",
+   shuttle:"~45 min via Ririe; Swan Valley shops run it."},
+  {id:"f7", river:"southfork", name:"Lower river: Byington → Heise", put:"bying", take:"heise",
+   miles:3.0, klass:"I", beginner:true, typSpeed:4.0,
+   notes:"Mellow water below the canyon past the hot springs — cottonwood islands and easy banks, far fewer boats than the canyon.",
+   shuttle:"Short shuttle on the Heise/Ririe roads."},
   {id:"f4", river:"southfork", name:"Byington → Lorenzo (Twin Bridges)", put:"bying", take:"loren",
    miles:8.5, klass:"I", beginner:true, typSpeed:4.0,
    notes:"The mellow lower river — cottonwood islands, big slow banks, fewer boats than the canyon.",
    shuttle:"Easy shuttle via Hwy 48/US-20."},
   // Teton
+  {id:"t3", river:"teton", name:"Fox Creek → Bates Bridge", put:"foxc", take:"bates",
+   miles:6.6, klass:"I", beginner:true, typSpeed:2.2,
+   notes:"The quiet upper valley — placid, shallow, SUP-friendly water. Fox Creek is a short carry to the river.",
+   shuttle:"Driggs/Victor rental shops shuttle the valley accesses."},
   {id:"t1", river:"teton", name:"Bates Bridge → Rainey Bridge", put:"bates", take:"rain",
    miles:3.7, klass:"I", beginner:true, typSpeed:2.4,
    notes:"Glassy meadow meanders — the best first-time rowing water in the region. Slow current; budget extra time.",
    shuttle:"10 min on valley back roads; Driggs/Victor shops shuttle."},
+  {id:"t4", river:"teton", name:"Rainey (Big Eddy) → Cache Bridge", put:"rain", take:"tcache",
+   miles:3.3, klass:"I", beginner:true, typSpeed:2.4,
+   notes:"Glassy meadow bends with the Tetons on full display; moose are common. Slow current — budget more time than the miles imply.",
+   shuttle:"Easy valley shuttle; Cache is the busiest access on weekends."},
   {id:"t2", river:"teton", name:"Rainey → Harrops Bridge", put:"rain", take:"harr",
    miles:9.0, klass:"I", beginner:true, typSpeed:2.4,
    notes:"More spring-creek bends, rising fish on calm evenings. TAKE OUT AT HARROPS — Class IV–V canyon downstream.",
    shuttle:"Hwy 33 makes this an easy two-car shuttle."},
+  {id:"t5", river:"teton", name:"Cache Bridge → Harrops Bridge", put:"tcache", take:"harr",
+   miles:5.6, klass:"I", beginner:true, typSpeed:2.5,
+   notes:"The last mellow stretch. TAKE OUT AT HARROPS — below it the river drops into a Class IV–V canyon for experts only.",
+   shuttle:"Hwy 33 two-car shuttle."},
   // Salt
   {id:"sa1", river:"salt", name:"Etna → Salt River mouth (Alpine)", put:"etna", take:"saltm",
    miles:10.0, klass:"I", beginner:true, typSpeed:3.4,
